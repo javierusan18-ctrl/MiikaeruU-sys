@@ -16,7 +16,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260731-17" />
+  <link rel="stylesheet" href="style.css?v=20260801-18" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -57,6 +57,7 @@
           <p class="master-auth__error" id="master-login-error" hidden></p>
           <button type="submit" class="btn-send" data-i18n="masterAuthLoginBtn">Iniciar Sesión</button>
         </form>
+        <button type="button" class="master-auth__toggle" id="master-auth-go-register-btn" data-i18n="masterAuthGoRegister">¿No tienes cuenta? Crear una</button>
       </div>
 
       <!-- Vista: Crear Cuenta Principal (primera vez en este dispositivo) -->
@@ -70,6 +71,7 @@
           <p class="master-auth__error" id="master-register-error" hidden></p>
           <button type="submit" class="btn-send" data-i18n="masterAuthRegisterBtn">Crear Cuenta</button>
         </form>
+        <button type="button" class="master-auth__toggle" id="master-auth-go-login-btn" data-i18n="masterAuthGoLogin">¿Ya tienes cuenta? Iniciar sesión</button>
       </div>
     </div>
   </div>
@@ -1727,7 +1729,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260731-17"></script>
+  <script src="app.js?v=20260801-18"></script>
   <!-- Service Worker: estrategia Cache First para assets estáticos (ver
        sw.js) — carga instantánea en visitas repetidas y funcionamiento
        offline. Registro envuelto en try/catch + comprobación de

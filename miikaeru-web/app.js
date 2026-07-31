@@ -694,6 +694,9 @@ const I18N = {
     masterAuthRegisterBtn: "Crear Cuenta",
     masterAuthPasswordMismatch: "Las contraseñas no coinciden.",
     masterAuthInvalidCredentials: "Celular o contraseña incorrectos.",
+    masterAuthAccountExists: "Ya existe una cuenta en este dispositivo. Inicia sesión con tu celular y contraseña.",
+    masterAuthGoRegister: "¿No tienes cuenta? Crear una",
+    masterAuthGoLogin: "¿Ya tienes cuenta? Iniciar sesión",
     profileSwitchBtnTitle: "Cambiar de perfil",
     miikaPassBtn: "🎫 Miika Pass",
     miikaPassTitle: "🎫 MIIKA PASS",
@@ -1134,6 +1137,9 @@ const I18N = {
     masterAuthRegisterBtn: "Create Account",
     masterAuthPasswordMismatch: "Passwords don't match.",
     masterAuthInvalidCredentials: "Incorrect phone number or password.",
+    masterAuthAccountExists: "An account already exists on this device. Log in with your phone and password.",
+    masterAuthGoRegister: "Don't have an account? Create one",
+    masterAuthGoLogin: "Already have an account? Log in",
     profileSwitchBtnTitle: "Switch profile",
     miikaPassBtn: "🎫 Miika Pass",
     miikaPassTitle: "🎫 MIIKA PASS",
@@ -1574,6 +1580,9 @@ const I18N = {
     masterAuthRegisterBtn: "アカウントを作成",
     masterAuthPasswordMismatch: "パスワードが一致しません。",
     masterAuthInvalidCredentials: "電話番号またはパスワードが正しくありません。",
+    masterAuthAccountExists: "この端末にはすでにアカウントがあります。電話番号とパスワードでログインしてください。",
+    masterAuthGoRegister: "アカウントをお持ちでないですか？作成する",
+    masterAuthGoLogin: "すでにアカウントをお持ちですか？ログイン",
     profileSwitchBtnTitle: "プロフィールを切り替える",
     miikaPassBtn: "🎫 ミイカパス",
     miikaPassTitle: "🎫 ミイカパス",
@@ -4301,6 +4310,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const masterRegisterPassword = document.getElementById("master-register-password");
   const masterRegisterPasswordConfirm = document.getElementById("master-register-password-confirm");
   const masterRegisterError = document.getElementById("master-register-error");
+  const masterAuthGoRegisterBtn = document.getElementById("master-auth-go-register-btn");
+  const masterAuthGoLoginBtn = document.getElementById("master-auth-go-login-btn");
 
   const welcomeModal = document.getElementById("welcome-modal");
   const welcomeViewChoice = document.getElementById("welcome-view-choice");
@@ -9611,6 +9622,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const password = masterRegisterPassword.value;
     const confirmPassword = masterRegisterPasswordConfirm.value;
 
+    // Este sistema es de UNA sola cuenta por dispositivo (ver MASTER_ACCOUNT_KEY
+    // más arriba): si ya existe una cuenta guardada, un submit de registro
+    // NUNCA debe sobreescribirla en silencio (eso era el bug reportado: un
+    // número viejo dejaba de reconocerse porque el registro pisaba la cuenta).
+    // En vez de eso, se avisa y se manda directo a la vista de login.
+    if (loadMasterAccount()) {
+      showMasterAuthView("login");
+      masterLoginPhone.value = phone;
+      masterLoginError.textContent = t("masterAuthAccountExists");
+      masterLoginError.hidden = false;
+      return;
+    }
+
     if (password !== confirmPassword) {
       masterRegisterError.textContent = t("masterAuthPasswordMismatch");
       masterRegisterError.hidden = false;
@@ -9621,6 +9645,16 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem(MASTER_LOGGED_IN_KEY, "true");
     masterAuthModal.hidden = true;
     onMasterAuthSuccess();
+  });
+
+  masterAuthGoRegisterBtn.addEventListener("click", () => {
+    masterLoginError.hidden = true;
+    showMasterAuthView("register");
+  });
+
+  masterAuthGoLoginBtn.addEventListener("click", () => {
+    masterRegisterError.hidden = true;
+    showMasterAuthView("login");
   });
 
   masterLoginForm.addEventListener("submit", (event) => {

@@ -4363,6 +4363,26 @@ textarea,
   text-shadow: 0 0 6px rgba(255, 46, 154, 0.5);
 }
 
+/* Enlace secundario para alternar entre login/registro dentro del candado
+   principal — a propósito NO usa el estilo de .btn-send (fondo sólido) para
+   que quede claro que es una acción secundaria, no el submit del form. */
+.master-auth__toggle {
+  margin-top: 4px;
+  background: none;
+  border: none;
+  padding: 4px;
+  font-size: 0.78rem;
+  color: var(--neon-cyan);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.master-auth__toggle:hover,
+.master-auth__toggle:focus-visible {
+  color: var(--text-primary);
+}
+
 .modal {
   width: 100%;
   max-width: 380px;
@@ -6212,6 +6232,45 @@ textarea,
     font-size: 0.62rem;
     letter-spacing: 1px;
     padding: 6px 10px 8px;
+  }
+}
+
+/* ===================== HUD CELULAR: DOCKS COMPACTOS =====================
+   El breakpoint de 900px de arriba fue pensado para tablet — en un celular
+   real (≤480px) esos mismos 56px de dock por lado le comen ~112px de ancho
+   a la tarjeta central del León, que es lo que se reportó como "los íconos
+   ocupan mucho espacio". Acá se recorta el padding/gap del dock (no tanto
+   el tamaño del ícono, para no bajar el touch target de un valor razonable)
+   y se le devuelve ese espacio ganado a la tarjeta del avatar. */
+@media (max-width: 480px) {
+  .hud-layout {
+    padding: 4px 4px 16px;
+    gap: 4px;
+  }
+
+  .hud-dock {
+    width: 44px;
+    padding: 6px 3px;
+    gap: 6px;
+  }
+
+  .hud-dock__icon,
+  .hud-dock .pillar-btn,
+  .hud-dock .app-card {
+    width: 38px;
+    height: 38px;
+  }
+
+  .hud-dock__icon,
+  .hud-dock .pillar-btn__icon,
+  .hud-dock .app-card__icon {
+    font-size: 1.05rem;
+  }
+
+  .hud-center .panel--avatar {
+    flex-basis: auto;
+    max-width: none;
+    height: min(420px, 52vh);
   }
 }
 

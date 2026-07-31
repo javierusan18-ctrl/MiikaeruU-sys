@@ -1301,3 +1301,25 @@ Pedido de seguimiento tras el Bloque 43 ("mejoralo más"), acotado explícitamen
 - 0 errores de consola.
 
 **Cache-busting:** `?v=20260731-16` → `?v=20260731-17` en `index.html` (`style.css`/`app.js`) y en `CACHE_NAME` de `sw.js`.
+
+---
+
+## Bloque 47 — Fix real de bug en Login/Registro del candado principal + compactación de docks HUD en celular
+
+Pedido de usabilidad/lógica en dos frentes, ya con la app en producción: dock de íconos "ocupa mucho espacio" en celular, y una falla de cuentas donde un número viejo "da error o no permite el acceso".
+
+**1. Bug de autenticación (root cause real, no cosmético).** Se descartó primero la hipótesis obvia — que "Cerrar sesión" borrara la cuenta — leyendo `logoutBtn`'s handler directamente: solo limpia `MASTER_LOGGED_IN_KEY` (la bandera de sesión), nunca toca `MASTER_ACCOUNT_KEY` (los datos de la cuenta), tal como dice su propio comentario. El bug real estaba en otro lado: `checkMasterAuthAndInit()` decide UNA sola vez, al cargar la página, qué vista mostrar (login si hay cuenta guardada, registro si no) — pero no existía ningún botón para cambiar de vista a mano. Combinado con que el submit de Registro sobreescribía `MASTER_ACCOUNT_KEY` sin preguntar si ya había una cuenta, cualquier usuario que aterrizara en la vista de Registro (por la razón que fuera) terminaba pisando su propia cuenta vieja sin darse cuenta — el "número viejo da error" era literalmente la contraseña real siendo reemplazada por lo que sea que se haya tipeado en ese formulario de registro.
+
+**Fix (los dos lados del mismo problema):**
+- Botón `.master-auth__toggle` nuevo en cada vista (`#master-auth-go-register-btn` en Login, `#master-auth-go-login-btn` en Registro) — texto-link discreto, deliberadamente sin el estilo sólido de `.btn-send` para que no compita visualmente con el submit real. Ambos llaman a `showMasterAuthView()`, que ya existía pero solo se usaba internamente.
+- Guardia de sobreescritura en el submit de Registro: si `loadMasterAccount()` ya devuelve algo, el submit NO escribe nada — en cambio cambia a la vista de Login, precarga el celular tipeado, y muestra un error explicando que ya existe una cuenta en este dispositivo. Este es el sistema de una-sola-cuenta-por-dispositivo documentado desde el Bloque 29 — la guardia lo hace cumplir de verdad en vez de solo en la intención.
+- 3 claves i18n nuevas (`masterAuthGoRegister`, `masterAuthGoLogin`, `masterAuthAccountExists`) en los 3 bloques `I18N` (es/en/ja).
+
+**2. Compactación de docks HUD en celular real.** El breakpoint de `900px` (pensado para tablet) era el único que existía por debajo del desktop — un celular de 375-480px heredaba esos mismos 56px de dock por lado (112px combinados) sin ningún ajuste adicional, justo el "ocupan mucho espacio" reportado. Se agregó un breakpoint nuevo `@media (max-width: 480px)` que recorta `.hud-dock` a 44px de ancho (padding 6px/3px, gap 6px) e íconos a 38px — se priorizó recortar padding/gap sobre encoger más el ícono, para no bajar el touch target de un tamaño razonable. `.hud-center .panel--avatar` recupera ese espacio (`flex-basis: auto`, sin `max-width` fijo). El breakpoint de tablet (`900px`) queda intacto — confirmado que a 700px de ancho el dock sigue midiendo 56px/44px sin tocar.
+
+**Pruebas realizadas:**
+- Auth: con una cuenta ya existente en `localStorage` (celular `999888777`), se intentó re-registrar con una contraseña distinta — bloqueado, cero cambios en `localStorage` (`loadMasterAccount()` confirmado sin modificar antes/después), vista cambia sola a Login con el celular precargado y el mensaje de error visible. Login posterior con la contraseña ORIGINAL (no la del intento de registro) confirmado exitoso. Toggle Login→Registro→Login confirmado visualmente en ambos sentidos.
+- Dock: a 375px de viewport, `.hud-dock` confirmado en 44px de ancho / íconos en 38px vía `getComputedStyle()`; a 700px (tablet), confirmado sin cambios en 56px/44px — el breakpoint nuevo no se filtra a tablet/desktop.
+- 0 errores de consola.
+
+**Cache-busting:** `?v=20260731-17` → `?v=20260801-18` en `index.html` (`style.css`/`app.js`) y en `CACHE_NAME` de `sw.js`.
