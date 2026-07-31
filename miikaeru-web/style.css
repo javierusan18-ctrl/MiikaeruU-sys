@@ -175,11 +175,45 @@ body::before {
   font-size: 1.3rem;
 }
 
+/* Título "despintado" (pedido explícito de rediseño): antes era solo
+   var(--text-primary) sin brillo — el resto del HUD ya usa neón en todos
+   lados, pero el título quedaba plano y perdía contra el fondo Cyberpunk.
+   Capas de text-shadow apiladas (halo cercano + halo lejano) imitan un
+   tubo de neón real en vez de un glow plano de una sola capa; la
+   animación de pulso es sutil (nunca baja del 85% de intensidad) para
+   que siga siendo legible, no un parpadeo molesto. Se apaga solo en
+   Mobile Lite (≤767px, ver más abajo): esa media query ya tiene un
+   `*, *::before, *::after { text-shadow: none !important; animation:
+   none !important; }` para toda la app — el título hereda ese apagado
+   sin código adicional, queda con su color sólido cian sin glow ahí. */
 .hud__title {
   font-weight: 700;
   letter-spacing: 2px;
   font-size: 1.1rem;
-  color: var(--text-primary);
+  color: var(--neon-cyan);
+  text-shadow:
+    0 0 4px rgba(0, 240, 255, 0.9),
+    0 0 10px rgba(0, 240, 255, 0.7),
+    0 0 22px rgba(0, 240, 255, 0.5),
+    0 0 40px rgba(0, 240, 255, 0.25);
+  animation: hudTitlePulse 3.2s ease-in-out infinite;
+}
+
+@keyframes hudTitlePulse {
+  0%, 100% {
+    text-shadow:
+      0 0 4px rgba(0, 240, 255, 0.9),
+      0 0 10px rgba(0, 240, 255, 0.7),
+      0 0 22px rgba(0, 240, 255, 0.5),
+      0 0 40px rgba(0, 240, 255, 0.25);
+  }
+  50% {
+    text-shadow:
+      0 0 6px rgba(0, 240, 255, 1),
+      0 0 14px rgba(0, 240, 255, 0.85),
+      0 0 30px rgba(0, 240, 255, 0.65),
+      0 0 54px rgba(0, 240, 255, 0.35);
+  }
 }
 
 .hud__title-accent {
@@ -3284,6 +3318,94 @@ textarea,
   border-color: var(--neon-cyan);
 }
 
+/* ===================== APRENDIZAJE: VITRINA DE CURSOS =====================
+   Tarjetas "visible pero inerte" (mismo criterio que .mpass-tier--locked/
+   .jp-level-btn--locked) para los cursos tecnológicos todavía no
+   disponibles — grayscale + opacity en el cuerpo de la tarjeta, pero el
+   badge de abajo queda a todo color con brillo dorado/magenta y pulso
+   propio: a diferencia de un "Próximamente" simple, acá se quiere que
+   se sienta como un anuncio llamativo de lanzamiento, no una tarjeta
+   apagada sin más. */
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.course-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 18px 14px;
+  text-align: center;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(124, 147, 173, 0.3);
+  background: rgba(255, 255, 255, 0.03);
+  transition: transform 0.2s ease;
+}
+
+.course-card:hover {
+  transform: translateY(-2px);
+}
+
+/* El filter de "apagado" vive en este wrapper interno, NO en .course-card
+   completa — filter es un efecto de post-procesado que alcanza a TODOS
+   los descendientes sin que un hijo pueda "des-aplicarlo" con su propio
+   filter:none (no es como opacity/color, que sí se pueden pisar). Si el
+   grayscale hubiera quedado en la tarjeta entera, el badge de abajo
+   también habría salido apagado a pesar de su propio estilo a color. */
+.course-card__body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  filter: grayscale(0.7) brightness(0.75);
+  transition: filter 0.2s ease;
+}
+
+.course-card:hover .course-card__body {
+  filter: grayscale(0.3) brightness(0.95);
+}
+
+.course-card__icon {
+  font-size: 1.8rem;
+}
+
+.course-card__name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.course-card__desc {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.course-card__badge {
+  margin-top: 6px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  color: var(--neon-gold);
+  border: 1px solid rgba(255, 183, 0, 0.55);
+  background: rgba(255, 183, 0, 0.1);
+  animation: courseBadgeGlow 2.4s ease-in-out infinite;
+}
+
+@keyframes courseBadgeGlow {
+  0%, 100% { box-shadow: 0 0 4px rgba(255, 183, 0, 0.25); }
+  50% { box-shadow: 0 0 14px rgba(255, 183, 0, 0.6); }
+}
+
 /* Mismo criterio "visible pero inerte" que .mpass-tier--locked — no se
    oculta el nivel, se muestra apagado con su badge de Próximamente. */
 .jp-level-btn--locked {
@@ -5992,11 +6114,20 @@ textarea,
   text-transform: uppercase;
 }
 
+/* justify-content:center (no space-between): con max-width:1600 pero
+   avatar+chat de ancho fijo, space-between empujaba los docks a los
+   bordes reales del viewport dejando un hueco enorme y vacío entre cada
+   dock y el León — el look "MOBA" pedido necesita que los íconos queden
+   pegados al marco del avatar. Con center, el grupo completo (dock +
+   centro + dock) se centra como una sola consola compacta; en mobile/
+   tablet es un no-op porque ahí .hud-center ya llena el espacio exacto
+   sin sobra (ver límite de .hud-center en el media query de escritorio
+   más abajo, que es donde de verdad hacía falta el hueco). */
 .hud-layout {
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
+  justify-content: center;
+  gap: 10px;
   padding: 4px 20px 28px;
   max-width: 1600px;
   margin: 0 auto;
@@ -6332,6 +6463,15 @@ textarea,
     flex-direction: row;
     align-items: stretch;
     gap: 20px;
+    /* Tope exacto = avatar(460) + gap(20) + chat(380): sin esto,
+       .hud-center (flex:1) crecía hasta llenar TODO el espacio libre de
+       .hud-layout (hasta 1600px) y centraba el par avatar+chat adentro,
+       dejando un hueco enorme entre cada dock y el propio marco del
+       León. Con el tope, ese "grupo consola" queda compacto y son los
+       MÁRGENES EXTERNOS de .hud-layout los que absorben el espacio
+       sobrante en pantallas anchas — los íconos quedan pegados al
+       marco, como pedía el rediseño estilo MOBA/RPG. */
+    max-width: 900px;
   }
 
   /* Layout de 2 columnas "cara a cara con el León": el avatar cede algo

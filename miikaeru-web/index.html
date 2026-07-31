@@ -16,7 +16,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260801-18" />
+  <link rel="stylesheet" href="style.css?v=20260801-19" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -698,13 +698,67 @@
       </div>
 
       <!-- Herramienta de Aprendizaje: solo visible cuando ese pilar está activo.
-           Pilar nuevo, todavía sin formulario propio — placeholder consistente
-           con el resto del modal en vez de un botón que no hace nada. -->
+           Todavía sin formulario propio de seguimiento — mientras tanto, vitrina
+           de los próximos cursos tecnológicos (pedido explícito), mismo criterio
+           "visible pero inerte" que .mpass-tier--locked / .jp-level-btn--locked:
+           tarjetas reales con nombre/ícono/descripción, atenuadas + badge de
+           lanzamiento, en vez de ocultarlas o dejar el panel vacío. -->
       <div class="aprendizaje-panel" id="aprendizaje-panel" hidden>
         <h3 data-i18n="aprendizajeTitle">🧠 Aprendizaje</h3>
         <p class="aprendizaje-panel__hint" data-i18n="aprendizajeHint">
           Este pilar está en construcción. Pronto vas a poder registrar tu progreso de aprendizaje aquí.
         </p>
+
+        <div class="course-grid" id="course-grid">
+          <div class="course-card">
+            <div class="course-card__body">
+              <span class="course-card__icon" aria-hidden="true">🤖</span>
+              <h4 class="course-card__name" data-i18n="courseAiName">Sistemas con Inteligencia Artificial</h4>
+              <p class="course-card__desc" data-i18n="courseAiDesc">Fundamentos de IA, modelos de lenguaje y automatización aplicada a negocios reales.</p>
+            </div>
+            <span class="course-card__badge" data-i18n="courseComingSoonBadge">🚀 Próximamente — Gran Lanzamiento</span>
+          </div>
+          <div class="course-card">
+            <div class="course-card__body">
+              <span class="course-card__icon" aria-hidden="true">🗣️</span>
+              <h4 class="course-card__name" data-i18n="courseEnglishName">Inglés Técnico</h4>
+              <p class="course-card__desc" data-i18n="courseEnglishDesc">Vocabulario y comunicación técnica en inglés para el mundo laboral tecnológico.</p>
+            </div>
+            <span class="course-card__badge" data-i18n="courseComingSoonBadge">🚀 Próximamente — Gran Lanzamiento</span>
+          </div>
+          <div class="course-card">
+            <div class="course-card__body">
+              <span class="course-card__icon" aria-hidden="true">📊</span>
+              <h4 class="course-card__name" data-i18n="courseFinanceName">Finanzas Avanzadas</h4>
+              <p class="course-card__desc" data-i18n="courseFinanceDesc">Inversión, análisis financiero y estrategias avanzadas más allá del control básico de gastos.</p>
+            </div>
+            <span class="course-card__badge" data-i18n="courseComingSoonBadge">🚀 Próximamente — Gran Lanzamiento</span>
+          </div>
+          <div class="course-card">
+            <div class="course-card__body">
+              <span class="course-card__icon" aria-hidden="true">🛡️</span>
+              <h4 class="course-card__name" data-i18n="courseCyberName">Ciberseguridad y Ciberestructuras</h4>
+              <p class="course-card__desc" data-i18n="courseCyberDesc">Protección de datos, redes y sistemas — fundamentos de seguridad digital aplicada.</p>
+            </div>
+            <span class="course-card__badge" data-i18n="courseComingSoonBadge">🚀 Próximamente — Gran Lanzamiento</span>
+          </div>
+          <div class="course-card">
+            <div class="course-card__body">
+              <span class="course-card__icon" aria-hidden="true">💻</span>
+              <h4 class="course-card__name" data-i18n="courseCodeName">Programación y Desarrollo de Software</h4>
+              <p class="course-card__desc" data-i18n="courseCodeDesc">Lógica de programación y desarrollo de software desde cero, paso a paso.</p>
+            </div>
+            <span class="course-card__badge" data-i18n="courseComingSoonBadge">🚀 Próximamente — Gran Lanzamiento</span>
+          </div>
+          <div class="course-card">
+            <div class="course-card__body">
+              <span class="course-card__icon" aria-hidden="true">☁️</span>
+              <h4 class="course-card__name" data-i18n="courseCloudName">Cloud y Automatización</h4>
+              <p class="course-card__desc" data-i18n="courseCloudDesc">Infraestructura en la nube y automatización de procesos para escalar cualquier negocio.</p>
+            </div>
+            <span class="course-card__badge" data-i18n="courseComingSoonBadge">🚀 Próximamente — Gran Lanzamiento</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -1729,7 +1783,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260801-18"></script>
+  <script src="app.js?v=20260801-19"></script>
   <!-- Service Worker: estrategia Cache First para assets estáticos (ver
        sw.js) — carga instantánea en visitas repetidas y funcionamiento
        offline. Registro envuelto en try/catch + comprobación de
