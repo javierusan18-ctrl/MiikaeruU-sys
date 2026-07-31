@@ -1348,3 +1348,26 @@ Pedido de diseño explícito con referencias tipo Mobile Legends: consola centra
 - 0 errores de consola en toda la sesión de pruebas.
 
 **Cache-busting:** `?v=20260801-18` → `?v=20260801-19` en `index.html` (`style.css`/`app.js`) y en `CACHE_NAME` de `sw.js`.
+
+---
+
+## Bloque 49 — Auto-actualización real del Service Worker (sin depender del botón manual)
+
+Tras el Bloque 48, el usuario reportó que el celular seguía mostrando la versión vieja aunque el deploy en Vercel ya tenía el código nuevo — confirmado con `curl` directo al servidor (sin pasar por ningún navegador): la producción SÍ tenía `?v=20260801-19` con el HTML/CSS nuevos, o sea el problema nunca fue Vercel. Pidió un fix de código, no depender de que el usuario final toque el botón "🔄 Forzar Actualización" a mano.
+
+**Causa raíz real (no la que parecía a simple vista).** El Service Worker desde el Bloque 25 trata `index.html`/`"/"` con la misma estrategia "Cache First" que el resto de assets estáticos — pero a diferencia de `style.css?v=X`/`app.js?v=X` (que cambian de URL en cada deploy gracias al cache-busting), el documento HTML **nunca cambia de nombre**. Eso significa que, una vez que un celular lo guardó en caché una vez, jamás vuelve a pedirlo a la red por su cuenta — se queda sirviendo ese HTML viejo (con sus `<link>`/`<script>` apuntando a los `?v=` viejos) indefinidamente, sin importar cuántos deploys nuevos haya en el servidor. El botón manual funcionaba porque desregistraba todo a la fuerza; sin él, no había ningún mecanismo que hiciera lo mismo solo.
+
+**Fix de raíz — dos cambios que se complementan:**
+1. **`sw.js`:** el documento HTML (`request.mode === "navigate"`, más los casos de respaldo `"/"` e `"/index.html"`) pasa de Cache First a **Network First** — intenta la red primero, y solo cae al caché si no hay conexión. El resto de assets (CSS/JS/imágenes) sigue en Cache First tal cual, porque sus URLs versionadas ya garantizan que nunca sirvan contenido viejo bajo una URL nueva. Con esto, cualquier visita con internet ve el HTML más reciente (y por lo tanto las URLs `?v=` correctas) de inmediato, sin depender de que el propio Service Worker se entere de que cambió.
+2. **`index.html` (script de registro):** dos piezas nuevas.
+   - `registration.update()` explícito apenas carga y cada vez que la pestaña/PWA vuelve a primer plano (`visibilitychange`) — sin esto, un celular que deja la app abierta en segundo plano en vez de cerrarla puede tardar horas en que el navegador revise por su cuenta si `sw.js` cambió.
+   - Listener de `controllerchange`: en cuanto un Service Worker nuevo termina de instalarse y toma el control (`skipWaiting()`+`clients.claim()`, ya existían desde antes), la pestaña YA ABIERTA sigue corriendo con los archivos viejos que cargó al inicio hasta que se recarga — este listener dispara ese `location.reload()` automáticamente, una sola vez (`refreshedOnce` evita loops).
+
+**Limitación honesta, comunicada explícitamente al usuario:** este fix hace que TODOS los deploys futuros se auto-apliquen solos. Pero los celulares que ya estén atascados en el `sw.js` viejo (sin esta lógica) necesitan UNA última actualización manual para recibir el fix — no hay forma de empujarle código nuevo a un cliente que todavía no pide el archivo nuevo. Después de esa única vez, no hace falta tocar nada más.
+
+**Pruebas realizadas:**
+- Servidor local: recargado dos veces seguidas, confirmado que `index.html` sirve las URLs `?v=20260801-20` correctas sin loop de recarga infinito.
+- 0 errores de consola (solo el warning ya conocido y documentado del `.glb` de escritorio que todavía no existe).
+- Revisión manual del flujo Network-First: el `catch()` cae a `caches.match(event.request)` — confirmado en el código que el fallback offline sigue intacto.
+
+**Cache-busting:** `?v=20260801-19` → `?v=20260801-20` en `index.html` (`style.css`/`app.js`) y en `CACHE_NAME` de `sw.js`.

@@ -1,8 +1,17 @@
-// Service Worker de Miikaeru_SYS — estrategia "Cache First" SOLO para los
+// Service Worker de Miikaeru_SYS — estrategia "Cache First" para los
 // assets estáticos propios del sitio (CSS, JS, imágenes, manifest): la
 // primera vez se guardan en caché, y desde la segunda visita se sirven
 // directo desde ahí (carga instantánea, funciona sin internet), sin
-// siquiera esperar a la red.
+// siquiera esperar a la red. El documento HTML (navegación) es la ÚNICA
+// excepción — usa "Network First" (ver el listener "fetch" más abajo):
+// es el único archivo que NUNCA cambia de nombre entre deploys (a
+// diferencia de style.css?v=X/app.js?v=X, que sí cambian de URL en cada
+// release gracias al cache-busting) — si se sirviera cacheado primero,
+// un deploy nuevo podía quedar invisible indefinidamente para cualquier
+// celular/pestaña que ya lo tuviera guardado, porque nunca volvería a
+// pedirlo a la red por su cuenta hasta que el propio Service Worker se
+// actualizara (y ni siquiera ahí, sin recargar — ver el listener de
+// "controllerchange" en index.html).
 //
 // Todo lo demás (llamadas a la API REST de Supabase, los CDN de Hanzi
 // Writer/Supabase-js, cualquier request cross-origin) pasa de largo sin
@@ -13,7 +22,7 @@
 // index.html (ver ese archivo) — subirlo a mano en cada deploy real
 // hace que `activate` borre el caché viejo y todo se vuelva a guardar
 // fresco, evitando que un celular se quede pegado en una versión vieja.
-const CACHE_NAME = "miikaeru-cache-v20260801-19";
+const CACHE_NAME = "miikaeru-cache-v20260801-20";
 
 const STATIC_ASSETS = [
   "./",
@@ -68,6 +77,14 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
+function isNavigationRequest(request, url) {
+  // request.mode === "navigate" cubre la carga normal de una URL; los dos
+  // chequeos de pathname son respaldo para casos donde algún navegador/PWA
+  // shell pida el documento con otro `mode` (ha pasado en algunos wrappers
+  // de Android para apps "Agregadas a la pantalla de inicio").
+  return request.mode === "navigate" || url.pathname === "/" || url.pathname.endsWith("/index.html");
+}
+
 function isStaticAsset(url) {
   if (url.origin !== self.location.origin) return false;
   // "glb" incluido para el modelo 3D del avatar de escritorio (ver
@@ -75,12 +92,34 @@ function isStaticAsset(url) {
   // fetch de assets/models/leon_nivel1.glb pasaría de largo del caché
   // (ver el `return` de abajo en el listener "fetch") y se pediría de
   // nuevo a la red en cada carga, incluso estando offline.
-  return /\.(?:css|js|png|jpg|jpeg|svg|webp|json|glb)$/i.test(url.pathname) || url.pathname === "/" || url.pathname.endsWith("/index.html");
+  return /\.(?:css|js|png|jpg|jpeg|svg|webp|json|glb)$/i.test(url.pathname);
 }
 
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
-  if (event.request.method !== "GET" || !isStaticAsset(url)) return; // deja pasar todo lo demás sin tocarlo
+  if (event.request.method !== "GET" || url.origin !== self.location.origin) return; // deja pasar todo lo demás sin tocarlo
+
+  // Network First para el documento HTML: intenta la red primero para que
+  // cualquier visita con internet vea el deploy más reciente (y por lo
+  // tanto las URLs `?v=` nuevas de style.css/app.js) sin esperar a que el
+  // Service Worker se actualice solo. El caché queda como respaldo SOLO
+  // para cuando no hay red — ahí sí se sirve lo último que se guardó.
+  if (isNavigationRequest(event.request, url)) {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          if (response && response.ok) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+          }
+          return response;
+        })
+        .catch(() => caches.match(event.request))
+    );
+    return;
+  }
+
+  if (!isStaticAsset(url)) return;
 
   event.respondWith(
     caches.match(event.request).then((cached) => {

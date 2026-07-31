@@ -16,7 +16,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260801-19" />
+  <link rel="stylesheet" href="style.css?v=20260801-20" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -1783,7 +1783,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260801-19"></script>
+  <script src="app.js?v=20260801-20"></script>
   <!-- Service Worker: estrategia Cache First para assets estáticos (ver
        sw.js) — carga instantánea en visitas repetidas y funcionamiento
        offline. Registro envuelto en try/catch + comprobación de
@@ -1792,9 +1792,37 @@
   <script>
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
-        navigator.serviceWorker.register("sw.js").catch((err) => {
-          console.warn("Service Worker: no se pudo registrar (la app sigue funcionando igual):", err);
-        });
+        navigator.serviceWorker
+          .register("sw.js")
+          .then((registration) => {
+            // Comprobación explícita de actualización apenas carga y cada
+            // vez que la PWA vuelve a primer plano — sin esto, un celular
+            // que se queda con la app abierta en segundo plano en vez de
+            // cerrarla del todo puede tardar horas en notar que sw.js
+            // cambió (el navegador solo revisa por su cuenta de tanto en
+            // tanto). Con esto, cualquier regreso a la app dispara el
+            // chequeo al toque.
+            registration.update();
+            document.addEventListener("visibilitychange", () => {
+              if (document.visibilityState === "visible") registration.update();
+            });
+          })
+          .catch((err) => {
+            console.warn("Service Worker: no se pudo registrar (la app sigue funcionando igual):", err);
+          });
+      });
+
+      // En cuanto un Service Worker NUEVO toma el control (skipWaiting +
+      // clients.claim() en sw.js), esta pestaña/PWA YA ABIERTA sigue
+      // corriendo con los archivos viejos que cargó al inicio — sin
+      // recargar, nunca se ve la versión nueva por más que el SW ya se
+      // haya actualizado de fondo. `refreshedOnce` evita un loop si el
+      // navegador llegara a disparar el evento más de una vez.
+      let refreshedOnce = false;
+      navigator.serviceWorker.addEventListener("controllerchange", () => {
+        if (refreshedOnce) return;
+        refreshedOnce = true;
+        location.reload();
       });
     }
   </script>
