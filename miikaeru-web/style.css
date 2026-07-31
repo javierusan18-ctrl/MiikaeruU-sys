@@ -5540,6 +5540,275 @@ textarea,
    de territorio" sin salirse de la filosofía 100% vanilla del proyecto
    (la única dependencia externa real de todo Miikaeru es Hanzi Writer, y
    solo para ese módulo puntual). */
+/* ===================== MODAL DE LORE / CUENTO INTERACTIVO =====================
+   Se abre al hacer click en el avatar del León (ver openStoryModal() en
+   app.js) — mismo criterio "100% CSS, sin dependencias" que el resto de
+   la app. Los 3 PNG de assets/avatar/ (lion-base/mandala/lion-glow) y los
+   4 de assets/story/ todavía NO existen (ver README.md en esas carpetas)
+   — cada `background-image`/`<img>` de acá abajo tiene una capa de
+   respaldo 100% CSS detrás (gradiente + glow generado, sin imagen) para
+   que el modal se vea completo YA MISMO; en cuanto se agreguen los PNG
+   reales con esos nombres exactos, los reemplazan visualmente solos. */
+.modal--story {
+  max-width: 640px;
+  max-height: 88vh;
+  overflow-y: auto;
+  padding: 40px 28px 30px;
+  text-align: left;
+  position: relative;
+}
+
+/* Watermark de fondo: usa assets/mandala.png si existe, con el MISMO
+   patrón de geometría sagrada dibujado en CSS puro que ya usa
+   .panel--avatar::before como respaldo (nunca se ve "vacío" mientras no
+   se suba el PNG real). z-index:0 + contenido en position:relative para
+   que quede detrás de todo el texto sin tocar el layout. */
+.modal--story::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.07;
+  background:
+    url("assets/mandala.png") center/cover no-repeat,
+    repeating-conic-gradient(from 0deg at 50% 38%, rgba(0, 242, 255, 0.6) 0deg 1.2deg, transparent 1.2deg 30deg),
+    repeating-radial-gradient(circle at 50% 38%, rgba(255, 183, 0, 0.35) 0 1px, transparent 1px 26px);
+}
+
+.modal--story > * {
+  position: relative;
+  z-index: 1;
+}
+
+.story-modal__header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.story-modal__header-portrait {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 2px solid var(--neon-gold);
+  box-shadow: 0 0 14px rgba(255, 183, 0, 0.5);
+  background:
+    url("assets/lion-glow.png") center/cover no-repeat,
+    url("assets/lion-base.png") center/cover no-repeat,
+    radial-gradient(circle at 40% 35%, rgba(255, 183, 0, 0.55), rgba(0, 240, 255, 0.35) 60%, #050912 100%);
+}
+
+.story-modal__header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.story-modal__eyebrow {
+  font-family: "Consolas", "SFMono-Regular", "Courier New", monospace;
+  font-size: 0.6rem;
+  letter-spacing: 1.5px;
+  color: var(--neon-cyan);
+  text-shadow: var(--shadow-neon-cyan);
+}
+
+.story-modal__chapter-title {
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+  color: var(--text-primary);
+  margin: 2px 0;
+  line-height: 1.3;
+}
+
+.story-modal__chapter-rank {
+  align-self: flex-start;
+  font-size: 0.62rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--neon-green);
+  border: 1px solid rgba(0, 255, 156, 0.4);
+  background: rgba(0, 255, 156, 0.06);
+  border-radius: 999px;
+  padding: 1px 9px;
+}
+
+/* Pestañas de capítulo: mismo criterio "visible pero inerte" que
+   .mpass-tier--locked/.jp-level-btn--locked para los todavía no
+   alcanzados — se ven, con su nivel requerido, pero no se pueden abrir. */
+.story-modal__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px dashed rgba(124, 147, 173, 0.3);
+}
+
+.story-modal__tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  background: rgba(0, 240, 255, 0.05);
+  color: var(--text-secondary);
+  font-size: 0.62rem;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.story-modal__tab:hover:not(.story-modal__tab--locked) {
+  border-color: var(--neon-cyan);
+  color: var(--text-primary);
+}
+
+.story-modal__tab--active {
+  border-color: var(--neon-gold);
+  background: rgba(255, 183, 0, 0.1);
+  color: var(--neon-gold);
+  box-shadow: 0 0 10px rgba(255, 183, 0, 0.35);
+}
+
+.story-modal__tab--locked {
+  filter: grayscale(0.85) brightness(0.6);
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+
+.story-modal__image {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  margin-bottom: 16px;
+}
+
+/* Galería secundaria (campo `imagenes_adicionales` de storyData.json,
+   ej. portada/madre_ia/sacrificio/enemigo del capítulo) — miniaturas en
+   fila que se marcan solas con display:none vía onerror si el archivo
+   todavía no existe, sin dejar huecos rotos en la fila. */
+.story-modal__gallery {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.story-modal__gallery-thumb {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.story-modal__gallery-thumb:hover {
+  border-color: var(--neon-gold);
+  transform: translateY(-2px);
+}
+
+/* Caja de texto scrolleable independiente del scroll del modal completo
+   — se lee como su propia "consola de datos", con tipografía monoespaciada
+   sci-fi (pedido explícito) y scrollbar delgada a juego con .hud-dock. */
+.story-modal__body {
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 16px;
+  margin-bottom: 18px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(0, 240, 255, 0.25);
+  background: rgba(0, 10, 20, 0.55);
+  font-family: "Consolas", "SFMono-Regular", "Courier New", monospace;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+.story-modal__body::-webkit-scrollbar {
+  width: 4px;
+}
+.story-modal__body::-webkit-scrollbar-thumb {
+  background: rgba(0, 240, 255, 0.3);
+  border-radius: 999px;
+}
+
+.story-modal__body p {
+  margin: 0 0 12px;
+}
+.story-modal__body p:last-child {
+  margin-bottom: 0;
+}
+
+.story-modal__mystery,
+.story-modal__clue {
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  margin-bottom: 14px;
+}
+
+.story-modal__mystery {
+  border: 1px solid rgba(255, 46, 154, 0.45);
+  background: rgba(255, 46, 154, 0.08);
+  box-shadow: 0 0 16px rgba(255, 46, 154, 0.2);
+}
+
+.story-modal__clue {
+  border: 1px solid rgba(255, 183, 0, 0.45);
+  background: rgba(255, 183, 0, 0.08);
+  box-shadow: 0 0 16px rgba(255, 183, 0, 0.2);
+}
+
+.story-modal__mystery-title,
+.story-modal__clue-title {
+  font-size: 0.68rem;
+  letter-spacing: 1px;
+  margin: 0 0 6px;
+}
+
+.story-modal__mystery-title {
+  color: var(--neon-magenta);
+}
+.story-modal__clue-title {
+  color: var(--neon-gold);
+}
+
+.story-modal__mystery-text,
+.story-modal__clue-text {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.btn-story-close {
+  width: 100%;
+  padding: 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--neon-cyan);
+  background: rgba(0, 240, 255, 0.08);
+  color: var(--neon-cyan);
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-story-close:hover {
+  background: var(--neon-cyan);
+  color: #04121a;
+  box-shadow: var(--shadow-neon-cyan);
+}
+
 .modal--city-map {
   max-width: 640px;
   max-height: 85vh;

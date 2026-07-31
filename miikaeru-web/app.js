@@ -866,6 +866,10 @@ const I18N = {
     negocioVentaGananciaFinalLabel: "Ganancia Neta Final",
     negocioGananciaPreviewLabel: "Ganancia Neta (vista previa)",
     negocioRegistrarBtn: "+ Registrar Transacción",
+    storyModalEyebrow: "NÚCLEO MIIKAERU // REGISTRO CUÁNTICO DE LORE",
+    storyModalMysteryTitle: "⚠ MISTERIO REVELADO",
+    storyModalClueTitle: "📡 PRÓXIMA PISTA",
+    storyModalCloseBtn: "🔌 CERRAR ENLACE",
     cityMapTitle: "🌐 Expansión de Territorio",
     cityMapHeadline: "Próximamente: Ten tus deseos listos en tu ciudad",
     feedbackTitle: "🐞 Bugs & Sugerencias",
@@ -1322,6 +1326,10 @@ const I18N = {
     negocioVentaGananciaFinalLabel: "Final Net Profit",
     negocioGananciaPreviewLabel: "Net Profit (preview)",
     negocioRegistrarBtn: "+ Log Transaction",
+    storyModalEyebrow: "MIIKAERU CORE // QUANTUM LORE REGISTRY",
+    storyModalMysteryTitle: "⚠ MYSTERY REVEALED",
+    storyModalClueTitle: "📡 NEXT CLUE",
+    storyModalCloseBtn: "🔌 CLOSE LINK",
     cityMapTitle: "🌐 Territory Expansion",
     cityMapHeadline: "Coming soon: have your wishes ready in your city",
     feedbackTitle: "🐞 Bugs & Suggestions",
@@ -1778,6 +1786,10 @@ const I18N = {
     negocioVentaGananciaFinalLabel: "最終純利益",
     negocioGananciaPreviewLabel: "純利益（プレビュー）",
     negocioRegistrarBtn: "+ 取引を登録",
+    storyModalEyebrow: "ミイカエル核心 // 量子ロア記録",
+    storyModalMysteryTitle: "⚠ 明かされた謎",
+    storyModalClueTitle: "📡 次の手がかり",
+    storyModalCloseBtn: "🔌 回線を切断",
     cityMapTitle: "🌐 都市拡張",
     cityMapHeadline: "近日公開：あなたの街で願いを叶える準備を",
     feedbackTitle: "🐞 バグ＆提案",
@@ -4031,10 +4043,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const negocioRegistrarBtn = document.getElementById("negocio-registrar-btn");
 
-  // Modal de Expansión de Ciudades (se abre al hacer click en el avatar/León)
+  // Modal de Expansión de Ciudades (se abre desde el ícono 🌐 del dock
+  // izquierdo — hasta el Bloque 50 vivía en el click del avatar/León, ver
+  // #story-modal más abajo, que tomó ese gesto).
   const cityMapModal = document.getElementById("city-map-modal");
   const cityMapModalClose = document.getElementById("city-map-modal-close");
   const cityMapGrid = document.getElementById("city-map-grid");
+  const cityMapOpenBtn = document.getElementById("city-map-open-btn");
 
   // Bugs & Sugerencias — vive dentro del mismo modal del León (city-map-modal)
   const feedbackForm = document.getElementById("feedback-form");
@@ -4697,6 +4712,13 @@ document.addEventListener("DOMContentLoaded", () => {
   cityMapModal.addEventListener("click", (event) => {
     if (event.target === cityMapModal) closeCityMapModal();
   });
+  if (cityMapOpenBtn) cityMapOpenBtn.addEventListener("click", openCityMapModal);
+
+  // El Modal de Lore / Cuento Interactivo (se abre al hacer click en el
+  // avatar/León) vive en su propio módulo, storyEngine.js — mismo patrón
+  // de "punto de enchufe" que MiikaeruHub al inicio de este archivo.
+  // alHacerClicEnAvatarLeon() lee sus propios DOM refs por id (no
+  // comparte closure con este bloque) y solo necesita el nivel actual.
 
   // Bugs & Sugerencias: mismo patrón de "mejor esfuerzo" que
   // syncTransactionToSupabase() — si la tabla `feedback` todavía no
@@ -4751,20 +4773,22 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   if (avatarStage) {
-    // Además del consejo de siempre, tocar a Miikaeru abre el mapa de
-    // Expansión de Ciudades (antes abría el Dashboard Financiero General
-    // — ver comentario arriba de CITY_MAP_NODES).
+    // Además del consejo de siempre, tocar a Miikaeru abre el Modal de
+    // Lore vía storyEngine.js (antes abría el mapa de Expansión de
+    // Ciudades, que se movió al ícono 🌐 del dock izquierdo — ver
+    // #city-map-open-btn). MiikaeruStoryEngine es un módulo aparte, cargado
+    // después de app.js — ver <script src="storyEngine.js"> en index.html.
     avatarStage.addEventListener("click", () => {
       showRandomAvatarTip();
       pulseAvatarStage();
-      openCityMapModal();
+      if (window.MiikaeruStoryEngine) window.MiikaeruStoryEngine.alHacerClicEnAvatarLeon({ nivel: state.level });
     });
     avatarStage.addEventListener("keydown", (event) => {
       if (event.code === "Enter" || event.code === "Space") {
         event.preventDefault();
         showRandomAvatarTip();
         pulseAvatarStage();
-        openCityMapModal();
+        if (window.MiikaeruStoryEngine) window.MiikaeruStoryEngine.alHacerClicEnAvatarLeon({ nivel: state.level });
       }
     });
   }

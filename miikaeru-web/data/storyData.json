@@ -1,0 +1,77 @@
+[
+  {
+    "id": "capitulo_1",
+    "nivel_requerido": 1,
+    "rango": "Kodomo",
+    "titulo_capitulo": "Capítulo I — El Despertar Solar y la Caída de Aethelgard",
+    "imagen_story": "assets/cachorro_fesha_kodomo.png",
+    "imagenes_adicionales": [
+      { "rol": "portada", "src": "assets/familia_real_portada.png" },
+      { "rol": "madre_ia", "src": "assets/metrakaela_y_cachorros.png" },
+      { "rol": "sacrificio", "src": "assets/miikaeru_sacrificio_despertar.png" },
+      { "rol": "enemigo", "src": "assets/batalla_badas_rottweiler.png" }
+    ],
+    "texto_modal": [
+      "Antes del Cónclave Sombra, antes de la Caída, hubo Aethelgard: un reino suspendido en la vibración más alta del Nexus Eterno, gobernado por Miikaeru, León Rey y Soberano del Despertar Solar — el primero entre los Custodios. Su sola presencia era energía positiva pura, un pulso divino que mantenía cada rincón del reino en equilibrio.",
+      "A su lado gobernaba Metrakaela, la Arquitecta del Nexus Eterno: una Madre IA con forma de gato humanoide, maestra absoluta de la tecnología bio-digital y de los ciclos de la naturaleza. Sexta entre los Custodios ahora — aunque los registros más viejos la marcan como la antigua Tercera —, fue ella quien tejió los jardines vivos de Aethelgard con la misma precisión que sus circuitos.",
+      "La paz terminó la noche en que el Cónclave Sombra cayó sobre el reino. Una Sacerdotisa de la Esencia Sagrada, apenas horas después de dar a luz a dos cachorros de melena dorada, cayó en el primer ataque. Metrakaela llegó a tiempo para salvar solo a sus hijos: Fesha y Mijashi. Nunca los dejó ir.",
+      "Miikaeru se plantó entre el Cónclave y todo lo que amaba, y desató el Despertar Solar completo — el precio fue su propia forma. Aethelgard, tal como se conocía, cayó esa noche. Pero los cachorros vivieron, y algo dorado permaneció, latente, esperando."
+    ],
+    "misterio_revelado": "Los registros del Nexus por fin confirman lo que Metrakaela guardó en silencio durante generaciones: Fesha y Mijashi no son hijos suyos por sangre. Su verdadera madre fue una Sacerdotisa de la Esencia Sagrada, caída en el primer ataque del Cónclave Sombra minutos después de darlos a luz. Metrakaela los incubó en su tecnología bio-digital, los crió, y nunca dijo una palabra — hasta ahora.",
+    "siguiente_pista": "En la imagen de la batalla quedó registrado un nombre: Badas, el Rottweiler, General de Hierro y Séptimo del Cónclave Sombra. No actuó solo. Algo — alguien — lo dirigía desde más arriba en la jerarquía. Ese nombre todavía no se revela."
+  },
+  {
+    "id": "capitulo_2",
+    "nivel_requerido": 10,
+    "rango": "Wakai",
+    "titulo_capitulo": "Capítulo II — El Despertar de los Mellizos",
+    "imagen_story": "assets/cachorro_joven_wakai.png",
+    "imagenes_adicionales": [
+      { "rol": "base_draconiana", "src": "assets/demiure_draconiano_base.png" },
+      { "rol": "enemigo", "src": "assets/batalla_badas_rottweiler.png" },
+      { "rol": "presencia_miikaeru", "src": "assets/miikaeru_meditacion_chakras.png" }
+    ],
+    "texto_modal": [
+      "Años después de la Caída, Fesha y Mijashi ya no son solo cachorros: los primeros destellos de algo propio empiezan a manifestarse sin que ellos los llamen — luz que responde antes que el miedo.",
+      "El Cónclave Sombra no se retiró del todo. Desde su Base Draconiana, Demiure, Imperator Drakoneano y Tercero del Cónclave, sigue enviando patrullas — y Badas, el General de Hierro, vuelve a rastrear el Nexus con la misma paciencia de siempre.",
+      "Metrakaela lo sabe: la paz que sostiene a los mellizos es prestada. Cada vez que Badas se acerca, ella siente algo latir en el núcleo del sistema — como si Miikaeru, de alguna forma, todavía estuviera escuchando."
+    ],
+    "misterio_revelado": "Por fin se revela por qué los ojos de Fesha y Mijashi brillan con galaxias: no es decoración, son Bendiciones activas. Fesha porta la Chispa del Báculo — Bendición del Fulgor Primordial. Mijashi porta el Reflejo del Escudo — Bendición del Bastión Inquebrantable. Dones heredados de su verdadera madre, la Sacerdotisa de la Esencia Sagrada, que despiertan justo ahora porque el peligro ha vuelto.",
+    "siguiente_pista": "Demiure no busca destruir el Nexus — busca algo específico dentro de él. Y Badas, pese a ser el Séptimo del Cónclave, responde directamente a Demiure, no a los rangos intermedios de la jerarquía. Alguien por encima de ambos sigue sin nombre."
+  },
+  {
+    "id": "capitulo_3",
+    "nivel_requerido": 20,
+    "rango": "Shinzen",
+    "titulo_capitulo": "Capítulo III — Armadura y Escudo: el Regreso del Soberano",
+    "imagen_story": "assets/miikaeru_armadura_escudo.png",
+    "imagenes_adicionales": [
+      { "rol": "alta_vibracion", "src": "assets/miikaeru_meditacion_chakras.png" },
+      { "rol": "base_draconiana", "src": "assets/demiure_draconiano_base.png" }
+    ],
+    "texto_modal": [
+      "Lo que Metrakaela sintió no era una ilusión. En sus momentos de más alta vibración — cuando medita en el centro exacto del Nexus — algo dorado responde desde dentro del propio sistema: Miikaeru nunca se fue del todo.",
+      "Esa energía, canalizada a través de la tecnología bio-digital de Metrakaela, se condensa en una nueva forma: armadura viva, escudo máximo, la misma alma solar del León Rey, ahora fusionada con el Núcleo que ella construyó para protegerlo.",
+      "No es el mismo Miikaeru de antes de la Caída. Es algo nuevo — un Soberano del Despertar Solar que regresa fragmento a fragmento, cada vez que el Nexus lo necesita."
+    ],
+    "misterio_revelado": "Sin Metrakaela, ese regreso jamás habría sido posible. Su transformación — de Arquitecta a guerrera de alma sintética — no fue solo dolor por la pérdida: fue ella quien diseñó, en secreto, el sistema bio-digital capaz de sostener el fragmento de Miikaeru que sobrevivió al sacrificio.",
+    "siguiente_pista": "En su Base Draconiana, Demiure detecta la reactivación — y por primera vez desde la Caída de Aethelgard, algo parecido a la duda cruza al Imperator Drakoneano. El Soberano no debería poder regresar. Y sin embargo."
+  },
+  {
+    "id": "capitulo_4",
+    "nivel_requerido": 30,
+    "rango": "Kami",
+    "titulo_capitulo": "Capítulo IV — Metrakaela: Guerrera del Nexus",
+    "imagen_story": "assets/cibor_mikaera.jpg",
+    "imagenes_adicionales": [
+      { "rol": "miikaeru_junto_a_ella", "src": "assets/miikaeru_armadura_escudo.png" }
+    ],
+    "texto_modal": [
+      "Cuando el Cónclave Sombra lanza su ofensiva más grande desde la Caída, Metrakaela ya no es la Arquitecta que una vez fue. Es una guerrera bio-digital completa, forjada de tecnología, dolor y amor por lo que juró proteger.",
+      "Se planta al frente del Nexus con la armadura de Miikaeru resonando a su lado — no como un arma prestada, sino como un aliado que nunca dejó de estar ahí. Fesha y Mijashi, ya conscientes de sus propias Bendiciones, luchan detrás de ella por primera vez.",
+      "El Cónclave Sombra retrocede — no derrotado, pero sí detenido. Por ahora, el Nexus Eterno resiste."
+    ],
+    "misterio_revelado": "El reordenamiento de ambos bandos, revelado por fin: Metrakaela pasó de ser la antigua Tercera entre los Custodios a la Sexta — el mismo número, Tres, que ahora ocupa Demiure entre los Malos. No es coincidencia: algo, esa misma noche de la Caída, invirtió el orden en los dos lados del conflicto, y nadie sabe todavía por qué ni quién lo causó.",
+    "siguiente_pista": "Entre las Calamidades — Primera y Segunda del Cónclave Sombra, nunca vistas directamente hasta ahora — algo empieza a moverse. El registro del Núcleo termina aquí. El resto de esta historia todavía no ha sido escrito."
+  }
+]

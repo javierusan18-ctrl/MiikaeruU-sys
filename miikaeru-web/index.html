@@ -16,7 +16,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260801-20" />
+  <link rel="stylesheet" href="style.css?v=20260801-23" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -190,10 +190,17 @@
        ubicación/estilo en el layout. -->
   <main class="layout hud-layout">
 
-    <!-- DOCK IZQUIERDO: Chat/IA, Wishlist, Pilares -->
+    <!-- DOCK IZQUIERDO: Chat/IA, Wishlist, Expansión de Ciudades, Pilares -->
     <aside class="hud-dock hud-dock--left">
       <button type="button" class="hud-dock__icon hud-dock__icon--chat" id="chat-open-btn" data-i18n-title="chatTitle" title="Feed // Chat">💬</button>
       <button type="button" class="hud-dock__icon hud-dock__icon--wishlist" id="wishlist-open-btn" data-i18n-title="wishlistTitle" title="Wishlist // Garage">🎁</button>
+      <!-- Antes vivía en el click del avatar (ver Bloque 28) — el click del
+           avatar ahora abre el Modal de Lore (#story-modal), así que este
+           ícono queda como la nueva puerta de entrada al mapa de Expansión
+           de Ciudades Y al formulario de Bugs & Sugerencias que vive
+           adentro del mismo modal (#city-map-modal) — cero funcionalidad
+           perdida, solo reubicada. -->
+      <button type="button" class="hud-dock__icon hud-dock__icon--citymap" id="city-map-open-btn" data-i18n-title="cityMapTitle" title="🌐 Expansión de Territorio">🌐</button>
 
       <div class="hud-dock__divider"></div>
 
@@ -1447,12 +1454,64 @@
     </div>
   </div>
 
-  <!-- MODAL: EXPANSIÓN DE CIUDADES (mapa) — se abre al hacer click (o
-       Enter/Espacio) sobre el avatar/León de Miikaeru. Antes ese gesto
-       abría el Dashboard Financiero General; ahora el Dashboard se abre
-       desde el botón [📊 Ver Dashboard Completo] dentro del Cuadro de
-       Finanzas (ver #finanzas-open-dashboard-btn) para no perder esa
-       función. Contenido puramente decorativo por ahora ("Próximamente"):
+  <!-- MODAL: LORE / CUENTO INTERACTIVO — se abre al hacer click (o Enter/
+       Espacio) sobre el avatar/León de Miikaeru (ese gesto antes abría el
+       mapa de Expansión de Ciudades, ver comentario de #city-map-modal
+       más abajo: se movió al ícono 🌐 nuevo del dock izquierdo, cero
+       funcionalidad perdida). Muestra el capítulo de data/storyData.json
+       que corresponde al nivel actual del Operador — ver openStoryModal()/
+       renderStoryChapter() en app.js. Las pestañas de arriba dejan
+       revisar cualquier capítulo YA desbloqueado sin perder de vista cuál
+       es el más reciente; los todavía no alcanzados se muestran
+       atenuados con su nivel requerido, mismo criterio "visible pero
+       inerte" que .mpass-tier--locked / .jp-level-btn--locked. -->
+  <div class="modal-overlay" id="story-modal" hidden>
+    <div class="modal glass modal--story">
+      <button type="button" class="btn-modal-close" id="story-modal-close" aria-label="Cerrar">✕</button>
+
+      <header class="story-modal__header">
+        <div class="story-modal__header-portrait" aria-hidden="true"></div>
+        <div class="story-modal__header-text">
+          <span class="story-modal__eyebrow" data-i18n="storyModalEyebrow">NÚCLEO MIIKAERU // REGISTRO CUÁNTICO DE LORE</span>
+          <h2 class="story-modal__chapter-title" id="story-modal-chapter-title">—</h2>
+          <span class="story-modal__chapter-rank" id="story-modal-chapter-rank">—</span>
+        </div>
+      </header>
+
+      <!-- pestañas de capítulo renderizadas por renderStoryTabs() en app.js -->
+      <div class="story-modal__tabs" id="story-modal-tabs"></div>
+
+      <img class="story-modal__image" id="story-modal-image" alt="" hidden />
+
+      <!-- galería secundaria (campo imagenes_adicionales del capítulo,
+           ej. portada/madre_ia/sacrificio/enemigo) — renderizada por
+           renderStoryChapter() en app.js -->
+      <div class="story-modal__gallery" id="story-modal-gallery"></div>
+
+      <!-- párrafos del capítulo renderizados por renderStoryChapter() en app.js -->
+      <div class="story-modal__body" id="story-modal-body"></div>
+
+      <div class="story-modal__mystery">
+        <h3 class="story-modal__mystery-title" data-i18n="storyModalMysteryTitle">⚠ MISTERIO REVELADO</h3>
+        <p class="story-modal__mystery-text" id="story-modal-mystery-text">—</p>
+      </div>
+
+      <div class="story-modal__clue">
+        <h3 class="story-modal__clue-title" data-i18n="storyModalClueTitle">📡 PRÓXIMA PISTA</h3>
+        <p class="story-modal__clue-text" id="story-modal-clue-text">—</p>
+      </div>
+
+      <button type="button" class="btn-story-close" id="story-modal-close-btn" data-i18n="storyModalCloseBtn">🔌 CERRAR ENLACE</button>
+    </div>
+  </div>
+
+  <!-- MODAL: EXPANSIÓN DE CIUDADES (mapa) — se abre desde el ícono 🌐 del
+       dock izquierdo (ver #city-map-open-btn más arriba; hasta el Bloque
+       50 este gesto vivía en el click del avatar/León, reemplazado ahora
+       por el Modal de Lore de arriba). El Dashboard Financiero General se
+       abre desde el botón [📊 Ver Dashboard Completo] dentro del Cuadro de
+       Finanzas (ver #finanzas-open-dashboard-btn), sin relación con este
+       modal. Contenido puramente decorativo por ahora ("Próximamente"):
        nodos de ciudad estilo marcador neón sobre un fondo de grilla
        futurista, sin mapa real ni librería de mapas — 100% CSS/vanilla. -->
   <div class="modal-overlay" id="city-map-modal" hidden>
@@ -1783,7 +1842,12 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260801-20"></script>
+  <script src="app.js?v=20260801-23"></script>
+  <!-- Módulo de Lore (ver #story-modal más arriba) — punto de enchufe
+       aparte, mismo patrón que MiikaeruHub, cargado después de app.js
+       porque app.js llama a window.MiikaeruStoryEngine desde el click
+       del avatar/León. -->
+  <script src="storyEngine.js?v=20260801-23"></script>
   <!-- Service Worker: estrategia Cache First para assets estáticos (ver
        sw.js) — carga instantánea en visitas repetidas y funcionamiento
        offline. Registro envuelto en try/catch + comprobación de
