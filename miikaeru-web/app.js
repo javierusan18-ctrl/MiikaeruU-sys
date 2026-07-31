@@ -2000,20 +2000,19 @@ function t(key) {
 // temporalmente ante ciertos eventos (login, subir de nivel, victoria en
 // Boss Fight), volviendo solo a idle después de unos segundos.
 // ---------------------------------------------------
-// NOTA: welcome/levelup/victory quedan pendientes de remapeo — los PNG
-// que tenían (avatar-welcome.png, avatar-levelup.jpg, avatar-victory.png)
-// ya no existen en assets/, que ahora solo trae avatar_idle.png,
-// avatar_boss_mode.png y avatar_meditating.png. Decidir a qué imagen
-// nueva corresponde cada emote es una decisión de diseño pendiente de
-// confirmar; por ahora esos 3 quedan apuntando a un archivo inexistente
-// y el fallback `AVATAR_EMOTES[emoteKey] || AVATAR_EMOTES.idle` en
-// playAvatarEmote() no cubre este caso porque la key SÍ existe, solo
-// que su imagen da 404.
+// Remapeado a los 3 PNG reales de assets/ — los archivos originales
+// (avatar-welcome.png, avatar-levelup.jpg, avatar-victory.png) nunca
+// existieron en este assets/, así que daban 404 silencioso en cada
+// login/subida de nivel/victoria de Boss Fight. welcome usa la pose
+// meditando (cálida, distinta de idle); levelup y victory comparten la
+// pose boss_mode (ambos son momentos "de triunfo") — no hay arte nuevo
+// que inventar, se reutiliza lo que ya existe en vez de dejar una
+// imagen rota en un momento que se supone celebratorio.
 const AVATAR_EMOTES = {
   idle: "assets/avatar_idle.png",
-  welcome: "assets/avatar-welcome.png",
-  levelup: "assets/avatar-levelup.jpg",
-  victory: "assets/avatar-victory.png",
+  welcome: "assets/avatar_meditating.png",
+  levelup: "assets/avatar_boss_mode.png",
+  victory: "assets/avatar_boss_mode.png",
 };
 
 // Precarga las 4 imágenes al cargar el script para que los cambios de

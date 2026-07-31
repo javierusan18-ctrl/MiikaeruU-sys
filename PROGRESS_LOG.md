@@ -1284,3 +1284,20 @@ Pedido de seguimiento tras el Bloque 43 ("mejoralo más"), acotado explícitamen
 - 0 errores de consola en toda la sesión de pruebas.
 
 **Cache-busting:** `?v=20260731-15` → `?v=20260731-16` en `index.html` (`style.css`/`app.js`) y en `CACHE_NAME` de `sw.js`.
+
+---
+
+## Bloque 46 — Primer despliegue real a GitHub + Vercel, y limpieza de los 3 emotes de avatar rotos
+
+**Despliegue (fuera del código, documentado acá por ser la primera vez que pasa):** este directorio nunca había tenido git. Se inicializó, se conectó a `https://github.com/javierusan18-ctrl/MiikaeruU-sys` (provista por el usuario), y se hizo el primer push a `main` — el usuario completó el login de GitHub que pidió Git Credential Manager en el navegador. El primer deploy en Vercel falló (build `HEG9PuVqK`, punto rojo) porque el proyecto no tiene `package.json` ni ningún framework — sin `miikaeru-web/vercel.json` explícito, Vercel asumía un paso de build/install que no tiene nada contra qué correr. Se agregó `miikaeru-web/vercel.json` (`framework: null, buildCommand: null, installCommand: null, outputDirectory: "."`) — confirmado con el usuario que el redeploy quedó funcionando: `sw.js`/`manifest.json` pasaron de 404 a 200 en producción, `app.js` en vivo ya incluye el Reto 7 Minutos. Política de push establecida con el usuario: de acá en adelante, commit + push directo a `main` sin pedir confirmación en cada bloque (el usuario aceptó el trade-off explícitamente, sabiendo que no hay tests ni etapa de revisión antes de producción).
+
+**Emotes de avatar rotos (bug real, no relacionado al deploy):** `AVATAR_EMOTES` (`welcome`/`levelup`/`victory`, disparados en login, subida de nivel, y victoria de Boss Fight) apuntaban a `avatar-welcome.png`, `avatar-levelup.jpg`, `avatar-victory.png` — archivos que nunca existieron en `assets/` (ya había un comentario honesto de un bloque anterior documentando esto como pendiente). Se remapearon a los 3 PNG reales que sí existen: `welcome` → `avatar_meditating.png` (pose cálida, distinta de idle), `levelup` y `victory` → `avatar_boss_mode.png` (ambos son momentos de triunfo, comparten la misma pose real en vez de que uno de los dos quede con una imagen inventada). No se generó arte nuevo — se reutilizó lo que ya existía.
+
+**Pruebas realizadas:**
+- Los 3 archivos remapeados devuelven 200 verificado con `fetch()` directo.
+- Confirmado por grep que no queda ninguna referencia funcional a los 3 nombres viejos en `app.js`/`index.html`/`sw.js` (solo sobrevive la mención en un comentario explicativo).
+- Se encontraron 404 de los nombres viejos en el log de red del navegador de prueba, pero se confirmó que eran historial de ANTES del fix, arrastrado por un Service Worker/caché viejo de pruebas anteriores en la misma sesión — se desregistró ese SW, se recargó, y desde ahí en adelante cero pedidos nuevos a los nombres viejos.
+- Producción verificada en vivo (`miikaeru-web.vercel.app`): `sw.js` y `manifest.json` responden 200, `app.js` incluye el contenido más reciente.
+- 0 errores de consola.
+
+**Cache-busting:** `?v=20260731-16` → `?v=20260731-17` en `index.html` (`style.css`/`app.js`) y en `CACHE_NAME` de `sw.js`.
