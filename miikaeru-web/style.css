@@ -1,0 +1,6698 @@
+/* ===================================================
+   MIIKAERU SYSTEM — SCI-FI CYBERPUNK UI
+   =================================================== */
+
+:root {
+  --bg-base: #0B0F19;
+  --bg-elevated: #10151f;
+  --neon-cyan: #00F0FF;
+  --neon-green: #00FF9C;
+  --neon-magenta: #FF2E9A;
+  --text-primary: #E6F7FF;
+  --text-secondary: #7C93AD;
+  --glass-bg: rgba(18, 24, 38, 0.55);
+  --glass-border: rgba(0, 240, 255, 0.25);
+  --radius-lg: 18px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+  --shadow-neon-cyan: 0 0 12px rgba(0, 240, 255, 0.35), 0 0 2px rgba(0, 240, 255, 0.6);
+  --shadow-neon-green: 0 0 12px rgba(0, 255, 156, 0.35), 0 0 2px rgba(0, 255, 156, 0.6);
+  --neon-cyan-glow: #00F2FF;
+  --neon-gold: #FFB700;
+  --font-main: "Segoe UI", "Rajdhani", "Orbitron", system-ui, sans-serif;
+
+  /* Color del resplandor de .layer-lion (escena 3D Parallax del avatar).
+     Cian = estado "idle" por defecto. No existe todavía un sistema que
+     recolorea el aura según el estado de una meta (blanco/rojo/dorado) —
+     si se agrega, alcanza con sobreescribir estas variables en un
+     selector de estado superior, sin duplicar ni tocar el CSS de
+     .layer-lion. */
+  --avatar-aura-strong: rgba(0, 255, 255, 0.6);
+  --avatar-aura-soft: rgba(0, 255, 255, 0.2);
+
+  /* Escala visual del León y del panel de Chat, controlada por el
+     usuario (ver #scale-controls en el modal de Perfiles / SCALE_KEY en
+     app.js). Solo mueve un transform:scale() — nunca el flex-basis/
+     max-width real de esos paneles — para no poder reintroducir el bug
+     de layout del Bloque 37. */
+  --avatar-scale: 1;
+  --chat-scale: 1;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* El atributo [hidden] es una regla del user-agent, con la MISMA
+   especificidad que cualquier `display:` de una clase de este archivo —
+   y los estilos de autor siempre le ganan al user-agent. Sin este
+   !important, cualquier elemento con `display` propio (p. ej.
+   `.evidence-preview { display:flex }`) ignora `hidden` y queda visible
+   permanentemente aunque el atributo esté puesto. Regla única y global
+   en vez de parchear elemento por elemento. */
+[hidden] {
+  display: none !important;
+}
+
+/* ===================== SCROLLBARS CYBERPUNK =====================
+   Reemplaza la barra nativa blanca/gris de Windows en TODA la app —
+   global (selector universal para WebKit/Chromium + scrollbar-width/
+   scrollbar-color para Firefox) en vez de enumerar cada contenedor
+   scrolleable uno por uno (frágil: cualquier módulo nuevo quedaría
+   afuera). Delgada (6px), track casi transparente con tinte oscuro, y
+   thumb con degradado cian→magenta neón para integrarse al
+   Glassmorphism en vez del gris nativo del sistema operativo. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 240, 255, 0.45) rgba(5, 9, 16, 0.25);
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: rgba(5, 9, 16, 0.25);
+}
+
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(0, 240, 255, 0.55), rgba(255, 46, 154, 0.55));
+  border-radius: 999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(0, 240, 255, 0.8), rgba(255, 46, 154, 0.8));
+}
+
+html, body {
+  height: 100%;
+}
+
+/* Fondo global (assets/bg_main.png): capas radiales cian/verde arriba de
+   la imagen para el tinte cyberpunk de siempre, y un degradado oscuro
+   debajo de todo para que ningún panel pierda contraste — la imagen es
+   `fixed` para que no se desplace con el scroll de la página. */
+body {
+  font-family: var(--font-main);
+  color: var(--text-primary);
+  background:
+    radial-gradient(circle at 15% 10%, rgba(0, 240, 255, 0.08), transparent 40%),
+    radial-gradient(circle at 85% 90%, rgba(0, 255, 156, 0.07), transparent 45%),
+    linear-gradient(180deg, rgba(9, 12, 20, 0.88) 0%, rgba(7, 9, 15, 0.94) 100%),
+    url("assets/bg_main.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* Scanline / grid texture overlay */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(0, 240, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.035) 1px, transparent 1px);
+  background-size: 42px 42px;
+  z-index: 0;
+}
+
+/* transform: translateZ(0) fuerza a estos paneles con backdrop-filter
+   (el efecto más caro de renderizar de toda la app) a su propia capa de
+   GPU en vez de repintarse junto con el resto de la página — el mismo
+   truco para .modal y .hud-dock más abajo, que tienen el mismo blur. */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow:
+    0 0 0 1px rgba(0, 240, 255, 0.05) inset,
+    0 8px 30px rgba(0, 0, 0, 0.45),
+    0 0 16px rgba(0, 242, 255, 0.09),
+    0 0 30px rgba(255, 183, 0, 0.05);
+  transform: translateZ(0);
+}
+
+/* ===================== HUD SUPERIOR ===================== */
+
+.hud {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 14px 28px;
+  background: rgba(10, 14, 22, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--glass-border);
+  box-shadow: 0 2px 24px rgba(0, 240, 255, 0.08);
+  flex-wrap: wrap;
+}
+
+.hud__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+.hud__logo {
+  color: var(--neon-cyan);
+  text-shadow: var(--shadow-neon-cyan);
+  font-size: 1.3rem;
+}
+
+.hud__title {
+  font-weight: 700;
+  letter-spacing: 2px;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.hud__title-accent {
+  color: var(--neon-green);
+  text-shadow: var(--shadow-neon-green);
+}
+
+.hud__stats {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  flex: 1;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.stat__label {
+  font-size: 0.7rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.stat__value {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--neon-cyan);
+  text-shadow: var(--shadow-neon-cyan);
+}
+
+.stat__value--rank {
+  color: var(--neon-green);
+  text-shadow: var(--shadow-neon-green);
+  padding: 3px 12px;
+  border: 1px solid rgba(0, 255, 156, 0.4);
+  border-radius: 999px;
+  background: rgba(0, 255, 156, 0.06);
+}
+
+.stat--xp {
+  min-width: 200px;
+}
+
+.stat__tag {
+  font-size: 0.6rem;
+  letter-spacing: 1px;
+  color: var(--text-secondary);
+  border: 1px solid rgba(124, 147, 173, 0.35);
+  padding: 1px 8px;
+  border-radius: 999px;
+}
+
+/* Brújula / Estado Espiritual */
+.stat--spiritual {
+  gap: 8px;
+}
+
+.compass {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  position: relative;
+  flex-shrink: 0;
+  background: rgba(0, 240, 255, 0.05);
+}
+
+.compass__needle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2px;
+  height: 8px;
+  background: linear-gradient(var(--neon-green), var(--neon-cyan));
+  transform-origin: bottom center;
+  transform: translate(-50%, -100%) rotate(0deg);
+  animation: compass-spin 5s ease-in-out infinite;
+  box-shadow: 0 0 6px rgba(0, 240, 255, 0.6);
+}
+
+@keyframes compass-spin {
+  0%, 100% { transform: translate(-50%, -100%) rotate(-25deg); }
+  50% { transform: translate(-50%, -100%) rotate(25deg); }
+}
+
+.stat__value--spiritual {
+  color: var(--neon-magenta);
+  text-shadow: 0 0 10px rgba(255, 46, 154, 0.5);
+  font-size: 0.85rem;
+}
+
+.stat__value--finance {
+  font-size: 0.95rem;
+}
+
+.currency-select {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  color: var(--text-primary);
+  font-size: 0.72rem;
+  border-radius: var(--radius-sm);
+  padding: 4px 6px;
+  outline: none;
+  cursor: pointer;
+  min-height: 26px;
+}
+
+.currency-select:hover {
+  border-color: var(--neon-cyan);
+}
+
+.currency-select:focus {
+  border-color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.currency-select option {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+.language-select {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  color: var(--text-primary);
+  font-size: 0.72rem;
+  border-radius: var(--radius-sm);
+  padding: 4px 6px;
+  outline: none;
+  cursor: pointer;
+  min-height: 26px;
+}
+
+.language-select:hover,
+.language-select:focus {
+  border-color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.language-select option {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+.stat--gold .stat__label,
+.stat--diamonds .stat__label {
+  font-size: 0.9rem;
+}
+
+.stat__value--gold {
+  color: var(--neon-gold);
+  text-shadow: 0 0 10px rgba(255, 183, 0, 0.5);
+}
+
+.stat__value--streak {
+  color: #ff7a00;
+  text-shadow: 0 0 10px rgba(255, 122, 0, 0.6);
+}
+
+.stat__value--balance-global {
+  color: var(--neon-cyan);
+  text-shadow: var(--shadow-neon-cyan);
+  font-size: 0.85rem;
+}
+
+.stat__value--diamonds {
+  color: var(--neon-magenta);
+  text-shadow: 0 0 10px rgba(255, 46, 154, 0.5);
+}
+
+.hud__profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+.hud__profile-name {
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+  color: var(--text-primary);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(0, 240, 255, 0.05);
+}
+
+.btn-logout {
+  border: 1px solid rgba(255, 46, 154, 0.4);
+  background: rgba(255, 46, 154, 0.08);
+  color: var(--neon-magenta);
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  font-size: 0.85rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.2s ease, filter 0.2s ease;
+}
+
+.btn-logout:hover {
+  background: var(--neon-magenta);
+  color: #04121a;
+  box-shadow: 0 0 12px rgba(255, 46, 154, 0.5);
+  filter: drop-shadow(0 0 8px rgba(255, 46, 154, 0.85));
+}
+
+.btn-miika-pass {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #04121a;
+  background: linear-gradient(135deg, var(--neon-gold), var(--neon-cyan));
+  border: none;
+  padding: 6px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+  transition: filter 0.2s ease, transform 0.2s ease;
+  animation: mpassBtnPulse 2.6s ease-in-out infinite;
+}
+
+.btn-miika-pass:hover {
+  transform: translateY(-1px);
+  filter: drop-shadow(0 0 10px rgba(255, 183, 0, 0.7));
+}
+
+@keyframes mpassBtnPulse {
+  0%, 100% { box-shadow: 0 0 6px rgba(255, 183, 0, 0.4); }
+  50% { box-shadow: 0 0 14px rgba(0, 240, 255, 0.6); }
+}
+
+.btn-profile-switch {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  letter-spacing: 0.4px;
+  color: var(--neon-gold);
+  border: 1px solid rgba(255, 183, 0, 0.4);
+  background: rgba(255, 183, 0, 0.06);
+  padding: 4px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease, filter 0.2s ease;
+}
+
+.btn-profile-switch:hover {
+  background: var(--neon-gold);
+  color: #04121a;
+  box-shadow: 0 0 12px rgba(255, 183, 0, 0.5);
+  filter: drop-shadow(0 0 8px rgba(255, 183, 0, 0.85));
+}
+
+.xp-bar {
+  position: relative;
+  width: 180px;
+  height: 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(0, 240, 255, 0.25);
+  overflow: hidden;
+}
+
+.xp-bar__fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--neon-green), var(--neon-cyan));
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
+  filter: drop-shadow(0 0 2px rgba(0, 240, 255, 0.35));
+  transition: width 0.4s ease, filter 0.2s ease;
+}
+
+.xp-bar:hover .xp-bar__fill {
+  filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.9));
+}
+
+.xp-bar__text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  color: #04121a;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-shadow: none;
+  mix-blend-mode: screen;
+  color: #ffffff;
+}
+
+.hud__status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.status-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--neon-green);
+  box-shadow: 0 0 8px var(--neon-green), 0 0 2px var(--neon-green);
+  animation: pulse 1.8s infinite ease-in-out;
+}
+
+.hud__status-text {
+  font-size: 0.75rem;
+  letter-spacing: 1.5px;
+  color: var(--neon-green);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.75); }
+}
+
+/* ===================== LAYOUT PRINCIPAL ===================== */
+
+.layout {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  /* Flexbox en vez de Grid: cuando un panel crece por su resize:both
+     nativo, sus hermanos se encogen (flex-shrink) hasta su propio
+     min-width en lugar de quedar tapados — sin JS de por medio. */
+  display: flex;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  gap: 20px;
+  padding: 20px 28px 28px;
+  max-width: 1600px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  /* isolation:isolate crea un contexto de apilamiento propio por panel,
+     así cualquier elemento interno posicionado (auras, asas de resize,
+     texturas de fondo) nunca puede pintarse por encima de un panel
+     vecino, sin importar su z-index interno. */
+  isolation: isolate;
+}
+
+/* ===================== MARCOS SCI-FI DE LOS PANELES =====================
+   Esquinas superiores "cortadas" estilo HUD vía clip-path — solo arriba,
+   a propósito: las esquinas inferiores quedan intactas (con su
+   border-radius normal de .glass) para no tapar ni el asa nativa de
+   resize ni su indicador .resizable::after, ambos en la esquina
+   inferior derecha.
+   El resplandor pulsante usa `filter: drop-shadow`, no box-shadow: los
+   4 paneles ya tienen `::before` (mandala de .panel--avatar) y `::after`
+   (indicador de .resizable) ocupados, así que no hay pseudo-elemento
+   libre para otra capa — y modificar el box-shadow de .glass afectaría
+   también a los modales, que no son parte de este pedido. filter no
+   pisa nada de eso y además respeta el recorte del clip-path. */
+.panel.glass {
+  clip-path: polygon(0 14px, 14px 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
+  border-color: rgba(0, 255, 255, 0.4);
+  animation: neonPulse 3s ease-in-out infinite;
+}
+
+@keyframes neonPulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 6px rgba(0, 255, 255, 0.45));
+  }
+  50% {
+    filter: drop-shadow(0 0 16px rgba(0, 255, 255, 0.85));
+  }
+}
+
+/* Clase reutilizable: líneas de escaneo horizontales sutiles (textura
+   estática tipo monitor CRT) + un haz de luz que barre de arriba a
+   abajo en bucle continuo. Implementada 100% con background-image (dos
+   capas) en vez de un pseudo-elemento — por la misma razón que arriba,
+   no queda ::before/::after libre en los paneles. Al ser solo fondo,
+   tampoco intercepta clics ni el mousemove del parallax del avatar. */
+.scanlines {
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      rgba(0, 240, 255, 0.05) 0px,
+      rgba(0, 240, 255, 0.05) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(0, 240, 255, 0.22) 48%,
+      rgba(0, 240, 255, 0.32) 50%,
+      rgba(0, 240, 255, 0.22) 52%,
+      transparent 100%
+    );
+  background-repeat: repeat, no-repeat;
+  background-size: 100% 100%, 100% 45%;
+  background-position: 0 0, 0 -50%;
+  animation: scanlineSweep 5s linear infinite;
+}
+
+@keyframes scanlineSweep {
+  0% { background-position: 0 0, 0 -50%; }
+  100% { background-position: 0 0, 0 150%; }
+}
+
+/* Garantiza que ningún elemento interactivo quede accidentalmente
+   inerte por un pointer-events:none heredado de un contenedor
+   decorativo (auras, líneas de energía, capas de fondo). */
+button,
+input,
+select,
+textarea,
+[role="button"] {
+  pointer-events: auto;
+}
+
+.panel__header {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(0, 240, 255, 0.15);
+}
+
+/* Barra de "corriente eléctrica": degradado cyan→magenta→cyan que
+   recorre el borde superior del header en bucle. .panel__header no
+   tenía ::before propio (el existente es .panel__header h2::before,
+   sobre el <h2> hijo, distinto elemento) así que este slot está libre. */
+.panel__header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-magenta), var(--neon-cyan));
+  background-size: 200% 100%;
+  pointer-events: none;
+  animation: electricFlow 3s linear infinite;
+}
+
+@keyframes electricFlow {
+  from { background-position: 0% 0%; }
+  to { background-position: -200% 0%; }
+}
+
+.panel__header h2 {
+  font-size: 0.95rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.panel__header h2::before {
+  content: "// ";
+  color: var(--neon-cyan);
+}
+
+.panel__tag {
+  font-size: 0.65rem;
+  color: var(--text-secondary);
+  letter-spacing: 1px;
+  border: 1px solid rgba(124, 147, 173, 0.3);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+/* ===================== WISHLIST / GARAGE ===================== */
+
+.sidebar--wishlist {
+  flex: 0 1 280px;
+  min-width: 250px;
+}
+
+.panel--wishlist {
+  flex: 1;
+  height: calc(100vh - 140px);
+  /* Contiene su propio scroll interno (.wishlist__grid); el panel en sí
+     no necesita otro más — evita la doble barra de scroll anidada. */
+  overflow: hidden;
+}
+
+.wishlist__grid {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  align-content: start;
+}
+
+.wishlist-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 14px 8px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  background: rgba(255, 255, 255, 0.03);
+  text-align: center;
+  transition: all 0.25s ease;
+  /* Recorta la Flor de la Vida (gira más grande que la propia tarjeta,
+     ver .wishlist-item__sacred-geo) para que no se salga del borde
+     redondeado de la tarjeta. */
+  overflow: hidden;
+  /* Toda la tarjeta abre el modal de Requisitos (ver wishlistGrid click
+     delegation en app.js). */
+  cursor: pointer;
+}
+
+.wishlist-item:hover {
+  transform: translateY(-2px);
+  border-color: rgba(0, 240, 255, 0.4);
+}
+
+/* Geometría Sagrada (Flor de la Vida) de fondo — ver
+   buildSacredGeometrySVG() en app.js. Gira continuamente en las 4
+   tarjetas; el brillo neón "respira" (pulso) solo mientras el deseo
+   sigue bloqueado/en manifestación (pedido explícito); ya desbloqueado
+   pasa a un brillo dorado fijo, sin pulso, marcando que el ciclo
+   terminó. z-index/orden: se inyecta como PRIMER hijo de la tarjeta, así
+   que el ícono/nombre/candado (insertados después) quedan naturalmente
+   por encima sin necesitar z-index explícito. */
+.wishlist-item__sacred-geo {
+  position: absolute;
+  inset: -20%;
+  width: 140%;
+  height: 140%;
+  fill: none;
+  stroke: var(--neon-cyan);
+  stroke-width: 0.6;
+  opacity: 0.3;
+  pointer-events: none;
+  animation: sacredGeoRotate 40s linear infinite, sacredGeoPulse 3.2s ease-in-out infinite;
+}
+
+@keyframes sacredGeoRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes sacredGeoPulse {
+  0%, 100% { opacity: 0.22; }
+  50% { opacity: 0.5; }
+}
+
+.wishlist-item--unlocked .wishlist-item__sacred-geo {
+  stroke: var(--neon-gold);
+  opacity: 0.4;
+  /* Desbloqueado: sigue girando (pedido "rotación suave continua" no
+     distingue estado), pero el pulso de "manifestándose" ya no aplica —
+     brillo dorado fijo en vez de latido. Shorthand completo (no solo
+     animation-name) para no dejar sacredGeoPulse "colgando" con una
+     lista de nombres/duraciones desalineada. */
+  animation: sacredGeoRotate 40s linear infinite;
+}
+
+/* Efecto ESPECIAL: se completó el 100% de los requisitos propios del
+   deseo (distinto de desbloquear solo por nivel) — pedido explícito
+   "efecto de brillo/desbloqueo neón especial con su símbolo de Geometría
+   Sagrada". Magenta + giro más rápido + resplandor pulsante propio,
+   claramente más intenso que el dorado fijo del desbloqueo por nivel. */
+.wishlist-item--requirements-complete {
+  border-color: rgba(255, 46, 154, 0.55);
+  box-shadow: 0 0 20px rgba(255, 46, 154, 0.25);
+}
+
+.wishlist-item--requirements-complete .wishlist-item__sacred-geo {
+  stroke: var(--neon-magenta);
+  opacity: 0.6;
+  animation: sacredGeoRotate 18s linear infinite, sacredGeoSpecialGlow 1.8s ease-in-out infinite;
+}
+
+@keyframes sacredGeoSpecialGlow {
+  0%, 100% { filter: drop-shadow(0 0 3px rgba(255, 46, 154, 0.5)); }
+  50% { filter: drop-shadow(0 0 14px rgba(255, 46, 154, 0.9)); }
+}
+
+/* Barra de progreso dentro de cada tarjeta (ver getWishProgress() en
+   app.js) — cian/verde en progreso normal, dorado/magenta cuando llega
+   al 100% (mismo acento que el efecto especial de arriba). */
+.wishlist-item__progress-bar {
+  position: relative;
+  width: 100%;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.wishlist-item__progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-green));
+  box-shadow: 0 0 8px rgba(0, 240, 255, 0.55);
+  transition: width 0.4s ease;
+}
+
+.wishlist-item--requirements-complete .wishlist-item__progress-fill {
+  background: linear-gradient(90deg, var(--neon-gold), var(--neon-magenta));
+  box-shadow: 0 0 8px rgba(255, 46, 154, 0.6);
+}
+
+.wishlist-item__icon {
+  font-size: 1.6rem;
+  filter: grayscale(1) brightness(0.6);
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+.wishlist-item__name {
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+}
+
+.wishlist-item__req {
+  font-size: 0.6rem;
+  color: var(--text-secondary);
+  opacity: 0.8;
+}
+
+.wishlist-item--unlocked {
+  border-color: rgba(0, 255, 156, 0.45);
+  box-shadow: 0 0 16px rgba(0, 255, 156, 0.15);
+  background: rgba(0, 255, 156, 0.05);
+}
+
+.wishlist-item--unlocked .wishlist-item__icon {
+  filter: grayscale(0) brightness(1);
+  transform: scale(1.05);
+}
+
+.wishlist-item--unlocked .wishlist-item__name {
+  color: var(--neon-green);
+  text-shadow: var(--shadow-neon-green);
+}
+
+.wishlist-item--just-unlocked {
+  animation: unlock-pulse 1.1s ease;
+}
+
+@keyframes unlock-pulse {
+  0% { box-shadow: 0 0 0 rgba(0, 255, 156, 0); }
+  30% { box-shadow: 0 0 28px rgba(0, 255, 156, 0.55); }
+  100% { box-shadow: 0 0 16px rgba(0, 255, 156, 0.15); }
+}
+
+.wishlist-item__lock {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  font-size: 0.7rem;
+  opacity: 0.6;
+}
+
+.wishlist__form {
+  display: flex;
+  gap: 8px;
+  padding: 14px 16px;
+  border-top: 1px solid rgba(0, 240, 255, 0.15);
+}
+
+.wishlist__form input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(0, 240, 255, 0.25);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  color: var(--text-primary);
+  font-size: 0.8rem;
+  outline: none;
+}
+
+.wishlist__form input:focus {
+  border-color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.btn-add {
+  border: 1px solid var(--neon-green);
+  background: rgba(0, 255, 156, 0.08);
+  color: var(--neon-green);
+  border-radius: var(--radius-sm);
+  padding: 6px 16px;
+  font-size: 1rem;
+  cursor: pointer;
+  filter: drop-shadow(0 0 2px rgba(0, 255, 156, 0.25));
+  transition: all 0.2s ease, filter 0.2s ease;
+}
+
+.btn-add:hover {
+  background: var(--neon-green);
+  color: #04121a;
+  box-shadow: var(--shadow-neon-green);
+  filter: drop-shadow(0 0 8px rgba(0, 255, 156, 0.85));
+}
+
+/* ===================== CHAT / FEED ===================== */
+
+/* ===================== PANELES REDIMENSIONABLES ===================== */
+/* resize:both necesita overflow != visible para que el navegador dibuje
+   el asa de arrastre nativa (flecha diagonal nwse-resize) en la esquina
+   inferior derecha; position:relative habilita el indicador visual
+   (::after) de esquina con líneas diagonales sobre esa asa. */
+.resizable {
+  resize: both;
+  overflow: auto;
+  min-width: 250px;
+  min-height: 200px;
+  position: relative;
+}
+
+.resizable::after {
+  content: "";
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  width: 13px;
+  height: 13px;
+  pointer-events: none;
+  opacity: 0.85;
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgba(0, 242, 255, 0.65) 0px,
+    rgba(0, 242, 255, 0.65) 1.5px,
+    transparent 1.5px,
+    transparent 4px
+  );
+}
+
+.panel--chat {
+  flex: 1 1 480px;
+  height: calc(100vh - 140px);
+  /* resize:both reemplaza el antiguo botón de expandir/contraer — se
+     arrastra desde la esquina inferior derecha (el navegador dibuja el
+     asa nativa ahí, reforzada por el indicador ::after de .resizable).
+     Al crecer, Wishlist y Avatar/Boss Fight se encogen (flex-shrink)
+     hasta su propio min-width en vez de quedar tapados: sin JS. */
+  position: relative;
+  /* Overlay oscuro reforzado (en vez del --glass-bg estándar, más
+     translúcido) como respaldo por si ::before no llegara a cargar —
+     pedido explícito de legibilidad, ya que bg_state_meditation.png es
+     la más brillante de las 4 imágenes. La imagen real vive en ::before
+     (ver abajo), que por orden de apilamiento pinta ENCIMA del fondo
+     propio del panel — es decir, encima también del patrón animado de
+     .scanlines declarado en ese mismo `background-image`. Trade-off
+     aceptado a propósito: en este panel puntual, la fotografía de fondo
+     importa más que conservar visible el barrido de scanlines (que sigue
+     intacto en el resto de paneles). */
+  background-color: rgba(10, 14, 26, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-color: rgba(0, 240, 255, 0.4);
+}
+
+/* Avatar en meditación, esquina inferior derecha del panel de chat,
+   detrás del contenido real (z-index bajo) y con opacidad reducida para
+   que quede como presencia ambiental sin distraer de la lectura. */
+.chat__meditating-avatar {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  width: 110px;
+  height: auto;
+  opacity: 0.22;
+  z-index: 0;
+  pointer-events: none;
+  filter: drop-shadow(0 0 12px rgba(0, 240, 255, 0.25));
+}
+
+.panel--chat::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  /* El degradado oscuro va horneado JUNTO con la imagen en esta misma
+     capa (no depende del background-color del panel, que por orden de
+     apilamiento pintaría DEBAJO de este ::before, no encima). */
+  background:
+    linear-gradient(rgba(10, 14, 26, 0.85), rgba(10, 14, 26, 0.85)),
+    url("assets/bg_state_meditation.png") center/cover no-repeat;
+  pointer-events: none;
+}
+
+/* Grid en vez de flex-wrap: con 4 pilares, un grid de 4 columnas iguales
+   garantiza que siempre queden parejos (2 filas de 2 en pantallas
+   angostas vía el media query de abajo, nunca "3 arriba + 1 solo"). */
+.pillars {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  padding: 12px 20px 0;
+}
+
+.pillar-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 10px;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-primary);
+  border: 1px solid rgba(124, 147, 173, 0.3);
+  transition: all 0.2s ease;
+}
+
+.pillar-btn:hover {
+  transform: translateY(-1px);
+}
+
+.pillar-btn--finanzas:hover,
+.pillar-btn--finanzas:focus-visible {
+  border-color: var(--neon-green);
+  color: var(--neon-green);
+  box-shadow: var(--shadow-neon-green);
+}
+
+.pillar-btn--fisico:hover,
+.pillar-btn--fisico:focus-visible {
+  border-color: var(--neon-magenta);
+  color: var(--neon-magenta);
+  box-shadow: 0 0 12px rgba(255, 46, 154, 0.35);
+}
+
+.pillar-btn--espiritual:hover,
+.pillar-btn--espiritual:focus-visible {
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.pillar-btn--aprendizaje:hover,
+.pillar-btn--aprendizaje:focus-visible {
+  border-color: var(--neon-gold);
+  color: var(--neon-gold);
+  box-shadow: 0 0 12px rgba(255, 183, 0, 0.4);
+}
+
+.chat__feed {
+  /* Sin overflow-y propio: el único scroll de la tarjeta es el del
+     panel--chat exterior (.resizable), para evitar scrolls anidados.
+     min-height se deja en su valor automático a propósito: con
+     overflow:visible, un flex item sin min-height explícito nunca se
+     encoge por debajo de la altura real de su contenido — así los
+     mensajes jamás se desbordan fuera de la caja ni se solapan con los
+     botones de pilares/el input. flex-grow ya lo hace bien amplio
+     cuando hay pocos mensajes. */
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ===================== MINI-FORMULARIO FÍSICO ===================== */
+
+.fisico-panel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  align-content: flex-start;
+  gap: 14px;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 46, 154, 0.3);
+  border-radius: var(--radius-md);
+  background: rgba(255, 46, 154, 0.04);
+}
+
+.fisico-panel__row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fisico-panel__row label {
+  font-size: 0.65rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.fisico-panel__row input {
+  width: 110px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 46, 154, 0.3);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  outline: none;
+}
+
+.fisico-panel__row input:focus {
+  border-color: var(--neon-magenta);
+  box-shadow: 0 0 10px rgba(255, 46, 154, 0.35);
+}
+
+.fisico-panel__source {
+  font-size: 0.6rem;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.btn-register {
+  border: 1px solid var(--neon-magenta);
+  background: rgba(255, 46, 154, 0.08);
+  color: var(--neon-magenta);
+  border-radius: var(--radius-sm);
+  padding: 8px 18px;
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  filter: drop-shadow(0 0 2px rgba(255, 46, 154, 0.25));
+  transition: all 0.2s ease, filter 0.2s ease;
+}
+
+.btn-register:hover {
+  background: var(--neon-magenta);
+  color: #04121a;
+  box-shadow: 0 0 12px rgba(255, 46, 154, 0.5);
+  filter: drop-shadow(0 0 8px rgba(255, 46, 154, 0.85));
+}
+
+/* ===================== PANEL DE FINANZAS ===================== */
+
+.finanzas-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid rgba(0, 255, 156, 0.3);
+  border-radius: var(--radius-md);
+  background: rgba(0, 255, 156, 0.04);
+}
+
+/* Pestañas: Personales (verde, el acento de Finanzas de siempre) vs.
+   Servicios / Negocio (cian) — el pedido de "bordes neón verde/cian"
+   se resuelve como un color por pestaña en vez de un tono ambiguo. */
+.finanzas-tabs {
+  display: flex;
+  gap: 8px;
+}
+
+.finanzas-tab {
+  flex: 1;
+  padding: 8px 10px;
+  font-size: 0.68rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  text-align: center;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(124, 147, 173, 0.3);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.finanzas-tab:hover {
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+}
+
+.finanzas-tab--active[data-finanzas-tab="personal"] {
+  border-color: var(--neon-green);
+  color: var(--neon-green);
+  background: rgba(0, 255, 156, 0.08);
+  box-shadow: var(--shadow-neon-green);
+}
+
+.finanzas-tab--active[data-finanzas-tab="servicios"] {
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+  background: rgba(0, 240, 255, 0.08);
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.finanzas-tab-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Resumen General Financiero: permanente, visible sin importar la pestaña
+   activa (vive ANTES de .finanzas-tab-panel, no dentro). Mismo esquema de
+   color que .dashboard-card (verde/magenta/cian) para que se sienta la
+   misma familia visual que el Dashboard completo, solo que más compacto
+   para caber en el ancho angosto de .modal--pillar (520px). */
+.finanzas-global-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px dashed rgba(124, 147, 173, 0.3);
+}
+
+.finanzas-global-summary__card {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 8px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(124, 147, 173, 0.3);
+  background: rgba(255, 255, 255, 0.03);
+  min-width: 0;
+}
+
+.finanzas-global-summary__label {
+  font-size: 0.55rem;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.finanzas-global-summary__value {
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.finanzas-global-summary__card--income {
+  border-color: rgba(0, 255, 156, 0.35);
+}
+.finanzas-global-summary__card--income .finanzas-global-summary__value {
+  color: var(--neon-green);
+  text-shadow: var(--shadow-neon-green);
+}
+
+.finanzas-global-summary__card--expense {
+  border-color: rgba(255, 46, 154, 0.35);
+}
+.finanzas-global-summary__card--expense .finanzas-global-summary__value {
+  color: var(--neon-magenta);
+  text-shadow: 0 0 10px rgba(255, 46, 154, 0.5);
+}
+
+.finanzas-global-summary__card--balance {
+  border-color: rgba(0, 240, 255, 0.35);
+}
+.finanzas-global-summary__card--balance .finanzas-global-summary__value {
+  color: var(--neon-cyan);
+  text-shadow: var(--shadow-neon-cyan);
+}
+
+.finanzas-global-summary__dashboard-btn {
+  grid-column: 1 / -1;
+  margin-top: 4px;
+  border: 1px solid rgba(255, 183, 0, 0.4);
+  background: rgba(255, 183, 0, 0.06);
+  color: var(--neon-gold);
+  border-radius: var(--radius-sm);
+  padding: 7px 10px;
+  font-size: 0.68rem;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.finanzas-global-summary__dashboard-btn:hover {
+  background: var(--neon-gold);
+  color: #1a1200;
+  box-shadow: 0 0 12px rgba(255, 183, 0, 0.5);
+}
+
+.finanzas-global-summary__admin-btn {
+  grid-column: 1 / -1;
+  margin-top: 4px;
+  border: 1px solid rgba(255, 46, 154, 0.4);
+  background: rgba(255, 46, 154, 0.06);
+  color: var(--neon-magenta);
+  border-radius: var(--radius-sm);
+  padding: 7px 10px;
+  font-size: 0.68rem;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.finanzas-global-summary__admin-btn:hover {
+  background: var(--neon-magenta);
+  color: #1a0410;
+  box-shadow: 0 0 12px rgba(255, 46, 154, 0.5);
+}
+
+.finanzas-global-summary__admin-btn--inspector {
+  border-color: rgba(0, 240, 255, 0.4);
+  background: rgba(0, 240, 255, 0.06);
+  color: var(--neon-cyan);
+}
+
+.finanzas-global-summary__admin-btn--inspector:hover {
+  background: var(--neon-cyan);
+  color: #04222a;
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+@media (max-width: 480px) {
+  .finanzas-global-summary {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Fila de solo lectura (Sueldo del Trabajador, calculado): mismo look
+   que .finanzas-panel__row pero sin input, con el valor ya formateado. */
+.finanzas-panel__row--computed {
+  padding: 6px 10px;
+  border: 1px dashed rgba(0, 240, 255, 0.25);
+  border-radius: var(--radius-sm);
+  background: rgba(0, 240, 255, 0.04);
+}
+
+.finanzas-panel__row--computed span {
+  color: var(--neon-cyan);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.finanzas-servicio-comision-suffix {
+  font-size: 0.75rem;
+  color: var(--neon-cyan);
+  font-weight: 700;
+}
+
+/* Inputs de la pestaña Servicios en cian, en vez del verde de Personales. */
+#finanzas-tab-servicios .finanzas-panel__row input {
+  border-color: rgba(0, 240, 255, 0.3);
+}
+
+#finanzas-tab-servicios .finanzas-panel__row input:focus {
+  border-color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+#finanzas-tab-servicios .finanzas-currency-symbol {
+  color: var(--neon-cyan);
+}
+
+/* Escaneo por Foto (Visión IA simulada) + Imprimir Formulario Físico —
+   ver scanReceiptImage()/buildPrintableFormHTML() en app.js. */
+.negocio-scan-toolbar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+
+.btn-scan {
+  flex: 1;
+  min-width: 140px;
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  background: rgba(0, 240, 255, 0.06);
+  color: var(--neon-cyan);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  font-size: 0.68rem;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  transition: all 0.2s ease, filter 0.2s ease;
+}
+
+.btn-scan:hover {
+  background: var(--neon-cyan);
+  color: #04121a;
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+  filter: drop-shadow(0 0 6px rgba(0, 240, 255, 0.7));
+}
+
+.btn-scan--print {
+  border-color: rgba(255, 183, 0, 0.4);
+  background: rgba(255, 183, 0, 0.06);
+  color: var(--neon-gold);
+}
+
+.btn-scan--print:hover {
+  background: var(--neon-gold);
+  color: #04121a;
+  box-shadow: 0 0 10px rgba(255, 183, 0, 0.4);
+  filter: drop-shadow(0 0 6px rgba(255, 183, 0, 0.7));
+}
+
+/* Descargar PDF: acento verde, distinto del dorado de Imprimir y el cian
+   de Escanear — mismo botón físico de impresión del navegador por debajo
+   (ver openPrintWindow() en app.js), pero con su propia identidad visual
+   para que quede claro que es una acción separada. */
+.btn-scan--pdf {
+  border-color: rgba(0, 255, 156, 0.4);
+  background: rgba(0, 255, 156, 0.06);
+  color: var(--neon-green);
+}
+
+.btn-scan--pdf:hover {
+  background: var(--neon-green);
+  color: #04121a;
+  box-shadow: 0 0 10px rgba(0, 255, 156, 0.4);
+  filter: drop-shadow(0 0 6px rgba(0, 255, 156, 0.7));
+}
+
+.negocio-scan-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
+  border: 1px dashed rgba(0, 240, 255, 0.3);
+  border-radius: var(--radius-sm);
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+.negocio-scan-preview {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 240, 255, 0.4);
+}
+
+/* Selector Tipo 1 "Servicio" / Tipo 2 "Venta" — mismo patrón visual que
+   el toggle Hiragana/Katakana del módulo Japonés. */
+.negocio-type-toggle {
+  display: flex;
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.negocio-type-btn {
+  flex: 1;
+  border: none;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-secondary);
+  padding: 8px 12px;
+  font-size: 0.72rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.negocio-type-btn--active {
+  background: rgba(0, 240, 255, 0.15);
+  color: var(--neon-cyan);
+}
+
+.negocio-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Toggle % / Monto Fijo de la comisión opcional en Venta — mismo patrón
+   visual que .negocio-type-toggle pero con acento dorado, para
+   diferenciarse del toggle Servicio/Venta (cian) que vive arriba. */
+.negocio-comision-modo-toggle {
+  display: flex;
+  border: 1px solid rgba(255, 183, 0, 0.3);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin-top: -4px;
+}
+
+.negocio-comision-modo-btn {
+  flex: 1;
+  border: none;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-secondary);
+  padding: 6px 10px;
+  font-size: 0.68rem;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.negocio-comision-modo-btn--active {
+  background: rgba(255, 183, 0, 0.15);
+  color: var(--neon-gold);
+}
+
+.finanzas-panel__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.finanzas-panel__row label {
+  font-size: 0.7rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.finanzas-currency-symbol {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--neon-green);
+  min-width: 1.4em;
+  text-align: center;
+}
+
+.finanzas-category .finanzas-currency-symbol {
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+}
+
+.finanzas-panel__row input {
+  flex: 1;
+  max-width: 160px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 255, 156, 0.3);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  outline: none;
+}
+
+.finanzas-panel__row input:focus {
+  border-color: var(--neon-green);
+  box-shadow: var(--shadow-neon-green);
+}
+
+.finanzas-panel__categories {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.finanzas-category {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border: 1px solid rgba(0, 255, 156, 0.2);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.finanzas-category__name,
+.finanzas-category__name-input {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.78rem;
+  color: var(--text-primary);
+}
+
+.finanzas-category__name-input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 255, 156, 0.25);
+  border-radius: var(--radius-sm);
+  padding: 4px 6px;
+  outline: none;
+}
+
+.finanzas-category__amount {
+  width: 76px;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 255, 156, 0.25);
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+  color: var(--text-primary);
+  font-size: 0.8rem;
+  outline: none;
+}
+
+.finanzas-category__remove {
+  background: none;
+  border: 1px solid rgba(255, 46, 154, 0.4);
+  color: var(--neon-magenta);
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 0.65rem;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* Ícono que abre el Desglose de Gastos de esa categoría (modal) — mismo
+   tamaño/forma que .finanzas-category__remove, acento cian para
+   distinguirse del rojo de "eliminar categoría". */
+.btn-category-breakdown {
+  background: rgba(0, 240, 255, 0.06);
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  color: var(--neon-cyan);
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 0.65rem;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.btn-category-breakdown:hover {
+  background: var(--neon-cyan);
+  color: #04121a;
+  box-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+}
+
+/* Ícono que abre la Auditoría y Control de Nómina, junto a Ingreso
+   Mensual — mismo patrón visual, acento dorado. */
+.btn-payroll-audit {
+  background: rgba(255, 183, 0, 0.06);
+  border: 1px solid rgba(255, 183, 0, 0.4);
+  color: var(--neon-gold);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  font-size: 0.7rem;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.btn-payroll-audit:hover {
+  background: var(--neon-gold);
+  color: #04121a;
+  box-shadow: 0 0 8px rgba(255, 183, 0, 0.5);
+}
+
+.finanzas-panel__summary {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(0, 255, 156, 0.25);
+}
+
+.finanzas-panel__summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.finanzas-panel__summary-row--balance {
+  color: var(--neon-green);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+/* ===================== PANEL DE ESTADO ESPIRITUAL ===================== */
+
+.espiritual-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 14px;
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: var(--radius-md);
+  background: rgba(0, 240, 255, 0.04);
+}
+
+.espiritual-panel h3 {
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--neon-cyan);
+  margin-bottom: 6px;
+}
+
+.espiritual-panel__hint {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.espiritual-panel__timer-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.espiritual-panel__timer-row label {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+.espiritual-panel__timer-row input {
+  width: 70px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  color: var(--text-primary);
+  outline: none;
+}
+
+.espiritual-panel__countdown {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.espiritual-panel__countdown span {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--neon-cyan);
+  text-shadow: var(--shadow-neon-cyan);
+  letter-spacing: 2px;
+}
+
+.technique-card {
+  padding: 10px 12px;
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.03);
+  margin-bottom: 8px;
+}
+
+.technique-card h4 {
+  font-size: 0.78rem;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.technique-card p {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+/* ===================== EVIDENCIA / ADJUNTOS ===================== */
+
+.evidence-preview {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 20px 0;
+  padding: 8px 12px;
+  border: 1px solid rgba(0, 240, 255, 0.25);
+  border-radius: var(--radius-md);
+  background: rgba(0, 240, 255, 0.04);
+}
+
+.evidence-preview img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+}
+
+#evidence-remove {
+  margin-left: auto;
+  background: none;
+  border: 1px solid rgba(255, 46, 154, 0.4);
+  color: var(--neon-magenta);
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  font-size: 0.7rem;
+  cursor: pointer;
+}
+
+.btn-attach {
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  background: rgba(0, 240, 255, 0.05);
+  color: var(--neon-cyan);
+  border-radius: var(--radius-sm);
+  padding: 0 12px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-attach:hover {
+  background: rgba(0, 240, 255, 0.15);
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.message__image {
+  display: block;
+  max-width: 220px;
+  max-height: 160px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  margin-top: 8px;
+  border: 1px solid rgba(0, 240, 255, 0.25);
+}
+
+.message {
+  max-width: 78%;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  position: relative;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.message__author {
+  display: block;
+  font-size: 0.65rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  color: var(--text-secondary);
+}
+
+.message__text {
+  font-size: 0.92rem;
+  line-height: 1.4;
+  color: var(--text-primary);
+}
+
+.message__time {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.6rem;
+  color: var(--text-secondary);
+  text-align: right;
+}
+
+.message--system {
+  align-self: center;
+  max-width: 90%;
+  border-color: rgba(255, 46, 154, 0.3);
+  background: rgba(255, 46, 154, 0.05);
+}
+.message--system .message__author { color: var(--neon-magenta); }
+
+.message--bot {
+  align-self: flex-start;
+  border-color: rgba(0, 240, 255, 0.3);
+  box-shadow: 0 0 14px rgba(0, 240, 255, 0.08);
+}
+.message--bot .message__author { color: var(--neon-cyan); }
+
+.message--user {
+  align-self: flex-end;
+  border-color: rgba(0, 255, 156, 0.3);
+  box-shadow: 0 0 14px rgba(0, 255, 156, 0.08);
+}
+.message--user .message__author { color: var(--neon-green); }
+
+.chat__input {
+  display: flex;
+  gap: 10px;
+  padding: 16px 20px;
+  border-top: 1px solid rgba(0, 240, 255, 0.15);
+}
+
+.chat__input input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(0, 240, 255, 0.25);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.chat__input input:focus {
+  border-color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.chat__input input::placeholder {
+  color: var(--text-secondary);
+}
+
+.btn-send {
+  border: 1px solid var(--neon-cyan);
+  background: rgba(0, 240, 255, 0.08);
+  color: var(--neon-cyan);
+  border-radius: var(--radius-sm);
+  padding: 10px 20px;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  cursor: pointer;
+  filter: drop-shadow(0 0 2px rgba(0, 240, 255, 0.25));
+  transition: all 0.2s ease, filter 0.2s ease;
+}
+
+.btn-send:hover {
+  background: var(--neon-cyan);
+  color: #04121a;
+  box-shadow: var(--shadow-neon-cyan);
+  filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.85));
+}
+
+/* ===================== SIDEBAR: AVATAR + MINIJUEGO ===================== */
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-height: 0;
+}
+
+.sidebar--right {
+  flex: 0 1 320px;
+  min-width: 250px;
+}
+
+.panel--avatar {
+  flex: none;
+  height: 340px;
+}
+
+/* Más bajo que antes: ahora solo aloja la grilla de tarjetas (cada módulo
+   abre su propia ventana modal en vez de vivir aquí) — con .resizable el
+   usuario igual puede agrandarlo o encogerlo a gusto. */
+.panel--minigame {
+  flex: none;
+  height: 300px;
+}
+
+.panel--avatar {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Textura de fondo discreta: geometría sagrada en forma de mandala,
+   apenas visible, como marca de agua detrás del contenido del panel. */
+.panel--avatar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.08;
+  background:
+    repeating-conic-gradient(from 0deg at 50% 38%, rgba(0, 242, 255, 0.6) 0deg 1.2deg, transparent 1.2deg 30deg),
+    repeating-radial-gradient(circle at 50% 38%, rgba(255, 183, 0, 0.35) 0 1px, transparent 1px 26px);
+}
+
+.panel--avatar .panel__header,
+.panel--avatar #avatarScene,
+.panel--avatar .avatar__meta {
+  position: relative;
+  z-index: 1;
+}
+
+#avatarScene {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  min-height: 190px;
+  overflow: hidden;
+  /* Habilita el espacio 3D: los descendientes de #avatarStage con
+     translateZ se alejan/acercan de cámara respecto a este valor. */
+  perspective: 1000px;
+}
+
+/* Escenario 3D real (Three.js) — ver initAvatar3D() en app.js. Mismo
+   flex:1 que #avatarScene para que, al intercambiarse, ocupe exactamente
+   el mismo espacio dentro de .panel--avatar. Arranca [hidden] siempre
+   (regla global !important) hasta que initAvatar3D() confirme que el
+   .glb cargó bien Y estemos en desktop — ver style.css [hidden] arriba
+   del archivo. */
+.avatar-3d-stage {
+  flex: 1;
+  position: relative;
+  min-height: 190px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.avatar-3d-stage canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+
+.avatar-3d-stage canvas:active {
+  cursor: grabbing;
+}
+
+/* Reticle/marco HUD sutil sobre el lienzo 3D — el mismo lenguaje visual
+   Cyberpunk/Glassmorphism del resto de la app (esquinas cortadas, glow
+   cian) en vez de un <canvas> desnudo. */
+.avatar-3d-stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border: 1px solid rgba(0, 240, 255, 0.25);
+  border-radius: var(--radius-md);
+  box-shadow: inset 0 0 30px rgba(0, 240, 255, 0.12);
+}
+
+/* Globo de diálogo del asistente guía */
+
+.avatar__speech-bubble {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 4;
+  max-width: 92%;
+  padding: 7px 12px;
+  border-radius: var(--radius-md);
+  background: rgba(10, 20, 32, 0.78);
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  box-shadow: 0 0 14px rgba(0, 240, 255, 0.22), inset 0 0 10px rgba(0, 240, 255, 0.08);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  text-align: center;
+  pointer-events: none;
+  transition: opacity 0.18s ease;
+}
+
+.avatar__speech-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 7px solid rgba(10, 20, 32, 0.78);
+}
+
+.avatar__speech-bubble--fading {
+  opacity: 0;
+}
+
+.avatar__speech-text {
+  font-size: 0.66rem;
+  line-height: 1.35;
+  color: var(--text-primary);
+  letter-spacing: 0.2px;
+}
+
+/* ===================== AVATAR: ESCENA 3D PARALLAX =====================
+   #avatarScene (perspective) > #avatarStage (preserve-3d, rota con el
+   mouse vía app.js) > 3 imágenes-capa, de atrás hacia adelante:
+   .layer-bg (fondo), .layer-props (rocas flotantes), .layer-lion (león,
+   con el resplandor cian "respirando" que ya existía). Cada capa fija su
+   profundidad con --depth (custom property, valor distinto por capa) y
+   app.js solo escribe --layer-px/--layer-py (desplazamiento por mouse)
+   sin tocar el resto de la declaración transform.
+   Reemplaza el sistema anterior de galaxia CSS + canvas de partículas +
+   anillos/drones/mandala decorativos — innecesarios ahora que hay arte
+   real en assets/ dando la sensación de profundidad. */
+
+.avatar-scene-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.avatar-scene-container::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+    radial-gradient(circle, transparent 60%, rgba(10, 15, 29, 0.8) 100%);
+  background-size: 100% 4px, 100% 100%;
+  z-index: 10;
+  animation: avatar-scanline-drift 9s linear infinite;
+}
+
+@keyframes avatar-scanline-drift {
+  0% { background-position: 0 0, 0 0; opacity: 0.9; }
+  50% { opacity: 1; }
+  100% { background-position: 0 400px, 0 0; opacity: 0.9; }
+}
+
+#avatarStage {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  /* app.js solo escribe --stage-rx/--stage-ry (mousemove sobre
+     #avatarScene) y los limpia a 0deg en mouseleave. will-change avisa
+     al navegador para promover esta capa a GPU ANTES de que empiece a
+     rotar (evita el "salto" del primer frame). */
+  transform: rotateX(var(--stage-rx, 0deg)) rotateY(var(--stage-ry, 0deg));
+  transition: transform 0.15s ease-out;
+  will-change: transform;
+  cursor: pointer;
+}
+
+#avatarStage:focus-visible {
+  outline: 2px solid var(--neon-cyan);
+  outline-offset: 6px;
+}
+
+/* Pulso de feedback al hacer click/Enter sobre la escena (antes vivía
+   en .avatar__ring--pulse, sobre el anillo CSS ya retirado). */
+@keyframes avatar-stage-click-pulse {
+  0% { filter: drop-shadow(0 0 0 rgba(0, 240, 255, 0)); }
+  40% { filter: drop-shadow(0 0 26px rgba(0, 240, 255, 0.65)); }
+  100% { filter: drop-shadow(0 0 0 rgba(0, 240, 255, 0)); }
+}
+
+#avatarStage.stage-pulse {
+  animation: avatar-stage-click-pulse 0.6s ease;
+}
+
+.layer-bg,
+.layer-props,
+.layer-lion {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  pointer-events: none;
+  /* translateZ fija la profundidad de cada capa (declarada por clase,
+     más abajo); translate() es el desplazamiento por mouse que escribe
+     app.js en --layer-px/--layer-py — nunca se pisan porque viven en la
+     misma declaración, no en animaciones/JS independientes. */
+  transform: translateZ(var(--depth, 0px)) translate(var(--layer-px, 0px), var(--layer-py, 0px));
+  /* opacity 0.2s: setAvatarState() en app.js la baja a 0, cambia el
+     `src` de la capa y la vuelve a subir a 1 — un fade rápido y limpio
+     en vez de un cambio de imagen abrupto. Compartida por las 3 capas
+     aunque hoy solo layer-bg/layer-lion cambien de src por estado. */
+  transition: transform 0.15s ease-out, opacity 0.2s ease;
+}
+
+.layer-bg {
+  --depth: -120px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  z-index: 1;
+}
+
+.layer-props {
+  --depth: -40px;
+  width: 92%;
+  height: 92%;
+  object-fit: contain;
+  opacity: 0.92;
+  z-index: 2;
+}
+
+.layer-lion {
+  --depth: 70px;
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
+  z-index: 3;
+  /* Resplandor cian "respirando" — igual que antes de este bloque, solo
+     que ahora aplicado directamente sobre la imagen-capa. Usa
+     --avatar-aura-strong/soft (definidas en :root) en vez de color fijo,
+     para que un futuro sistema de aura por estado de meta solo tenga
+     que sobreescribir esas variables. */
+  filter: drop-shadow(0 0 12px var(--avatar-aura-strong))
+          drop-shadow(0 0 25px var(--avatar-aura-soft))
+          contrast(105%)
+          brightness(95%);
+  animation: avatar-lion-glow-breathe 3.6s ease-in-out infinite;
+  /* transition (transform + opacity 0.2s) queda heredada de la regla
+     compartida de arriba — la usan tanto setAvatarEmote() como
+     setAvatarState() para cruzar en fade al cambiar de imagen. */
+}
+
+@keyframes avatar-lion-glow-breathe {
+  0%, 100% {
+    filter: drop-shadow(0 0 12px var(--avatar-aura-strong))
+            drop-shadow(0 0 25px var(--avatar-aura-soft))
+            contrast(105%)
+            brightness(95%);
+  }
+  50% {
+    filter: drop-shadow(0 0 20px var(--avatar-aura-strong))
+            drop-shadow(0 0 40px var(--avatar-aura-soft))
+            contrast(108%)
+            brightness(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .avatar-scene-container::after,
+  .layer-lion,
+  .panel.glass,
+  .panel__header::before,
+  .scanlines {
+    animation: none;
+  }
+  #avatarStage,
+  .layer-bg,
+  .layer-props,
+  .layer-lion {
+    transition: none;
+  }
+}
+
+.avatar__meta {
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-top: 1px solid rgba(0, 240, 255, 0.15);
+  font-size: 0.75rem;
+}
+
+.avatar__name {
+  color: var(--text-primary);
+  letter-spacing: 1px;
+}
+
+.avatar__hp {
+  color: var(--neon-green);
+  text-shadow: var(--shadow-neon-green);
+  transition: filter 0.2s ease;
+}
+
+.avatar__hp:hover {
+  filter: drop-shadow(0 0 6px rgba(0, 255, 156, 0.85));
+}
+
+/* ===================== APP HUB =====================
+   Solo el catálogo de tarjetas vive aquí — cada módulo abre su propia
+   ventana modal independiente al elegirlo (ver .modal--app más abajo y
+   openAppModal() en app.js) en vez de renderizarse dentro de este panel. */
+
+.panel--minigame {
+  position: relative;
+}
+
+.btn-add-app {
+  position: absolute;
+  top: 14px;
+  right: 20px;
+  z-index: 2;
+  border: 1px solid var(--neon-gold);
+  background: rgba(255, 183, 0, 0.08);
+  color: var(--neon-gold);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 0.65rem;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  filter: drop-shadow(0 0 2px rgba(255, 183, 0, 0.25));
+  transition: all 0.2s ease, filter 0.2s ease;
+}
+
+.btn-add-app:hover {
+  background: var(--neon-gold);
+  color: #04121a;
+  box-shadow: 0 0 12px rgba(255, 183, 0, 0.5);
+  filter: drop-shadow(0 0 8px rgba(255, 183, 0, 0.85));
+}
+
+.app-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 36px 20px 0;
+}
+
+.app-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 8px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(124, 147, 173, 0.3);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-primary);
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.app-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.app-card--active {
+  border-color: var(--neon-green);
+  background: rgba(0, 255, 156, 0.06);
+  animation: appCardActivePulse 2.4s ease-in-out infinite;
+}
+
+@keyframes appCardActivePulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(0, 255, 156, 0.2); }
+  50% { box-shadow: 0 0 18px rgba(0, 255, 156, 0.5); }
+}
+
+.app-card__icon {
+  font-size: 1.4rem;
+}
+
+.app-card__name {
+  font-size: 0.68rem;
+  letter-spacing: 0.3px;
+  line-height: 1.2;
+}
+
+.app-card__status {
+  font-size: 0.55rem;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  border: 1px solid rgba(124, 147, 173, 0.35);
+  padding: 1px 8px;
+  border-radius: 999px;
+}
+
+.app-card__status--new {
+  color: var(--neon-gold);
+  border-color: rgba(255, 183, 0, 0.4);
+  background: rgba(255, 183, 0, 0.06);
+}
+
+/* Placeholder "en desarrollo" reutilizado dentro del modal de Hábitos. */
+.app-active-view__placeholder-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 8px 0 0;
+  padding: 16px;
+  border: 1px dashed rgba(255, 183, 0, 0.3);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+/* Ventana modal estándar para los módulos del App Hub (Boss Fight,
+   Calendario, Bio-Sync, Hábitos) — Japonés usa su propia variante más
+   ancha (.modal--japanese) porque su cuadrícula Gojuon lo necesita, pero
+   comparte el mismo marco (.modal.glass + .btn-modal-close). overflow-y
+   auto es un resguardo, no un scroll permanente: con contenido normal
+   ningún módulo debería necesitarlo (pedido explícito: "sin scrollbars
+   indeseados"). */
+.modal--app {
+  max-width: 640px;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 44px 30px 30px;
+  text-align: left;
+  position: relative;
+  /* Fondo de la ventana del Hub (assets/bg_state_idle.png), muy brillante
+     en su centro — el degradado oscuro encima es lo que mantiene el
+     texto/formularios legibles sobre ella. */
+  background:
+    linear-gradient(rgba(10, 14, 26, 0.85), rgba(10, 14, 26, 0.85)),
+    url("assets/bg_state_idle.png") center/cover no-repeat;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 240, 255, 0.4);
+}
+
+.modal-app__title {
+  font-size: 1.05rem;
+  letter-spacing: 1px;
+  color: var(--neon-cyan);
+  text-shadow: var(--shadow-neon-cyan);
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+/* ===================== MIIKA PASS =====================
+   Pase de progresión semanal con lore de Miikaeru. Reutiliza
+   .modal--app como base pero pisa su fondo con bg_state_meditation.png
+   (pedido explícito: "fondo visual para el pase de batalla y la zona de
+   chat") — es la imagen más brillante de las 4, así que aquí también el
+   overlay oscuro + blur es imprescindible para la legibilidad. */
+.modal--miika-pass {
+  background:
+    linear-gradient(rgba(10, 14, 26, 0.85), rgba(10, 14, 26, 0.85)),
+    url("assets/bg_state_meditation.png") center/cover no-repeat;
+}
+
+.mpass-title {
+  margin-bottom: 4px;
+}
+
+.mpass-lore {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.mpass-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.mpass-toolbar label {
+  font-size: 0.7rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+/* Selector estilizado con "selectores neón" (pedido explícito) — mismo
+   patrón visual que .currency-select, pero con acento dorado para
+   diferenciarse del resto de dropdowns cian de la app. */
+.mpass-filter {
+  background: rgba(255, 183, 0, 0.08);
+  border: 1px solid rgba(255, 183, 0, 0.45);
+  border-radius: var(--radius-sm);
+  color: var(--neon-gold);
+  padding: 6px 10px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  outline: none;
+}
+
+.mpass-filter:focus {
+  box-shadow: 0 0 8px rgba(255, 183, 0, 0.4);
+}
+
+.mpass-track {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 6px 4px 14px;
+}
+
+/* Tarjetas con esquinas biseladas (estilo Cyberpunk 2077) alternando
+   borde neón dorado/cian por nivel — ver nth-child más abajo. */
+.mpass-tier {
+  flex: 0 0 84px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px 6px;
+  background: rgba(10, 14, 26, 0.6);
+  border: 2px solid var(--neon-gold);
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+  transition: transform 0.2s ease;
+}
+
+.mpass-tier:nth-child(even) {
+  border-color: var(--neon-cyan);
+}
+
+.mpass-tier:hover {
+  transform: translateY(-3px);
+}
+
+.mpass-tier__num {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--text-primary);
+}
+
+.mpass-tier__reward {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+.mpass-tier__reward span {
+  font-size: 0.6rem;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.mpass-tier__avatar {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 6px rgba(255, 183, 0, 0.6));
+}
+
+/* Niveles ya alcanzados: brillo pulsante reforzando el progreso real
+   (pedido explícito: "animaciones sutiles de pulso neón... en bordes de
+   tarjetas"). */
+.mpass-tier--unlocked {
+  animation: mpassTierPulse 2.4s ease-in-out infinite;
+}
+
+@keyframes mpassTierPulse {
+  0%, 100% { box-shadow: 0 0 4px rgba(255, 183, 0, 0.25); }
+  50% { box-shadow: 0 0 12px rgba(255, 183, 0, 0.55); }
+}
+
+.mpass-tier--locked {
+  filter: grayscale(0.85) brightness(0.55);
+  opacity: 0.75;
+}
+
+.mpass-tier--special {
+  border-width: 2px;
+  background: rgba(255, 183, 0, 0.1);
+}
+
+/* ===================== MÓDULO CALENDARIO & EVENTOS ===================== */
+
+.calendar-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.calendar-nav-btn {
+  background: rgba(0, 240, 255, 0.08);
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  color: var(--neon-cyan);
+  border-radius: 999px;
+  width: 26px;
+  height: 26px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  line-height: 1;
+  transition: all 0.2s ease;
+}
+
+.calendar-nav-btn:hover {
+  background: var(--neon-cyan);
+  color: #04121a;
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+}
+
+.calendar-month-label {
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  color: var(--neon-cyan);
+}
+
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  text-align: center;
+}
+
+.calendar-weekdays span {
+  font-size: 0.6rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.5px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.calendar-day {
+  position: relative;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(124, 147, 173, 0.25);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text-primary);
+  font-size: 0.68rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.calendar-day:hover {
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 6px rgba(0, 240, 255, 0.3);
+}
+
+.calendar-day--empty {
+  visibility: hidden;
+  cursor: default;
+}
+
+.calendar-day--today {
+  border-color: var(--neon-gold);
+  color: var(--neon-gold);
+}
+
+.calendar-day--selected {
+  background: rgba(0, 255, 156, 0.12);
+  border-color: var(--neon-green);
+  color: var(--neon-green);
+  box-shadow: 0 0 10px rgba(0, 255, 156, 0.3);
+}
+
+.calendar-day__dot {
+  position: absolute;
+  bottom: 2px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--neon-magenta);
+  box-shadow: 0 0 6px var(--neon-magenta);
+}
+
+.calendar-add-event {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.calendar-input {
+  flex: 1;
+  min-width: 110px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(124, 147, 173, 0.35);
+  border-radius: 6px;
+  color: var(--text-primary);
+  padding: 6px 8px;
+  font-size: 0.7rem;
+}
+
+.calendar-input:focus {
+  outline: none;
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 6px rgba(0, 240, 255, 0.3);
+}
+
+.calendar-events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.calendar-events-empty {
+  color: var(--text-secondary);
+  font-size: 0.7rem;
+  text-align: center;
+  padding: 6px;
+}
+
+.calendar-event-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 10px;
+  border: 1px solid rgba(0, 240, 255, 0.25);
+  border-radius: 6px;
+  background: rgba(0, 240, 255, 0.04);
+  font-size: 0.72rem;
+}
+
+/* ===================== MÓDULO BIO-SYNC & ESTADO FÍSICO ===================== */
+
+.biosync-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.biosync-bpm-panel {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px;
+  border: 1px solid rgba(255, 46, 154, 0.35);
+  border-radius: var(--radius-md);
+  background: rgba(255, 46, 154, 0.05);
+}
+
+.biosync-bpm-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+}
+
+.biosync-bpm-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--neon-magenta);
+  filter: drop-shadow(0 0 8px rgba(255, 46, 154, 0.7));
+  animation: biosyncHeartbeat 1s infinite ease-in-out;
+}
+
+.biosync-bpm-label {
+  font-size: 0.6rem;
+  letter-spacing: 1px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+@keyframes biosyncHeartbeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+.biosync-pulse {
+  flex: 1;
+  height: 44px;
+}
+
+.biosync-pulse__svg {
+  width: 100%;
+  height: 100%;
+}
+
+.biosync-pulse__line {
+  fill: none;
+  stroke: var(--neon-magenta);
+  stroke-width: 2;
+  filter: drop-shadow(0 0 4px rgba(255, 46, 154, 0.8));
+  stroke-dasharray: 240;
+  stroke-dashoffset: 240;
+  animation: biosyncPulseSweep 1.4s linear infinite;
+}
+
+@keyframes biosyncPulseSweep {
+  0% { stroke-dashoffset: 240; }
+  100% { stroke-dashoffset: 0; }
+}
+
+.biosync-bt-status {
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  min-height: 1em;
+  text-align: center;
+}
+
+.biosync-manual {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.biosync-manual label {
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+}
+
+.biosync-manual__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.biosync-manual__row input[type="range"] {
+  flex: 1;
+  accent-color: var(--neon-magenta);
+}
+
+.biosync-manual__row span {
+  min-width: 24px;
+  text-align: right;
+  color: var(--neon-magenta);
+  font-size: 0.75rem;
+}
+
+.biosync-log-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 6px;
+  border-top: 1px dashed rgba(124, 147, 173, 0.3);
+}
+
+.biosync-log-history {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.biosync-log-entry {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 10px;
+  border: 1px solid rgba(0, 255, 156, 0.25);
+  border-radius: 6px;
+  background: rgba(0, 255, 156, 0.04);
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+}
+
+/* ===================== MÓDULO HÁBITOS & RACHAS + RUTINA =====================
+   Mismo criterio visual que Finanzas (.finanzas-tabs/.finanzas-tab) para
+   las 2 pestañas, y que Bio-Sync (.biosync-log-history) para el
+   historial de entrenamientos — nada nuevo que aprender, misma familia. */
+.modal--habits {
+  max-width: 700px;
+}
+
+.habits-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.habits-tab {
+  flex: 1;
+  padding: 10px 10px;
+  font-size: 0.7rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  text-align: center;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(124, 147, 173, 0.3);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.habits-tab:hover {
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+}
+
+.habits-tab--active {
+  border-color: var(--neon-gold);
+  color: var(--neon-gold);
+  background: rgba(255, 183, 0, 0.08);
+  box-shadow: 0 0 12px rgba(255, 183, 0, 0.25);
+}
+
+.habits-tab-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.habits-streak {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 122, 0, 0.35);
+  background: rgba(255, 122, 0, 0.06);
+}
+
+.habits-streak__icon {
+  font-size: 1.6rem;
+  filter: drop-shadow(0 0 8px rgba(255, 122, 0, 0.6));
+}
+
+.habits-streak__value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #ff7a00;
+  text-shadow: 0 0 10px rgba(255, 122, 0, 0.6);
+}
+
+.habits-streak__label {
+  font-size: 0.72rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.habits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.habit-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 10px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(124, 147, 173, 0.3);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.habit-card:hover {
+  border-color: var(--neon-cyan);
+  transform: translateY(-2px);
+}
+
+.habit-card__icon {
+  font-size: 1.6rem;
+}
+
+.habit-card__label {
+  font-size: 0.68rem;
+  letter-spacing: 0.3px;
+}
+
+.habit-card--done {
+  border-color: var(--neon-green);
+  background: rgba(0, 255, 156, 0.1);
+  box-shadow: var(--shadow-neon-green);
+}
+
+.habit-card--done .habit-card__icon {
+  filter: drop-shadow(0 0 8px rgba(0, 255, 156, 0.7));
+}
+
+.habits-hint {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  text-align: center;
+  margin: 0;
+}
+
+/* Reto 7 Minutos — ver #seven-min-section en index.html. Mismo acento
+   magenta que el resto del pilar Físico (.pillar-btn--fisico,
+   .workout-weekday-btn--active), y el mismo criterio "visible pero
+   inerte" para semanas bloqueadas que .jp-level-btn--locked (ver
+   style.css, módulo japonés) — acá en magenta en vez de cian para no
+   pisar el lenguaje visual de otro pilar. */
+.seven-min-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 14px;
+  margin-bottom: 4px;
+  border-bottom: 1px dashed rgba(124, 147, 173, 0.3);
+}
+
+.seven-min-section__title {
+  font-size: 0.95rem;
+  color: var(--neon-magenta);
+  text-shadow: 0 0 8px rgba(255, 46, 154, 0.4);
+  margin: 0;
+}
+
+.seven-min-section__note {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  margin: -4px 0 0;
+}
+
+.seven-min-week-toggle {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.seven-min-week-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 46, 154, 0.3);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.seven-min-week-btn--active {
+  background: rgba(255, 46, 154, 0.15);
+  color: var(--neon-magenta);
+  border-color: var(--neon-magenta);
+  box-shadow: 0 0 10px rgba(255, 46, 154, 0.3);
+}
+
+.seven-min-week-btn--locked {
+  filter: grayscale(0.85) brightness(0.6);
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+
+.seven-min-week-btn__badge {
+  font-size: 0.5rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+.seven-min-progress {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.seven-min-exercise-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+@media (max-width: 480px) {
+  .seven-min-exercise-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.seven-min-exercise-card {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  background: rgba(18, 24, 38, 0.65);
+}
+
+.seven-min-exercise-card__header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.seven-min-exercise-card__timing {
+  font-size: 0.6rem;
+  color: var(--neon-magenta);
+}
+
+.seven-min-exercise-card__guide {
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.seven-min-complete-btn {
+  align-self: flex-start;
+}
+
+.seven-min-complete-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(0.6);
+}
+
+.workout-plan {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed rgba(124, 147, 173, 0.3);
+}
+
+.workout-plan__weekdays {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.workout-weekday-btn {
+  padding: 8px 12px;
+  font-size: 0.66rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(124, 147, 173, 0.3);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.workout-weekday-btn:hover {
+  border-color: var(--neon-magenta);
+  color: var(--neon-magenta);
+}
+
+.workout-weekday-btn--active {
+  border-color: var(--neon-magenta);
+  color: var(--neon-magenta);
+  background: rgba(255, 46, 154, 0.08);
+  box-shadow: 0 0 10px rgba(255, 46, 154, 0.3);
+}
+
+.workout-plan__focus-input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  color: var(--text-primary);
+  font-family: var(--font-main);
+  font-size: 0.85rem;
+  outline: none;
+}
+
+.workout-plan__focus-input:focus {
+  border-color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.workout-log-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.workout-log-form__row3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.workout-log-history {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.workout-log-entry {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 10px;
+  border: 1px solid rgba(255, 46, 154, 0.25);
+  border-radius: 6px;
+  background: rgba(255, 46, 154, 0.04);
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+}
+
+/* Botón de emergencia dentro del modal de Perfiles — deliberadamente
+   discreto (outline, no relleno) para no competir visualmente con
+   "+ Crear Perfil", ya que es una acción de mantenimiento, no el flujo
+   principal de esa pantalla. */
+.btn-force-update {
+  margin-top: 16px;
+  width: 100%;
+  padding: 10px;
+  font-size: 0.7rem;
+  letter-spacing: 0.5px;
+  border-radius: var(--radius-sm);
+  border: 1px dashed rgba(124, 147, 173, 0.4);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-force-update:hover {
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+}
+
+/* Controles de escala (León / Chat) — ver --avatar-scale/--chat-scale
+   en :root y SCALE_KEY en app.js. */
+.scale-controls {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px dashed rgba(124, 147, 173, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.scale-controls__title {
+  font-size: 0.72rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.scale-controls__row {
+  display: grid;
+  grid-template-columns: 48px 1fr 44px;
+  align-items: center;
+  gap: 10px;
+}
+
+.scale-controls__row label {
+  font-size: 0.75rem;
+  color: var(--text-primary);
+}
+
+.scale-controls__row input[type="range"] {
+  width: 100%;
+  accent-color: var(--neon-cyan);
+}
+
+.scale-controls__row span {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  text-align: right;
+}
+
+.scale-controls__reset {
+  align-self: flex-start;
+  padding: 6px 12px;
+  font-size: 0.68rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(124, 147, 173, 0.3);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.scale-controls__reset:hover {
+  border-color: var(--neon-magenta);
+  color: var(--neon-magenta);
+}
+
+/* ===================== MÓDULO JAPONÉS: GOJUON =====================
+   Cuadrícula tradicional de kana por filas (grid) -> vista de trazo con
+   opción de Omitir -> quiz de opción múltiple. El dominio (3 respuestas
+   correctas, JP_MASTERY_THRESHOLD en app.js) se refleja en la cuadrícula
+   con brillo dorado + estrellas en vez del borde neón cyan por defecto. */
+
+.jp-view {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  /* Con min-height:0 el contenido puede exceder el alto disponible del
+     modal (p. ej. la tarjeta de trazos + info de Kanji en la vista de
+     "stroke") — sin scroll propio, ese exceso se desbordaba visualmente
+     y tapaba el botón "Continuar" en vez de quedar accesible. .jp-rows
+     ya tenía su propio scroll interno para la cuadrícula; esto agrega
+     el mismo resguardo a las otras 2 sub-vistas. */
+  overflow-y: auto;
+  padding: 14px 20px 20px;
+  gap: 12px;
+}
+
+.jp-grid-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Selector de nivel JLPT (N5 activo, N4-N1 bloqueados/próximamente) —
+   ver #jp-level-toggle en index.html. */
+.jp-level-toggle {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.jp-level-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.jp-level-btn--active {
+  background: rgba(0, 240, 255, 0.15);
+  color: var(--neon-cyan);
+  border-color: var(--neon-cyan);
+}
+
+/* Mismo criterio "visible pero inerte" que .mpass-tier--locked — no se
+   oculta el nivel, se muestra apagado con su badge de Próximamente. */
+.jp-level-btn--locked {
+  filter: grayscale(0.85) brightness(0.6);
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+
+.jp-level-btn__badge {
+  font-size: 0.5rem;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+  color: var(--text-secondary);
+}
+
+.jp-script-toggle {
+  display: flex;
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.jp-script-btn {
+  border: none;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-secondary);
+  padding: 6px 12px;
+  font-size: 0.7rem;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.jp-script-btn--active {
+  background: rgba(0, 240, 255, 0.15);
+  color: var(--neon-cyan);
+}
+
+.jp-general-btn {
+  padding: 6px 14px;
+  font-size: 0.72rem;
+}
+
+.jp-rows {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.jp-row {
+  border: 1px solid rgba(124, 147, 173, 0.25);
+  border-radius: var(--radius-md);
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.jp-row__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.jp-row__label {
+  font-size: 0.68rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.jp-row__practice-btn {
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  background: rgba(0, 240, 255, 0.06);
+  color: var(--neon-cyan);
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  font-size: 0.6rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.jp-row__practice-btn:hover {
+  background: var(--neon-cyan);
+  color: #04121a;
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.jp-row__kana {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 8px;
+}
+
+/* Kana sin dominar: fondo translúcido + borde neón cyan, tal como se pidió */
+.jp-kana-btn {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-sm);
+  border: 1px solid #00f0ff;
+  background: rgba(0, 240, 255, 0.08);
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.jp-kana-btn:hover {
+  background: rgba(0, 240, 255, 0.2);
+  box-shadow: var(--shadow-neon-cyan);
+  transform: translateY(-1px);
+}
+
+/* Kana dominado (JP_MASTERY_THRESHOLD respuestas correctas): brillo
+   dorado en vez del borde neón cyan por defecto, tal como se pidió. */
+.jp-kana-btn--mastered {
+  border-color: #ffd700;
+  background: rgba(255, 215, 0, 0.12);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.45);
+}
+
+.jp-kana-btn--mastered:hover {
+  box-shadow: 0 0 16px rgba(255, 215, 0, 0.75);
+}
+
+.jp-kana-btn__stars {
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.5rem;
+  color: #ffd700;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  text-shadow: 0 0 4px rgba(255, 215, 0, 0.8);
+}
+
+/* ---- Sub-vista: trazo ---- */
+
+.btn-jp-back {
+  align-self: flex-start;
+  border: 1px solid rgba(124, 147, 173, 0.4);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+  padding: 5px 10px;
+  font-size: 0.65rem;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-jp-back:hover {
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+}
+
+/* Botón de Omitir: flotante, esquina superior derecha de la vista de
+   trazo (pedido explícito). */
+.btn-jp-skip {
+  position: absolute;
+  top: 14px;
+  right: 20px;
+  border: 1px solid rgba(255, 46, 154, 0.4);
+  background: rgba(255, 46, 154, 0.06);
+  color: var(--neon-magenta);
+  border-radius: var(--radius-sm);
+  padding: 5px 10px;
+  font-size: 0.65rem;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-jp-skip:hover {
+  background: var(--neon-magenta);
+  color: #04121a;
+  box-shadow: 0 0 12px rgba(255, 46, 154, 0.5);
+}
+
+.jp-char-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.jp-char-row--center {
+  justify-content: center;
+  margin: 4px 0 10px;
+}
+
+/* Carácter principal notablemente más grande que antes (pedido
+   explícito: "que se distinga claramente"), aprovechando el ancho del
+   nuevo modal en vez del panel angosto donde vivía este módulo antes.
+   Reutilizado por las vistas de Fases (práctica) y Prueba de Trazo
+   (examen) — antes solo existía la variante de práctica. */
+.jp-phases-char,
+.jp-examstroke-char {
+  font-size: 6rem;
+  color: var(--text-primary);
+  text-shadow: var(--shadow-neon-cyan);
+  line-height: 1;
+}
+
+.jp-stroke-hint {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  max-width: 260px;
+}
+
+.jp-stroke-progress {
+  font-size: 0.65rem;
+  color: var(--text-secondary);
+  letter-spacing: 1px;
+}
+
+/* Botón de audio (Web Speech API, ver speakKana() en app.js) */
+.btn-jp-speak {
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  background: rgba(0, 240, 255, 0.08);
+  color: var(--neon-cyan);
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-jp-speak:hover {
+  background: var(--neon-cyan);
+  color: #04121a;
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+/* ===================== Trazos por Fases (MODO PRÁCTICA) =====================
+   Fila horizontal de cuadros — uno por trazo real, estilo Kanji123 — SIN
+   flechas: cada cuadro dibuja el carácter con datos de trazo REALES
+   (@k1low/hanzi-writer-data-jp, mismo dataset verificado del Bloque 30,
+   ver fetchHanziStrokeData() en app.js). Los trazos 1..N-1 quedan tenues
+   (opacity 0.35) y el trazo N se resalta en azul neón con glow —
+   construido con <path> reales posicionados vía
+   HanziWriter.getScalingTransform(), no texto/emoji. flex-wrap para que
+   en pantallas angostas las tarjetas se acomoden en varias filas en vez
+   de desbordar. */
+.jp-phase-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 4px 0 8px;
+}
+
+.jp-phase-row--empty {
+  justify-content: center;
+  padding: 10px;
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+.jp-phase-box {
+  position: relative;
+  width: 84px;
+  height: 84px;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  background-color: #05080f;
+  background-image:
+    linear-gradient(rgba(0, 240, 255, 0.14) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.14) 1px, transparent 1px);
+  background-size: 14px 14px;
+}
+
+.jp-phase-box__svg {
+  width: 100%;
+  height: 100%;
+}
+
+.jp-phase-stroke--previous {
+  fill: #00f0ff;
+  opacity: 0.35;
+}
+
+.jp-phase-stroke--current {
+  fill: #00f0ff;
+  opacity: 1;
+  filter: drop-shadow(0 0 4px #00f0ff) drop-shadow(0 0 8px rgba(0, 240, 255, 0.8));
+}
+
+.jp-phase-box__num {
+  position: absolute;
+  top: 3px;
+  left: 5px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: var(--neon-gold);
+  text-shadow: 0 0 4px rgba(255, 183, 0, 0.8);
+}
+
+/* ===================== Prueba de Orden de Trazos (MODO EXAMEN, Prueba 1) =====================
+   Los mismos pasos de getStrokeGuide(), pero como "palitos" sueltos y
+   desordenados: el usuario reconstruye el orden correcto haciendo clic
+   uno por uno. */
+.jp-exam-instruction {
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  max-width: 320px;
+  margin: 0 auto 4px;
+}
+
+.jp-exam-segments {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+/* Cada botón dibuja el trazo REAL correspondiente (ver
+   buildHanziSegmentSvg() en app.js) posicionado en su lugar real dentro
+   del carácter — la cuadrícula punteada de fondo (mismo patrón que
+   .jp-phase-box) ayuda a ubicar el trazo espacialmente contra el
+   carácter grande de referencia de arriba. */
+.jp-exam-segment-btn {
+  width: 64px;
+  height: 64px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  background-color: #05080f;
+  background-image:
+    linear-gradient(rgba(0, 240, 255, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.12) 1px, transparent 1px);
+  background-size: 12px 12px;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.jp-exam-segment-btn__svg {
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.jp-exam-segment-btn:hover:not(:disabled) {
+  box-shadow: var(--shadow-neon-cyan);
+  transform: translateY(-2px);
+}
+
+.jp-exam-segment-btn--correct {
+  border-color: var(--neon-green);
+  background: rgba(0, 255, 156, 0.15);
+  color: var(--neon-green);
+  box-shadow: var(--shadow-neon-green);
+  cursor: default;
+}
+
+.jp-exam-segment-btn--wrong {
+  animation: jpExamWrongFlash 0.5s ease;
+}
+
+@keyframes jpExamWrongFlash {
+  0%, 100% { border-color: rgba(0, 240, 255, 0.35); background: rgba(0, 240, 255, 0.06); }
+  40% { border-color: var(--neon-magenta); background: rgba(255, 46, 154, 0.25); box-shadow: 0 0 12px rgba(255, 46, 154, 0.7); }
+}
+
+/* Solo Kanji: lecturas + significado, debajo del progreso "N / total". */
+.jp-kanji-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 6px;
+  padding: 8px 12px;
+  border: 1px dashed rgba(255, 183, 0, 0.3);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 183, 0, 0.04);
+}
+
+.jp-kanji-info__row {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+.jp-kanji-info__row strong {
+  color: var(--neon-gold);
+  font-weight: 700;
+}
+
+/* Palabras Clave: vocabulario ampliado (varios ejemplos reales por kana,
+   ver JP_VOCAB en app.js) en cuadrícula cyberpunk de 2 columnas —
+   glassmorphism oscuro con bordes neón cian/rosa, reemplazando las
+   tarjetas de fondo blanco brillante de antes (pedido explícito). */
+.jp-vocab-section {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px dashed rgba(0, 240, 255, 0.25);
+}
+
+.jp-vocab-section__title {
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  color: var(--neon-cyan);
+  text-shadow: var(--shadow-neon-cyan);
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.jp-vocab-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 480px) {
+  .jp-vocab-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Alterna borde cian/rosa por índice — mismo patrón ya usado en los
+   nodos del mapa de ciudades (.city-map__node), para que la cuadrícula
+   completa no se sienta monocroma. */
+.jp-vocab-card {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  background: rgba(18, 24, 38, 0.65);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.15);
+  text-align: left;
+}
+
+.jp-vocab-card:nth-child(even) {
+  border-color: rgba(255, 46, 154, 0.4);
+  box-shadow: 0 0 10px rgba(255, 46, 154, 0.15);
+}
+
+.jp-vocab-card__main {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+/* Pronunciación de la PALABRA de ejemplo (pedido explícito) — empujado a
+   la derecha de la tarjeta con margin-left:auto, distinto del 🔊 del
+   carácter grande de arriba, que solo lee el kana suelto. */
+.jp-vocab-card__speak {
+  margin-left: auto;
+  border: none;
+  background: none;
+  color: var(--neon-cyan);
+  font-size: 0.85rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 2px;
+  flex-shrink: 0;
+}
+
+.jp-vocab-card__speak:hover {
+  filter: drop-shadow(0 0 4px rgba(0, 240, 255, 0.8));
+}
+
+.jp-vocab-card__kana {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.jp-vocab-card:nth-child(even) .jp-vocab-card__kana {
+  color: #ffd6ec;
+}
+
+.jp-vocab-card__kanji {
+  font-size: 0.8rem;
+  color: var(--neon-gold);
+}
+
+.jp-vocab-card__romaji {
+  font-size: 0.62rem;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.jp-vocab-card__meaning {
+  font-size: 0.72rem;
+  color: var(--text-primary);
+  margin-top: 2px;
+}
+
+/* ---- Sub-vista: quiz ---- */
+
+.jp-quiz-prompt {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.jp-quiz-char {
+  display: block;
+  text-align: center;
+  font-size: 6rem;
+  color: var(--text-primary);
+  text-shadow: var(--shadow-neon-cyan);
+  line-height: 1;
+}
+
+/* Lectura en hiragana debajo del kanji del quiz de gramática — ver
+   #jp-mini-quiz-reading en index.html y renderMiniQuizItem() en app.js. */
+.jp-quiz-reading {
+  display: block;
+  text-align: center;
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin: -8px 0 10px;
+  letter-spacing: 0.5px;
+}
+
+.jp-quiz-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.jp-quiz-option-btn {
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-primary);
+  border-radius: var(--radius-sm);
+  padding: 10px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.jp-quiz-option-btn:hover:not(:disabled) {
+  border-color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.jp-quiz-option-btn:disabled {
+  cursor: default;
+}
+
+.jp-quiz-option-btn--correct {
+  border-color: var(--neon-green);
+  background: rgba(0, 255, 156, 0.15);
+  color: var(--neon-green);
+}
+
+.jp-quiz-option-btn--wrong {
+  border-color: var(--neon-magenta);
+  background: rgba(255, 46, 154, 0.15);
+  color: var(--neon-magenta);
+}
+
+.jp-quiz-feedback {
+  text-align: center;
+  font-size: 0.75rem;
+  margin-top: 4px;
+  min-height: 1.2em;
+}
+
+.jp-quiz-feedback--correct {
+  color: var(--neon-green);
+}
+
+.jp-quiz-feedback--incorrect {
+  color: var(--neon-magenta);
+}
+
+/* ---- Sub-vistas: Vocabulario N5 (categorías) y Gramática N5 ---- */
+
+.jp-vocab-cat-grid,
+.jp-grammar-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.jp-vocab-cat-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 16px 10px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+/* Badge de progreso persistente (IndexedDB, ver saveN5Progress() en
+   app.js) — solo aparece si el usuario ya completó el mini-quiz de esa
+   categoría al menos una vez. */
+.jp-vocab-cat-card__badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 999px;
+  color: var(--neon-green);
+  border: 1px solid rgba(0, 255, 156, 0.5);
+  background: rgba(0, 255, 156, 0.1);
+}
+
+.jp-vocab-cat-card:hover {
+  border-color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+  transform: translateY(-2px);
+}
+
+.jp-vocab-cat-card__icon {
+  font-size: 1.8rem;
+}
+
+.jp-vocab-cat-card__title {
+  font-size: 0.75rem;
+  letter-spacing: 0.3px;
+}
+
+.jp-vocab-cat-card__count {
+  font-size: 0.62rem;
+  color: var(--text-secondary);
+}
+
+.jp-vocab-words__title {
+  font-size: 1rem;
+  color: var(--neon-cyan);
+  text-shadow: var(--shadow-neon-cyan);
+  margin: 4px 0 10px;
+}
+
+.jp-vocab-words-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  overflow-y: auto;
+}
+
+@media (max-width: 480px) {
+  .jp-vocab-words-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Yōon: tabla de lectura (きゃ/しゃ/etc.), ver #jp-view-yoon en
+   index.html — mismo criterio de grid que .jp-vocab-words-list. */
+.jp-yoon-note {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  margin: 4px 0 10px;
+}
+
+.jp-yoon-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  overflow-y: auto;
+  margin-bottom: 12px;
+}
+
+@media (max-width: 480px) {
+  .jp-yoon-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.jp-yoon-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 6px;
+  border-radius: var(--radius-md);
+  background: rgba(18, 24, 38, 0.65);
+}
+
+.jp-yoon-card__hiragana {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.jp-yoon-card__katakana {
+  font-size: 0.9rem;
+  color: #ffd6ec;
+}
+
+.jp-yoon-card__romaji {
+  font-size: 0.65rem;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+/* Tarjeta de gramática: contraída (label + patrón) hasta que se toca —
+   ahí revela explicación + ejemplos. Menos abrumador que mostrar los 15
+   puntos desplegados a la vez, sobre todo en Mobile Lite. */
+/* Banner de progreso persistente (IndexedDB) del quiz de gramática —
+   mismo criterio que .jp-vocab-cat-card__badge, ver app.js. */
+.jp-grammar-progress-banner {
+  grid-column: 1 / -1;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: var(--radius-md);
+  color: var(--neon-green);
+  border: 1px solid rgba(0, 255, 156, 0.5);
+  background: rgba(0, 255, 156, 0.1);
+  text-align: center;
+}
+
+.jp-grammar-card {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(124, 147, 173, 0.3);
+  background: rgba(255, 255, 255, 0.03);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.jp-grammar-card:hover,
+.jp-grammar-card--open {
+  border-color: var(--neon-cyan);
+}
+
+.jp-grammar-card__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.jp-grammar-card__label {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--neon-cyan);
+  text-shadow: var(--shadow-neon-cyan);
+}
+
+.jp-grammar-card__pattern {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  text-align: right;
+}
+
+.jp-grammar-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.jp-grammar-card__explanation {
+  font-size: 0.8rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+.jp-grammar-card__example {
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  border-left: 2px solid var(--neon-gold);
+  background: rgba(255, 183, 0, 0.06);
+  font-size: 0.78rem;
+}
+
+.jp-grammar-card__example-jp {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.jp-grammar-card__example-reading {
+  color: var(--neon-cyan);
+  font-size: 0.78rem;
+  margin-top: -2px;
+}
+
+.jp-grammar-card__example-romaji {
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.jp-grammar-card__example-translation {
+  color: var(--neon-gold);
+}
+
+.jp-mini-quiz-score {
+  text-align: center;
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  margin-top: 6px;
+}
+
+@media (max-width: 480px) {
+  .jp-vocab-cat-grid,
+  .jp-grammar-list {
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  }
+}
+
+.minigame__viewport {
+  position: relative;
+  flex: 1;
+  margin: 0;
+  min-height: 150px;
+  border: 1px dashed rgba(0, 240, 255, 0.25);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background:
+    repeating-linear-gradient(45deg, rgba(0, 240, 255, 0.03) 0 10px, transparent 10px 20px);
+}
+
+#minigame-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.minigame__placeholder {
+  position: relative;
+  z-index: 1;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 0 16px;
+  pointer-events: none;
+}
+
+.btn-play {
+  margin: 16px 0 0;
+  padding: 10px;
+  border: 1px solid var(--neon-green);
+  background: rgba(0, 255, 156, 0.08);
+  color: var(--neon-green);
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  filter: drop-shadow(0 0 2px rgba(0, 255, 156, 0.25));
+  transition: all 0.2s ease, filter 0.2s ease;
+}
+
+.btn-play:hover {
+  background: var(--neon-green);
+  color: #04121a;
+  box-shadow: var(--shadow-neon-green);
+  filter: drop-shadow(0 0 8px rgba(0, 255, 156, 0.85));
+}
+
+/* ===================== RESPONSIVE ===================== */
+
+@media (max-width: 1280px) {
+  .layout {
+    flex-wrap: wrap;
+  }
+
+  .sidebar--wishlist {
+    order: 3;
+    flex: 1 1 100%;
+  }
+
+  .panel--wishlist {
+    height: auto;
+  }
+
+  .wishlist__grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 1024px) {
+  .layout {
+    flex-direction: column;
+  }
+
+  .sidebar--wishlist,
+  .sidebar--right,
+  .panel--chat {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .panel--chat {
+    height: 60vh;
+    /* Layout de una sola columna: ya no hay nada al costado que proteger,
+       así que el resize horizontal no aporta nada y se desactiva. */
+    resize: vertical;
+  }
+
+  .sidebar--right {
+    flex-direction: row;
+  }
+
+  .panel--avatar,
+  .panel--minigame {
+    flex: 1;
+  }
+
+  /* Avatar y App Hub comparten fila y quedan más angostos — 3 columnas
+     de tarjetas ya no entran cómodas, pasan a 2. */
+  .app-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .wishlist__grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .hud {
+    padding: 12px 16px;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .hud__stats {
+    gap: 16px;
+  }
+
+  .stat--xp {
+    min-width: 0;
+  }
+
+  .xp-bar {
+    width: 120px;
+  }
+
+  .layout {
+    padding: 16px;
+  }
+
+  .sidebar--right {
+    flex-direction: column;
+  }
+
+  .message {
+    max-width: 90%;
+  }
+
+  .wishlist__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .pillars {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .fisico-panel {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .fisico-panel__row input {
+    width: 100%;
+  }
+}
+
+/* ===================== MODAL: REGISTRO DE OPERADOR ===================== */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(5, 7, 12, 0.75);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+/* ===================== CANDADO PRINCIPAL (autenticación) =====================
+   z-index más alto que cualquier otro modal-overlay (100) — este candado
+   tiene que ganar SIEMPRE, incluso si algún otro modal quedó marcado
+   visible por error. No es cerrable: sin backdrop-filter transparente
+   que sugiera "click fuera para cerrar" (fondo opaco), sin btn-modal-close. */
+.master-auth-overlay {
+  z-index: 500;
+  background: rgba(3, 4, 7, 0.92);
+}
+
+.modal--master-auth {
+  max-width: 400px;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 40px 30px;
+  text-align: center;
+  background:
+    linear-gradient(rgba(10, 14, 26, 0.85), rgba(10, 14, 26, 0.85)),
+    url("assets/bg_login.png") center/cover no-repeat;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 240, 255, 0.4);
+}
+
+.master-auth__brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 22px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.master-auth__subtitle {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+#master-login-form,
+#master-register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+#master-login-form input,
+#master-register-form input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  outline: none;
+  text-align: center;
+}
+
+#master-login-form input:focus,
+#master-register-form input:focus {
+  border-color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.master-auth__error {
+  font-size: 0.75rem;
+  color: var(--neon-magenta);
+  text-shadow: 0 0 6px rgba(255, 46, 154, 0.5);
+}
+
+.modal {
+  width: 100%;
+  max-width: 380px;
+  padding: 28px 26px;
+  text-align: center;
+}
+
+/* Fondo de la pantalla de inicio de sesión (assets/bg_login.png): el
+   degradado oscuro va POR ENCIMA de la imagen en el mismo shorthand
+   `background`, así queda por encima de la imagen en la cascada de capas
+   sin pelear con el `background` de .glass (gana por especificidad de
+   selector: #welcome-modal .modal > .glass solo). */
+#welcome-modal .modal {
+  background:
+    linear-gradient(rgba(10, 14, 26, 0.85), rgba(10, 14, 26, 0.85)),
+    url("assets/bg_login.png") center/cover no-repeat;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 240, 255, 0.4);
+}
+
+/* Modal de herramientas de pilares (Finanzas / Estado Físico / Estado
+   Espiritual): más ancho que el modal de registro porque aloja
+   formularios con grillas de categorías, y con scroll propio para que
+   el contenido largo (técnicas de claridad mental) nunca se recorte. */
+.modal--pillar {
+  max-width: 520px;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 44px 26px 26px;
+  text-align: left;
+  position: relative;
+}
+
+/* Modal de Perfiles de Usuario: angosto, centrado, muy similar en tamaño
+   al modal de bienvenida ya que su contenido (lista + un formulario) es
+   comparablemente compacto. */
+.modal--profiles {
+  max-width: 420px;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 44px 26px 26px;
+  text-align: left;
+  position: relative;
+}
+
+.profile-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 18px 0;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.profile-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid rgba(124, 147, 173, 0.3);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.profile-row--active {
+  border-color: var(--neon-green);
+  background: rgba(0, 255, 156, 0.06);
+  box-shadow: 0 0 12px rgba(0, 255, 156, 0.15);
+}
+
+.profile-row__name {
+  font-size: 0.85rem;
+  color: var(--text-primary);
+}
+
+.profile-row__badge {
+  font-size: 0.6rem;
+  letter-spacing: 0.5px;
+  color: var(--neon-green);
+  border: 1px solid rgba(0, 255, 156, 0.4);
+  padding: 2px 10px;
+  border-radius: 999px;
+}
+
+.profile-row__switch-btn {
+  font-size: 0.65rem;
+  letter-spacing: 0.5px;
+  color: var(--neon-cyan);
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  background: rgba(0, 240, 255, 0.06);
+  padding: 4px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.profile-row__switch-btn:hover {
+  background: var(--neon-cyan);
+  color: #04121a;
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+}
+
+.profile-create-form {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-top: 14px;
+  border-top: 1px dashed rgba(124, 147, 173, 0.3);
+}
+
+.profile-create-form input {
+  flex: 1;
+  min-width: 180px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 255, 156, 0.3);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  outline: none;
+}
+
+.profile-create-form input:focus {
+  border-color: var(--neon-green);
+  box-shadow: 0 0 8px rgba(0, 255, 156, 0.3);
+}
+
+/* ===================== MODAL: REQUISITOS DE DESEO ===================== */
+
+.modal--wishlist-item {
+  max-width: 440px;
+  max-height: 85vh;
+  overflow-y: auto;
+  text-align: left;
+  position: relative;
+  padding: 44px 26px 26px;
+}
+
+.wishlist-item-modal__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.wishlist-item-modal__icon {
+  font-size: 2rem;
+}
+
+.wishlist-item-modal__header h2 {
+  font-size: 1.05rem;
+  color: var(--neon-cyan);
+  text-shadow: var(--shadow-neon-cyan);
+}
+
+.wishlist-item-modal__progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.wishlist-item-modal__progress .wishlist-progress-bar {
+  flex: 1;
+  height: 8px;
+}
+
+.wishlist-item-modal__progress-text {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--neon-cyan);
+  min-width: 34px;
+  text-align: right;
+}
+
+.wishlist-progress-bar {
+  position: relative;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.wishlist-progress-bar__fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-green));
+  box-shadow: 0 0 8px rgba(0, 240, 255, 0.55);
+  transition: width 0.4s ease;
+}
+
+.wishlist-req-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 260px;
+  overflow-y: auto;
+  margin-bottom: 16px;
+}
+
+.wishlist-req-empty {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 10px;
+}
+
+.wishlist-req-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.wishlist-req-row input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--neon-green);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.wishlist-req-row__text {
+  flex: 1;
+  font-size: 0.82rem;
+  color: var(--text-primary);
+}
+
+.wishlist-req-row--done .wishlist-req-row__text {
+  color: var(--neon-green);
+  text-decoration: line-through;
+  opacity: 0.75;
+}
+
+.wishlist-req-row__remove {
+  border: none;
+  background: none;
+  color: var(--neon-magenta);
+  font-size: 0.8rem;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+.wishlist-req-row__remove:hover {
+  opacity: 1;
+}
+
+.wishlist-req-form {
+  display: flex;
+  gap: 8px;
+}
+
+.wishlist-req-form input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(0, 240, 255, 0.25);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  outline: none;
+}
+
+.wishlist-req-form input:focus {
+  border-color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+/* ===================== MODAL: AUDITORÍA Y CONTROL DE NÓMINA ===================== */
+
+.modal--payroll-audit {
+  max-width: 520px;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 44px 26px 26px;
+  text-align: left;
+  position: relative;
+}
+
+.payroll-section-title {
+  font-size: 0.78rem;
+  letter-spacing: 0.5px;
+  color: var(--neon-gold);
+  margin: 18px 0 10px;
+  padding-top: 12px;
+  border-top: 1px dashed rgba(255, 183, 0, 0.25);
+}
+
+.payroll-section-title:first-of-type {
+  margin-top: 4px;
+  padding-top: 0;
+  border-top: none;
+}
+
+/* ===================== MODAL: DESGLOSE DE GASTOS POR CATEGORÍA =====================
+   Items individuales: mismo patrón visual que .wishlist-req-* (lista +
+   fila + formulario de alta), pero con 2 inputs (concepto/monto) en vez
+   de un checkbox. */
+
+.category-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 260px;
+  overflow-y: auto;
+  margin: 16px 0;
+}
+
+.category-items-empty {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 10px;
+}
+
+.category-item-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.category-item-row__concept {
+  flex: 1;
+  min-width: 0;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  border-radius: var(--radius-sm);
+  padding: 6px 8px;
+  color: var(--text-primary);
+  font-size: 0.78rem;
+  outline: none;
+}
+
+.category-item-row__amount {
+  width: 90px;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  border-radius: var(--radius-sm);
+  padding: 6px 8px;
+  color: var(--text-primary);
+  font-size: 0.78rem;
+  outline: none;
+}
+
+.category-item-row__concept:focus,
+.category-item-row__amount:focus {
+  border-color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.category-item-row__remove {
+  background: none;
+  border: 1px solid rgba(255, 46, 154, 0.4);
+  color: var(--neon-magenta);
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  font-size: 0.68rem;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.category-item-form {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.category-item-form input {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(0, 240, 255, 0.25);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  outline: none;
+}
+
+.category-item-form input:focus {
+  border-color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+#category-item-concept {
+  flex: 1;
+  min-width: 0;
+}
+
+#category-item-amount {
+  width: 100px;
+  flex-shrink: 0;
+}
+
+/* Modal del módulo Japonés: mucho más ancho que el resto (pedido
+   explícito: "aprovechar todo el ancho del contenedor central" en vez
+   del panel angosto lateral donde vivía antes). display:flex para que
+   .jp-view (flex:1, ver más abajo) reparta el alto disponible igual que
+   antes dentro del panel, con .jp-rows quedándose con su propio scroll
+   interno mientras la barra de herramientas queda fija arriba. */
+.modal--japanese {
+  max-width: 900px;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 44px 30px 30px;
+  text-align: left;
+  position: relative;
+}
+
+/* Dashboard Financiero General: se abre al hacer click en el avatar de
+   Miikaeru (ver #avatarStage en app.js). Ancho como el modal Japonés,
+   pero con scroll propio en vez de flex interno — el contenido (tarjetas
+   + ranking + tabla) puede crecer bastante con muchas transacciones. */
+.modal--dashboard {
+  max-width: 900px;
+  max-height: 88vh;
+  overflow-y: auto;
+  padding: 44px 30px 30px;
+  text-align: left;
+  position: relative;
+}
+
+.dashboard-title {
+  font-size: 1.05rem;
+  letter-spacing: 1px;
+  color: var(--neon-cyan);
+  text-shadow: var(--shadow-neon-cyan);
+  margin-bottom: 16px;
+}
+
+.dashboard-filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.dashboard-filters label {
+  font-size: 0.7rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.dashboard-filters select {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  color: var(--text-primary);
+  font-size: 0.8rem;
+  outline: none;
+  cursor: pointer;
+}
+
+.dashboard-filters select:focus {
+  border-color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.dashboard-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.dashboard-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(124, 147, 173, 0.3);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.dashboard-card__label {
+  font-size: 0.62rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.dashboard-card__value {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.dashboard-card--income {
+  border-color: rgba(0, 255, 156, 0.35);
+}
+.dashboard-card--income .dashboard-card__value {
+  color: var(--neon-green);
+  text-shadow: var(--shadow-neon-green);
+}
+
+.dashboard-card--expense {
+  border-color: rgba(255, 46, 154, 0.35);
+}
+.dashboard-card--expense .dashboard-card__value {
+  color: var(--neon-magenta);
+  text-shadow: 0 0 10px rgba(255, 46, 154, 0.5);
+}
+
+.dashboard-card--balance {
+  border-color: rgba(0, 240, 255, 0.35);
+}
+.dashboard-card--balance .dashboard-card__value {
+  color: var(--neon-cyan);
+  text-shadow: var(--shadow-neon-cyan);
+}
+
+.dashboard-ranking {
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 183, 0, 0.3);
+  border-radius: var(--radius-md);
+  background: rgba(255, 183, 0, 0.04);
+  margin-bottom: 16px;
+}
+
+.dashboard-ranking__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.dashboard-ranking__title {
+  display: block;
+  font-size: 0.68rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--neon-gold);
+}
+
+/* Toggle Por Negocio / Por Colaborador — mismo patrón visual que
+   .negocio-type-toggle y .jp-script-toggle, en dorado para calzar con
+   el resto del panel de ranking. */
+.dashboard-ranking-toggle {
+  display: flex;
+  border: 1px solid rgba(255, 183, 0, 0.3);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.dashboard-ranking-toggle__btn {
+  border: none;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-secondary);
+  padding: 5px 10px;
+  font-size: 0.62rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dashboard-ranking-toggle__btn--active {
+  background: rgba(255, 183, 0, 0.15);
+  color: var(--neon-gold);
+}
+
+.dashboard-ranking__list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dashboard-ranking__row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.dashboard-ranking__row--top .dashboard-ranking__name,
+.dashboard-ranking__row--top .dashboard-ranking__value {
+  color: var(--neon-gold);
+  font-weight: 700;
+}
+
+.dashboard-ranking__empty {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+/* Filas de colaborador clickeables (ver dashboardRankingBy === "colaborador"
+   en app.js) — seleccionar una filtra la tabla de abajo a solo sus
+   registros y revela el panel de Boleta de Pago. */
+.dashboard-ranking__row--clickable {
+  cursor: pointer;
+  padding: 4px 8px;
+  margin: 0 -8px;
+  border-radius: var(--radius-sm);
+  transition: background 0.15s ease;
+}
+
+.dashboard-ranking__row--clickable:hover {
+  background: rgba(0, 240, 255, 0.06);
+}
+
+.dashboard-ranking__row--selected {
+  background: rgba(0, 240, 255, 0.1);
+}
+
+.dashboard-ranking__row--selected .dashboard-ranking__name,
+.dashboard-ranking__row--selected .dashboard-ranking__value {
+  color: var(--neon-cyan);
+  font-weight: 700;
+}
+
+.dashboard-collaborator-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+  padding: 10px 12px;
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: var(--radius-md);
+  background: rgba(0, 240, 255, 0.05);
+}
+
+.dashboard-collaborator-panel__label {
+  font-size: 0.78rem;
+  color: var(--neon-cyan);
+  font-weight: 700;
+}
+
+.dashboard-table-wrap {
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  border-radius: var(--radius-md);
+  overflow: auto;
+  max-height: 320px;
+}
+
+.dashboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.75rem;
+}
+
+.dashboard-table th {
+  position: sticky;
+  top: 0;
+  background: rgba(10, 20, 32, 0.95);
+  color: var(--neon-cyan);
+  text-align: left;
+  padding: 8px 10px;
+  font-size: 0.65rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(0, 240, 255, 0.3);
+  white-space: nowrap;
+}
+
+.dashboard-table td {
+  padding: 7px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.dashboard-table tbody tr:hover {
+  background: rgba(0, 240, 255, 0.05);
+}
+
+/* Ganancia Neta es la penúltima columna (la última es Acciones, con el
+   botón de eliminar) — :nth-last-child(2) en vez de :last-child, que
+   apuntaría al botón desde que se agregó esa columna. */
+.dashboard-table__row--negative td:nth-last-child(2) {
+  color: var(--neon-magenta);
+}
+
+.dashboard-table__delete-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  transition: background 0.2s ease;
+}
+
+.dashboard-table__delete-btn:hover {
+  background: rgba(255, 46, 154, 0.15);
+}
+
+.dashboard-empty {
+  padding: 20px;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.btn-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: none;
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  color: var(--text-primary);
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  font-size: 0.8rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-modal-close:hover {
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.modal h2 {
+  font-size: 1.05rem;
+  letter-spacing: 1.5px;
+  color: var(--neon-cyan);
+  text-shadow: var(--shadow-neon-cyan);
+  margin-bottom: 8px;
+}
+
+.modal__subtitle {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 18px;
+  line-height: 1.4;
+}
+
+#registration-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+#registration-form input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  outline: none;
+  text-align: center;
+}
+
+#registration-form input:focus {
+  border-color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+#registration-form .btn-send {
+  padding: 12px;
+}
+
+.modal__view {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.modal__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modal__subtitle--warning {
+  color: var(--neon-magenta);
+}
+
+.btn-secondary {
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-primary);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 4px;
+  align-self: center;
+}
+
+.btn-link:hover {
+  color: var(--neon-cyan);
+}
+
+/* ===================== MÓDULO: PRÁCTICA DE TRAZOS REALES (Hanzi Writer) =====================
+   Separado del módulo Japonés (.jp-*): reutiliza el patrón visual de
+   .modal--japanese/.jp-view pero con su propio prefijo .hanzi-* porque
+   el lienzo lo dibuja Hanzi Writer directamente en un <div>, no HTML
+   nuestro. El fondo oscuro + cuadrícula punteada imita las tablas de
+   caligrafía tradicionales (米字格), pedido explícito para máxima
+   visibilidad táctil en móvil. */
+
+.jp-hanzi-writer-open-btn {
+  border-color: rgba(255, 46, 154, 0.35);
+  background: rgba(255, 46, 154, 0.06);
+  color: var(--neon-magenta);
+}
+
+.jp-hanzi-writer-open-btn:hover {
+  background: var(--neon-magenta);
+  color: #1a0410;
+  box-shadow: 0 0 12px rgba(255, 46, 154, 0.5);
+}
+
+.modal--hanzi-writer {
+  max-width: 640px;
+  max-height: 88vh;
+  overflow-y: auto;
+  padding: 44px 26px 26px;
+  text-align: left;
+  position: relative;
+}
+
+.hanzi-view {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.hanzi-grid-section__title {
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--neon-gold);
+  margin: 0 0 8px;
+  padding-top: 12px;
+  border-top: 1px dashed rgba(255, 183, 0, 0.25);
+}
+
+.hanzi-grid-section:first-child .hanzi-grid-section__title {
+  padding-top: 0;
+  border-top: none;
+}
+
+.hanzi-char-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Mismo tratamiento visual que .jp-kana-btn (borde neón cian, hover con
+   glow), para que el módulo se sienta parte de la misma familia aunque
+   viva en un modal distinto. */
+.hanzi-char-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-sm);
+  border: 1px solid #00f0ff;
+  background: rgba(0, 240, 255, 0.08);
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.hanzi-char-btn:hover {
+  background: rgba(0, 240, 255, 0.2);
+  box-shadow: var(--shadow-neon-cyan);
+  transform: translateY(-1px);
+}
+
+.hanzi-canvas-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Lienzo: fondo oscuro sólido + cuadrícula punteada tradicional (米字格
+   simplificada — cruz central + diagonales) dibujada en CSS puro, detrás
+   del SVG que genera Hanzi Writer. El propio div#hanzi-writer-target lo
+   llena Hanzi Writer con su <svg> (width/height 240 pasados en JS). */
+.hanzi-canvas-stage {
+  width: 240px;
+  height: 240px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  background-color: #05080f;
+  background-image:
+    linear-gradient(rgba(0, 240, 255, 0.18) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.18) 1px, transparent 1px),
+    repeating-linear-gradient(45deg, rgba(0, 240, 255, 0.12) 0, rgba(0, 240, 255, 0.12) 1px, transparent 1px, transparent 8px),
+    repeating-linear-gradient(-45deg, rgba(0, 240, 255, 0.12) 0, rgba(0, 240, 255, 0.12) 1px, transparent 1px, transparent 8px);
+  background-size: 100% 50%, 50% 100%, 100% 100%, 100% 100%;
+  background-position: center, center, center, center;
+  background-repeat: no-repeat;
+  box-shadow: var(--shadow-neon-cyan);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Feedback táctil del modo Quiz de Hanzi Writer: onCorrectStroke/onMistake
+   agregan estas clases brevemente sobre el propio lienzo (ver app.js). */
+.hanzi-canvas-stage--correct {
+  animation: hanziFlashCorrect 0.4s ease;
+}
+
+.hanzi-canvas-stage--wrong {
+  animation: hanziFlashWrong 0.4s ease;
+}
+
+@keyframes hanziFlashCorrect {
+  0% { box-shadow: 0 0 0 rgba(0, 255, 156, 0); }
+  40% { box-shadow: 0 0 22px rgba(0, 255, 156, 0.9); border-color: var(--neon-green); }
+  100% { box-shadow: var(--shadow-neon-cyan); }
+}
+
+@keyframes hanziFlashWrong {
+  0% { box-shadow: 0 0 0 rgba(255, 46, 154, 0); }
+  40% { box-shadow: 0 0 22px rgba(255, 46, 154, 0.9); border-color: var(--neon-magenta); }
+  100% { box-shadow: var(--shadow-neon-cyan); }
+}
+
+.hanzi-quiz-feedback {
+  min-height: 1.2em;
+  font-size: 0.78rem;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+.hanzi-quiz-feedback--correct {
+  color: var(--neon-green);
+  text-shadow: var(--shadow-neon-green);
+}
+
+.hanzi-quiz-feedback--wrong {
+  color: var(--neon-magenta);
+}
+
+.hanzi-quiz-feedback--complete {
+  color: var(--neon-gold);
+}
+
+.hanzi-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.btn-hanzi-control {
+  border-radius: var(--radius-sm);
+  padding: 9px 14px;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.btn-hanzi-control--animate {
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  color: var(--neon-cyan);
+}
+
+.btn-hanzi-control--animate:hover {
+  background: var(--neon-cyan);
+  color: #04121a;
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.btn-hanzi-control--quiz {
+  border: 1px solid rgba(0, 255, 156, 0.4);
+  color: var(--neon-green);
+}
+
+.btn-hanzi-control--quiz:hover {
+  background: var(--neon-green);
+  color: #04120a;
+  box-shadow: var(--shadow-neon-green);
+}
+
+.btn-hanzi-control--reset {
+  border: 1px solid rgba(255, 46, 154, 0.4);
+  color: var(--neon-magenta);
+}
+
+.btn-hanzi-control--reset:hover {
+  background: var(--neon-magenta);
+  color: #1a0410;
+  box-shadow: 0 0 12px rgba(255, 46, 154, 0.5);
+}
+
+@media (max-width: 480px) {
+  .hanzi-canvas-stage {
+    width: 200px;
+    height: 200px;
+  }
+}
+
+/* ===================== MODAL: EXPANSIÓN DE CIUDADES (mapa) =====================
+   Sin librería de mapas ni coordenadas geográficas reales: un fondo de
+   grilla estilo radar/circuito (gradientes CSS) con nodos-marcador
+   flotando encima, suficiente para transmitir "mapa futurista / expansión
+   de territorio" sin salirse de la filosofía 100% vanilla del proyecto
+   (la única dependencia externa real de todo Miikaeru es Hanzi Writer, y
+   solo para ese módulo puntual). */
+.modal--city-map {
+  max-width: 640px;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 44px 30px 30px;
+  text-align: center;
+  position: relative;
+}
+
+.city-map__headline {
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  color: var(--neon-gold);
+  text-shadow: 0 0 10px rgba(255, 183, 0, 0.5);
+  margin: 0 0 20px;
+}
+
+.city-map__grid {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  gap: 18px 28px;
+  min-height: 220px;
+  padding: 28px 20px;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  background-color: #050912;
+  background-image:
+    linear-gradient(rgba(0, 240, 255, 0.15) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.15) 1px, transparent 1px),
+    radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.12), transparent 65%);
+  background-size: 32px 32px, 32px 32px, 100% 100%;
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.city-map__node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  background: rgba(0, 240, 255, 0.06);
+  color: var(--text-primary);
+  animation: cityNodePulse 2.6s ease-in-out infinite;
+}
+
+/* Alterna cian/magenta por índice (par/impar), como "nodos de expansión"
+   de distinto color en vez de una fila monocroma repetitiva. */
+.city-map__node:nth-child(even) {
+  border-color: rgba(255, 46, 154, 0.4);
+  background: rgba(255, 46, 154, 0.06);
+  animation-delay: 0.6s;
+}
+
+.city-map__node:nth-child(even) .city-map__node-pin {
+  color: var(--neon-magenta);
+  text-shadow: 0 0 8px rgba(255, 46, 154, 0.7);
+}
+
+.city-map__node-pin {
+  font-size: 1.3rem;
+  color: var(--neon-cyan);
+  text-shadow: var(--shadow-neon-cyan);
+}
+
+.city-map__node-name {
+  font-size: 0.68rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+@keyframes cityNodePulse {
+  0%, 100% { box-shadow: 0 0 6px rgba(0, 240, 255, 0.25); }
+  50% { box-shadow: 0 0 16px rgba(0, 240, 255, 0.55); }
+}
+
+/* ===== Bugs & Sugerencias (dentro del modal del León / City Map) ===== */
+.feedback-section {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(0, 240, 255, 0.2);
+  text-align: left;
+}
+
+.feedback-section__title {
+  font-size: 0.95rem;
+  color: var(--neon-cyan);
+  text-shadow: var(--shadow-neon-cyan);
+  margin: 0 0 6px;
+}
+
+.feedback-section__subtitle {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin: 0 0 14px;
+}
+
+#feedback-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#feedback-form select,
+#feedback-form textarea {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  color: var(--text-primary);
+  font-family: var(--font-main);
+  font-size: 0.88rem;
+  outline: none;
+  resize: vertical;
+}
+
+#feedback-form select:focus,
+#feedback-form textarea:focus {
+  border-color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.feedback-section__status {
+  font-size: 0.78rem;
+  color: var(--neon-green);
+  text-shadow: var(--shadow-neon-green);
+  margin: 0;
+}
+
+.feedback-section__status--error {
+  color: var(--neon-magenta);
+  text-shadow: 0 0 6px rgba(255, 46, 154, 0.5);
+}
+
+/* ===================== MÓDULO PLACEHOLDER GENÉRICO (Hábitos / Karaoke) =====================
+   El mismo modal se reutiliza para cualquier módulo "próximamente": el
+   ícono/título/texto se escriben dinámicamente por app.js según qué app
+   se seleccionó (ver APP_MODULES), en vez de duplicar un modal casi
+   idéntico por cada uno. */
+.app-placeholder-icon {
+  display: block;
+  text-align: center;
+  font-size: 2.4rem;
+  margin-bottom: 10px;
+  filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.5));
+}
+
+/* ===================== MODAL: CONFIGURACIÓN DE IDIOMAS =====================
+   Pantalla inicial del módulo Japonés: elegir idioma de interfaz (mismo
+   selector global ES/EN/JA) y modo (Práctica/Examen) antes de entrar a
+   la cuadrícula. */
+.modal--jp-config {
+  max-width: 420px;
+  max-height: 85vh;
+  overflow-y: auto;
+  text-align: center;
+  position: relative;
+  padding: 44px 26px 30px;
+}
+
+.jp-config-section {
+  margin-top: 22px;
+}
+
+.jp-config-section__title {
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+
+.jp-config-language-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.jp-config-lang-btn {
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-primary);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.jp-config-lang-btn:hover {
+  border-color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.jp-config-lang-btn--active {
+  border-color: var(--neon-cyan);
+  background: rgba(0, 240, 255, 0.15);
+  color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.jp-config-mode-row {
+  display: flex;
+  gap: 12px;
+}
+
+.jp-config-mode-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 16px 10px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(124, 147, 173, 0.35);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-primary);
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.jp-config-mode-btn__icon {
+  font-size: 1.8rem;
+}
+
+.jp-config-mode-btn:hover {
+  border-color: var(--neon-gold);
+  color: var(--neon-gold);
+  box-shadow: 0 0 12px rgba(255, 183, 0, 0.35);
+}
+
+/* Botón dentro del módulo Japonés para volver a esta pantalla y cambiar
+   idioma/modo sin cerrar todo el módulo (pedido explícito: "regresar o
+   cambiar de idioma en cualquier momento"). */
+.btn-jp-config {
+  position: absolute;
+  top: 14px;
+  left: 20px;
+  border: 1px solid rgba(255, 183, 0, 0.4);
+  background: rgba(255, 183, 0, 0.06);
+  color: var(--neon-gold);
+  border-radius: var(--radius-sm);
+  padding: 5px 10px;
+  font-size: 0.65rem;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 1;
+}
+
+.btn-jp-config:hover {
+  background: var(--neon-gold);
+  color: #1a1200;
+  box-shadow: 0 0 12px rgba(255, 183, 0, 0.5);
+}
+
+/* ===================== MODAL: PANEL DE ADMINISTRADOR =====================
+   Candado de contraseña (cortina de interfaz, ver nota de seguridad en
+   app.js) -> tabla consolidada de transacciones leída desde Supabase. */
+.modal--admin-panel {
+  max-width: 720px;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 44px 26px 30px;
+  text-align: left;
+  position: relative;
+}
+
+.admin-panel__error {
+  color: var(--neon-magenta);
+  font-size: 0.75rem;
+}
+
+/* Pestañas del Panel de Admin (Transacciones / Inspector de Bugs) —
+   mismo criterio visual que .finanzas-tabs/.habits-tabs, ya establecido
+   en el resto de la app. */
+.admin-panel-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.admin-panel-tab {
+  flex: 1;
+  padding: 10px 10px;
+  font-size: 0.7rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  text-align: center;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 46, 154, 0.3);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.admin-panel-tab:hover {
+  border-color: var(--neon-magenta);
+  color: var(--neon-magenta);
+}
+
+.admin-panel-tab--active {
+  border-color: var(--neon-magenta);
+  color: var(--neon-magenta);
+  background: rgba(255, 46, 154, 0.08);
+  box-shadow: 0 0 12px rgba(255, 46, 154, 0.25);
+}
+
+/* Modal de Login de Administrador — mismo patrón de formulario apilado
+   que #master-login-form (candado principal de la app), reutilizado
+   para consistencia visual entre los 2 flujos de autenticación real
+   que existen en toda la app. */
+.modal--admin-login {
+  max-width: 380px;
+  text-align: center;
+}
+
+#admin-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+#admin-login-form input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 46, 154, 0.3);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  outline: none;
+  text-align: center;
+}
+
+#admin-login-form input:focus {
+  border-color: var(--neon-magenta);
+  box-shadow: 0 0 10px rgba(255, 46, 154, 0.4);
+}
+
+/* Inspector de Bugs: estadísticas rápidas + tarjetas de decisión */
+.inspector-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.inspector-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 10px 6px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(124, 147, 173, 0.3);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.inspector-stat__value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.inspector-stat__label {
+  font-size: 0.6rem;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.inspector-stat--pending {
+  border-color: rgba(255, 183, 0, 0.4);
+}
+.inspector-stat--pending .inspector-stat__value {
+  color: var(--neon-gold);
+}
+
+.inspector-stat--approved {
+  border-color: rgba(0, 255, 156, 0.4);
+}
+.inspector-stat--approved .inspector-stat__value {
+  color: var(--neon-green);
+}
+
+.inspector-stat--resolved {
+  border-color: rgba(0, 240, 255, 0.4);
+}
+.inspector-stat--resolved .inspector-stat__value {
+  color: var(--neon-cyan);
+}
+
+.inspector-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.inspector-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(124, 147, 173, 0.3);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.inspector-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.inspector-card__status {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.6rem;
+  font-weight: 700;
+}
+
+.inspector-card__status--pendiente {
+  background: rgba(255, 183, 0, 0.15);
+  color: var(--neon-gold);
+}
+.inspector-card__status--aprobado {
+  background: rgba(0, 255, 156, 0.15);
+  color: var(--neon-green);
+}
+.inspector-card__status--descartado {
+  background: rgba(255, 46, 154, 0.15);
+  color: var(--neon-magenta);
+}
+.inspector-card__status--resuelto {
+  background: rgba(0, 240, 255, 0.15);
+  color: var(--neon-cyan);
+}
+
+.inspector-card__message {
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.inspector-card__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.inspector-card__actions button {
+  flex: 1;
+  padding: 8px;
+  font-size: 0.75rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(124, 147, 173, 0.3);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.inspector-card__approve:hover {
+  border-color: var(--neon-green);
+  color: var(--neon-green);
+  background: rgba(0, 255, 156, 0.08);
+}
+
+.inspector-card__discard:hover {
+  border-color: var(--neon-magenta);
+  color: var(--neon-magenta);
+  background: rgba(255, 46, 154, 0.08);
+}
+
+.inspector-card__resolve:hover {
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+  background: rgba(0, 240, 255, 0.08);
+}
+
+@media (max-width: 480px) {
+  .inspector-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.admin-panel__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.admin-panel__status {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+  min-height: 1.2em;
+}
+
+.admin-panel__table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid rgba(255, 46, 154, 0.25);
+  border-radius: var(--radius-md);
+}
+
+.admin-panel__table {
+  width: 100%;
+  min-width: 640px;
+  border-collapse: collapse;
+  font-size: 0.75rem;
+}
+
+.admin-panel__table th,
+.admin-panel__table td {
+  padding: 8px 10px;
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.admin-panel__table th {
+  color: var(--neon-magenta);
+  text-transform: uppercase;
+  font-size: 0.62rem;
+  letter-spacing: 0.5px;
+  background: rgba(255, 46, 154, 0.06);
+}
+
+.admin-panel__table td {
+  color: var(--text-primary);
+}
+
+.admin-panel__table tbody tr:hover {
+  background: rgba(255, 46, 154, 0.05);
+}
+
+/* ===================== REDISEÑO HUD ESTILO JUEGO (Mobile Legends) =====================
+   "Lobby despejado": centro limpio con el fondo Cyberpunk del body y el
+   avatar como única pieza central, accesos a TODOS los módulos en dos
+   docks laterales flotantes compactos de solo ícono. Wishlist y Chat,
+   antes paneles siempre visibles en el layout de 3 columnas, ahora viven
+   detrás de un ícono como el resto (#wishlist-modal / #chat-modal) —
+   mismos ids internos de siempre (#chat-feed, #chat-form, #wishlist-grid,
+   #wishlist-form, #pillars, #app-grid), CERO cambios en la lógica de
+   app.js, solo reubicación/estilo. Reemplaza visualmente el layout de 3
+   columnas (.sidebar/.panel--chat/.panel--minigame) — esas reglas quedan
+   sin uso en el HTML pero no se borraron para minimizar el diff. */
+
+.hud-banner {
+  text-align: center;
+  padding: 6px 20px 10px;
+  font-size: 0.72rem;
+  letter-spacing: 2px;
+  font-weight: 700;
+  color: var(--neon-gold);
+  text-shadow: 0 0 10px rgba(255, 183, 0, 0.6);
+  text-transform: uppercase;
+}
+
+.hud-layout {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 4px 20px 28px;
+  max-width: 1600px;
+  margin: 0 auto;
+  min-height: 0;
+}
+
+.hud-dock {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 68px;
+  padding: 16px 8px;
+  border-radius: var(--radius-lg);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-neon-cyan);
+  position: sticky;
+  top: 12px;
+  max-height: calc(100vh - 160px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  transform: translateZ(0);
+}
+
+.hud-dock::-webkit-scrollbar {
+  width: 4px;
+}
+.hud-dock::-webkit-scrollbar-thumb {
+  background: rgba(0, 240, 255, 0.3);
+  border-radius: 999px;
+}
+
+.hud-dock__divider {
+  width: 60%;
+  height: 1px;
+  flex-shrink: 0;
+  background: rgba(124, 147, 173, 0.3);
+  margin: 2px 0;
+}
+
+.hud-dock__icon {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  background: rgba(0, 240, 255, 0.06);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.hud-dock__icon:hover {
+  border-color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+  transform: translateY(-2px);
+}
+
+/* Chat Guía: parpadeo neón sobre el ícono del dock al que apunta la
+   respuesta guía (ver pulseDockGlow() en app.js) — llama la atención
+   sobre DÓNDE hacer click sin depender de texto adicional en pantalla. */
+.dock-icon-glow {
+  animation: dockIconGlowPulse 1.1s ease-in-out infinite;
+  border-color: var(--neon-cyan) !important;
+  will-change: transform, box-shadow;
+  z-index: 1;
+}
+
+@keyframes dockIconGlowPulse {
+  0%, 100% {
+    box-shadow: 0 0 6px rgba(0, 240, 255, 0.4), 0 0 0 0 rgba(0, 240, 255, 0.5);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 22px rgba(0, 240, 255, 0.95), 0 0 34px rgba(0, 240, 255, 0.5);
+    transform: scale(1.12);
+  }
+}
+
+/* #pillars y .app-grid pasan de fila/grilla ancha a columna de íconos
+   compactos dentro del dock — mismos elementos/ids de siempre, solo
+   restyle. El texto (nombre/estado/tag) se oculta: el dock es
+   deliberadamente solo-ícono, con el nombre accesible vía `title` en
+   cada <button> (tooltip nativo al mantener el dedo/mouse). */
+.hud-dock #pillars,
+.hud-dock .app-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.hud-dock .pillar-btn,
+.hud-dock .app-card {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  position: relative;
+}
+
+.hud-dock .pillar-btn span:not(.pillar-btn__icon),
+.hud-dock .app-card__name,
+.hud-dock .app-card__status,
+.hud-dock .panel__tag {
+  display: none;
+}
+
+.hud-dock .pillar-btn__icon,
+.hud-dock .app-card__icon {
+  font-size: 1.3rem;
+}
+
+.hud-center {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 60vh;
+}
+
+/* El avatar pasa a ser la pieza central del lobby: mucho más grande que
+   en el layout de 3 columnas de antes (donde compartía sidebar con el
+   App Hub). Sin .resizable a propósito — un centro fijo y prolijo es
+   justo el punto del rediseño. */
+.hud-center .panel--avatar {
+  /* flex-basis explícito en vez de flex:none + width:100% (la combinación
+     anterior): un flex-basis:auto + width:100% dentro de un contenedor
+     row que también tiene OTRO hijo con flex-grow (ver #chat-modal en
+     desktop) confunde al algoritmo de flexbox en la resolución de
+     "espacio libre" — mide como si el 100% se calculara sobre un
+     contenedor más chico de lo real y termina achicando .hud-center
+     entero, solapando el panel de chat con el dock derecho. flex-basis
+     fijo (mismo valor que max-width) es inequívoco. */
+  flex: 0 0 600px;
+  max-width: 600px;
+  height: min(720px, 76vh);
+  transform: scale(var(--avatar-scale, 1));
+  transition: transform 0.15s ease;
+  /* max-height:100% (relativo a .hud-center, que YA se estira al alto
+     real que sobra debajo del header/banner vía align-items:stretch en
+     desktop) es la cota que de verdad importa — el 76vh de arriba es
+     solo un techo estético para pantallas altas, pero un header que
+     creció más de lo esperado (más stats, texto más grande, etc.) no
+     debe poder empujar el avatar fuera del viewport nunca. */
+  max-height: 100%;
+}
+
+.avatar__rank-tag {
+  font-size: 0.68rem;
+  letter-spacing: 0.5px;
+  color: var(--neon-gold);
+  text-shadow: 0 0 6px rgba(255, 183, 0, 0.6);
+}
+
+/* ===================== MODALES: CHAT Y WISHLIST =====================
+   Antes paneles siempre visibles; ahora overlays glassmorphism como el
+   resto de la app — blur(10px) pedido explícito. */
+.modal--chat,
+.modal--wishlist {
+  max-width: 560px;
+  max-height: 85vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 44px 26px 26px;
+  text-align: left;
+  position: relative;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.modal--chat {
+  transform: scale(var(--chat-scale, 1));
+  transition: transform 0.15s ease;
+}
+
+.modal--chat .chat__feed {
+  max-height: 45vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.modal--wishlist .wishlist__grid {
+  max-height: 50vh;
+  overflow-y: auto;
+  margin: 12px 0;
+}
+
+@media (max-width: 900px) {
+  .hud-layout {
+    padding: 4px 8px 20px;
+  }
+
+  .hud-dock {
+    width: 56px;
+    padding: 10px 6px;
+    gap: 8px;
+  }
+
+  .hud-dock__icon,
+  .hud-dock .pillar-btn,
+  .hud-dock .app-card {
+    width: 44px;
+    height: 44px;
+  }
+
+  .hud-center .panel--avatar {
+    flex-basis: 340px;
+    max-width: 340px;
+    height: min(440px, 55vh);
+  }
+
+  .hud-banner {
+    font-size: 0.62rem;
+    letter-spacing: 1px;
+    padding: 6px 10px 8px;
+  }
+}
+
+/* ===================== HUD LAPTOP/ESCRITORIO: PANTALLA COMPLETA =====
+   `html`/`body` pasan a height:100% real (no solo min-height) y
+   `.hud-layout` se estira (flex:1) para ocupar exactamente el espacio
+   que sobra debajo del header + banner — así el lobby llena el
+   viewport (100vh/100vw) sin scroll de página en el caso normal.
+   `overflow-y:auto` en vez de `hidden`: es una red de seguridad para
+   viewports muy bajos/zoom alto, no una barra de scroll que aparezca
+   en el uso normal. Los docks también crecen (más íconos "estilo HUD
+   de videojuego") y el avatar central gana aún más espacio vertical. */
+@media (min-width: 901px) {
+  html, body {
+    height: 100%;
+  }
+
+  body {
+    overflow-y: auto;
+  }
+
+  .hud-layout {
+    flex: 1;
+    min-height: 0;
+    align-items: stretch;
+    padding: 12px 32px 24px;
+  }
+
+  .hud-dock {
+    width: 96px;
+    padding: 28px 14px;
+    gap: 20px;
+    max-height: none;
+    height: 100%;
+    /* En desktop ya no hay scroll de página al que "engancharse" (todo
+       el layout está pensado para caber en 100vh) — position:sticky
+       aquí es puro leftover del layout viejo con scroll de página, y
+       además genera una discrepancia real de scrollHeight en algunos
+       motores de render cuando el dock también tiene overflow-y:auto
+       propio. static lo evita sin perder nada funcional. */
+    position: static;
+  }
+
+  .hud-dock__icon,
+  .hud-dock .pillar-btn,
+  .hud-dock .app-card {
+    width: 76px;
+    height: 76px;
+  }
+
+  .hud-dock__icon,
+  .hud-dock .pillar-btn__icon,
+  .hud-dock .app-card__icon {
+    font-size: 2.1rem;
+  }
+
+  .hud-center {
+    min-height: 0;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 20px;
+  }
+
+  /* Layout de 2 columnas "cara a cara con el León": el avatar cede algo
+     de su ancho máximo (600px a solas, ver regla base más arriba) para
+     dejarle un panel fijo de chat al costado. */
+  .hud-center .panel--avatar {
+    flex-basis: 460px;
+    max-width: 460px;
+  }
+
+  /* Chat Guía HUD: en mobile #chat-modal sigue siendo el overlay de
+     pantalla completa de siempre (position:fixed heredado de
+     .modal-overlay, abierto/cerrado por openChatModal()/closeChatModal()
+     en app.js — CERO cambios ahí). En desktop se "aplana" a un panel
+     estático dentro de .hud-center, SIEMPRE visible sin importar el
+     atributo [hidden] que ese mismo JS sigue escribiendo (inofensivo:
+     el ícono 💬 del dock ya no necesita abrir nada en desktop, pero
+     seguir llamando a openChatModal() no rompe nada). El selector
+     `#chat-modal[hidden]` (más específico que `[hidden]` solo) es lo
+     que le gana al `display:none !important` global. */
+  #chat-modal[hidden] {
+    display: flex !important;
+  }
+
+  #chat-modal {
+    position: static;
+    inset: auto;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    padding: 0;
+    align-items: stretch;
+    justify-content: stretch;
+    flex: 1;
+    max-width: 380px;
+    z-index: auto;
+  }
+
+  #chat-modal .modal--chat {
+    width: 100%;
+    max-width: none;
+    max-height: none;
+    height: 100%;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #chat-modal .chat__feed {
+    max-height: none;
+    flex: 1;
+  }
+
+  /* Nada que cerrar: es un panel persistente en desktop, no un modal. */
+  #chat-modal-close {
+    display: none;
+  }
+}
+
+/* El header (.hud__stats) trae ~11 bloques de estadística + selectors —
+   a un ancho "laptop" intermedio (901-1300px, ej. 1024px) con el gap de
+   28px por defecto, ese header terminaba envolviendo en 4-5 filas y
+   comiéndose gran parte de los 100vh, forzando scroll de página incluso
+   con .hud-layout perfectamente dimensionado — justo lo que el pedido
+   de "pantalla completa sin scroll" quiere evitar. Achicar gap/fuente
+   en este rango intermedio (sin ocultar ningún stat) es suficiente para
+   que quepa en 1-2 filas. */
+@media (min-width: 901px) and (max-width: 1300px) {
+  .hud {
+    gap: 14px;
+    padding: 10px 20px;
+  }
+
+  .hud__stats {
+    gap: 14px;
+  }
+
+  .stat__label {
+    font-size: 0.62rem;
+  }
+
+  .stat__value {
+    font-size: 0.9rem;
+  }
+
+  /* Mismo espíritu que el resto de este bloque: a este ancho intermedio
+     el dock con 6 apps + 4 pilares a 76px no entra completo en la
+     altura disponible — bajarlo a 60px le da más aire antes de
+     depender de su propio scroll interno (overflow-y:auto, ya
+     preparado para esto de todas formas). */
+  .hud-dock__icon,
+  .hud-dock .pillar-btn,
+  .hud-dock .app-card {
+    width: 60px;
+    height: 60px;
+  }
+
+  .hud-dock__icon,
+  .hud-dock .pillar-btn__icon,
+  .hud-dock .app-card__icon {
+    font-size: 1.6rem;
+  }
+
+  /* El layout de 2 columnas (avatar + chat, ver bloque desktop de arriba)
+     con sus anchos completos (460px + 380px) se sale del ancho real
+     disponible en este rango intermedio (medido en 1024px: ~736px
+     libres dentro de .hud-center) — se achican ambos para que quepan
+     sin generar scroll horizontal ni empujar los docks. */
+  .hud-center .panel--avatar {
+    flex-basis: 380px;
+    max-width: 380px;
+  }
+
+  #chat-modal {
+    max-width: 300px;
+  }
+}
+
+/* ===================== OPTIMIZACIÓN MOBILE-FIRST =====================
+   Pase transversal de ergonomía táctil sobre toda la app — no reemplaza
+   los breakpoints existentes (1280/1024/640px más arriba), los
+   complementa. Alcance deliberado: se sube a 44-48px la altura mínima de
+   los controles de NAVEGACIÓN Y ACCIÓN primarios (botones de flujo,
+   tarjetas, pestañas, opciones de quiz/examen), no los íconos inline
+   secundarios y decorativos ya pequeños a propósito (🔊 hablar, ✕
+   quitar, ▶ practicar fila) — inflarlos a 44px se vería roto frente a su
+   texto vecino y no son objetivos reales de navegación con el pulgar. */
+
+/* Feedback táctil inmediato: no se limita a mobile (el mouse también se
+   beneficia de un micro-press), pero es el requisito que más se nota al
+   tocar con el dedo, sin hover previo que "avise" el estado interactivo. */
+button,
+.app-card,
+.jp-kana-btn,
+.hanzi-char-btn,
+.wishlist-item,
+.pillar-btn,
+select {
+  transition: transform 0.12s ease, filter 0.12s ease, box-shadow 0.12s ease, background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+button:active,
+.app-card:active,
+.jp-kana-btn:active,
+.hanzi-char-btn:active,
+.wishlist-item:active,
+.pillar-btn:active {
+  transform: scale(0.98);
+  filter: brightness(1.25);
+}
+
+@media (max-width: 600px) {
+  /* Controles de navegación/acción primarios: 44px de alto mínimo,
+     centrados, para que el pulgar no falle el toque. */
+  .btn-register,
+  .btn-add,
+  .btn-add-app,
+  .btn-secondary,
+  .btn-scan,
+  .btn-jp-back,
+  .btn-jp-skip,
+  .btn-jp-config,
+  .btn-modal-close,
+  .btn-logout,
+  .btn-miika-pass,
+  .btn-profile-switch,
+  .btn-hanzi-control,
+  .finanzas-global-summary__dashboard-btn,
+  .finanzas-global-summary__admin-btn,
+  .jp-config-lang-btn,
+  .jp-config-mode-btn,
+  .jp-script-btn,
+  .finanzas-tab,
+  .habits-tab,
+  .workout-weekday-btn,
+  .jp-vocab-cat-card,
+  .jp-grammar-card,
+  .pillar-btn,
+  .negocio-type-btn,
+  .jp-quiz-option-btn,
+  .jp-exam-segment-btn,
+  .dashboard-ranking__row--clickable,
+  select,
+  input[type="text"],
+  input[type="tel"],
+  input[type="password"],
+  input[type="number"],
+  input[type="date"] {
+    min-height: 44px;
+  }
+
+  /* Tarjetas/filas completas: el ALTO mínimo alcanza, no hace falta
+     centrar contenido (ya vienen con su propio layout interno). */
+  .app-card,
+  .jp-kana-btn,
+  .hanzi-char-btn,
+  .wishlist-item,
+  .habit-card {
+    min-height: 48px;
+  }
+
+  .btn-register,
+  .btn-add,
+  .btn-secondary,
+  .btn-scan,
+  .btn-modal-close,
+  .jp-quiz-option-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Padding lateral 12-16px en los contenedores principales — antes
+     algunos modales/paneles usaban 26-30px fijos sin importar el ancho
+     real de pantalla, recortando el área útil en un celular angosto. */
+  .modal {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .app-grid {
+    margin-left: 12px;
+    margin-right: 12px;
+  }
+
+  .workout-log-form__row3 {
+    grid-template-columns: 1fr;
+  }
+
+  .finanzas-tab-panel,
+  .finanzas-global-summary,
+  .jp-grid-toolbar,
+  .jp-rows {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .layout {
+    padding: 12px;
+  }
+
+  /* Tipografía de Kana/Kanji y vocabulario: legible sin necesidad de
+     hacer zoom en pantallas chicas. */
+  .jp-kana-btn {
+    font-size: 1.25rem;
+  }
+
+  .jp-phases-char,
+  .jp-examstroke-char {
+    font-size: 5rem;
+  }
+
+  .jp-vocab-card__kana {
+    font-size: 1.3rem;
+  }
+
+  .jp-vocab-card__romaji,
+  .jp-vocab-card__meaning {
+    font-size: 0.78rem;
+  }
+
+  .hanzi-char-btn {
+    font-size: 1.3rem;
+  }
+
+  /* Fila de Fases: el flex-wrap ya evita el desborde, pero se agrega
+     scroll horizontal suave con inercia táctil como resguardo extra si
+     algún carácter con muchos trazos no llega a acomodarse en el ancho
+     disponible de una pantalla muy angosta. */
+  .jp-phase-row {
+    flex-wrap: wrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+  }
+
+  /* Navegación en la zona del pulgar: ".btn-jp-back" (Volver) vive en
+     .jp-view, un flex-column (ver arriba) — con order se reubica visualmente
+     al final, junto al resto de las acciones primarias (Siguiente/Omitir/
+     Confirmar, que ya son los últimos elementos del flujo por defecto),
+     sin tocar el orden real del DOM ni la navegación por teclado. */
+  .btn-jp-back {
+    order: 10;
+    align-self: stretch;
+    text-align: center;
+  }
+}
+
+/* ===================================================
+   MOBILE LITE (≤767px) — "Mobile Lite & Desktop Pro"
+   ===================================================
+   Objetivo explícito: rendimiento/batería + legibilidad de estudio en
+   celulares, dejando el Cyberpunk Glassmorphism completo INTACTO en
+   desktop/tablet (≥768px, ni una regla de acá los toca). Mecanismo
+   elegido: sobreescribir las custom properties de :root (--bg-base,
+   --text-primary, --shadow-neon-*, etc.) DENTRO de este media query —
+   como casi todo el archivo ya lee color/sombra a través de esas
+   variables en vez de hardcodear valores, este único bloque cambia el
+   tema de la app entera "de forma transparente" (mismo mecanismo que
+   ya usan --avatar-scale/--chat-scale) sin tener que tocar cada
+   selector uno por uno. Los pocos lugares que SÍ hardcodean un hex
+   cian (las cajas de práctica de Kanji/Kana, ver más abajo) se
+   sobreescriben a mano porque son justo la superficie que el pedido
+   prioriza ("tipografía nítida para trazos e ideogramas"). */
+@media (max-width: 767px) {
+  :root {
+    /* Fondo limpio/formal en vez del starfield oscuro — blanco/gris
+       minimalista pedido explícito. */
+    --bg-base: #F3F5F8;
+    --bg-elevated: #FFFFFF;
+    /* Acentos oscurecidos/saturados para que sigan siendo reconocibles
+       como "de marca" pero con contraste real sobre fondo claro (los
+       tonos neón originales, pensados para fondo oscuro, casi
+       desaparecen sobre blanco). */
+    --neon-cyan: #0A6E8C;
+    --neon-green: #1F7A4D;
+    --neon-magenta: #A32B67;
+    --neon-gold: #A66A00;
+    --neon-cyan-glow: #0A6E8C;
+    --text-primary: #12161F;
+    --text-secondary: #545E6B;
+    --glass-bg: #FFFFFF;
+    --glass-border: rgba(15, 23, 42, 0.14);
+    /* Sin resplandores neón — "elimina... efectos neón secundarios" — al
+       vaciar la variable, CUALQUIER `box-shadow: var(--shadow-neon-*)`
+       de toda la app queda en blanco automáticamente. */
+    --shadow-neon-cyan: none;
+    --shadow-neon-green: none;
+    --avatar-aura-strong: transparent;
+    --avatar-aura-soft: transparent;
+  }
+
+  /* Sin blur (el efecto más caro de renderizar, y el que más batería
+     consume en GPUs móviles) en NINGÚN elemento — más simple y a
+     prueba de módulos futuros que enumerar cada .glass/.hud-dock/
+     modal--* uno por uno. */
+  * {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Sin resplandor de texto (siempre decorativo, nunca informativo) ni
+     animaciones en bucle (pulsos/glow/carrusel) — las transiciones
+     simples de hover/focus quedan intactas, esas sí son baratas y le
+     dan feedback táctil real al usuario. */
+  *, *::before, *::after {
+    text-shadow: none !important;
+    animation: none !important;
+  }
+
+  /* Textura de scanlines + imagen de fondo (assets/bg_main.png, la más
+     pesada de toda la app) fuera por completo — fondo sólido y liviano
+     en su lugar. */
+  body::before {
+    display: none;
+  }
+
+  body {
+    background: var(--bg-base);
+    background-attachment: scroll;
+  }
+
+  /* Cuadrícula decorativa detrás del avatar (mandala sutil) — puramente
+     ornamental, se apaga junto con el resto de los efectos secundarios. */
+  .panel--avatar::before {
+    display: none;
+  }
+
+  /* Avatar: solo el PNG del León, liviano — nada de las capas de fondo
+     de escena ni props (rocas flotantes) que setAvatarState() cambia
+     por detrás; siguen existiendo en el DOM (no se tocó la lógica de
+     app.js) pero no se pintan en celular. */
+  .layer-bg,
+  .layer-props {
+    display: none;
+  }
+
+  .layer-lion {
+    filter: drop-shadow(0 0 10px rgba(10, 110, 140, 0.35));
+  }
+
+  /* ---- Legibilidad de Kanji/Kana: las cajas de práctica hardcodean su
+     propio fondo casi-negro + grid cian (pensadas para el tema oscuro),
+     así que las variables de arriba no alcanzan — se sobreescriben a
+     mano con fondo claro y trazos en tinta oscura, el mismo criterio
+     visual de cualquier app de caligrafía japonesa real. ---- */
+  .jp-phase-box,
+  .jp-exam-segment-btn,
+  .hanzi-canvas-stage {
+    background-color: #FFFFFF !important;
+    background-image:
+      linear-gradient(rgba(15, 23, 42, 0.12) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(15, 23, 42, 0.12) 1px, transparent 1px) !important;
+    border-color: rgba(15, 23, 42, 0.25) !important;
+    box-shadow: none !important;
+  }
+
+  .jp-phase-stroke--previous {
+    fill: #12161F;
+    opacity: 0.25;
+  }
+
+  .jp-phase-stroke--current {
+    fill: #12161F;
+    opacity: 1;
+    filter: none;
+  }
+
+  .jp-kana-btn,
+  .hanzi-char-btn {
+    border-color: rgba(15, 23, 42, 0.3);
+    background: #FFFFFF;
+  }
+
+  .jp-kana-btn:hover,
+  .hanzi-char-btn:hover {
+    background: rgba(10, 110, 140, 0.08);
+    box-shadow: none;
+  }
+}

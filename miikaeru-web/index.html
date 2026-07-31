@@ -1,0 +1,1746 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Sistema Miikaeru</title>
+  <!-- PWA: display:standalone en manifest.json hace que, instalada en el
+       celular, la app abra a pantalla completa sin barra del navegador.
+       apple-mobile-web-app-* cubre el mismo caso en iOS/Safari, que no
+       lee manifest.json para esto. -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#070912" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="apple-touch-icon" href="assets/avatar_idle.png" />
+  <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
+       deploy en vez de servir una versión vieja desde su caché — subir
+       este número a mano cada vez que se publique un cambio real. -->
+  <link rel="stylesheet" href="style.css?v=20260731-16" />
+  <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
+       Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
+       a partir de datos KanjiVG reales — algo que el módulo de Práctica
+       por Fases (más simple/orientativo, ver app.js) NUNCA pretendió ser. -->
+  <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5/dist/hanzi-writer.min.js"></script>
+  <!-- Supabase: backend en la nube para respaldar el ledger de negocios
+       (ver businessLedger en app.js) y alimentar el Panel de
+       Administrador. La clave usada es "publishable" (pensada para vivir
+       en código de cliente, no un secreto) — ver initSupabaseClient() en
+       app.js para la nota de seguridad real: la protección de los datos
+       depende de las políticas RLS configuradas del lado de Supabase, no
+       de este archivo. -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+
+  <!-- CANDADO PRINCIPAL: bloquea el acceso a TODA la app hasta que haya
+       una sesión de cuenta principal activa (miikaeru_master_account /
+       miikaeru_master_logged_in en localStorage — ver app.js). No es
+       cerrable (sin botón [X], sin click-fuera, sin Escape): es un
+       candado real, no un modal más. Los Sub-Perfiles (Admin, etc.) son
+       una capa DISTINTA y siguen viviendo dentro de la app, una vez
+       pasado este candado — ver #profile-modal más abajo. -->
+  <div class="modal-overlay master-auth-overlay" id="master-auth-modal">
+    <div class="modal modal--master-auth glass">
+      <div class="master-auth__brand">
+        <span class="hud__logo">✦</span>
+        <span class="hud__title">MIIKAERU<span class="hud__title-accent">_SYS</span></span>
+      </div>
+
+      <!-- Vista: Iniciar Sesión (ya existe una cuenta principal guardada) -->
+      <div id="master-auth-view-login">
+        <h2 data-i18n="masterAuthLoginTitle">Bienvenido de vuelta</h2>
+        <p class="master-auth__subtitle" data-i18n="masterAuthLoginSubtitle">Ingresa tu celular y contraseña para desbloquear el núcleo.</p>
+        <form id="master-login-form">
+          <input type="tel" id="master-login-phone" data-i18n-placeholder="masterAuthPhonePlaceholder" placeholder="Número de Celular" autocomplete="tel" required />
+          <input type="password" id="master-login-password" data-i18n-placeholder="masterAuthPasswordPlaceholder" placeholder="Contraseña" autocomplete="current-password" required />
+          <p class="master-auth__error" id="master-login-error" hidden></p>
+          <button type="submit" class="btn-send" data-i18n="masterAuthLoginBtn">Iniciar Sesión</button>
+        </form>
+      </div>
+
+      <!-- Vista: Crear Cuenta Principal (primera vez en este dispositivo) -->
+      <div id="master-auth-view-register" hidden>
+        <h2 data-i18n="masterAuthRegisterTitle">Crea tu Cuenta Principal</h2>
+        <p class="master-auth__subtitle" data-i18n="masterAuthRegisterSubtitle">Esta cuenta protege el acceso a todo el dispositivo. Los perfiles se crean después, ya adentro.</p>
+        <form id="master-register-form">
+          <input type="tel" id="master-register-phone" data-i18n-placeholder="masterAuthPhonePlaceholder" placeholder="Número de Celular" autocomplete="tel" required />
+          <input type="password" id="master-register-password" data-i18n-placeholder="masterAuthPasswordPlaceholder" placeholder="Contraseña" autocomplete="new-password" minlength="4" required />
+          <input type="password" id="master-register-password-confirm" data-i18n-placeholder="masterAuthPasswordConfirmPlaceholder" placeholder="Confirmar Contraseña" autocomplete="new-password" minlength="4" required />
+          <p class="master-auth__error" id="master-register-error" hidden></p>
+          <button type="submit" class="btn-send" data-i18n="masterAuthRegisterBtn">Crear Cuenta</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- HUD SUPERIOR -->
+  <header class="hud">
+    <div class="hud__brand">
+      <span class="hud__logo">✦</span>
+      <span class="hud__title">MIIKAERU<span class="hud__title-accent">_SYS</span></span>
+    </div>
+
+    <div class="hud__stats">
+      <div class="stat">
+        <span class="stat__label" data-i18n="statLevel">Nivel</span>
+        <span class="stat__value" id="level-value">12</span>
+      </div>
+
+      <button type="button" class="btn-miika-pass" id="miika-pass-btn" data-i18n="miikaPassBtn">🎫 Miika Pass</button>
+
+      <div class="stat stat--xp">
+        <span class="stat__label">XP</span>
+        <div class="xp-bar">
+          <div class="xp-bar__fill" id="xp-fill" style="width: 64%;"></div>
+          <span class="xp-bar__text" id="xp-text">6,400 / 10,000</span>
+        </div>
+      </div>
+
+      <div class="stat">
+        <span class="stat__label" data-i18n="statRank">Rango</span>
+        <span class="stat__value stat__value--rank" id="rank-value">Kodomo</span>
+      </div>
+
+      <!-- Racha de actividad (días consecutivos, ver updateActivityStreak()
+           en app.js) — pedido explícito para el resumen rápido del HUD. -->
+      <div class="stat stat--streak" data-i18n-title="statStreakTitle" title="Racha de aprendizaje">
+        <span class="stat__label">🔥</span>
+        <span class="stat__value stat__value--streak" id="streak-value">0</span>
+      </div>
+
+      <!-- Balance Global (todo el ledger de negocios, sin filtrar) — mismo
+           cálculo que renderFinanzasGlobalSummary() dentro del Cuadro de
+           Finanzas, reflejado también acá para el resumen rápido del HUD. -->
+      <div class="stat stat--balance-global" data-i18n-title="statBalanceGlobalTitle" title="Balance Global">
+        <span class="stat__label" data-i18n="statBalanceGlobal">Balance Global</span>
+        <span class="stat__value stat__value--balance-global" id="hud-balance-global">S/ 0</span>
+      </div>
+
+      <div class="stat stat--spiritual" title="Estado Espiritual">
+        <span class="stat__label" data-i18n="statCompass">Brújula</span>
+        <div class="compass" id="compass">
+          <span class="compass__needle"></span>
+        </div>
+        <span class="stat__value stat__value--spiritual" id="spiritual-value">Equilibrado</span>
+      </div>
+
+      <div class="stat stat--finance" title="Módulo de Finanzas">
+        <span class="stat__label" data-i18n="statFinance">Finanzas</span>
+        <select class="currency-select" id="currency-select" title="Divisa">
+          <option value="PEN">S/. Soles</option>
+          <option value="JPY">¥ Yenes</option>
+          <option value="USD">$ Dólares</option>
+        </select>
+        <span class="stat__value stat__value--finance" id="finance-value">S/ 0</span>
+        <span class="stat__tag" id="finance-tier">Nivel 0</span>
+      </div>
+
+      <div class="stat stat--gold" title="Oro">
+        <span class="stat__label">🪙</span>
+        <span class="stat__value stat__value--gold" id="gold-value">0</span>
+      </div>
+
+      <div class="stat stat--diamonds" title="Diamantes (solo con dinero real)">
+        <span class="stat__label">💎</span>
+        <span class="stat__value stat__value--diamonds" id="diamonds-value">0</span>
+      </div>
+
+      <div class="stat stat--language" title="Idioma / Language / 言語">
+        <span class="stat__label">語</span>
+        <select class="language-select" id="language-select" title="Idioma">
+          <option value="es">ES</option>
+          <option value="en">EN</option>
+          <option value="ja">JA</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="hud__status">
+      <span class="status-dot"></span>
+      <span class="hud__status-text" data-i18n="online">ONLINE</span>
+    </div>
+
+    <div class="hud__profile" id="hud-profile">
+      <button class="btn-profile-switch" id="profile-switch-btn" type="button" data-i18n-title="profileSwitchBtnTitle" title="Cambiar de perfil">
+        👤 <span id="active-profile-name">Admin</span>
+      </button>
+      <span class="hud__profile-name" id="profile-name">Operador</span>
+      <button class="btn-logout" id="logout-btn" type="button" data-i18n-title="logout" title="Cerrar sesión">⏻</button>
+    </div>
+  </header>
+
+  <!-- Banner de copywriting motivacional: rotativo entre un puñado de
+       frases (ver HUD_BANNER_PHRASES en app.js), mismo patrón que
+       AVATAR_TIPS. Pedido explícito del rediseño HUD estilo juego. -->
+  <div class="hud-banner">
+    <span class="hud-banner__text" id="hud-banner-text">TOMA EL CONTROL DE TU NEGOCIO</span>
+  </div>
+
+  <!-- CUERPO PRINCIPAL — rediseño estilo HUD de juego (Mobile Legends):
+       centro despejado (fondo Cyberpunk + avatar), accesos a TODOS los
+       módulos en dos docks laterales flotantes compactos de solo ícono.
+       Wishlist y Chat, que antes eran paneles siempre visibles, ahora
+       viven detrás de un ícono igual que el resto (ver #chat-modal /
+       #wishlist-modal más abajo) — mismos ids internos que antes
+       (#chat-feed, #chat-form, #wishlist-grid, #wishlist-form, #pillars,
+       #app-grid) para no tocar ninguna lógica de app.js, solo su
+       ubicación/estilo en el layout. -->
+  <main class="layout hud-layout">
+
+    <!-- DOCK IZQUIERDO: Chat/IA, Wishlist, Pilares -->
+    <aside class="hud-dock hud-dock--left">
+      <button type="button" class="hud-dock__icon hud-dock__icon--chat" id="chat-open-btn" data-i18n-title="chatTitle" title="Feed // Chat">💬</button>
+      <button type="button" class="hud-dock__icon hud-dock__icon--wishlist" id="wishlist-open-btn" data-i18n-title="wishlistTitle" title="Wishlist // Garage">🎁</button>
+
+      <div class="hud-dock__divider"></div>
+
+      <div class="pillars" id="pillars">
+        <button class="pillar-btn pillar-btn--finanzas" data-pillar="finanzas" type="button" data-i18n-title="pillarFinanzas" title="Finanzas">
+          <span class="pillar-btn__icon">💰</span> <span data-i18n="pillarFinanzas">Finanzas</span>
+        </button>
+        <button class="pillar-btn pillar-btn--fisico" data-pillar="fisico" type="button" data-i18n-title="pillarFisico" title="Estado Físico">
+          <span class="pillar-btn__icon">💪</span> <span data-i18n="pillarFisico">Estado Físico</span>
+        </button>
+        <button class="pillar-btn pillar-btn--espiritual" data-pillar="espiritual" type="button" data-i18n-title="pillarEspiritual" title="Estado Espiritual">
+          <span class="pillar-btn__icon">🧭</span> <span data-i18n="pillarEspiritual">Estado Espiritual</span>
+        </button>
+        <button class="pillar-btn pillar-btn--aprendizaje" data-pillar="aprendizaje" type="button" data-i18n-title="pillarAprendizaje" title="Aprendizaje">
+          <span class="pillar-btn__icon">🧠</span> <span data-i18n="pillarAprendizaje">Aprendizaje</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- CENTRO: solo el avatar, agrandado — "lobby despejado" pedido
+         explícito, el fondo Cyberpunk del body ya hace de mapa neón. -->
+    <div class="hud-center">
+      <div class="panel panel--avatar glass scanlines">
+        <!-- Globo de diálogo del asistente: mensajes dinámicos de guía,
+             actualizados por app.js (bienvenida, subir de nivel, victoria en
+             Boss Fight, felicitación de hábitos, y al hacer click/Enter
+             sobre la escena). Vive FUERA de #avatarScene/#avatar3dStage a
+             propósito — sigue funcionando igual sin importar cuál de las
+             dos escenas esté activa (setAvatarSpeech() usa getElementById,
+             no depende de dónde cuelgue en el DOM). -->
+        <div class="avatar__speech-bubble" id="avatar-speech-bubble">
+          <p class="avatar__speech-text" id="avatar-speech-text">Bienvenido, Operador.</p>
+        </div>
+
+        <div id="avatarScene" class="avatar-scene-container">
+          <!-- Escenario 3D Parallax: perspective vive en #avatarScene;
+               preserve-3d + rotación por mouse (rotateX/rotateY, ver app.js)
+               vive en #avatarStage. Reemplaza el sistema anterior de
+               galaxia CSS + canvas de partículas + anillos/drones
+               decorativos, ahora innecesarios con arte real de assets/.
+               Esta es la escena PNG — sigue siendo la única en mobile
+               (Mobile Lite, ver style.css) y el fallback automático en
+               desktop si no hay .glb real todavía (ver
+               initAvatar3D()/avatar3dStage abajo). -->
+          <div
+            id="avatarStage"
+            role="button"
+            tabindex="0"
+            aria-label="Miikaeru, tu guía. Toca para un consejo."
+          >
+            <img class="layer-bg" src="assets/bg_state_meditation.png" alt="" aria-hidden="true" />
+            <img class="layer-props" src="assets/props_floating_rocks.png" alt="" aria-hidden="true" />
+            <!-- Sistema de emotes controlado por app.js (AVATAR_EMOTES /
+                 playAvatarEmote): la key activa decide qué PNG mostrar. -->
+            <img id="avatar-visual-img" class="layer-lion" src="assets/avatar_meditating.png" alt="Miikaeru the Lion" />
+          </div>
+        </div>
+
+        <!-- Escenario 3D real (Three.js + GLTFLoader, cargados por app.js
+             SOLO en desktop ≥768px — en mobile este bloque nunca se toca ni
+             se pide de la red). Arranca oculto: initAvatar3D() lo revela
+             recién si assets/models/leon_nivel1.glb carga con éxito: si el
+             archivo no existe todavía (caso de hoy) o falla la carga, la
+             escena PNG de arriba se queda como está — cero cambio visible
+             hasta que se agregue el modelo real. -->
+        <div id="avatar3dStage" class="avatar-3d-stage" hidden></div>
+
+        <div class="avatar__meta">
+          <span class="avatar__name">UNIT-042</span>
+          <span class="avatar__rank-tag" id="avatar-rank-tag">Kodomo</span>
+          <span class="avatar__hp" id="avatar-hp">HP 100%</span>
+        </div>
+      </div>
+
+      <!-- MODAL: CHAT / FEED — vive acá (junto al León) a propósito: en
+           desktop (ver @media min-width:901px en style.css) deja de ser
+           un overlay de pantalla completa y se convierte en un panel
+           glassmorphic FIJO al costado del avatar (layout de 2 columnas,
+           "cara a cara con el León"), forzado visible sin importar el
+           atributo [hidden]. En mobile no cambia nada: sigue siendo
+           exactamente el mismo modal desplegable de siempre (mismo
+           position:fixed de .modal-overlay, mismos ids, mismo
+           openChatModal()/closeChatModal() en app.js — CERO cambios de
+           lógica). -->
+      <div class="modal-overlay" id="chat-modal" hidden>
+        <div class="modal modal--chat glass">
+          <button type="button" class="btn-modal-close" id="chat-modal-close" aria-label="Cerrar">✕</button>
+          <div class="panel__header">
+            <h2 data-i18n="chatTitle">Feed // Chat</h2>
+            <span class="panel__tag" data-i18n="chatChannel">canal-01</span>
+          </div>
+
+          <div class="chat__feed" id="chat-feed"></div>
+
+          <div class="evidence-preview" id="evidence-preview" hidden>
+            <img id="evidence-preview-img" alt="Vista previa de evidencia" />
+            <button type="button" id="evidence-remove" aria-label="Quitar evidencia">✕</button>
+          </div>
+
+          <form class="chat__input" id="chat-form">
+            <button type="button" class="btn-attach" id="attach-btn" title="Adjuntar evidencia" aria-label="Adjuntar evidencia">📷</button>
+            <input type="file" id="evidence-input" accept="image/*" hidden />
+            <input
+              type="text"
+              id="chat-input"
+              data-i18n-placeholder="chatPlaceholder"
+              placeholder="Escribe un mensaje a Miikaeru..."
+              autocomplete="off"
+            />
+            <button type="submit" class="btn-send" aria-label="Enviar mensaje">
+              <span data-i18n="chatSend">Enviar</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- DOCK DERECHO: Apps & Módulos (Boss Fight, Japonés, Hábitos,
+         Calendario, Bio-Sync, Karaoke) — cada ícono ya abría su propio
+         modal (openAppModal() en app.js), ahora compactos en el dock en
+         vez de tarjetas grandes en un panel lateral. -->
+    <aside class="hud-dock hud-dock--right">
+      <button type="button" class="hud-dock__icon hud-dock__icon--add-app" id="add-app-btn" data-i18n-title="appsAddBtn" title="+ Agregar App">➕</button>
+
+      <div class="hud-dock__divider"></div>
+
+      <div class="app-grid" id="app-grid">
+        <button type="button" class="app-card app-card--active" data-app="bossfight" id="app-card-bossfight" data-i18n-title="appBossFightName" title="Boss Fight">
+          <span class="app-card__icon">⚔️</span>
+          <span class="app-card__name" data-i18n="appBossFightName">Boss Fight</span>
+          <span class="panel__tag" id="minigame-status" data-i18n="bossStatusStandby">standby</span>
+        </button>
+        <button type="button" class="app-card" data-app="japanese" data-i18n-title="appJapaneseName" title="Japonés AI Coach">
+          <span class="app-card__icon">🎌</span>
+          <span class="app-card__name" data-i18n="appJapaneseName">Japonés AI Coach</span>
+          <span class="app-card__status app-card__status--new" data-i18n="appStatusNew">Nuevo</span>
+        </button>
+        <button type="button" class="app-card" data-app="habits" data-i18n-title="appHabitsName" title="Tracker de Hábitos">
+          <span class="app-card__icon">📈</span>
+          <span class="app-card__name" data-i18n="appHabitsName">Tracker de Hábitos</span>
+        </button>
+        <button type="button" class="app-card" data-app="calendar" data-i18n-title="appCalendarName" title="Calendario &amp; Eventos">
+          <span class="app-card__icon">📅</span>
+          <span class="app-card__name" data-i18n="appCalendarName">Calendario &amp; Eventos</span>
+          <span class="app-card__status app-card__status--new" data-i18n="appStatusNew">Nuevo</span>
+        </button>
+        <button type="button" class="app-card" data-app="biosync" data-i18n-title="appBiosyncName" title="Bio-Sync &amp; Estado Físico">
+          <span class="app-card__icon">❤️</span>
+          <span class="app-card__name" data-i18n="appBiosyncName">Bio-Sync &amp; Estado Físico</span>
+          <span class="app-card__status app-card__status--new" data-i18n="appStatusNew">Nuevo</span>
+        </button>
+        <button type="button" class="app-card" data-app="karaoke" data-i18n-title="appKaraokeName" title="Karaoke">
+          <span class="app-card__icon">🎤</span>
+          <span class="app-card__name" data-i18n="appKaraokeName">Karaoke</span>
+          <span class="app-card__status app-card__status--new" data-i18n="appStatusComingSoon">Próximamente</span>
+        </button>
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- MODAL: WISHLIST // GARAGE — antes panel siempre visible en el
+       sidebar izquierdo; ahora se abre desde el ícono 🎁 del dock
+       izquierdo. Mismos ids internos que antes. -->
+  <div class="modal-overlay" id="wishlist-modal" hidden>
+    <div class="modal modal--wishlist glass">
+      <button type="button" class="btn-modal-close" id="wishlist-modal-close" aria-label="Cerrar">✕</button>
+      <div class="panel__header">
+        <h2 data-i18n="wishlistTitle">Wishlist // Garage</h2>
+        <span class="panel__tag" id="wishlist-count">0/4</span>
+      </div>
+
+      <div class="wishlist__grid" id="wishlist-grid">
+        <!-- items renderizados por app.js -->
+      </div>
+
+      <form class="wishlist__form" id="wishlist-form">
+        <input
+          type="text"
+          id="wishlist-input"
+          data-i18n-placeholder="wishlistPlaceholder"
+          placeholder="Agregar deseo..."
+          autocomplete="off"
+        />
+        <button type="submit" class="btn-add" aria-label="Agregar deseo">+</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: HERRAMIENTAS DE PILARES (Finanzas / Estado Físico / Estado Espiritual).
+       Antes vivían encajadas dentro de la caja de mensajes del chat, causando scrolls
+       anidados; ahora son un overlay independiente, y el panel de chat queda libre
+       para ser únicamente feed + input. -->
+  <div class="modal-overlay" id="pillar-modal" hidden>
+    <div class="modal modal--pillar glass">
+      <button type="button" class="btn-modal-close" id="pillar-modal-close" aria-label="Cerrar">✕</button>
+
+      <!-- Herramienta de Finanzas: solo visible cuando ese pilar está activo -->
+      <div class="finanzas-panel" id="finanzas-panel" hidden>
+        <div class="finanzas-tabs" id="finanzas-tabs">
+          <button type="button" class="finanzas-tab finanzas-tab--active" data-finanzas-tab="personal" data-i18n="financeTabPersonal">Personales</button>
+          <button type="button" class="finanzas-tab" data-finanzas-tab="servicios" data-i18n="financeTabServicios">Servicios / Negocio</button>
+        </div>
+
+        <!-- Resumen General Financiero: antes vivía SOLO dentro del Dashboard
+             (modal aparte, se abría con clic en el avatar). Ahora vive acá,
+             permanente y scannable, visible sin importar qué pestaña esté
+             activa (Personales o Servicios/Negocio) — se calcula sobre TODO
+             el ledger de negocios sin filtrar, a diferencia de las tarjetas
+             del Dashboard que sí responden al filtro de negocio/colaborador.
+             Como el avatar ahora abre el mapa de Expansión de Ciudades (ver
+             #city-map-modal), este botón queda como la puerta de entrada al
+             Dashboard completo (ranking, tabla, impresión/PDF). -->
+        <div class="finanzas-global-summary" id="finanzas-global-summary">
+          <div class="finanzas-global-summary__card finanzas-global-summary__card--income">
+            <span class="finanzas-global-summary__label" data-i18n="dashboardCardIncome">Total Ingresos</span>
+            <span class="finanzas-global-summary__value" id="finanzas-global-ingresos">S/ 0</span>
+          </div>
+          <div class="finanzas-global-summary__card finanzas-global-summary__card--expense">
+            <span class="finanzas-global-summary__label" data-i18n="dashboardCardExpense">Total Gastos</span>
+            <span class="finanzas-global-summary__value" id="finanzas-global-gastos">S/ 0</span>
+          </div>
+          <div class="finanzas-global-summary__card finanzas-global-summary__card--balance">
+            <span class="finanzas-global-summary__label" data-i18n="dashboardCardBalance">Balance Neto Global</span>
+            <span class="finanzas-global-summary__value" id="finanzas-global-balance">S/ 0</span>
+          </div>
+          <button type="button" class="finanzas-global-summary__dashboard-btn" id="finanzas-open-dashboard-btn" data-i18n="financeOpenDashboardBtn">📊 Ver Dashboard Completo</button>
+          <!-- Ocultos por defecto en el HTML (no solo vía JS) para que
+               nunca haya ni un parpadeo visible antes de que
+               checkAdminSession() confirme la sesión — ver
+               applySuperAdminVisibility() en app.js. Solo se revelan si
+               la sesión real de Supabase Auth coincide con ADMIN_EMAIL. -->
+          <button type="button" class="finanzas-global-summary__admin-btn" id="admin-panel-open-btn" data-i18n="adminPanelOpenBtn" hidden>🛡️ Panel de Administrador</button>
+          <button type="button" class="finanzas-global-summary__admin-btn finanzas-global-summary__admin-btn--inspector" id="inspector-open-btn" data-i18n="inspectorOpenBtn" hidden>🕵️ Agente Inspector</button>
+        </div>
+
+        <!-- Pestaña 1: Gastos Personales (contenido original, sin cambios de lógica) -->
+        <div class="finanzas-tab-panel" id="finanzas-tab-personal">
+          <div class="finanzas-panel__row">
+            <label for="finanzas-ingreso" data-i18n="financeIncomeLabel">Ingreso Mensual</label>
+            <!-- Abre la Auditoría y Control de Nómina (給与明細書) — ver
+                 #payroll-audit-modal más abajo. Botón dedicado en vez de
+                 hacer clickeable la fila entera, para no interferir con
+                 escribir directamente en el input de al lado. -->
+            <button type="button" class="btn-payroll-audit" id="payroll-audit-open-btn" data-i18n-title="payrollAuditOpenTitle" title="Auditoría y Control de Nómina">📋</button>
+            <span class="finanzas-currency-symbol" id="finanzas-ingreso-symbol">S/</span>
+            <input type="number" id="finanzas-ingreso" min="0" placeholder="0" />
+          </div>
+
+          <div class="finanzas-panel__categories" id="finanzas-categories">
+            <!-- categorías renderizadas por app.js -->
+          </div>
+
+          <button type="button" class="btn-add" id="finanzas-add-category" data-i18n="financeAddCategory">+ Agregar categoría</button>
+
+          <div class="finanzas-panel__summary">
+            <div class="finanzas-panel__summary-row">
+              <span data-i18n="financeTotal">Total Gastos</span>
+              <span id="finanzas-total-gastos">S/ 0</span>
+            </div>
+            <div class="finanzas-panel__summary-row finanzas-panel__summary-row--balance">
+              <span data-i18n="financeBalance">Balance</span>
+              <span id="finanzas-balance">S/ 0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pestaña 2: Servicios / Negocio — registro de TRANSACCIONES
+             (no un solo snapshot editable como Personales): cada envío
+             agrega una fila nueva al ledger de negocios, persistido
+             aparte en localStorage (miikaeru_business_ledger, ver
+             app.js). El detalle completo se analiza en el Dashboard
+             Financiero General (clic en el avatar de Miikaeru). -->
+        <div class="finanzas-tab-panel" id="finanzas-tab-servicios" hidden>
+          <!-- Escaneo por Foto (Visión IA simulada) + Imprimir Formulario Físico:
+               ver scanReceiptImage()/buildPrintableFormHTML() en app.js. El
+               formulario impreso está pensado para volver a subirse aquí
+               mismo una vez llenado a mano. -->
+          <div class="negocio-scan-toolbar">
+            <input type="file" id="negocio-scan-input" accept="image/png, image/jpeg" hidden />
+            <button type="button" class="btn-scan" id="negocio-scan-btn" data-i18n="negocioScanBtn">📷 Subir Foto de Registro / Boleta</button>
+            <button type="button" class="btn-scan btn-scan--print" id="negocio-print-btn" data-i18n="negocioPrintBtn">🖨️ Imprimir Formulario Físico</button>
+            <button type="button" class="btn-scan btn-scan--pdf" id="negocio-pdf-btn" data-i18n="btnDownloadPdf">📥 Descargar PDF</button>
+          </div>
+          <div class="negocio-scan-status" id="negocio-scan-status" hidden>
+            <img id="negocio-scan-preview" class="negocio-scan-preview" alt="" />
+            <span id="negocio-scan-status-text"></span>
+          </div>
+
+          <!-- Moneda propia del ledger de negocios, independiente de la
+               moneda personal (state.currency) — persistida aparte en
+               localStorage (miikaeru_business_currency, ver app.js). -->
+          <div class="finanzas-panel__row">
+            <label for="negocio-currency-select" data-i18n="negocioCurrencyLabel">Moneda del Negocio</label>
+            <select id="negocio-currency-select" class="currency-select">
+              <option value="PEN">S/. Soles</option>
+              <option value="JPY">¥ Yenes</option>
+              <option value="USD">$ Dólares</option>
+            </select>
+          </div>
+
+          <div class="finanzas-panel__row">
+            <label for="negocio-fecha" data-i18n="negocioFechaLabel">Fecha</label>
+            <input type="date" id="negocio-fecha" />
+          </div>
+
+          <div class="finanzas-panel__row">
+            <label for="negocio-nombre" data-i18n="negocioNombreLabel">Nombre del Negocio</label>
+            <input type="text" id="negocio-nombre" list="negocio-nombre-sugerencias" placeholder="Salón, Camión, Pescadería..." autocomplete="off" />
+          </div>
+          <datalist id="negocio-nombre-sugerencias">
+            <option value="Salón"></option>
+            <option value="Camión"></option>
+            <option value="Pescadería"></option>
+          </datalist>
+
+          <!-- Campo obligatorio, compartido por Servicio y Venta (ver
+               negocio-fields más abajo) — aparece siempre, no solo en
+               una de las dos plantillas. list=negocio-colaborador-sugerencias
+               replica el mismo patrón de autocompletado/autoguardado que
+               ya tenía Nombre del Negocio (ver refreshNegocioColaboradorSuggestions()
+               en app.js): al escribir un nombre nuevo y registrar, queda
+               guardado para seleccionarlo con un tecleo/Enter la próxima vez. -->
+          <div class="finanzas-panel__row">
+            <label for="negocio-colaborador" data-i18n="negocioColaboradorLabel">Colaborador / Vendedor *</label>
+            <input type="text" id="negocio-colaborador" list="negocio-colaborador-sugerencias" placeholder="Ryana, Milagros, Vendedor 1..." autocomplete="off" required />
+          </div>
+          <datalist id="negocio-colaborador-sugerencias"></datalist>
+
+          <!-- Método de Pago: compartido por Servicio y Venta, igual que
+               Colaborador — no es un campo específico de una sola
+               plantilla. "Otro" revela un campo de texto libre debajo
+               (ver wiring en app.js) en vez de forzar el operador a
+               elegir entre solo Yape/Tarjeta cuando cobró de otra forma
+               (efectivo, Plin, transferencia, etc.). -->
+          <div class="finanzas-panel__row">
+            <label for="negocio-metodo-pago" data-i18n="negocioMetodoPagoLabel">Método de Pago</label>
+            <select id="negocio-metodo-pago">
+              <option value="yape" data-i18n="negocioMetodoPagoYape">Yape</option>
+              <option value="tarjeta" data-i18n="negocioMetodoPagoTarjeta">Tarjeta</option>
+              <option value="otro" data-i18n="negocioMetodoPagoOtro">Otro</option>
+            </select>
+          </div>
+          <div class="finanzas-panel__row" id="negocio-metodo-pago-otro-row" hidden>
+            <label for="negocio-metodo-pago-otro" data-i18n="negocioMetodoPagoOtroLabel">Especifica el método</label>
+            <input type="text" id="negocio-metodo-pago-otro" placeholder="Efectivo, Plin, Transferencia..." />
+          </div>
+
+          <div class="negocio-type-toggle" id="negocio-type-toggle">
+            <button type="button" class="negocio-type-btn negocio-type-btn--active" data-negocio-tipo="servicio" data-i18n="negocioTipoServicio">Servicio</button>
+            <button type="button" class="negocio-type-btn" data-negocio-tipo="venta" data-i18n="negocioTipoVenta">Venta</button>
+          </div>
+
+          <!-- Tipo 1: Servicio — restaurado a su estado original (pedido
+               explícito): exactamente los mismos campos de antes de la
+               unificación, sin desglose de precio unitario/cantidad. -->
+          <div class="negocio-fields" id="negocio-fields-servicio">
+            <div class="finanzas-panel__row">
+              <label for="negocio-servicio-concepto" data-i18n="negocioServicioConceptoLabel">Servicio / Ruta</label>
+              <input type="text" id="negocio-servicio-concepto" placeholder="Corte de cabello, Ruta Norte..." />
+            </div>
+            <div class="finanzas-panel__row">
+              <label for="negocio-servicio-monto" data-i18n="negocioServicioMontoLabel">Monto Cobrado</label>
+              <span class="finanzas-currency-symbol" id="negocio-servicio-monto-symbol">S/</span>
+              <input type="number" id="negocio-servicio-monto" min="0" placeholder="0" />
+            </div>
+            <div class="finanzas-panel__row">
+              <label for="negocio-servicio-gastos" data-i18n="negocioServicioGastosLabel">Gastos Directos</label>
+              <span class="finanzas-currency-symbol" id="negocio-servicio-gastos-symbol">S/</span>
+              <input type="number" id="negocio-servicio-gastos" min="0" placeholder="0" />
+            </div>
+            <div class="finanzas-panel__row">
+              <label for="negocio-servicio-comision" data-i18n="negocioServicioComisionLabel">% Comisión</label>
+              <input type="number" id="negocio-servicio-comision" min="0" max="100" step="1" placeholder="30" />
+              <span class="finanzas-servicio-comision-suffix">%</span>
+            </div>
+            <!-- Deja explícito a quién le corresponde la comisión calculada,
+                 justo debajo del % que la genera (pedido explícito). -->
+            <div class="finanzas-panel__row finanzas-panel__row--computed">
+              <label data-i18n="negocioComisionPreviewLabel">Comisión del Colaborador</label>
+              <span id="negocio-servicio-comision-preview">S/ 0</span>
+            </div>
+            <div class="finanzas-panel__row finanzas-panel__row--computed">
+              <label data-i18n="negocioGananciaPreviewLabel">Ganancia Neta (vista previa)</label>
+              <span id="negocio-servicio-ganancia-preview">S/ 0</span>
+            </div>
+          </div>
+
+          <!-- Tipo 2: Venta — lógica mayorista: Costo Total Compra (Precio
+               Unitario × Cantidad) separado del Monto Cobrado (precio de
+               venta final, cargado a mano, no calculado), Ganancia Bruta
+               = Monto Cobrado - Costo Total Compra, y comisión OPCIONAL en
+               % o Monto Fijo. Todos los campos de precio/cantidad con
+               step="0.01" (pedido explícito: soporte decimal real, sin
+               redondear). -->
+          <div class="negocio-fields" id="negocio-fields-venta" hidden>
+            <div class="finanzas-panel__row">
+              <label for="negocio-venta-concepto" data-i18n="negocioVentaConceptoLabel">Producto / Concepto</label>
+              <input type="text" id="negocio-venta-concepto" placeholder="Pescado, repuestos..." />
+            </div>
+            <div class="finanzas-panel__row">
+              <label for="negocio-venta-precio-unitario" data-i18n="negocioVentaPrecioUnitarioLabel">Precio Unitario (Costo Mayorista)</label>
+              <span class="finanzas-currency-symbol" id="negocio-venta-precio-unitario-symbol">S/</span>
+              <input type="number" id="negocio-venta-precio-unitario" min="0" step="0.01" placeholder="0.00" />
+            </div>
+            <div class="finanzas-panel__row">
+              <label for="negocio-venta-cantidad" data-i18n="negocioCantidadLabel">Cantidad / Peso / Unidades</label>
+              <input type="number" id="negocio-venta-cantidad" min="0" step="0.01" value="1" placeholder="1" />
+            </div>
+            <div class="finanzas-panel__row finanzas-panel__row--computed">
+              <label data-i18n="negocioVentaCostoTotalLabel">Costo Total Compra</label>
+              <span id="negocio-venta-costo-total">S/ 0.00</span>
+            </div>
+            <div class="finanzas-panel__row">
+              <label for="negocio-venta-monto-cobrado" data-i18n="negocioVentaMontoCobradoLabel">Monto Cobrado (Precio Venta Final)</label>
+              <span class="finanzas-currency-symbol" id="negocio-venta-monto-cobrado-symbol">S/</span>
+              <input type="number" id="negocio-venta-monto-cobrado" min="0" step="0.01" placeholder="0.00" />
+            </div>
+            <div class="finanzas-panel__row finanzas-panel__row--computed">
+              <label data-i18n="negocioVentaGananciaBrutaLabel">Ganancia Bruta</label>
+              <span id="negocio-venta-ganancia-bruta">S/ 0.00</span>
+            </div>
+
+            <div class="finanzas-panel__row">
+              <label for="negocio-venta-comision" data-i18n="negocioVentaComisionLabel">Comisión (opcional)</label>
+              <input type="number" id="negocio-venta-comision" min="0" step="0.01" placeholder="0" />
+              <span class="finanzas-currency-symbol" id="negocio-venta-comision-suffix">%</span>
+            </div>
+            <div class="negocio-comision-modo-toggle" id="negocio-venta-comision-modo-toggle">
+              <button type="button" class="negocio-comision-modo-btn negocio-comision-modo-btn--active" data-comision-modo="pct" data-i18n="negocioComisionModoPct">% Porcentaje</button>
+              <button type="button" class="negocio-comision-modo-btn" data-comision-modo="fijo" data-i18n="negocioComisionModoFijo">Monto Fijo</button>
+            </div>
+            <div class="finanzas-panel__row finanzas-panel__row--computed">
+              <label data-i18n="negocioComisionPreviewLabel">Comisión del Colaborador</label>
+              <span id="negocio-venta-comision-preview">S/ 0.00</span>
+            </div>
+            <div class="finanzas-panel__row finanzas-panel__row--computed">
+              <label data-i18n="negocioVentaGananciaFinalLabel">Ganancia Neta Final</label>
+              <span id="negocio-venta-ganancia-preview">S/ 0.00</span>
+            </div>
+          </div>
+
+          <button type="button" class="btn-register" id="negocio-registrar-btn" data-i18n="negocioRegistrarBtn">+ Registrar Transacción</button>
+        </div>
+
+        <button type="button" class="btn-register" id="finanzas-save-btn" data-i18n="financeSave">Guardar</button>
+      </div>
+
+      <!-- Herramienta de Estado Físico: solo visible cuando ese pilar está activo -->
+      <div class="fisico-panel" id="fisico-panel" hidden>
+        <div class="fisico-panel__row">
+          <label for="fisico-reps" data-i18n="fisicoRepsLabel">Meta de repeticiones</label>
+          <input type="number" id="fisico-reps" min="1" value="20" />
+        </div>
+        <div class="fisico-panel__row">
+          <label for="fisico-steps" data-i18n="fisicoStepsLabel">Pasos registrados</label>
+          <input type="number" id="fisico-steps" min="0" placeholder="0" />
+          <span class="fisico-panel__source" id="fisico-steps-source">manual</span>
+        </div>
+        <button type="button" class="btn-register" id="fisico-submit" data-i18n="fisicoRegister">Registrar</button>
+      </div>
+
+      <!-- Herramienta de Estado Espiritual: solo visible cuando ese pilar está activo -->
+      <div class="espiritual-panel" id="espiritual-panel" hidden>
+        <div class="espiritual-panel__meditation">
+          <h3 data-i18n="espiritualMeditationTitle">Meditación en Silencio</h3>
+          <p class="espiritual-panel__hint" data-i18n="espiritualMeditationHint">
+            Desconexión total: sin música, sin distracciones, sin notificaciones.
+          </p>
+          <div class="espiritual-panel__timer-row" id="meditation-controls">
+            <label for="meditation-minutes" data-i18n="espiritualMinutesLabel">Minutos</label>
+            <input type="number" id="meditation-minutes" min="1" max="30" value="3" />
+            <button type="button" class="btn-register" id="meditation-start-btn" data-i18n="espiritualStart">Iniciar Meditación</button>
+          </div>
+          <div class="espiritual-panel__countdown" id="meditation-countdown" hidden>
+            <span id="meditation-countdown-value">03:00</span>
+            <button type="button" class="btn-link" id="meditation-cancel-btn" data-i18n="espiritualCancel">Cancelar</button>
+          </div>
+        </div>
+
+        <div class="espiritual-panel__techniques">
+          <h3 data-i18n="espiritualTechniquesTitle">Técnicas de Claridad Mental</h3>
+
+          <div class="technique-card">
+            <h4>Respiración 4-7-8</h4>
+            <p>Inhala 4 segundos, sostén 7, exhala 8. Repite 4 veces para calmar la mente.</p>
+            <button type="button" class="btn-register technique-complete-btn" data-technique="Respiración 4-7-8">Completar</button>
+          </div>
+
+          <div class="technique-card">
+            <h4>Descarga de Pensamientos</h4>
+            <p>Escribe 3 cargas que te pesan hoy y suéltalas conscientemente, entregándoselas a Dios.</p>
+            <button type="button" class="btn-register technique-complete-btn" data-technique="Descarga de Pensamientos">Completar</button>
+          </div>
+
+          <div class="technique-card">
+            <h4>Gratitud Rápida</h4>
+            <p>Enumera 3 cosas por las que agradeces hoy. La gratitud fortalece tu inteligencia emocional.</p>
+            <button type="button" class="btn-register technique-complete-btn" data-technique="Gratitud Rápida">Completar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Herramienta de Aprendizaje: solo visible cuando ese pilar está activo.
+           Pilar nuevo, todavía sin formulario propio — placeholder consistente
+           con el resto del modal en vez de un botón que no hace nada. -->
+      <div class="aprendizaje-panel" id="aprendizaje-panel" hidden>
+        <h3 data-i18n="aprendizajeTitle">🧠 Aprendizaje</h3>
+        <p class="aprendizaje-panel__hint" data-i18n="aprendizajeHint">
+          Este pilar está en construcción. Pronto vas a poder registrar tu progreso de aprendizaje aquí.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: REQUISITOS DE DESEO — se abre al hacer clic en cualquier
+       tarjeta de la Wishlist. Cada deseo tiene su propia lista de
+       requisitos (checklist) independiente; completarlos todos desbloquea
+       la tarjeta igual que subir de nivel (ver isWishRequirementsComplete()
+       en app.js). -->
+  <div class="modal-overlay" id="wishlist-item-modal" hidden>
+    <div class="modal glass modal--wishlist-item">
+      <button type="button" class="btn-modal-close" id="wishlist-item-modal-close" aria-label="Cerrar">✕</button>
+
+      <div class="wishlist-item-modal__header">
+        <span class="wishlist-item-modal__icon" id="wishlist-item-modal-icon">🏠</span>
+        <h2 id="wishlist-item-modal-name">Casa</h2>
+      </div>
+
+      <div class="wishlist-item-modal__progress">
+        <div class="wishlist-progress-bar">
+          <div class="wishlist-progress-bar__fill" id="wishlist-item-modal-progress-fill"></div>
+        </div>
+        <span class="wishlist-item-modal__progress-text" id="wishlist-item-modal-progress-text">0%</span>
+      </div>
+
+      <div class="wishlist-req-list" id="wishlist-req-list">
+        <!-- requisitos renderizados por app.js -->
+      </div>
+
+      <form class="wishlist-req-form" id="wishlist-req-form">
+        <input
+          type="text"
+          id="wishlist-req-input"
+          data-i18n-placeholder="wishlistReqPlaceholder"
+          placeholder="Nuevo requisito (ej. Juntar cuota inicial)"
+          autocomplete="off"
+        />
+        <button type="submit" class="btn-add" aria-label="Agregar requisito">+</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: AUDITORÍA Y CONTROL DE NÓMINA — estructura de boleta
+       japonesa (給与明細書). Se abre desde el botón 📋 junto a Ingreso
+       Mensual; "Usar como Ingreso Mensual" vuelca el Sueldo Neto Final
+       calculado acá directamente al campo de la pestaña Personales. -->
+  <div class="modal-overlay" id="payroll-audit-modal" hidden>
+    <div class="modal glass modal--payroll-audit">
+      <button type="button" class="btn-modal-close" id="payroll-audit-modal-close" aria-label="Cerrar">✕</button>
+      <h2 class="modal-app__title" data-i18n="payrollAuditTitle">📋 Auditoría y Control de Nómina</h2>
+      <p class="modal__subtitle" data-i18n="payrollAuditSubtitle">Estructura de boleta japonesa (給与明細書) — registra tus horas e ingresos para calcular tu sueldo neto real.</p>
+
+      <div class="negocio-scan-toolbar">
+        <input type="file" id="payroll-scan-input" accept="image/png, image/jpeg" hidden />
+        <button type="button" class="btn-scan" id="payroll-scan-btn" data-i18n="payrollScanBtn">📷 Subir Boleta / Hoja de Horas</button>
+      </div>
+      <div class="negocio-scan-status" id="payroll-scan-status" hidden>
+        <img id="payroll-scan-preview" class="negocio-scan-preview" alt="" />
+        <span id="payroll-scan-status-text"></span>
+      </div>
+
+      <h3 class="payroll-section-title" data-i18n="payrollHoursTitle">⏱️ Días / Horas Trabajadas</h3>
+      <div class="finanzas-panel__row">
+        <label for="payroll-horas-base" data-i18n="payrollHorasBaseLabel">Horas Base (出勤時間)</label>
+        <input type="number" id="payroll-horas-base" min="0" step="0.5" placeholder="0" />
+      </div>
+      <div class="finanzas-panel__row">
+        <label for="payroll-horas-extra" data-i18n="payrollHorasExtraLabel">Horas Extras (残業)</label>
+        <input type="number" id="payroll-horas-extra" min="0" step="0.5" placeholder="0" />
+      </div>
+      <div class="finanzas-panel__row">
+        <label for="payroll-horas-nocturnas" data-i18n="payrollHorasNocturnasLabel">Horas Nocturnas (深夜)</label>
+        <input type="number" id="payroll-horas-nocturnas" min="0" step="0.5" placeholder="0" />
+      </div>
+
+      <h3 class="payroll-section-title" data-i18n="payrollIncomeTitle">💰 Ingresos Brutos</h3>
+      <div class="finanzas-panel__row">
+        <label for="payroll-sueldo-base" data-i18n="payrollSueldoBaseLabel">Sueldo Base (基本給)</label>
+        <span class="finanzas-currency-symbol" id="payroll-sueldo-base-symbol">S/</span>
+        <input type="number" id="payroll-sueldo-base" min="0" placeholder="0" />
+      </div>
+      <div class="finanzas-panel__row">
+        <label for="payroll-bonos" data-i18n="payrollBonosLabel">Bonos / Incentivos</label>
+        <span class="finanzas-currency-symbol" id="payroll-bonos-symbol">S/</span>
+        <input type="number" id="payroll-bonos" min="0" placeholder="0" />
+      </div>
+
+      <h3 class="payroll-section-title" data-i18n="payrollDeductionsTitle">➖ Descuentos</h3>
+      <div class="finanzas-panel__row">
+        <label for="payroll-seguros" data-i18n="payrollSegurosLabel">Seguros (社会保険)</label>
+        <span class="finanzas-currency-symbol" id="payroll-seguros-symbol">S/</span>
+        <input type="number" id="payroll-seguros" min="0" placeholder="0" />
+      </div>
+      <div class="finanzas-panel__row">
+        <label for="payroll-impuestos" data-i18n="payrollImpuestosLabel">Impuestos (所得税)</label>
+        <span class="finanzas-currency-symbol" id="payroll-impuestos-symbol">S/</span>
+        <input type="number" id="payroll-impuestos" min="0" placeholder="0" />
+      </div>
+      <div class="finanzas-panel__row">
+        <label for="payroll-adelantos" data-i18n="payrollAdelantosLabel">Adelantos (前払い)</label>
+        <span class="finanzas-currency-symbol" id="payroll-adelantos-symbol">S/</span>
+        <input type="number" id="payroll-adelantos" min="0" placeholder="0" />
+      </div>
+
+      <div class="finanzas-panel__row finanzas-panel__row--computed">
+        <label data-i18n="payrollNetoFinalLabel">Sueldo Neto Final</label>
+        <span id="payroll-neto-final">S/ 0</span>
+      </div>
+
+      <button type="button" class="btn-register" id="payroll-apply-btn" data-i18n="payrollApplyBtn">✓ Usar como Ingreso Mensual</button>
+    </div>
+  </div>
+
+  <!-- MODAL: DESGLOSE DE GASTOS POR CATEGORÍA — se abre desde el ícono 📊
+       de cada tarjeta de categoría en Personales. La suma de items
+       sincroniza automáticamente el monto de la categoría en la pantalla
+       principal (ver renderFinanzasCategories()/syncCategoryAmount()). -->
+  <div class="modal-overlay" id="category-breakdown-modal" hidden>
+    <div class="modal glass modal--wishlist-item">
+      <button type="button" class="btn-modal-close" id="category-breakdown-modal-close" aria-label="Cerrar">✕</button>
+      <h2 id="category-breakdown-modal-title">Desglose de Gastos</h2>
+
+      <div class="negocio-scan-toolbar">
+        <input type="file" id="category-scan-input" accept="image/png, image/jpeg" hidden />
+        <button type="button" class="btn-scan" id="category-scan-btn" data-i18n="categoryScanBtn">📷 Subir Boleta / Ticket</button>
+      </div>
+      <div class="negocio-scan-status" id="category-scan-status" hidden>
+        <img id="category-scan-preview" class="negocio-scan-preview" alt="" />
+        <span id="category-scan-status-text"></span>
+      </div>
+
+      <div class="category-items-list" id="category-items-list">
+        <!-- items renderizados por app.js -->
+      </div>
+
+      <form class="category-item-form" id="category-item-form">
+        <input
+          type="text"
+          id="category-item-concept"
+          data-i18n-placeholder="categoryItemConceptPlaceholder"
+          placeholder="Concepto (ej. Supermercado)"
+          autocomplete="off"
+        />
+        <input
+          type="number"
+          id="category-item-amount"
+          min="0"
+          data-i18n-placeholder="categoryItemAmountPlaceholder"
+          placeholder="Monto"
+        />
+        <button type="submit" class="btn-add" data-i18n="categoryItemAddBtn">+ Agregar Gasto</button>
+      </form>
+
+      <div class="finanzas-panel__row finanzas-panel__row--computed">
+        <label data-i18n="categoryBreakdownTotalLabel">Total de la categoría</label>
+        <span id="category-breakdown-total">S/ 0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: MIIKA PASS — pase de progresión semanal (antes "Pase de
+       Batalla" genérico), renombrado con el lore de Miikaeru. Niveles
+       1-20 con recompensas: oro/diamantes alternados, y 2 recompensas
+       especiales de avatar en los niveles 10 y 20. El desbloqueo se basa
+       en state.level (sin sistema de misiones nuevo: es una
+       visualización de progreso, no una mecánica nueva). -->
+  <div class="modal-overlay" id="miika-pass-modal" hidden>
+    <div class="modal modal--app modal--miika-pass glass">
+      <button type="button" class="btn-modal-close" id="miika-pass-modal-close" aria-label="Cerrar">✕</button>
+      <h2 class="modal-app__title mpass-title" data-i18n="miikaPassTitle">🎫 MIIKA PASS</h2>
+      <p class="mpass-lore" data-i18n="miikaPassLore">Cada nivel que alcanzas desbloquea una recompensa del núcleo Miikaeru.</p>
+
+      <div class="mpass-toolbar">
+        <label for="mpass-filter" data-i18n="miikaPassFilterLabel">Ver</label>
+        <select id="mpass-filter" class="mpass-filter">
+          <option value="all" data-i18n="miikaPassFilterAll">Todos los niveles</option>
+          <option value="unlocked" data-i18n="miikaPassFilterUnlocked">Solo desbloqueados</option>
+        </select>
+      </div>
+
+      <div class="mpass-track" id="mpass-track">
+        <!-- 20 niveles renderizados por app.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: BOSS FIGHT — el minijuego real, sin cambios de lógica; solo
+       se movió del panel App Hub a su propia ventana independiente. -->
+  <div class="modal-overlay" id="bossfight-modal" hidden>
+    <div class="modal modal--app glass">
+      <button type="button" class="btn-modal-close" id="bossfight-modal-close" aria-label="Cerrar">✕</button>
+      <h2 class="modal-app__title" data-i18n="appBossFightName">Boss Fight</h2>
+      <div class="minigame__viewport" id="minigame-viewport">
+        <canvas id="minigame-canvas" width="280" height="150"></canvas>
+        <p class="minigame__placeholder" id="minigame-placeholder" data-i18n="bossWaiting">Módulo de minijuego en espera...</p>
+      </div>
+      <button class="btn-play" id="play-btn" data-i18n="bossStart">Iniciar</button>
+    </div>
+  </div>
+
+  <!-- MODAL: CALENDARIO & EVENTOS — el contenido se renderiza apenas se
+       abre el modal (ver openAppModal() en app.js); ya no hay un paso
+       intermedio de "standby + Iniciar" porque abrir el modal ES esa
+       acción ahora. -->
+  <div class="modal-overlay" id="calendar-modal" hidden>
+    <div class="modal modal--app glass">
+      <button type="button" class="btn-modal-close" id="calendar-modal-close" aria-label="Cerrar">✕</button>
+      <h2 class="modal-app__title" data-i18n="appCalendarName">Calendario &amp; Eventos</h2>
+
+      <div class="calendar-content" id="calendar-content">
+        <div class="calendar-header">
+          <button type="button" class="calendar-nav-btn" id="calendar-prev-btn" aria-label="Mes anterior">‹</button>
+          <span class="calendar-month-label" id="calendar-month-label">—</span>
+          <button type="button" class="calendar-nav-btn" id="calendar-next-btn" aria-label="Mes siguiente">›</button>
+        </div>
+
+        <div class="calendar-weekdays" id="calendar-weekdays"></div>
+        <div class="calendar-grid" id="calendar-grid"></div>
+
+        <div class="calendar-add-event">
+          <input type="date" id="calendar-event-date" class="calendar-input" />
+          <input type="text" id="calendar-event-title" class="calendar-input" data-i18n-placeholder="calendarEventPlaceholder" placeholder="Pagos de sueldo, Mantenimiento Camión..." />
+          <button type="button" class="btn-register" id="calendar-add-event-btn" data-i18n="calendarAddBtn">+ Agregar</button>
+        </div>
+
+        <div class="calendar-events-list" id="calendar-events-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: BIO-SYNC & ESTADO FÍSICO — mismo criterio que Calendario:
+       contenido siempre visible dentro del modal, sin standby intermedio. -->
+  <div class="modal-overlay" id="biosync-modal" hidden>
+    <div class="modal modal--app glass">
+      <button type="button" class="btn-modal-close" id="biosync-modal-close" aria-label="Cerrar">✕</button>
+      <h2 class="modal-app__title" data-i18n="appBiosyncName">Bio-Sync &amp; Estado Físico</h2>
+
+      <div class="biosync-content" id="biosync-content">
+        <div class="biosync-bpm-panel">
+          <div class="biosync-bpm-display">
+            <span class="biosync-bpm-value" id="biosync-bpm-value">--</span>
+            <span class="biosync-bpm-label">BPM</span>
+          </div>
+          <div class="biosync-pulse" id="biosync-pulse">
+            <svg class="biosync-pulse__svg" viewBox="0 0 200 50" preserveAspectRatio="none">
+              <polyline class="biosync-pulse__line" points="0,25 30,25 40,8 50,42 60,25 200,25" />
+            </svg>
+          </div>
+        </div>
+
+        <button type="button" class="btn-register" id="biosync-connect-btn" data-i18n="biosyncConnectBtn">📡 Conectar Smartwatch / Banda Bluetooth</button>
+        <p class="biosync-bt-status" id="biosync-bt-status"></p>
+
+        <div class="biosync-manual">
+          <label for="biosync-manual-bpm" data-i18n="biosyncManualLabel">Modo Manual / Simulación (BPM)</label>
+          <div class="biosync-manual__row">
+            <input type="range" id="biosync-manual-bpm" min="40" max="180" value="72" />
+            <span id="biosync-manual-bpm-value">72</span>
+          </div>
+        </div>
+
+        <div class="biosync-log-form">
+          <div class="finanzas-panel__row">
+            <label for="biosync-weight" data-i18n="biosyncWeightLabel">Peso (kg)</label>
+            <input type="number" id="biosync-weight" min="0" placeholder="0" />
+          </div>
+          <div class="finanzas-panel__row">
+            <label for="biosync-sleep" data-i18n="biosyncSleepLabel">Horas de Sueño</label>
+            <input type="number" id="biosync-sleep" min="0" max="24" placeholder="0" />
+          </div>
+          <div class="finanzas-panel__row">
+            <label for="biosync-energy" data-i18n="biosyncEnergyLabel">Nivel de Energía (1-10)</label>
+            <div class="biosync-manual__row">
+              <input type="range" id="biosync-energy" min="1" max="10" value="5" />
+              <span id="biosync-energy-value">5</span>
+            </div>
+          </div>
+          <button type="button" class="btn-register" id="biosync-save-log-btn" data-i18n="biosyncSaveBtn">+ Registrar Estado Físico</button>
+        </div>
+
+        <div class="biosync-log-history" id="biosync-log-history"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: HÁBITOS & RACHAS + RUTINA DE EJERCICIOS — módulo real (ya no
+       placeholder). Dos pestañas, mismo patrón que .finanzas-tabs:
+       "Hábitos Diarios" (checklist + racha) y "Rutina de Ejercicios"
+       (planificador semanal + registro rápido de series/repeticiones/peso).
+       Ver HABITS_LIST/WORKOUT_WEEKDAYS/WORKOUT_PLAN_DEFAULT en app.js. -->
+  <div class="modal-overlay" id="habits-modal" hidden>
+    <div class="modal modal--app modal--habits glass">
+      <button type="button" class="btn-modal-close" id="habits-modal-close" aria-label="Cerrar">✕</button>
+      <h2 class="modal-app__title" data-i18n="appHabitsName">Hábitos &amp; Rachas</h2>
+
+      <div class="habits-tabs" id="habits-tabs">
+        <button type="button" class="habits-tab habits-tab--active" data-habits-tab="daily" data-i18n="habitsTabDaily">🔥 Hábitos Diarios</button>
+        <button type="button" class="habits-tab" data-habits-tab="workout" data-i18n="habitsTabWorkout">💪 Rutina de Ejercicios</button>
+      </div>
+
+      <!-- Pestaña: Hábitos Diarios -->
+      <div class="habits-tab-panel" id="habits-tab-daily">
+        <div class="habits-streak" id="habits-streak">
+          <span class="habits-streak__icon">🔥</span>
+          <span class="habits-streak__value" id="habits-streak-value">0</span>
+          <span class="habits-streak__label" data-i18n="habitsStreakLabel">días de racha</span>
+        </div>
+
+        <div class="habits-grid" id="habits-grid">
+          <!-- tarjetas de hábito renderizadas por app.js -->
+        </div>
+
+        <p class="habits-hint" data-i18n="habitsHint">Completa los 5 hábitos hoy para sumar a tu racha.</p>
+      </div>
+
+      <!-- Pestaña: Rutina de Ejercicios -->
+      <div class="habits-tab-panel" id="habits-tab-workout" hidden>
+        <!-- Reto 7 Minutos: circuito funcional sin equipo (12 ejercicios,
+             30s cada uno, 10s de descanso), organizado en 4 semanas que se
+             desbloquean progresivamente por sesiones completadas — ver
+             SEVEN_MIN_EXERCISES/SEVEN_MIN_WEEKS en app.js. Separado del
+             planificador libre de abajo (#workout-plan): esto es un
+             programa estructurado y guiado, ese sigue siendo de uso libre. -->
+        <div class="seven-min-section" id="seven-min-section">
+          <h3 class="seven-min-section__title" data-i18n="sevenMinTitle">🏆 Reto 7 Minutos — Funcional sin Equipo</h3>
+          <p class="seven-min-section__note" data-i18n="sevenMinNote">12 ejercicios, 30s cada uno con 10s de descanso — sin ningún equipo, solo tu cuerpo (y una silla firme).</p>
+
+          <div class="seven-min-week-toggle" id="seven-min-week-toggle">
+            <!-- 4 botones de semana, renderizados por app.js -->
+          </div>
+
+          <p class="seven-min-progress" id="seven-min-progress"></p>
+
+          <div class="seven-min-exercise-grid" id="seven-min-exercise-grid">
+            <!-- 12 tarjetas de ejercicio, renderizadas por app.js -->
+          </div>
+
+          <button type="button" class="btn-register seven-min-complete-btn" id="seven-min-complete-btn" data-i18n="sevenMinCompleteBtn">✅ Completé la rutina de hoy</button>
+        </div>
+
+        <div class="workout-plan" id="workout-plan">
+          <!-- selector de día + input de enfoque, renderizado por app.js -->
+        </div>
+
+        <form class="workout-log-form" id="workout-log-form">
+          <div class="finanzas-panel__row">
+            <label for="workout-exercise" data-i18n="workoutExerciseLabel">Ejercicio</label>
+            <input type="text" id="workout-exercise" data-i18n-placeholder="workoutExercisePlaceholder" placeholder="Ej. Press de banca" autocomplete="off" required />
+          </div>
+          <div class="workout-log-form__row3">
+            <div class="finanzas-panel__row">
+              <label for="workout-sets" data-i18n="workoutSetsLabel">Series</label>
+              <input type="number" id="workout-sets" min="0" placeholder="0" />
+            </div>
+            <div class="finanzas-panel__row">
+              <label for="workout-reps" data-i18n="workoutRepsLabel">Repeticiones</label>
+              <input type="number" id="workout-reps" min="0" placeholder="0" />
+            </div>
+            <div class="finanzas-panel__row">
+              <label for="workout-weight" data-i18n="workoutWeightLabel">Peso (kg)</label>
+              <input type="number" id="workout-weight" min="0" step="0.5" placeholder="0" />
+            </div>
+          </div>
+          <button type="submit" class="btn-register" data-i18n="workoutLogBtn">+ Registrar Ejercicio</button>
+        </form>
+
+        <div class="workout-log-history" id="workout-log-history"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PLACEHOLDER GENÉRICO "próximamente" — mismo marco de ventana
+       que los módulos ya implementados. Ahora solo lo usa Karaoke (Hábitos
+       ya tiene su propio módulo real arriba) pero se deja genérico por si
+       se agrega otra app "próximamente" más adelante. -->
+  <div class="modal-overlay" id="app-placeholder-modal" hidden>
+    <div class="modal modal--app glass">
+      <button type="button" class="btn-modal-close" id="app-placeholder-modal-close" aria-label="Cerrar">✕</button>
+      <span class="app-placeholder-icon" id="app-placeholder-icon">🎤</span>
+      <h2 class="modal-app__title" id="app-placeholder-title">Karaoke</h2>
+      <p class="app-active-view__placeholder-text" id="app-placeholder-text"></p>
+    </div>
+  </div>
+
+  <!-- MODAL: CONFIGURACIÓN DE IDIOMAS — pantalla inicial del módulo
+       Japonés. Se abre al hacer clic en la tarjeta "Japonés AI Coach" EN
+       VEZ de ir directo a la cuadrícula (ver appGrid click handler en
+       app.js). El idioma de interfaz reutiliza el MISMO sistema global
+       ES/EN/JA que el selector del header (aplyLanguage()) — no es un
+       idioma aparte solo para este módulo, cambia toda la app, para no
+       duplicar infraestructura de i18n. El modo decide si el estudio es
+       de pura práctica (sin evaluación) o de examen (con las 2 pruebas
+       interactivas) — ver jpMode en app.js. -->
+  <div class="modal-overlay" id="jp-config-modal" hidden>
+    <div class="modal modal--jp-config glass">
+      <button type="button" class="btn-modal-close" id="jp-config-modal-close" aria-label="Cerrar">✕</button>
+      <h2 class="modal-app__title" data-i18n="jpConfigTitle">🎌 Japonés AI Coach</h2>
+
+      <div class="jp-config-section">
+        <h4 class="jp-config-section__title" data-i18n="jpConfigLanguageTitle">Idioma de Interfaz</h4>
+        <div class="jp-config-language-row" id="jp-config-language-row">
+          <button type="button" class="jp-config-lang-btn" data-lang="es">🇪🇸 Español</button>
+          <button type="button" class="jp-config-lang-btn" data-lang="en">🇺🇸 English</button>
+          <button type="button" class="jp-config-lang-btn" data-lang="ja">🇯🇵 日本語</button>
+        </div>
+      </div>
+
+      <div class="jp-config-section">
+        <h4 class="jp-config-section__title" data-i18n="jpConfigModeTitle">Modo</h4>
+        <div class="jp-config-mode-row" id="jp-config-mode-row">
+          <button type="button" class="jp-config-mode-btn" data-mode="practica">
+            <span class="jp-config-mode-btn__icon">📖</span>
+            <span data-i18n="jpModePractica">Práctica</span>
+          </button>
+          <button type="button" class="jp-config-mode-btn" data-mode="examen">
+            <span class="jp-config-mode-btn__icon">✍️</span>
+            <span data-i18n="jpModeExamen">Examen</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: MÓDULO JAPONÉS (Gojuon: filas -> fases/trazo -> vocabulario o
+       examen). Vive en su propio modal ancho para aprovechar el área
+       central del layout, en vez del panel angosto del App Hub donde
+       vivía antes. -->
+  <div class="modal-overlay" id="japanese-modal" hidden>
+    <div class="modal modal--japanese glass">
+      <button type="button" class="btn-modal-close" id="japanese-modal-close" aria-label="Cerrar">✕</button>
+      <!-- Vuelve a #jp-config-modal para cambiar idioma de interfaz o modo
+           (Práctica/Examen) en cualquier momento, sin cerrar del todo el
+           módulo — pedido explícito. -->
+      <button type="button" class="btn-jp-config" id="jp-config-reopen-btn" data-i18n-title="jpConfigReopenTitle" title="Cambiar idioma / modo">⚙️ <span id="jp-mode-badge" data-i18n="jpModePractica">Práctica</span></button>
+
+      <!-- Sub-vista 1: cuadrícula Gojuon, elegir fila o práctica general -->
+      <div class="jp-view" id="jp-view-grid">
+        <!-- Selector de nivel JLPT: N5 es el único con contenido real hoy;
+             N4-N1 se muestran a propósito (no se ocultan) para que quede
+             claro que el currículum va a seguir creciendo — mismo criterio
+             visual "grayscale + opacity" que los tiers bloqueados de Miika
+             Pass (ver .mpass-tier--locked en style.css), con el mismo
+             badge de texto "Próximamente" que ya usan Hábitos/Karaoke en
+             el App Hub (appStatusComingSoon). Los botones N4-N1 llevan
+             disabled real, no solo estilo — un clic no debe hacer nada. -->
+        <div class="jp-level-toggle" id="jp-level-toggle">
+          <button type="button" class="jp-level-btn jp-level-btn--active" data-level="n5">N5</button>
+          <button type="button" class="jp-level-btn jp-level-btn--locked" disabled>
+            N4
+            <span class="jp-level-btn__badge" data-i18n="appStatusComingSoon">Próximamente</span>
+          </button>
+          <button type="button" class="jp-level-btn jp-level-btn--locked" disabled>
+            N3
+            <span class="jp-level-btn__badge" data-i18n="appStatusComingSoon">Próximamente</span>
+          </button>
+          <button type="button" class="jp-level-btn jp-level-btn--locked" disabled>
+            N2
+            <span class="jp-level-btn__badge" data-i18n="appStatusComingSoon">Próximamente</span>
+          </button>
+          <button type="button" class="jp-level-btn jp-level-btn--locked" disabled>
+            N1
+            <span class="jp-level-btn__badge" data-i18n="appStatusComingSoon">Próximamente</span>
+          </button>
+        </div>
+        <div class="jp-grid-toolbar">
+          <div class="jp-script-toggle" id="jp-script-toggle">
+            <button type="button" class="jp-script-btn jp-script-btn--active" data-script="hiragana" data-i18n="jpScriptHiragana">Hiragana</button>
+            <button type="button" class="jp-script-btn" data-script="katakana" data-i18n="jpScriptKatakana">Katakana</button>
+            <button type="button" class="jp-script-btn" data-script="kanji" data-i18n="jpScriptKanji">Kanji N5</button>
+          </div>
+          <button type="button" class="btn-register jp-general-btn" id="jp-general-practice-btn" data-i18n="jpGeneralPractice">🎯 Práctica General</button>
+          <button type="button" class="btn-register jp-general-btn jp-hanzi-writer-open-btn" id="jp-hanzi-writer-open-btn" data-i18n="jpHanziWriterOpenBtn">✍️ Trazos Reales</button>
+          <button type="button" class="btn-register jp-general-btn" id="jp-vocab-open-btn" data-i18n="jpVocabOpenBtn">📚 Vocabulario N5</button>
+          <button type="button" class="btn-register jp-general-btn" id="jp-grammar-open-btn" data-i18n="jpGrammarOpenBtn">📖 Gramática N5</button>
+          <button type="button" class="btn-register jp-general-btn" id="jp-yoon-open-btn" data-i18n="jpYoonOpenBtn">🈴 Yōon</button>
+        </div>
+        <div class="jp-rows" id="jp-rows">
+          <!-- filas del Gojuon renderizadas por app.js (renderGojuonGrid) -->
+        </div>
+      </div>
+
+      <!-- Sub-vista 2 (MODO PRÁCTICA): Trazos por Fases + Vocabulario
+           Ampliado. Reemplaza la vieja superposición de flechas sobre un
+           solo carácter por una fila horizontal de cuadros — uno por
+           fase/trazo — con el trazo nuevo resaltado en azul neón sobre
+           una cuadrícula punteada de fondo. Mismos datos
+           simplificados/orientativos de siempre (getStrokeGuide() en
+           app.js, ver su comentario), reutilizados en el layout nuevo
+           pedido: no invento una precisión de trazo real que no puedo
+           garantizar para los 92 kana + kanji. El trazo REAL verificado
+           (KanjiVG vía Hanzi Writer) sigue disponible aparte en
+           #hanzi-writer-modal (botón [✍️ Trazos Reales] arriba). -->
+      <div class="jp-view" id="jp-view-phases" hidden>
+        <button type="button" class="btn-jp-back" id="jp-phases-back-btn" data-i18n="jpBackToGrid">← Volver</button>
+        <div class="jp-char-row jp-char-row--center">
+          <span class="jp-phases-char" id="jp-phases-char">り</span>
+          <button type="button" class="btn-jp-speak" id="jp-phases-speak-btn" aria-label="Escuchar pronunciación" data-i18n-title="jpListen" title="Escuchar pronunciación">🔊</button>
+        </div>
+        <p class="jp-stroke-hint" data-i18n="jpPhasesHint">Observa la evolución del trazo, fase por fase.</p>
+        <span class="jp-stroke-progress" id="jp-phases-progress">1 / 5</span>
+
+        <div class="jp-phase-row" id="jp-phase-row">
+          <!-- cuadros de fase renderizados por app.js (renderJpPhaseRow) -->
+        </div>
+
+        <!-- Solo para Kanji: lecturas + significado. Oculto para
+             hiragana/katakana (no aplica). -->
+        <div class="jp-kanji-info" id="jp-kanji-info" hidden>
+          <span class="jp-kanji-info__row"><strong data-i18n="jpKanjiOnyomi">On'yomi:</strong> <span id="jp-kanji-onyomi"></span></span>
+          <span class="jp-kanji-info__row"><strong data-i18n="jpKanjiKunyomi">Kun'yomi:</strong> <span id="jp-kanji-kunyomi"></span></span>
+          <span class="jp-kanji-info__row"><strong data-i18n="jpKanjiMeaning">Significado:</strong> <span id="jp-kanji-meaning"></span></span>
+        </div>
+
+        <!-- Palabras Clave: tarjetas de vocabulario ampliado (varios
+             ejemplos reales por kana, ver JP_VOCAB en app.js) — oculto si
+             el carácter no tiene palabras curadas (ej. kanji, を, ん, o
+             filas de katakana aún sin cobertura). -->
+        <div class="jp-vocab-section" id="jp-vocab-section" hidden>
+          <h4 class="jp-vocab-section__title" data-i18n="jpVocabTitle">📚 Palabras Clave</h4>
+          <div class="jp-vocab-grid" id="jp-vocab-grid"></div>
+        </div>
+
+        <button type="button" class="btn-register" id="jp-phases-next-btn" data-i18n="jpNextChar">Siguiente →</button>
+      </div>
+
+      <!-- Sub-vista (MODO EXAMEN, Prueba 1): trazos sueltos ("palitos") en
+           orden aleatorio — clic en cada uno en el orden correcto de
+           escritura. Correcto = brillo neón; incorrecto = parpadeo rojo,
+           sin penalidad, se puede reintentar. Al completar todos, avanza
+           automáticamente a la Prueba 2 (opción múltiple, sub-vista
+           jp-view-quiz ya existente más abajo, reutilizada sin cambios). -->
+      <div class="jp-view" id="jp-view-examstroke" hidden>
+        <button type="button" class="btn-jp-back" id="jp-examstroke-back-btn" data-i18n="jpBackToGrid">← Volver</button>
+        <button type="button" class="btn-jp-skip" id="jp-examstroke-skip-btn" data-i18n="jpSkipStroke">⏭ Omitir Trazo</button>
+        <p class="jp-exam-instruction" data-i18n="jpExamStrokeInstruction">Prueba 1: haz clic en los trazos en el orden correcto de escritura.</p>
+        <div class="jp-char-row jp-char-row--center">
+          <span class="jp-examstroke-char" id="jp-examstroke-char">り</span>
+        </div>
+        <span class="jp-stroke-progress" id="jp-examstroke-progress">0 / 3</span>
+        <div class="jp-exam-segments" id="jp-exam-segments">
+          <!-- botones de trazo desordenados, renderizados por app.js -->
+        </div>
+
+        <!-- Diccionario de ejemplos por carácter — pedido explícito: se
+             muestra acá (Prueba 1) y no en la Prueba 2 (opción múltiple)
+             a propósito, porque las tarjetas incluyen el Romaji y eso
+             adelantaría la respuesta del quiz de romanización. -->
+        <div class="jp-vocab-section" id="jp-examstroke-vocab-section" hidden>
+          <h4 class="jp-vocab-section__title" data-i18n="jpVocabTitle">📚 Palabras Clave</h4>
+          <div class="jp-vocab-grid" id="jp-examstroke-vocab-grid"></div>
+        </div>
+      </div>
+
+      <!-- Sub-vista 3 (MODO EXAMEN, Prueba 2): quiz de opción múltiple -->
+      <div class="jp-view" id="jp-view-quiz" hidden>
+        <button type="button" class="btn-jp-back" id="jp-quiz-back-btn" data-i18n="jpBackToGrid">← Volver</button>
+        <p class="jp-quiz-prompt" id="jp-quiz-prompt" data-i18n="jpQuizPrompt">¿Cuál es la romanización?</p>
+        <div class="jp-char-row jp-char-row--center">
+          <span class="jp-quiz-char" id="jp-quiz-char">あ</span>
+          <button type="button" class="btn-jp-speak" id="jp-quiz-speak-btn" aria-label="Escuchar pronunciación" data-i18n-title="jpListen" title="Escuchar pronunciación">🔊</button>
+        </div>
+        <div class="jp-quiz-options" id="jp-quiz-options">
+          <!-- opciones renderizadas por app.js -->
+        </div>
+        <p class="jp-quiz-feedback" id="jp-quiz-feedback" hidden></p>
+      </div>
+
+      <!-- Sub-vista: Vocabulario N5 por categoría (N5_VOCAB_CATEGORIES en
+           app.js) — lista de categorías -> lista de palabras de esa
+           categoría -> quiz de opción múltiple de esa categoría. -->
+      <div class="jp-view" id="jp-view-vocab" hidden>
+        <button type="button" class="btn-jp-back" id="jp-vocab-back-btn" data-i18n="jpBackToGrid">← Volver</button>
+        <div class="jp-vocab-cat-grid" id="jp-vocab-cat-grid">
+          <!-- tarjetas de categoría renderizadas por app.js -->
+        </div>
+      </div>
+
+      <!-- Sub-vista: lista de palabras de UNA categoría + botón de quiz -->
+      <div class="jp-view" id="jp-view-vocab-words" hidden>
+        <button type="button" class="btn-jp-back" id="jp-vocab-words-back-btn" data-i18n="jpBackToVocab">← Volver a Categorías</button>
+        <h3 class="jp-vocab-words__title" id="jp-vocab-words-title"></h3>
+        <div class="jp-vocab-words-list" id="jp-vocab-words-list">
+          <!-- palabras renderizadas por app.js -->
+        </div>
+        <button type="button" class="btn-register jp-general-btn" id="jp-vocab-quiz-start-btn" data-i18n="jpVocabQuizStart">🎯 Quiz de esta categoría</button>
+      </div>
+
+      <!-- Sub-vista: Gramática N5 (N5_GRAMMAR_POINTS en app.js) — lista de
+           puntos -> detalle con patrón + explicación + ejemplos. -->
+      <div class="jp-view" id="jp-view-grammar" hidden>
+        <button type="button" class="btn-jp-back" id="jp-grammar-back-btn" data-i18n="jpBackToGrid">← Volver</button>
+        <div class="jp-grammar-list" id="jp-grammar-list">
+          <!-- tarjetas de punto gramatical renderizadas por app.js -->
+        </div>
+        <button type="button" class="btn-register jp-general-btn" id="jp-grammar-quiz-start-btn" data-i18n="jpGrammarQuizStart">🎯 Quiz de Gramática N5</button>
+      </div>
+
+      <!-- Sub-vista: Yōon (きゃ/しゃ/etc., YOON_ROWS en app.js) — tabla de
+           LECTURA, no practicable con trazos: fetchHanziStrokeData()
+           solo resuelve un carácter por pedido, y cada combo son 2
+           caracteres unicode reales (き + ゃ). Forzar el trazo ahí
+           mostraría un carácter incorrecto, así que se dejó como
+           referencia + quiz de reconocimiento de lectura (opción
+           múltiple, no depende de datos de trazo). -->
+      <div class="jp-view" id="jp-view-yoon" hidden>
+        <button type="button" class="btn-jp-back" id="jp-yoon-back-btn" data-i18n="jpBackToGrid">← Volver</button>
+        <p class="jp-yoon-note" data-i18n="jpYoonNote">Tabla de lectura — los trazos de き/し/ち/etc. y ゃ/ゅ/ょ se practican por separado arriba, en Hiragana/Katakana.</p>
+        <div class="jp-yoon-grid" id="jp-yoon-grid">
+          <!-- combos renderizados por app.js -->
+        </div>
+        <button type="button" class="btn-register jp-general-btn" id="jp-yoon-quiz-start-btn" data-i18n="jpYoonQuizStart">🎯 Quiz de Yōon</button>
+      </div>
+
+      <!-- Sub-vista: quiz genérico de opción múltiple, reutilizado por
+           Vocabulario (por categoría) y Gramática (partícula que falta) —
+           separado del quiz de kana/kanji de arriba (#jp-view-quiz, ligado
+           a jpQueue) para no arriesgar esa lógica ya afinada. -->
+      <div class="jp-view" id="jp-view-mini-quiz" hidden>
+        <button type="button" class="btn-jp-back" id="jp-mini-quiz-back-btn" data-i18n="jpBackToGrid">← Volver</button>
+        <p class="jp-quiz-prompt" id="jp-mini-quiz-prompt"></p>
+        <div class="jp-char-row jp-char-row--center">
+          <span class="jp-quiz-char" id="jp-mini-quiz-char"></span>
+        </div>
+        <!-- Lectura en hiragana de la oración (con el mismo blank ＿ que
+             el kanji de arriba) — accesible para nivel básico sin
+             revelar la partícula que hay que adivinar. Solo aparece en
+             preguntas de gramática (buildGrammarQuizItems); en preguntas
+             de vocabulario queda vacío/oculto. Ver renderMiniQuizItem()
+             en app.js. -->
+        <p class="jp-quiz-reading" id="jp-mini-quiz-reading" hidden></p>
+        <div class="jp-quiz-options" id="jp-mini-quiz-options">
+          <!-- opciones renderizadas por app.js -->
+        </div>
+        <p class="jp-quiz-feedback" id="jp-mini-quiz-feedback" hidden></p>
+        <p class="jp-mini-quiz-score" id="jp-mini-quiz-score"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: PRÁCTICA DE TRAZOS REALES (Hanzi Writer / datos KanjiVG).
+       Módulo separado del Japonés (arriba): ese usa una guía de trazos
+       SIMPLIFICADA/orientativa dibujada a mano (getStrokeGuide()); este
+       usa la librería Hanzi Writer con datos de trazos reales, con
+       lienzo interactivo, animación y modo Quiz con feedback táctil
+       (verde = trazo correcto, rojo = orden/dirección incorrecta). Se
+       abre desde el botón [✍️ Trazos Reales] dentro del modal Japonés. -->
+  <div class="modal-overlay" id="hanzi-writer-modal" hidden>
+    <div class="modal modal--hanzi-writer glass">
+      <button type="button" class="btn-modal-close" id="hanzi-writer-modal-close" aria-label="Cerrar">✕</button>
+      <h3 class="modal__title" data-i18n="hanziWriterTitle">✍️ Práctica de Trazos Reales</h3>
+      <p class="modal__subtitle" data-i18n="hanziWriterSubtitle">Basado en datos de trazos reales (KanjiVG). Elige un carácter para animarlo o practicarlo trazo por trazo.</p>
+
+      <!-- Sub-vista 1: cuadrícula de caracteres (Hiragana + Katakana + Kanji N5) -->
+      <div class="hanzi-view" id="hanzi-view-grid">
+        <div class="hanzi-grid-section">
+          <h4 class="hanzi-grid-section__title" data-i18n="hanziWriterHiraganaTitle">Hiragana</h4>
+          <div class="hanzi-char-grid" id="hanzi-hiragana-grid"><!-- renderizado por app.js --></div>
+        </div>
+        <div class="hanzi-grid-section">
+          <h4 class="hanzi-grid-section__title" data-i18n="hanziWriterKatakanaTitle">Katakana</h4>
+          <div class="hanzi-char-grid" id="hanzi-katakana-grid"><!-- renderizado por app.js --></div>
+        </div>
+        <div class="hanzi-grid-section">
+          <h4 class="hanzi-grid-section__title" data-i18n="hanziWriterKanjiTitle">Kanji Básicos (N5)</h4>
+          <div class="hanzi-char-grid" id="hanzi-kanji-grid"><!-- renderizado por app.js --></div>
+        </div>
+      </div>
+
+      <!-- Sub-vista 2: lienzo de práctica -->
+      <div class="hanzi-view" id="hanzi-view-practice" hidden>
+        <button type="button" class="btn-jp-back" id="hanzi-practice-back-btn" data-i18n="jpBackToGrid">← Volver</button>
+
+        <div class="hanzi-canvas-wrap">
+          <div class="hanzi-canvas-stage" id="hanzi-canvas-stage">
+            <div id="hanzi-writer-target"></div>
+          </div>
+          <p class="hanzi-quiz-feedback" id="hanzi-quiz-feedback" aria-live="polite"></p>
+        </div>
+
+        <div class="hanzi-controls">
+          <button type="button" class="btn-hanzi-control btn-hanzi-control--animate" id="hanzi-animate-btn" data-i18n="hanziAnimateBtn">🎬 Animar Trazos</button>
+          <button type="button" class="btn-hanzi-control btn-hanzi-control--quiz" id="hanzi-quiz-btn" data-i18n="hanziQuizBtn">✍️ Practicar Trazado</button>
+          <button type="button" class="btn-hanzi-control btn-hanzi-control--reset" id="hanzi-reset-btn" data-i18n="hanziResetBtn">🔄 Reiniciar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: EXPANSIÓN DE CIUDADES (mapa) — se abre al hacer click (o
+       Enter/Espacio) sobre el avatar/León de Miikaeru. Antes ese gesto
+       abría el Dashboard Financiero General; ahora el Dashboard se abre
+       desde el botón [📊 Ver Dashboard Completo] dentro del Cuadro de
+       Finanzas (ver #finanzas-open-dashboard-btn) para no perder esa
+       función. Contenido puramente decorativo por ahora ("Próximamente"):
+       nodos de ciudad estilo marcador neón sobre un fondo de grilla
+       futurista, sin mapa real ni librería de mapas — 100% CSS/vanilla. -->
+  <div class="modal-overlay" id="city-map-modal" hidden>
+    <div class="modal modal--city-map glass">
+      <button type="button" class="btn-modal-close" id="city-map-modal-close" aria-label="Cerrar">✕</button>
+      <h2 class="modal-app__title" data-i18n="cityMapTitle">🌐 Expansión de Territorio</h2>
+      <p class="city-map__headline" data-i18n="cityMapHeadline">Próximamente: Ten tus deseos listos en tu ciudad</p>
+      <div class="city-map__grid" id="city-map-grid">
+        <!-- nodos de ciudad renderizados por app.js -->
+      </div>
+
+      <!-- Bugs & Sugerencias: se guarda en la tabla `feedback` de Supabase
+           (mismo patrón de "mejor esfuerzo" que syncTransactionToSupabase()
+           en app.js — si la tabla no existe todavía o no hay internet, el
+           formulario igual confirma localmente y no rompe nada). -->
+      <div class="feedback-section">
+        <h3 class="feedback-section__title" data-i18n="feedbackTitle">🐞 Bugs &amp; Sugerencias</h3>
+        <p class="feedback-section__subtitle" data-i18n="feedbackSubtitle">¿Encontraste un error o tienes una idea para mejorar Miikaeru? Cuéntanos.</p>
+        <form id="feedback-form">
+          <select id="feedback-type" data-i18n-title="feedbackTypeLabel" title="Tipo">
+            <option value="bug" data-i18n="feedbackTypeBug">🐞 Bug / Error</option>
+            <option value="suggestion" data-i18n="feedbackTypeSuggestion">💡 Sugerencia</option>
+          </select>
+          <textarea id="feedback-message" rows="3" data-i18n-placeholder="feedbackMessagePlaceholder" placeholder="Describe el bug o tu idea..." required></textarea>
+          <button type="submit" class="btn-send" data-i18n="feedbackSubmitBtn">Enviar</button>
+          <p class="feedback-section__status" id="feedback-status" hidden></p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: PANEL DE ADMINISTRADOR — se abre desde [🛡️ Panel de
+       Administrador] o [🕵️ Agente Inspector] dentro del Cuadro de
+       Finanzas. Ambos botones están OCULTOS por defecto en el HTML (ver
+       #admin-panel-open-btn/#inspector-open-btn) y solo se revelan si
+       checkAdminSession() confirma una sesión REAL de Supabase Auth cuyo
+       email coincide con ADMIN_EMAIL (ver app.js) — a diferencia del
+       candado de contraseña del Bloque 32 (una cortina de interfaz sin
+       seguridad real), esto es autenticación real respaldada por RLS del
+       lado de Supabase (ver el SQL entregado junto con este cambio). Ya
+       no hace falta una pantalla de "candado" DENTRO del modal: si el
+       botón que lo abrió era visible, es porque la sesión ya es válida
+       (openAdminPanel() igual revalida isSuperAdmin como red de
+       seguridad). Dos pestañas: Transacciones (igual que siempre, lee de
+       `transactions`) e Inspector de Bugs (nuevo, lee/actualiza
+       `feedback`). -->
+  <div class="modal-overlay" id="admin-panel-modal" hidden>
+    <div class="modal modal--admin-panel glass">
+      <button type="button" class="btn-modal-close" id="admin-panel-modal-close" aria-label="Cerrar">✕</button>
+      <h2 class="modal-app__title" data-i18n="adminPanelTitle">🛡️ Panel de Administrador</h2>
+
+      <div class="admin-panel-tabs" id="admin-panel-tabs">
+        <button type="button" class="admin-panel-tab admin-panel-tab--active" data-admin-tab="transactions" data-i18n="adminPanelTabTransactions">💳 Transacciones</button>
+        <button type="button" class="admin-panel-tab" data-admin-tab="inspector" data-i18n="adminPanelTabInspector">🕵️ Inspector de Bugs</button>
+      </div>
+
+      <!-- Pestaña: Transacciones (contenido original, sin cambios de lógica) -->
+      <div id="admin-panel-tab-transactions">
+        <div class="admin-panel__toolbar">
+          <button type="button" class="btn-scan" id="admin-panel-refresh-btn" data-i18n="adminPanelRefreshBtn">🔄 Actualizar</button>
+          <button type="button" class="btn-scan btn-scan--pdf" id="admin-panel-export-btn" data-i18n="adminPanelExportBtn">📥 Exportar CSV</button>
+        </div>
+        <p class="admin-panel__status" id="admin-panel-status"></p>
+        <div class="admin-panel__table-wrap">
+          <table class="admin-panel__table" id="admin-panel-table">
+            <thead>
+              <tr>
+                <th data-i18n="adminPanelColDate">Fecha</th>
+                <th data-i18n="adminPanelColBusiness">Negocio</th>
+                <th data-i18n="adminPanelColCollaborator">Colaborador</th>
+                <th data-i18n="adminPanelColMetodoPago">Método de Pago</th>
+                <th data-i18n="adminPanelColIncome">Ingreso Bruto</th>
+                <th data-i18n="adminPanelColExpense">Gastos</th>
+                <th data-i18n="adminPanelColNet">Ganancia Neta</th>
+              </tr>
+            </thead>
+            <tbody id="admin-panel-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Pestaña: Agente Inspector — audita `feedback` (Bugs & Sugerencias,
+           ver #feedback-form/city-map-modal) y decide su destino. -->
+      <div id="admin-panel-tab-inspector" hidden>
+        <div class="admin-panel__toolbar">
+          <button type="button" class="btn-scan" id="inspector-refresh-btn" data-i18n="adminPanelRefreshBtn">🔄 Actualizar</button>
+        </div>
+        <p class="admin-panel__status" id="inspector-status"></p>
+
+        <div class="inspector-stats" id="inspector-stats">
+          <div class="inspector-stat">
+            <span class="inspector-stat__value" id="inspector-stat-total">0</span>
+            <span class="inspector-stat__label" data-i18n="inspectorStatTotal">Total</span>
+          </div>
+          <div class="inspector-stat inspector-stat--pending">
+            <span class="inspector-stat__value" id="inspector-stat-pending">0</span>
+            <span class="inspector-stat__label" data-i18n="inspectorStatPending">Pendientes</span>
+          </div>
+          <div class="inspector-stat inspector-stat--approved">
+            <span class="inspector-stat__value" id="inspector-stat-approved">0</span>
+            <span class="inspector-stat__label" data-i18n="inspectorStatApproved">Aprobados</span>
+          </div>
+          <div class="inspector-stat inspector-stat--resolved">
+            <span class="inspector-stat__value" id="inspector-stat-resolved">0</span>
+            <span class="inspector-stat__label" data-i18n="inspectorStatResolved">Resueltos</span>
+          </div>
+        </div>
+
+        <div class="inspector-cards" id="inspector-cards">
+          <!-- tarjetas renderizadas por app.js -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: LOGIN DE ADMINISTRADOR — único punto de entrada para
+       obtener sesión SUPER_ADMIN (ver checkAdminSession()/ADMIN_EMAIL en
+       app.js). Autenticación REAL vía supabaseClient.auth (no un
+       password hardcodeado como el candado del Bloque 32) — el email
+       tiene que coincidir con ADMIN_EMAIL para que la app conceda el
+       rol; si alguien inicia sesión con OTRO email válido de Supabase,
+       se cierra esa sesión de inmediato y se le niega el acceso. Vive
+       dentro del modal de Perfiles (ver #force-update-btn, mismo
+       "cajón de ajustes") — nunca se oculta a sí mismo, es el único
+       botón que SIEMPRE está visible para poder iniciar sesión. -->
+  <div class="modal-overlay" id="admin-login-modal" hidden>
+    <div class="modal modal--admin-login glass">
+      <button type="button" class="btn-modal-close" id="admin-login-modal-close" aria-label="Cerrar">✕</button>
+      <h2 class="modal-app__title" data-i18n="adminLoginTitle">🛡️ Acceso de Administrador</h2>
+      <p class="modal__subtitle" data-i18n="adminLoginSubtitle">Inicia sesión con tu cuenta de Administrador de Supabase.</p>
+      <form id="admin-login-form">
+        <input type="email" id="admin-login-email" data-i18n-placeholder="adminLoginEmailPlaceholder" placeholder="Correo" autocomplete="username" required />
+        <input type="password" id="admin-login-password" data-i18n-placeholder="adminLoginPasswordPlaceholder" placeholder="Contraseña" autocomplete="current-password" required />
+        <button type="submit" class="btn-register" data-i18n="adminLoginBtn">Iniciar Sesión</button>
+      </form>
+      <p class="admin-panel__error" id="admin-login-error" hidden></p>
+    </div>
+  </div>
+
+  <!-- MODAL: DASHBOARD FINANCIERO GENERAL — se abre desde el botón [📊 Ver
+       Dashboard Completo] dentro del Cuadro de Finanzas. Lee el ledger
+       completo de negocios (localStorage: miikaeru_business_ledger, ver
+       app.js), filtrable por negocio, con tabla tipo Excel, tarjetas de
+       balance y un ranking de qué negocio generó más ganancia neta. -->
+  <div class="modal-overlay" id="dashboard-modal" hidden>
+    <div class="modal modal--dashboard glass">
+      <button type="button" class="btn-modal-close" id="dashboard-modal-close" aria-label="Cerrar">✕</button>
+      <h2 class="dashboard-title" data-i18n="dashboardTitle">📊 Dashboard Financiero General</h2>
+
+      <div class="dashboard-filters">
+        <label for="dashboard-filter-negocio" data-i18n="dashboardFilterLabel">Negocio</label>
+        <select id="dashboard-filter-negocio">
+          <option value="__all__" data-i18n="dashboardFilterAll">Todos</option>
+          <!-- opciones dinámicas renderizadas por app.js -->
+        </select>
+        <button type="button" class="btn-scan btn-scan--print" id="dashboard-print-btn" data-i18n="dashboardPrintBtn">🖨️ Imprimir Reporte</button>
+        <button type="button" class="btn-scan btn-scan--pdf" id="dashboard-pdf-btn" data-i18n="btnDownloadPdf">📥 Descargar PDF</button>
+      </div>
+
+      <div class="dashboard-cards">
+        <div class="dashboard-card dashboard-card--income">
+          <span class="dashboard-card__label" data-i18n="dashboardCardIncome">Total Ingresos</span>
+          <span class="dashboard-card__value" id="dashboard-total-ingresos">S/ 0</span>
+        </div>
+        <div class="dashboard-card dashboard-card--expense">
+          <span class="dashboard-card__label" data-i18n="dashboardCardExpense">Total Gastos</span>
+          <span class="dashboard-card__value" id="dashboard-total-gastos">S/ 0</span>
+        </div>
+        <div class="dashboard-card dashboard-card--balance">
+          <span class="dashboard-card__label" data-i18n="dashboardCardBalance">Balance Neto Global</span>
+          <span class="dashboard-card__value" id="dashboard-total-balance">S/ 0</span>
+        </div>
+      </div>
+
+      <div class="dashboard-ranking" id="dashboard-ranking">
+        <div class="dashboard-ranking__header">
+          <span class="dashboard-ranking__title" data-i18n="dashboardRankingTitle">🏆 Mejor Rendimiento</span>
+          <div class="dashboard-ranking-toggle" id="dashboard-ranking-toggle">
+            <button type="button" class="dashboard-ranking-toggle__btn dashboard-ranking-toggle__btn--active" data-ranking-by="negocio" data-i18n="dashboardRankingByNegocio">Por Negocio</button>
+            <button type="button" class="dashboard-ranking-toggle__btn" data-ranking-by="colaborador" data-i18n="dashboardRankingByColaborador">Por Colaborador</button>
+          </div>
+        </div>
+        <div class="dashboard-ranking__list" id="dashboard-ranking-list">
+          <!-- renderizado por app.js -->
+        </div>
+
+        <!-- Boleta de Pago: aparece solo con un colaborador seleccionado
+             en el ranking (ver renderDashboardRanking()/selectedCollaborator
+             en app.js). Seleccionar un colaborador también filtra la
+             tabla de abajo a solo sus registros. -->
+        <div class="dashboard-collaborator-panel" id="dashboard-collaborator-panel" hidden>
+          <span class="dashboard-collaborator-panel__label" id="dashboard-collaborator-panel-label"></span>
+          <button type="button" class="btn-scan btn-scan--print" id="dashboard-payslip-btn" data-i18n="dashboardPayslipBtn">🖨️ Imprimir Boleta de Pago del Colaborador</button>
+          <button type="button" class="btn-scan btn-scan--pdf" id="dashboard-payslip-pdf-btn" data-i18n="btnDownloadPdf">📥 Descargar PDF</button>
+        </div>
+      </div>
+
+      <div class="dashboard-table-wrap">
+        <table class="dashboard-table">
+          <thead>
+            <tr>
+              <th data-i18n="dashboardColFecha">Fecha</th>
+              <th data-i18n="dashboardColNegocio">Negocio</th>
+              <th data-i18n="dashboardColColaborador">Colaborador</th>
+              <th data-i18n="dashboardColConcepto">Concepto</th>
+              <th data-i18n="dashboardColMetodoPago">Método de Pago</th>
+              <th data-i18n="dashboardColIngreso">Ingreso Bruto</th>
+              <th data-i18n="dashboardColEgresos">Egresos/Comisiones</th>
+              <th data-i18n="dashboardColGanancia">Ganancia Neta</th>
+              <th data-i18n="dashboardColAcciones">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="dashboard-table-body">
+            <!-- filas renderizadas por app.js -->
+          </tbody>
+        </table>
+        <p class="dashboard-empty" id="dashboard-empty" data-i18n="dashboardEmpty" hidden>Todavía no hay transacciones registradas.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: BIENVENIDA / CREAR CUENTA / INICIAR SESIÓN -->
+  <div class="modal-overlay" id="welcome-modal" hidden>
+    <div class="modal glass">
+
+      <!-- Vista: elección inicial -->
+      <div class="modal__view" id="welcome-view-choice">
+        <h2>Bienvenido al Núcleo Miikaeru</h2>
+        <p class="modal__subtitle">No hay un operador guardado en este dispositivo. Elige una opción para continuar.</p>
+        <div class="modal__actions">
+          <button type="button" class="btn-send" id="welcome-create-btn">Crear cuenta</button>
+          <button type="button" class="btn-secondary" id="welcome-login-btn">Iniciar sesión</button>
+        </div>
+      </div>
+
+      <!-- Vista: crear cuenta -->
+      <div class="modal__view" id="welcome-view-create" hidden>
+        <h2>Crear Cuenta</h2>
+        <p class="modal__subtitle">Ingresa tu nombre de operador. Empezarás en Nivel 1, Rango Kodomo.</p>
+        <form id="registration-form">
+          <input
+            type="text"
+            id="operator-name-input"
+            placeholder="Nombre de operador"
+            autocomplete="off"
+            required
+          />
+          <button type="submit" class="btn-send">Crear cuenta</button>
+        </form>
+        <button type="button" class="btn-link" id="welcome-back-from-create">Volver</button>
+      </div>
+
+      <!-- Vista: iniciar sesión (sin cuenta guardada) -->
+      <div class="modal__view" id="welcome-view-login" hidden>
+        <h2>Iniciar Sesión</h2>
+        <p class="modal__subtitle modal__subtitle--warning">
+          No encontramos una cuenta guardada en este dispositivo.
+        </p>
+        <div class="modal__actions">
+          <button type="button" class="btn-send" id="welcome-login-create-btn">Crear cuenta</button>
+        </div>
+        <button type="button" class="btn-link" id="welcome-back-from-login">Volver</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL: PERFILES DE USUARIO — cuentas separadas en el mismo
+       dispositivo (miikaeru_user_profiles), cada una con su propio
+       state/ledger/moneda/módulo activo. No reemplaza el flujo de
+       "Crear cuenta" de arriba (ese es el nombre de operador DENTRO de
+       un perfil); este modal decide QUÉ perfil está activo antes de eso. -->
+  <div class="modal-overlay" id="profile-modal" hidden>
+    <div class="modal modal--profiles glass">
+      <button type="button" class="btn-modal-close" id="profile-modal-close" aria-label="Cerrar">✕</button>
+
+      <h2 data-i18n="profilesTitle">Perfiles de Usuario</h2>
+      <p class="modal__subtitle" data-i18n="profilesSubtitle">Cada perfil guarda su propio historial, moneda y módulo activo.</p>
+
+      <div class="profile-list" id="profile-list">
+        <!-- filas renderizadas por app.js -->
+      </div>
+
+      <form class="profile-create-form" id="profile-create-form">
+        <input
+          type="text"
+          id="profile-create-input"
+          data-i18n-placeholder="profileCreatePlaceholder"
+          placeholder="Nombre del nuevo perfil (ej. Mamá - Salón)"
+          autocomplete="off"
+          required
+        />
+        <button type="submit" class="btn-send" data-i18n="profileCreateBtn">+ Crear Perfil</button>
+      </form>
+
+      <!-- Botón de emergencia para celulares que se quedan pegados en una
+           versión vieja del Service Worker/caché (ver sw.js) — desregistra
+           el SW, borra el CacheStorage y recarga forzando red. No borra
+           localStorage/datos del usuario, solo el caché de archivos. -->
+      <button type="button" class="btn-force-update" id="force-update-btn" data-i18n="forceUpdateBtn">🔄 Forzar Actualización / Limpiar Caché</button>
+
+      <!-- Único punto de entrada a la sesión SUPER_ADMIN — ver
+           #admin-login-modal. Alterna su propio texto/acción según haya
+           o no una sesión de admin activa (updateAdminLoginBtn() en
+           app.js): "Acceder como Admin" (abre el login) o "Cerrar sesión
+           de Admin" (sign-out directo, sin modal). -->
+      <button type="button" class="btn-force-update" id="admin-login-trigger-btn" data-i18n="adminLoginTriggerBtn">🛡️ Acceder como Admin</button>
+
+      <!-- Controles de escala: solo afectan tamaño VISUAL (transform:scale
+           sobre --avatar-scale/--chat-scale, ver style.css) sin tocar el
+           cálculo de layout (flex-basis/max-width) del León ni del panel
+           de chat — así no puede reintroducir el bug de superposición del
+           Bloque 37. Persisten por perfil (ver SCALE_KEY en app.js). -->
+      <div class="scale-controls" id="scale-controls">
+        <p class="scale-controls__title" data-i18n="scaleControlsTitle">🔍 Tamaño de Paneles</p>
+        <div class="scale-controls__row">
+          <label for="avatar-scale-input" data-i18n="scaleControlsAvatar">León</label>
+          <input type="range" id="avatar-scale-input" min="0.8" max="1.3" step="0.05" value="1" />
+          <span id="avatar-scale-value">100%</span>
+        </div>
+        <div class="scale-controls__row">
+          <label for="chat-scale-input" data-i18n="scaleControlsChat">Chat</label>
+          <input type="range" id="chat-scale-input" min="0.8" max="1.3" step="0.05" value="1" />
+          <span id="chat-scale-value">100%</span>
+        </div>
+        <button type="button" class="scale-controls__reset" id="scale-reset-btn" data-i18n="scaleControlsReset">Restablecer</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js?v=20260731-16"></script>
+  <!-- Service Worker: estrategia Cache First para assets estáticos (ver
+       sw.js) — carga instantánea en visitas repetidas y funcionamiento
+       offline. Registro envuelto en try/catch + comprobación de
+       soporte: si falla o el navegador no soporta Service Workers, la
+       app sigue funcionando igual, solo sin ese beneficio extra. -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("sw.js").catch((err) => {
+          console.warn("Service Worker: no se pudo registrar (la app sigue funcionando igual):", err);
+        });
+      });
+    }
+  </script>
+</body>
+</html>

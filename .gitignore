@@ -1,0 +1,10 @@
+# Configuración local de Claude Code — específica de cada máquina/sesión,
+# no es parte del código de la aplicación.
+.claude/
+
+# Cruft habitual del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Por si algún día se agrega tooling con dependencias
+node_modules/

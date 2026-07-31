@@ -1,0 +1,5 @@
+{
+  "version": 1,
+  "description": "Backlog local de mejoras y bugfixes APROBADOS para Miikaeru_SYS. Ver AUTOMATION_WORKFLOW.md en la raíz del proyecto para el esquema completo, el contrato que debe seguir n8n/Gemini al encolar tareas acá, y el estado real de la automatización (hoy: cola de solo lectura, consumida manualmente — no hay ningún ejecutor automático de código todavía).",
+  "tasks": []
+}
