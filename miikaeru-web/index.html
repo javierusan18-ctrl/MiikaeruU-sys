@@ -16,7 +16,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260801-28" />
+  <link rel="stylesheet" href="style.css?v=20260801-29" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -206,6 +206,9 @@
            mismo criterio: un ícono más, sin abrir un tercer cluster nuevo
            en la pantalla. -->
       <button type="button" class="hud-dock__icon hud-dock__icon--skins" id="skins-open-btn" data-i18n-title="skinsOpenBtn" title="🎭 Skins del León">🎭</button>
+      <!-- Mi Personaje (Fesha/Mijashi) — ver #character-modal /
+           #character-select-modal más abajo. -->
+      <button type="button" class="hud-dock__icon hud-dock__icon--character" id="character-open-btn" data-i18n-title="characterOpenBtn" title="🧬 Mi Personaje">🧬</button>
 
       <div class="hud-dock__divider"></div>
 
@@ -1553,6 +1556,53 @@
     </div>
   </div>
 
+  <!-- MODAL: SELECCIÓN DE AVATAR INICIAL — Fesha o Mijashi (ver
+       PLAYER_CHARACTERS en app.js). Se abre UNA sola vez, la primera vez
+       que el Operador entra (justo después de crear su cuenta/nombre de
+       Operador, o al detectar que un perfil viejo todavía no eligió) —
+       sin botón de cerrar a propósito: es una elección, no un aviso
+       descartable. Elegir uno queda guardado en `state.playerCharacter`
+       para siempre. -->
+  <div class="modal-overlay" id="character-select-modal" hidden>
+    <div class="modal glass modal--character-select">
+      <div class="panel__header">
+        <h2 data-i18n="characterSelectTitle">🧬 Elige tu Avatar Inicial</h2>
+        <span class="panel__tag" data-i18n="characterSelectSubtitle">evolucionará contigo, nivel a nivel</span>
+      </div>
+      <div class="character-select-grid">
+        <button type="button" class="character-select-card" id="character-select-fesha">
+          <img src="assets/skins/mikaeru_cachorro_kodomo.png" alt="Fesha" />
+          <span class="character-select-card__name">Fesha</span>
+          <span class="character-select-card__tag" data-i18n="characterSelectFemale">Mellizo Femenino</span>
+        </button>
+        <button type="button" class="character-select-card" id="character-select-mijashi">
+          <img src="assets/skins/mikaeru_skin_cachorro_galactico.png" alt="Mijashi" />
+          <span class="character-select-card__name">Mijashi</span>
+          <span class="character-select-card__tag" data-i18n="characterSelectMale">Mellizo Masculino</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: MI PERSONAJE — visor de las fases de evolución del avatar
+       elegido (ver renderCharacterModal() en app.js). Abre desde el
+       ícono 🧬 del dock izquierdo: si `state.playerCharacter` todavía es
+       null (perfiles creados antes de este Bloque), abre la selección de
+       arriba en su lugar en vez de mostrar un visor vacío. -->
+  <div class="modal-overlay" id="character-modal" hidden>
+    <div class="modal glass modal--character">
+      <button type="button" class="btn-modal-close" id="character-modal-close" aria-label="Cerrar">✕</button>
+      <div class="panel__header">
+        <h2 id="character-modal-name">—</h2>
+        <span class="panel__tag" id="character-modal-rank">—</span>
+      </div>
+      <img class="character-modal__image" id="character-modal-image" alt="" />
+      <p class="character-modal__phase-title" id="character-modal-phase-title">—</p>
+      <div class="character-evolution-grid" id="character-evolution-grid"></div>
+      <button type="button" class="btn-skins-close" id="character-modal-close-btn" data-i18n="skinsModalCloseBtn">Cerrar</button>
+    </div>
+  </div>
+
   <!-- MODAL: EXPANSIÓN DE CIUDADES (mapa) — se abre desde el ícono 🌐 del
        dock izquierdo (ver #city-map-open-btn más arriba; hasta el Bloque
        50 este gesto vivía en el click del avatar/León, reemplazado ahora
@@ -1890,19 +1940,19 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260801-28"></script>
+  <script src="app.js?v=20260801-29"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de
        los dos comparte closure con el otro. Cargado ANTES que ambos: los
        dos consumidores llaman a window.MiikaeruReader.crearLector() recién
        al abrir su propia vista, nunca en la carga inicial. -->
-  <script src="readerEngine.js?v=20260801-28"></script>
+  <script src="readerEngine.js?v=20260801-29"></script>
   <!-- Módulo de Lore (ver #story-modal más arriba) — punto de enchufe
        aparte, mismo patrón que MiikaeruHub, cargado después de app.js
        porque app.js llama a window.MiikaeruStoryEngine desde el click
        del avatar/León. -->
-  <script src="storyEngine.js?v=20260801-28"></script>
+  <script src="storyEngine.js?v=20260801-29"></script>
   <!-- Service Worker: estrategia Cache First para assets estáticos (ver
        sw.js) — carga instantánea en visitas repetidas y funcionamiento
        offline. Registro envuelto en try/catch + comprobación de

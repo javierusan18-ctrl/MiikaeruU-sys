@@ -5766,7 +5766,13 @@ textarea,
 .story-modal__image {
   width: 100%;
   aspect-ratio: 16 / 9;
-  object-fit: cover;
+  /* "contain" en vez de "cover": pedido explícito de que los retratos
+     (ej. metrakaela_madre_rosas.png, más alta que ancha en su
+     composición real) se vean SIEMPRE completos — corona y cachorros
+     incluidos — en vez de recortados por los bordes del cuadro 16:9. El
+     fondo oscuro rellena el letterbox sin que se note como un hueco. */
+  object-fit: contain;
+  background: rgba(0, 10, 20, 0.4);
   border-radius: var(--radius-md);
   border: 1px solid rgba(0, 240, 255, 0.3);
   margin-bottom: 16px;
@@ -6165,6 +6171,93 @@ textarea,
   background: var(--neon-cyan);
   color: #04121a;
   box-shadow: var(--shadow-neon-cyan);
+}
+
+/* Selección de Avatar Inicial (Fesha/Mijashi) — 2 tarjetas grandes, sin
+   botón de cerrar en el modal (ver comentario en index.html: es una
+   elección obligatoria la primera vez, no un aviso descartable). */
+.modal--character-select {
+  max-width: 520px;
+  text-align: center;
+}
+
+.character-select-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.character-select-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  background: rgba(0, 240, 255, 0.05);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.character-select-card:hover {
+  border-color: var(--neon-gold);
+  box-shadow: 0 0 16px rgba(255, 183, 0, 0.35);
+  transform: translateY(-2px);
+}
+
+.character-select-card img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: contain;
+  background: rgba(0, 10, 20, 0.4);
+  border-radius: var(--radius-sm);
+}
+
+.character-select-card__name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.character-select-card__tag {
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* Mi Personaje (visor de fases, ver #character-modal) — retrato grande +
+   grilla de fases reutilizando el lenguaje visual de .skin-card. */
+.modal--character {
+  max-width: 560px;
+}
+
+.character-modal__image {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: contain;
+  background: rgba(0, 10, 20, 0.4);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  margin: 12px 0;
+}
+
+.character-modal__phase-title {
+  text-align: center;
+  font-weight: 700;
+  color: var(--neon-gold);
+  margin: 0 0 14px;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+}
+
+.character-evolution-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+  gap: 8px;
+  margin-bottom: 14px;
 }
 
 .modal--city-map {

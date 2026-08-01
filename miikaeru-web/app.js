@@ -876,6 +876,11 @@ const I18N = {
     skinsModalTitle: "🎭 Skins del León",
     skinsModalSubtitle: "colección desbloqueable",
     skinsModalCloseBtn: "Cerrar",
+    characterOpenBtn: "🧬 Mi Personaje",
+    characterSelectTitle: "🧬 Elige tu Avatar Inicial",
+    characterSelectSubtitle: "evolucionará contigo, nivel a nivel",
+    characterSelectFemale: "Mellizo Femenino",
+    characterSelectMale: "Mellizo Masculino",
     cityMapTitle: "🌐 Expansión de Territorio",
     cityMapHeadline: "Próximamente: Ten tus deseos listos en tu ciudad",
     feedbackTitle: "🐞 Bugs & Sugerencias",
@@ -1342,6 +1347,11 @@ const I18N = {
     skinsModalTitle: "🎭 Lion Skins",
     skinsModalSubtitle: "unlockable collection",
     skinsModalCloseBtn: "Close",
+    characterOpenBtn: "🧬 My Character",
+    characterSelectTitle: "🧬 Choose your Starting Avatar",
+    characterSelectSubtitle: "will evolve with you, level by level",
+    characterSelectFemale: "Female Twin",
+    characterSelectMale: "Male Twin",
     cityMapTitle: "🌐 Territory Expansion",
     cityMapHeadline: "Coming soon: have your wishes ready in your city",
     feedbackTitle: "🐞 Bugs & Suggestions",
@@ -1808,6 +1818,11 @@ const I18N = {
     skinsModalTitle: "🎭 ライオンスキン",
     skinsModalSubtitle: "解放可能なコレクション",
     skinsModalCloseBtn: "閉じる",
+    characterOpenBtn: "🧬 マイキャラクター",
+    characterSelectTitle: "🧬 初期アバターを選んでください",
+    characterSelectSubtitle: "レベルとともに進化します",
+    characterSelectFemale: "双子の女の子",
+    characterSelectMale: "双子の男の子",
     cityMapTitle: "🌐 都市拡張",
     cityMapHeadline: "近日公開：あなたの街で願いを叶える準備を",
     feedbackTitle: "🐞 バグ＆提案",
@@ -2144,6 +2159,51 @@ const MIIKAERU_SKINS = [
 
 function skinUnlocked(skin, nivel) {
   return nivel >= skin.nivelRequerido;
+}
+
+// ---------------------------------------------------
+// Selección de Avatar Inicial: Fesha (mellizo femenino) o Mijashi
+// (mellizo masculino) — el Operador elige uno la primera vez que entra
+// (ver openCharacterSelectModal(), enganchado a onMasterAuthSuccess() /
+// al crear cuenta) y lo ve evolucionar por fases a medida que sube de
+// nivel, con rangos propios que van de cachorro a "Supremo Nivel Dios".
+// No existe arte dedicado y distinto por género en la carpeta de origen
+// más allá de las crías (ver Bloque 55 en PROGRESS_LOG) — las fases de
+// rango alto reutilizan retratos ya integrados de MIIKAERU_SKINS,
+// enmarcados narrativamente como "el mismo legado dorado manifestándose
+// en el mellizo que lo despierta", consistente con el propio lore
+// (Fesha/Mijashi heredan Bendiciones de la misma sangre que Miikaeru).
+const FESHA_EVOLUTIONS = [
+  { id: "fesha_kodomo", nivelRequerido: 1, rango: "Kodomo", titulo: "Cachorro Dorado", src: "assets/skins/mikaeru_cachorro_kodomo.png" },
+  { id: "fesha_wakai", nivelRequerido: 10, rango: "Wakai", titulo: "Despertar de la Chispa", src: "assets/skins/mikaeru_cachorro_cosmico_wakai.png" },
+  { id: "fesha_soldado_elite", nivelRequerido: 20, rango: "Shinzen", titulo: "Soldado de Élite", src: "assets/skins/mikaeru_skin_guardian_templo.png" },
+  { id: "fesha_general", nivelRequerido: 30, rango: "Kami", titulo: "General del Nexus", src: "assets/skins/mikaeru_skin_comandante_ejercito.png" },
+  { id: "fesha_meditacion_final", nivelRequerido: 40, rango: "Kami", titulo: "Meditación Final", src: "assets/skins/mikaeru_meditando_neon.png" },
+  { id: "fesha_supremo_dios", nivelRequerido: 50, rango: "Kami", titulo: "Supremo Nivel Dios", src: "assets/skins/mikaeru_skin_deidad_meditante.png" },
+];
+
+const MIJASHI_EVOLUTIONS = [
+  { id: "mijashi_kodomo", nivelRequerido: 1, rango: "Kodomo", titulo: "Cachorro Cósmico", src: "assets/skins/mikaeru_skin_cachorro_galactico.png" },
+  { id: "mijashi_wakai", nivelRequerido: 10, rango: "Wakai", titulo: "Reflejo del Escudo", src: "assets/skins/mikaeru_skin_cazador_neon.png" },
+  { id: "mijashi_soldado_elite", nivelRequerido: 20, rango: "Shinzen", titulo: "Soldado de Élite", src: "assets/skins/mikaeru_skin_cristal_arcano.png" },
+  { id: "mijashi_general", nivelRequerido: 30, rango: "Kami", titulo: "General del Nexus", src: "assets/skins/mikaeru_batalla_armadura.png" },
+  { id: "mijashi_meditacion_final", nivelRequerido: 40, rango: "Kami", titulo: "Meditación Final", src: "assets/skins/mikaeru_idle_chakras.png" },
+  { id: "mijashi_supremo_dios", nivelRequerido: 50, rango: "Kami", titulo: "Supremo Nivel Dios", src: "assets/skins/mikaeru_skin_soberano_estelar.png" },
+];
+
+const PLAYER_CHARACTERS = {
+  fesha: { id: "fesha", nombre: "Fesha", evoluciones: FESHA_EVOLUTIONS },
+  mijashi: { id: "mijashi", nombre: "Mijashi", evoluciones: MIJASHI_EVOLUTIONS },
+};
+
+// La fase más alta que el nivel actual ya alcanza — mismo criterio de
+// "lo más reciente que ya desbloqueaste" que MIIKAERU_SKINS/Miika Pass.
+function faseActualPersonaje(idPersonaje, nivel) {
+  const personaje = PLAYER_CHARACTERS[idPersonaje];
+  if (!personaje) return null;
+  const desbloqueadas = personaje.evoluciones.filter((fase) => skinUnlocked(fase, nivel));
+  if (!desbloqueadas.length) return null;
+  return desbloqueadas.reduce((mejor, fase) => (fase.nivelRequerido > mejor.nivelRequerido ? fase : mejor));
 }
 
 // Resuelve qué retrato usar para el estado "idle": el skin que el
@@ -3503,6 +3563,10 @@ function defaultState() {
     // (ver MIIKAERU_SKINS/currentIdleLionSrc() arriba) — `null` = usa el
     // carrusel ambiental de siempre (idle/meditando/batalla rotando).
     selectedSkin: null,
+    // Avatar Inicial elegido en el primer ingreso (ver PLAYER_CHARACTERS
+    // arriba) — "fesha" | "mijashi" | null (todavía no eligió, dispara
+    // openCharacterSelectModal() la próxima vez que se detecte).
+    playerCharacter: null,
     // Mock temporal: % de misiones completadas esta semana. Reemplazar por
     // un cálculo real (historial de pilares) cuando exista esa lógica.
     weeklyMissions: { completed: 3, total: 5 },
@@ -4845,6 +4909,102 @@ document.addEventListener("DOMContentLoaded", () => {
   if (skinsModal) {
     skinsModal.addEventListener("click", (event) => {
       if (event.target === skinsModal) closeSkinsModal();
+    });
+  }
+
+  // ---------------- Selección de Avatar Inicial (Fesha/Mijashi) ----------------
+  // Ver PLAYER_CHARACTERS/faseActualPersonaje() arriba, fuera de este
+  // closure. openCharacterSelectModal() se llama UNA vez, la primera vez
+  // que el Operador entra (ver onMasterAuthSuccess()/registrationForm más
+  // abajo) — sin botón de cerrar en el modal, es una elección obligatoria.
+  const characterSelectModal = document.getElementById("character-select-modal");
+  const characterSelectFeshaBtn = document.getElementById("character-select-fesha");
+  const characterSelectMijashiBtn = document.getElementById("character-select-mijashi");
+  const characterOpenBtn = document.getElementById("character-open-btn");
+  const characterModal = document.getElementById("character-modal");
+  const characterModalClose = document.getElementById("character-modal-close");
+  const characterModalCloseBtn = document.getElementById("character-modal-close-btn");
+  const characterModalName = document.getElementById("character-modal-name");
+  const characterModalRank = document.getElementById("character-modal-rank");
+  const characterModalImage = document.getElementById("character-modal-image");
+  const characterModalPhaseTitle = document.getElementById("character-modal-phase-title");
+  const characterEvolutionGrid = document.getElementById("character-evolution-grid");
+
+  function openCharacterSelectModal() {
+    if (characterSelectModal) characterSelectModal.hidden = false;
+  }
+
+  function chooseCharacter(idPersonaje) {
+    state.playerCharacter = idPersonaje;
+    persist();
+    if (characterSelectModal) characterSelectModal.hidden = true;
+    const personaje = PLAYER_CHARACTERS[idPersonaje];
+    setAvatarSpeech(`${personaje.nombre} despierta contigo. Crecerá junto a cada nivel que alcances.`);
+    playAvatarEmote("welcome", 3000);
+  }
+
+  if (characterSelectFeshaBtn) characterSelectFeshaBtn.addEventListener("click", () => chooseCharacter("fesha"));
+  if (characterSelectMijashiBtn) characterSelectMijashiBtn.addEventListener("click", () => chooseCharacter("mijashi"));
+
+  function renderCharacterModal() {
+    const personaje = PLAYER_CHARACTERS[state.playerCharacter];
+    if (!personaje) return;
+
+    const faseActual = faseActualPersonaje(state.playerCharacter, state.level);
+    characterModalName.textContent = personaje.nombre;
+    characterModalRank.textContent = faseActual ? `${faseActual.rango} · Nv. ${faseActual.nivelRequerido}` : "—";
+    characterModalPhaseTitle.textContent = faseActual ? faseActual.titulo : "—";
+    if (faseActual) {
+      characterModalImage.src = faseActual.src;
+      characterModalImage.alt = `${personaje.nombre} — ${faseActual.titulo}`;
+    }
+
+    characterEvolutionGrid.innerHTML = "";
+    personaje.evoluciones.forEach((fase) => {
+      const unlocked = skinUnlocked(fase, state.level);
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className =
+        "skin-card" +
+        (unlocked ? "" : " skin-card--locked") +
+        (faseActual && faseActual.id === fase.id ? " skin-card--selected" : "");
+      card.disabled = true; // solo lectura: la fase avanza sola con el nivel, no se elige a mano
+
+      const img = document.createElement("img");
+      img.src = fase.src;
+      img.alt = fase.titulo;
+      img.loading = "lazy";
+      card.appendChild(img);
+
+      if (!unlocked) {
+        const lockOverlay = document.createElement("span");
+        lockOverlay.className = "skin-card__lock";
+        lockOverlay.innerHTML = `🔒<span>Nv. ${fase.nivelRequerido}</span>`;
+        card.appendChild(lockOverlay);
+      }
+      characterEvolutionGrid.appendChild(card);
+    });
+  }
+
+  function openCharacterModal() {
+    if (!state.playerCharacter) {
+      openCharacterSelectModal();
+      return;
+    }
+    renderCharacterModal();
+    if (characterModal) characterModal.hidden = false;
+  }
+
+  function closeCharacterModal() {
+    if (characterModal) characterModal.hidden = true;
+  }
+
+  if (characterOpenBtn) characterOpenBtn.addEventListener("click", openCharacterModal);
+  if (characterModalClose) characterModalClose.addEventListener("click", closeCharacterModal);
+  if (characterModalCloseBtn) characterModalCloseBtn.addEventListener("click", closeCharacterModal);
+  if (characterModal) {
+    characterModal.addEventListener("click", (event) => {
+      if (event.target === characterModal) closeCharacterModal();
     });
   }
 
@@ -9786,6 +9946,11 @@ document.addEventListener("DOMContentLoaded", () => {
       text: `Cuenta creada. Bienvenido al núcleo Miikaeru, ${name}.`,
       variant: "system",
     });
+
+    // Elección de Avatar Inicial (Fesha/Mijashi) — pedido explícito de que
+    // viva "en la pantalla de inicio": se dispara acá, apenas se crea la
+    // cuenta del Operador, antes de que toque nada más de la app.
+    openCharacterSelectModal();
   });
 
   // 🔴 ahora cierra la sesión de la Cuenta Principal (candado de arriba),
@@ -9824,6 +9989,9 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       playAvatarEmote("welcome", 3500);
       setAvatarSpeech(`¡Bienvenido de vuelta, ${state.operatorName}!`);
+      // Perfiles creados antes de este Bloque no tienen playerCharacter
+      // guardado — se les pide elegir recién ahora, una sola vez.
+      if (!state.playerCharacter) openCharacterSelectModal();
     }
   }
 

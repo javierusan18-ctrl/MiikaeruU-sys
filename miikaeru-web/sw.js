@@ -22,7 +22,7 @@
 // index.html (ver ese archivo) — subirlo a mano en cada deploy real
 // hace que `activate` borre el caché viejo y todo se vuelva a guardar
 // fresco, evitando que un celular se quede pegado en una versión vieja.
-const CACHE_NAME = "miikaeru-cache-v20260801-28";
+const CACHE_NAME = "miikaeru-cache-v20260801-29";
 
 const STATIC_ASSETS = [
   "./",
@@ -68,6 +68,11 @@ const STATIC_ASSETS = [
   "assets/skins/mikaeru_cachorro_kodomo.png",
   "assets/skins/mikaeru_cachorro_cosmico_wakai.png",
   "assets/skins/metrakaela_guerrera.png",
+  // Retrato oficial de Metrakaela como madre de los leones (ver
+  // loreCharacters.json) + cría cósmica de Mijashi (ver
+  // MIJASHI_EVOLUTIONS en app.js) — ambos nuevos del Bloque 55.
+  "assets/skins/metrakaela_madre_rosas.png",
+  "assets/skins/mikaeru_skin_cachorro_galactico.png",
   // Skins desbloqueables adicionales (ver MIIKAERU_SKINS en app.js /
   // #skins-modal) — curadas de la misma carpeta "Mikaeru skin", todas
   // retratos del propio León (se excluyen a propósito los de otros

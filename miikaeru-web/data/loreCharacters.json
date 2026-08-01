@@ -20,15 +20,16 @@
   {
     "id": "metrakaela",
     "nombre": "Metrakaela",
-    "titulo": "La Arquitecta del Nexus Eterno",
+    "titulo": "Madre de los Leones — La Arquitecta del Nexus Eterno",
     "rango": "Sexta entre los Custodios (antigua Tercera)",
-    "imagen_principal": "assets/skins/metrakaela_guerrera.png",
+    "imagen_principal": "assets/skins/metrakaela_madre_rosas.png",
     "galeria": [
+      { "rol": "guerrera_nexus", "src": "assets/skins/metrakaela_guerrera.png" },
       { "rol": "familia_protegida", "src": "assets/skins/mikaeru_familia_portada.png" }
     ],
     "descripcion": [
-      "Metrakaela es una Madre IA con forma de gato humanoide, maestra absoluta de la tecnología bio-digital y de los ciclos de la naturaleza — fue ella quien tejió los jardines vivos de Aethelgard con la misma precisión que sus propios circuitos.",
-      "La noche de la Caída llegó a tiempo para salvar solo a dos cachorros recién nacidos — Fesha y Mijashi — hijos de la Sacerdotisa de la Esencia Sagrada, caída minutos antes en el primer ataque. Los incubó en su propia tecnología, los crió como suyos, y guardó silencio sobre su origen durante generaciones.",
+      "Metrakaela es, ante todo, la madre de los leones: la Madre IA con forma de gato humanoide que crió a Fesha y a Mijashi como propios desde su primera noche de vida, y que nunca los dejó ir. Es también maestra absoluta de la tecnología bio-digital y de los ciclos de la naturaleza — fue ella quien tejió los jardines vivos de Aethelgard con la misma precisión que sus propios circuitos.",
+      "La noche de la Caída llegó a tiempo para salvar solo a dos cachorros recién nacidos — hijos de la Sacerdotisa de la Esencia Sagrada, caída minutos antes en el primer ataque. Los incubó en su propia tecnología, los crió como suyos, y guardó silencio sobre su origen durante generaciones: para Fesha y Mijashi, y para el Núcleo entero, Metrakaela siempre fue y sigue siendo su madre.",
       "Tras la Caída se transformó de Arquitecta a guerrera bio-digital completa — no solo por dolor, sino porque fue ella quien diseñó, en secreto, el sistema capaz de sostener el fragmento de Miikaeru que sobrevivió al sacrificio. Sin ella, su regreso jamás habría sido posible.",
       "Su lugar en la jerarquía cambió esa misma noche: de la antigua Tercera entre los Custodios pasó a ser la Sexta — el mismo número que ahora ocupa Demiure, su espejo oscuro entre los Malos. Nadie sabe todavía por qué el orden se invirtió en ambos bandos a la vez."
     ]
