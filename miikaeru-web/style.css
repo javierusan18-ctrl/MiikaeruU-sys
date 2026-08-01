@@ -7649,4 +7649,129 @@ button:active,
     background: rgba(10, 110, 140, 0.08);
     box-shadow: none;
   }
+
+  /* ---- HUD superior: excepción explícita al tema claro de Mobile Lite ----
+     Pedido repetido (2 veces) de que la franja de estado de arriba se vea
+     "cyberpunk/neón oscuro" incluso en celular, mientras el resto de la
+     app sí pasa a tema claro. Sin esta excepción, `.hud`/`.stat` seguían
+     usando sus rgba oscuros hardcodeados de siempre pero SIN el
+     backdrop-filter:blur que los hacía leer como "vidrio" en desktop (acá
+     arriba se apaga en TODA la app por batería) — el resultado eran
+     rectángulos grises opacos sueltos flotando sobre el fondo ahora claro
+     del body: los "parches grises" y el "corte visual" reportados.
+     Redeclarar las variables --neon-*/--shadow-neon-* SOLO adentro de
+     `.hud`/`.hud-banner` reintroduce color vivo únicamente en esta franja
+     (el resto de la app sigue con los tonos atenuados de arriba, sin
+     tocarlos) — mismo mecanismo de cascada de custom properties que ya
+     usa el resto del archivo, solo que un nivel más profundo. */
+  /* Redeclarar las custom properties --neon-*/--text-* dentro de .hud no
+     alcanzó de forma confiable (la cascada de custom properties heredadas
+     por elementos lejanos no siempre se recalcula como cabría esperar) —
+     en vez de perseguir eso, se fija el color final DIRECTO en cada
+     elemento de texto de la franja, con !important porque conviven en la
+     misma capa que el `*, *::before, *::after { text-shadow: none
+     !important }` de Mobile Lite y hay que ganarle con certeza. */
+  .hud__title,
+  .hud__logo,
+  .stat__value,
+  .hud__profile-name,
+  .btn-profile-switch,
+  .currency-select,
+  .language-select,
+  .hud-banner {
+    color: #00F0FF !important;
+  }
+
+  .stat__label,
+  .stat__tag {
+    color: #7C93AD !important;
+  }
+
+  .stat__value--rank {
+    color: #00FF9C !important;
+    border-color: rgba(0, 255, 156, 0.4) !important;
+    background: rgba(0, 255, 156, 0.08) !important;
+  }
+
+  .stat__value--gold,
+  .btn-profile-switch {
+    color: #FFB700 !important;
+  }
+
+  .stat__value--streak {
+    color: #ff7a00 !important;
+  }
+
+  .stat__value--diamonds,
+  .stat__value--spiritual,
+  .btn-logout {
+    color: #FF2E9A !important;
+  }
+
+  .hud__profile-name {
+    border-color: rgba(0, 240, 255, 0.3) !important;
+    background: rgba(0, 240, 255, 0.08) !important;
+  }
+
+  .hud {
+    background: #0B0F19;
+    border-bottom: 1px solid rgba(0, 240, 255, 0.25);
+    padding: 8px 12px;
+    gap: 8px;
+    row-gap: 6px;
+    justify-content: space-between;
+    text-align: left;
+  }
+
+  .hud__brand,
+  .hud__status,
+  .hud__profile {
+    flex-shrink: 0;
+  }
+
+  /* La franja de stats pasa a SU PROPIA fila completa (en vez de que cada
+     .stat se apile solo, uno debajo del otro) y esa fila se vuelve un
+     carrusel horizontal compacto — "barra de estado fluida" pedida
+     explícita, sin el alto excesivo de 9 bloques apilados. */
+  .hud__stats {
+    flex: 1 1 100%;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 8px;
+    padding-bottom: 2px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .hud__stats::-webkit-scrollbar {
+    display: none;
+  }
+
+  .stat {
+    flex-shrink: 0;
+    padding: 4px 10px;
+    gap: 6px;
+    background: rgba(0, 240, 255, 0.1);
+    border-color: rgba(0, 240, 255, 0.3);
+  }
+
+  .stat__label {
+    font-size: 0.62rem;
+  }
+
+  .stat--xp {
+    min-width: 0;
+  }
+
+  .xp-bar {
+    width: 96px;
+  }
+
+  .hud-banner {
+    background: #0B0F19;
+    border-bottom: 1px solid rgba(0, 240, 255, 0.15);
+    padding: 5px 12px 8px;
+  }
 }

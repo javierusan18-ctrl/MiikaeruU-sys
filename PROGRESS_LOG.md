@@ -1531,3 +1531,25 @@ Pedido de 3 correcciones puntuales sobre trabajo ya construido en bloques anteri
 - Botón de japonés: confirmado texto `"🈺 Entérate de la historia en japonés"` en el capítulo IV tras abrir el modal.
 - Miika Pass: `totalTiers: 50`, `specialTiers: 15` (tiers con al menos un avatar), `doubleAvatarTiers: 5` (tiers donde coinciden un skin del León Y una fase del personaje elegido) — confirmado con Mijashi elegido, Nv. 1 muestra su cachorro cósmico + el skin `mikaeru_idle_chakras` lado a lado.
 - 0 errores de consola en toda la sesión de pruebas.
+
+---
+
+## Bloque 57 — Corrección urgente: HUD superior compacto, sin parches grises, con texto legible
+
+Pedido urgente de 3 puntos sobre el HUD superior en mobile: (1) eliminar el espacio vertical excesivo y agrupar los stats en una barra compacta y pegada al borde, (2) unificar el fondo de todo el bloque superior en un panel tecnológico oscuro sin parches grises ni corte visual, (3) que los botones de perfil (Admin/Operador/apagar) queden integrados sin estorbar.
+
+**1. Causa real de los "parches grises"/"corte visual": `.hud`/`.stat` usan colores oscuros fijos que dependen del `backdrop-filter: blur()` para leerse como "vidrio" — y el tema Mobile Lite (ver Bloque 39/150) apaga TODO blur de la app por batería.** Sin el blur, esos bloques oscuros quedaban como rectángulos opacos sueltos flotando sobre el fondo ahora claro del `body` (Mobile Lite pasa el resto de la app a blanco/gris), con un corte visible justo donde `.hud` terminaba y `.hud-banner` (sin fondo propio) dejaba ver el body claro de fondo. Corregido con una excepción explícita dentro del media query de Mobile Lite (`max-width: 767px`): `.hud` y `.hud-banner` pasan a un panel `#0B0F19` sólido (sin depender de blur) y comparten el mismo borde inferior neón — un solo bloque continuo, sin costura, del logo hasta el banner de racha.
+
+**2. Barra de stats reducida a una sola fila compacta con scroll horizontal.** `.hud__stats` pasa de apilar sus 11 bloques (Nivel/Miika Pass/XP/Rango/Racha/Balance/Brújula/Finanzas/Oro/Diamantes/Idioma) verticalmente uno debajo del otro — el "espacio excesivo" reportado — a una sola fila (`flex-wrap: nowrap`) con `overflow-x: auto` tipo carrusel (scrollbar oculta), igual que un HUD de videojuego real con más íconos de los que caben en pantalla. `.hud` en sí baja su padding vertical y usa `justify-content: space-between` para que logo/stats/perfil compartan una franja delgada pegada arriba, en vez de la columna alta de antes.
+
+**3. Bug real encontrado y corregido (no reportado por el usuario, apareció al verificar el punto 2): el texto dentro de la franja quedaba invisible sobre el nuevo fondo oscuro.** Los nombres de clase (`.hud__title`, `.stat__value`, `.hud__profile-name`, `.btn-profile-switch`, etc.) seguían heredando `color: var(--text-primary)`, que Mobile Lite redefine a un tono casi negro pensado para fondo BLANCO — perfecto en el resto de la app, ilegible sobre el panel oscuro nuevo de este bloque. Se fijó el color final de cada elemento de texto de la franja de forma directa (cian/dorado/verde/magenta según el tipo de stat, replicando la paleta neón de siempre) en vez de tocar las variables globales, para no afectar el tema claro del resto de la app.
+
+**Nota de depuración honesta:** el primer intento de corrección (recolorear vía variables CSS y luego vía `color: ... !important`) parecía no surtir efecto alguno al probarlo en el navegador — `getComputedStyle` seguía devolviendo el color viejo pese a que el CSS nuevo estaba confirmado presente en el archivo servido. La causa no era la cascada de CSS sino la caché HTTP del propio navegador: el `<link rel="stylesheet">` seguía apuntando al mismo `?v=` ya solicitado antes de la última edición, así que el navegador reusaba la respuesta vieja en vez de pedir el archivo de nuevo. Se resolvió subiendo la versión de caché (obligatorio de todos modos en cada deploy) y recargando — la lección para bloques futuros es que "el CSS está en el archivo" no es lo mismo que "el navegador ya lo cargó" cuando se está iterando sobre el mismo número de versión sin recargar con caché fría.
+
+**4. `sw.js`:** `CACHE_NAME` subido a `v20260801-33`.
+
+**Pruebas realizadas:**
+- Viewport mobile (375×812): capturado en pantalla — un solo panel oscuro continuo del logo hasta el banner de racha, sin parches grises ni corte visible.
+- `.hud__stats`: confirmado `scrollWidth: 1369px` vs `clientWidth: 351px` — los 11 stats en una sola fila con scroll horizontal, no apilados.
+- Texto de la franja: confirmado `getComputedStyle` con los colores neón correctos tras la recarga con caché fría (antes de la recarga mostraba el color viejo — ver nota de depuración).
+- 0 errores de consola.
