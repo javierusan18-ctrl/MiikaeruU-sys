@@ -109,6 +109,53 @@ Flags:
 - `--dry-run` — corre todo el bucle igual, pero en vez de insertar en Supabase imprime el hallazgo por consola. Para la primera corrida, antes de confiar en que escriba solo a la tabla real.
 - `--url <url>` — por default usa `http://localhost:5500` (mismo puerto que uso yo); cambiar si tu servidor local usa otro.
 
+## Corrida programada (sin abrir terminal)
+
+Hay una **tarea programada de Windows** llamada `Miikaeru IA Jugador` que
+corre todos los días a las **3:00 AM** (hora de la PC) mientras la PC esté
+encendida y vos hayas iniciado sesión (no hace falta tenerla desbloqueada,
+pero sí encendida). No pide tu contraseña de Windows ni queda guardada en
+ningún lado — se creó con `schtasks /create` usando tu sesión actual, sin la
+opción "ejecutar aunque no haya iniciado sesión" (esa sí requeriría guardar
+la contraseña).
+
+Qué hace cada corrida, en orden (`run-scheduled.js`):
+1. Levanta `tools/dev-server.js` (servidor estático local, puerto 5500) —
+   la misma app que usás vos desde el navegador, servida sola.
+2. Espera a que conteste antes de seguir.
+3. Corre `player.js --max-actions 40 --max-findings 10` contra ese server.
+4. Apaga el servidor al terminar (encuentre bugs, se corte por límite, o
+   truene).
+5. Todo lo que hubiera salido por consola queda además en
+   `tools/ai-player/logs/run-<fecha>.log` — un archivo por corrida.
+
+**Sigue siendo solo un reporter.** Esta corrida programada no cambia en
+nada el contrato de seguridad del resto del módulo: únicamente inserta
+filas `pending` en `automation_tasks` (nunca modifica código), tiene los
+mismos techos de gasto (`--max-actions 40 --max-findings 10`), y el mismo
+candado de "solo localhost" de `config.js`. Vos seguís aprobando/descartando
+cada hallazgo a mano desde el Panel de Administrador — nada se aplica solo.
+
+**Gasto real, sin supervisión.** Cada corrida llama a la API de Claude
+hasta 40 veces (ver § Costo abajo) y se cobra a tu cuenta de Anthropic así
+nadie esté mirando. Antes de confiar en que la tarea programada corra sola
+noche tras noche, te conviene disparar una corrida manual una vez
+(`node run-scheduled.js` desde `tools/ai-player/`) y revisar el log y lo que
+apareció en el Panel de Administrador.
+
+Para cambiar el horario, la frecuencia, o borrar la tarea:
+
+```bash
+# Cambiar horario (ej. a las 22:00)
+schtasks /change /tn "Miikaeru IA Jugador" /st 22:00
+
+# Ver estado / última corrida
+schtasks /query /tn "Miikaeru IA Jugador" /fo LIST /v
+
+# Borrarla
+schtasks /delete /tn "Miikaeru IA Jugador" /f
+```
+
 ## Costo
 
 Esta herramienta llama a la API de Claude repetidas veces por sesión (una

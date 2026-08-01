@@ -13,3 +13,7 @@ node_modules/
 # van al repo. .env.example SÍ se commitea (es la plantilla sin valores
 # reales de ANTHROPIC_API_KEY).
 tools/ai-player/.env
+
+# Logs de las corridas programadas (tools/ai-player/run-scheduled.js,
+# Bloque 64) — texto plano local, no aporta nada versionado.
+tools/ai-player/logs/
