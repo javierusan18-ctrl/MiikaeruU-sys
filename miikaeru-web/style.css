@@ -4219,9 +4219,33 @@ textarea,
   font-size: 0.78rem;
 }
 
+.jp-grammar-card__example-jp-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .jp-grammar-card__example-jp {
   font-weight: 700;
   color: var(--text-primary);
+}
+
+.jp-grammar-card__example-audio {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  background: rgba(0, 240, 255, 0.08);
+  color: var(--text-primary);
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.jp-grammar-card__example-audio:hover {
+  border-color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
 }
 
 .jp-grammar-card__example-reading {
@@ -5827,6 +5851,139 @@ textarea,
 .story-modal__spoiler-icon {
   font-size: 1.6rem;
   filter: drop-shadow(0 0 8px rgba(255, 183, 0, 0.6));
+}
+
+/* Lectura Inmersiva de Japonés (ver readerEngine.js) — botón que alterna
+   entre .story-modal__body (texto en español, de siempre) y
+   .reader-panel (líneas con furigana + audio + resaltado de lectura
+   automática). Reutilizado sin cambios por el Japonés AI Coach más abajo. */
+.story-modal__reader-toggle-row {
+  margin-bottom: 14px;
+}
+
+.story-modal__reader-toggle {
+  width: 100%;
+  padding: 10px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 46, 154, 0.4);
+  background: rgba(255, 46, 154, 0.08);
+  color: var(--neon-magenta);
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.story-modal__reader-toggle:hover {
+  border-color: var(--neon-magenta);
+  box-shadow: 0 0 12px rgba(255, 46, 154, 0.35);
+}
+
+.reader-panel {
+  margin-bottom: 18px;
+}
+
+.reader-panel__controls {
+  margin-bottom: 10px;
+}
+
+.reader-panel__auto-btn {
+  width: 100%;
+  padding: 9px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(0, 255, 156, 0.4);
+  background: rgba(0, 255, 156, 0.06);
+  color: var(--neon-green);
+  font-weight: 700;
+  font-size: 0.74rem;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.reader-panel__auto-btn:hover {
+  border-color: var(--neon-green);
+  box-shadow: 0 0 12px rgba(0, 255, 156, 0.35);
+}
+
+.reader-lines {
+  max-height: 320px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-right: 4px;
+}
+
+.reader-lines::-webkit-scrollbar {
+  width: 4px;
+}
+.reader-lines::-webkit-scrollbar-thumb {
+  background: rgba(0, 240, 255, 0.3);
+  border-radius: 999px;
+}
+
+.reader-line {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  column-gap: 8px;
+  align-items: start;
+  padding: 10px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  background: rgba(0, 10, 20, 0.4);
+  transition: all 0.25s ease;
+}
+
+.reader-line--active {
+  border-color: var(--neon-gold);
+  background: rgba(255, 183, 0, 0.1);
+  box-shadow: 0 0 14px rgba(255, 183, 0, 0.3);
+}
+
+.reader-line__audio {
+  grid-row: 1 / 3;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  background: rgba(0, 240, 255, 0.08);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.reader-line__audio:hover {
+  border-color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.reader-line__jp {
+  margin: 0 0 4px;
+  font-size: 1.05rem;
+  line-height: 2.1;
+  color: var(--text-primary);
+}
+
+.reader-line__jp ruby {
+  ruby-position: over;
+}
+
+.reader-line__jp rt {
+  font-size: 0.6rem;
+  color: var(--neon-cyan);
+  font-weight: 600;
+  user-select: none;
+}
+
+.reader-line__es {
+  margin: 0;
+  font-size: 0.76rem;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  font-family: "Inter", sans-serif;
 }
 
 .story-modal__body::-webkit-scrollbar {

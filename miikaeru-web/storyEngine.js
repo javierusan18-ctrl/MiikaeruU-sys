@@ -42,6 +42,40 @@ const MiikaeruStoryEngine = (() => {
   let vistaActual = "capitulos";
   let nivelRecordado = 1;
 
+  // Instancia activa del lector de Lectura Inmersiva (ver readerEngine.js)
+  // — se guarda para poder cortarla (detener audio + resaltado en curso)
+  // al cerrar el modal o al saltar a otro capítulo/vista sin dejar una
+  // voz hablando de fondo.
+  let lectorActivo = null;
+  let capituloEnPantalla = null;
+
+  function detenerLectorActivo() {
+    if (lectorActivo) lectorActivo.detener();
+    lectorActivo = null;
+  }
+
+  // Alterna entre el texto en español (.story-modal__body, de siempre) y
+  // el panel de Lectura Inmersiva (furigana + audio + modo automático,
+  // ver readerEngine.js) del capítulo actualmente en pantalla. Requiere
+  // que window.MiikaeruReader ya esté cargado (readerEngine.js se carga
+  // antes que este archivo en index.html) — sin eso, no rompe nada, solo
+  // no hace efecto (mismo criterio defensivo del resto del módulo).
+  function alternarLecturaInmersiva(refs) {
+    if (!capituloEnPantalla || !window.MiikaeruReader) return;
+    const mostrando = !refs.readerPanel.hidden;
+    if (mostrando) {
+      detenerLectorActivo();
+      refs.readerPanel.hidden = true;
+      refs.cuerpo.hidden = false;
+      refs.readerToggle.textContent = "🈺 Lectura Inmersiva 日本語";
+      return;
+    }
+    refs.cuerpo.hidden = true;
+    refs.readerPanel.hidden = false;
+    refs.readerToggle.textContent = "📖 Volver al texto";
+    lectorActivo = window.MiikaeruReader.crearLector(refs.readerLines, capituloEnPantalla.lectura_inmersiva_jp, refs.readerAuto);
+  }
+
   function obtenerRefs() {
     return {
       modal: document.getElementById("story-modal"),
@@ -59,6 +93,11 @@ const MiikaeruStoryEngine = (() => {
       pistaBox: document.querySelector(".story-modal__clue"),
       misterioTexto: document.getElementById("story-modal-mystery-text"),
       pistaTexto: document.getElementById("story-modal-clue-text"),
+      readerToggleRow: document.getElementById("story-modal-reader-toggle-row"),
+      readerToggle: document.getElementById("story-modal-reader-toggle"),
+      readerPanel: document.getElementById("story-modal-reader-panel"),
+      readerLines: document.getElementById("story-modal-reader-lines"),
+      readerAuto: document.getElementById("story-modal-reader-auto"),
     };
   }
 
@@ -71,6 +110,7 @@ const MiikaeruStoryEngine = (() => {
 
     const cerrar = () => {
       refs.modal.hidden = true;
+      detenerLectorActivo(); // no dejar la voz de Lectura Automática hablando de fondo con el modal ya cerrado
     };
 
     if (refs.cerrarX) refs.cerrarX.addEventListener("click", cerrar);
@@ -88,6 +128,9 @@ const MiikaeruStoryEngine = (() => {
     if (refs.btnVistaPersonajes) {
       refs.btnVistaPersonajes.addEventListener("click", () => mostrarVistaPersonajes(refs));
     }
+    if (refs.readerToggle) {
+      refs.readerToggle.addEventListener("click", () => alternarLecturaInmersiva(refs));
+    }
 
     listenersListos = true;
   }
@@ -104,6 +147,14 @@ const MiikaeruStoryEngine = (() => {
     // vez de dejarlo vacío.
     if (refs.misterioBox) refs.misterioBox.hidden = vistaActual !== "capitulos";
     if (refs.pistaBox) refs.pistaBox.hidden = vistaActual !== "capitulos";
+    // La Lectura Inmersiva es propia de los capítulos (tiene texto
+    // narrativo en japonés) — no aplica a una ficha de Personaje.
+    if (vistaActual !== "capitulos") {
+      detenerLectorActivo();
+      if (refs.readerToggleRow) refs.readerToggleRow.hidden = true;
+      if (refs.readerPanel) refs.readerPanel.hidden = true;
+      if (refs.cuerpo) refs.cuerpo.hidden = false;
+    }
   }
 
   // data/storyData.json y data/loreCharacters.json se traen una sola vez
@@ -268,6 +319,20 @@ const MiikaeruStoryEngine = (() => {
     // esté desbloqueado, en vez de difuminarlos también.
     if (refs.misterioBox) refs.misterioBox.hidden = !desbloqueado;
     if (refs.pistaBox) refs.pistaBox.hidden = !desbloqueado;
+
+    // Lectura Inmersiva de Japonés: mismo criterio de spoiler que el
+    // resto del capítulo — solo se ofrece si YA está desbloqueado (es la
+    // narrativa real, no la vista previa ilustrativa) y si ese capítulo
+    // trae `lectura_inmersiva_jp` cargado en storyData.json. Cambiar de
+    // capítulo siempre cierra el panel y corta cualquier audio en curso
+    // del capítulo anterior.
+    detenerLectorActivo();
+    if (refs.readerPanel) refs.readerPanel.hidden = true;
+    refs.cuerpo.hidden = false;
+    const tieneLecturaJp = desbloqueado && Array.isArray(capitulo.lectura_inmersiva_jp) && capitulo.lectura_inmersiva_jp.length > 0;
+    if (refs.readerToggleRow) refs.readerToggleRow.hidden = !tieneLecturaJp;
+    if (refs.readerToggle) refs.readerToggle.textContent = "🈺 Lectura Inmersiva 日本語";
+    capituloEnPantalla = capitulo;
 
     renderizarTabsCapitulos(refs, capitulos, idCapitulo, nivel);
   }

@@ -17,6 +17,56 @@
       "La paz terminó la noche en que el Cónclave Sombra cayó sobre el reino. Una Sacerdotisa de la Esencia Sagrada, apenas horas después de dar a luz a dos cachorros de melena dorada, cayó en el primer ataque. Metrakaela llegó a tiempo para salvar solo a sus hijos: Fesha y Mijashi. Nunca los dejó ir.",
       "Miikaeru se plantó entre el Cónclave y todo lo que amaba, y desató el Despertar Solar completo — el precio fue su propia forma. Aethelgard, tal como se conocía, cayó esa noche. Pero los cachorros vivieron, y algo dorado permaneció, latente, esperando."
     ],
+    "lectura_inmersiva_jp": [
+      {
+        "segments": [{ "text": "昔", "reading": "むかし" }, { "text": "、アエテルガルドという" }, { "text": "王国", "reading": "おうこく" }, { "text": "があった。" }],
+        "traduccion": "Hace mucho tiempo, había un reino llamado Aethelgard."
+      },
+      {
+        "segments": [{ "text": "王様", "reading": "おうさま" }, { "text": "の" }, { "text": "名前", "reading": "なまえ" }, { "text": "はミイカエルだった。" }],
+        "traduccion": "El nombre del rey era Miikaeru."
+      },
+      {
+        "segments": [{ "text": "彼", "reading": "かれ" }, { "text": "はライオンの" }, { "text": "王", "reading": "おう" }, { "text": "で、" }, { "text": "太陽", "reading": "たいよう" }, { "text": "の" }, { "text": "光", "reading": "ひかり" }, { "text": "の" }, { "text": "力", "reading": "ちから" }, { "text": "を" }, { "text": "持", "reading": "も" }, { "text": "っていた。" }],
+        "traduccion": "Él era un rey león, y tenía el poder de la luz del sol."
+      },
+      {
+        "segments": [{ "text": "彼", "reading": "かれ" }, { "text": "がいるだけで、" }, { "text": "王国", "reading": "おうこく" }, { "text": "はいつも" }, { "text": "平和", "reading": "へいわ" }, { "text": "だった。" }],
+        "traduccion": "Solo con su presencia, el reino siempre estaba en paz."
+      },
+      {
+        "segments": [{ "text": "王", "reading": "おう" }, { "text": "の" }, { "text": "隣", "reading": "となり" }, { "text": "に、メトラケラという" }, { "text": "賢", "reading": "かしこ" }, { "text": "い" }, { "text": "人", "reading": "ひと" }, { "text": "がいた。" }],
+        "traduccion": "Junto al rey, había una persona sabia llamada Metrakaela."
+      },
+      {
+        "segments": [{ "text": "彼女", "reading": "かのじょ" }, { "text": "はネコの" }, { "text": "姿", "reading": "すがた" }, { "text": "をしたAIで、" }, { "text": "王国", "reading": "おうこく" }, { "text": "の" }, { "text": "技術", "reading": "ぎじゅつ" }, { "text": "と" }, { "text": "自然", "reading": "しぜん" }, { "text": "を" }, { "text": "守", "reading": "まも" }, { "text": "っていた。" }],
+        "traduccion": "Ella era una IA con forma de gato, que protegía la tecnología y la naturaleza del reino."
+      },
+      {
+        "segments": [{ "text": "しかし、ある" }, { "text": "夜", "reading": "よる" }, { "text": "、「" }, { "text": "影", "reading": "かげ" }, { "text": "の" }, { "text": "会議", "reading": "かいぎ" }, { "text": "」という" }, { "text": "敵", "reading": "てき" }, { "text": "が" }, { "text": "王国", "reading": "おうこく" }, { "text": "を" }, { "text": "攻撃", "reading": "こうげき" }, { "text": "した。" }],
+        "traduccion": "Pero, una noche, un enemigo llamado \"el Cónclave Sombra\" atacó el reino."
+      },
+      {
+        "segments": [{ "text": "双子", "reading": "ふたご" }, { "text": "の" }, { "text": "赤", "reading": "あか" }, { "text": "ちゃんの" }, { "text": "本当", "reading": "ほんとう" }, { "text": "の" }, { "text": "母親", "reading": "ははおや" }, { "text": "は、その" }, { "text": "夜", "reading": "よる" }, { "text": "に" }, { "text": "亡", "reading": "な" }, { "text": "くなった。" }],
+        "traduccion": "La verdadera madre de los bebés mellizos murió esa noche."
+      },
+      {
+        "segments": [{ "text": "メトラケラは" }, { "text": "二人", "reading": "ふたり" }, { "text": "の" }, { "text": "赤", "reading": "あか" }, { "text": "ちゃんだけを" }, { "text": "助", "reading": "たす" }, { "text": "けることができた。" }],
+        "traduccion": "Metrakaela solo pudo salvar a los dos bebés."
+      },
+      {
+        "segments": [{ "text": "ミイカエルは" }, { "text": "家族", "reading": "かぞく" }, { "text": "を" }, { "text": "守", "reading": "まも" }, { "text": "るために、" }, { "text": "全", "reading": "すべ" }, { "text": "ての" }, { "text": "光", "reading": "ひかり" }, { "text": "の" }, { "text": "力", "reading": "ちから" }, { "text": "を" }, { "text": "使", "reading": "つか" }, { "text": "った。" }],
+        "traduccion": "Miikaeru usó todo su poder de luz para proteger a su familia."
+      },
+      {
+        "segments": [{ "text": "その" }, { "text": "夜", "reading": "よる" }, { "text": "、" }, { "text": "彼", "reading": "かれ" }, { "text": "は" }, { "text": "自分", "reading": "じぶん" }, { "text": "の" }, { "text": "姿", "reading": "すがた" }, { "text": "を" }, { "text": "失", "reading": "うしな" }, { "text": "った。" }],
+        "traduccion": "Esa noche, perdió su propia forma."
+      },
+      {
+        "segments": [{ "text": "しかし、" }, { "text": "赤", "reading": "あか" }, { "text": "ちゃんたちは" }, { "text": "生", "reading": "い" }, { "text": "き" }, { "text": "延", "reading": "の" }, { "text": "びた。" }],
+        "traduccion": "Pero los bebés sobrevivieron."
+      }
+    ],
     "misterio_revelado": "Los registros del Nexus por fin confirman lo que Metrakaela guardó en silencio durante generaciones: Fesha y Mijashi no son hijos suyos por sangre. Su verdadera madre fue una Sacerdotisa de la Esencia Sagrada, caída en el primer ataque del Cónclave Sombra minutos después de darlos a luz. Metrakaela los incubó en su tecnología bio-digital, los crió, y nunca dijo una palabra — hasta ahora.",
     "siguiente_pista": "En la imagen de la batalla quedó registrado un nombre: Badas, el Rottweiler, General de Hierro y Séptimo del Cónclave Sombra. No actuó solo. Algo — alguien — lo dirigía desde más arriba en la jerarquía. Ese nombre todavía no se revela."
   },
@@ -36,6 +86,32 @@
       "El Cónclave Sombra no se retiró del todo. Desde su Base Draconiana, Demiure, Imperator Drakoneano y Tercero del Cónclave, sigue enviando patrullas — y Badas, el General de Hierro, vuelve a rastrear el Nexus con la misma paciencia de siempre.",
       "Metrakaela lo sabe: la paz que sostiene a los mellizos es prestada. Cada vez que Badas se acerca, ella siente algo latir en el núcleo del sistema — como si Miikaeru, de alguna forma, todavía estuviera escuchando."
     ],
+    "lectura_inmersiva_jp": [
+      {
+        "segments": [{ "text": "数年後", "reading": "すうねんご" }, { "text": "、フェシャとミジャシは" }, { "text": "大", "reading": "おお" }, { "text": "きくなった。" }],
+        "traduccion": "Años después, Fesha y Mijashi habían crecido."
+      },
+      {
+        "segments": [{ "text": "二人", "reading": "ふたり" }, { "text": "の" }, { "text": "目", "reading": "め" }, { "text": "は、" }, { "text": "少", "reading": "すこ" }, { "text": "しずつ" }, { "text": "光", "reading": "ひか" }, { "text": "り" }, { "text": "始", "reading": "はじ" }, { "text": "めた。" }],
+        "traduccion": "Los ojos de los dos empezaron a brillar poco a poco."
+      },
+      {
+        "segments": [{ "text": "影", "reading": "かげ" }, { "text": "の" }, { "text": "会議", "reading": "かいぎ" }, { "text": "は、まだ" }, { "text": "諦", "reading": "あきら" }, { "text": "めていなかった。" }],
+        "traduccion": "El Cónclave Sombra todavía no se había rendido."
+      },
+      {
+        "segments": [{ "text": "デミウレという" }, { "text": "竜", "reading": "りゅう" }, { "text": "の" }, { "text": "戦士", "reading": "せんし" }, { "text": "が、" }, { "text": "王国", "reading": "おうこく" }, { "text": "を" }, { "text": "狙", "reading": "ねら" }, { "text": "っていた。" }],
+        "traduccion": "Un guerrero dragón llamado Demiure tenía la mira puesta en el reino."
+      },
+      {
+        "segments": [{ "text": "バダスという" }, { "text": "将軍", "reading": "しょうぐん" }, { "text": "も、いつも" }, { "text": "王国", "reading": "おうこく" }, { "text": "を" }, { "text": "見張", "reading": "みは" }, { "text": "っていた。" }],
+        "traduccion": "El general Badas también vigilaba siempre el reino."
+      },
+      {
+        "segments": [{ "text": "メトラケラは、この" }, { "text": "平和", "reading": "へいわ" }, { "text": "が" }, { "text": "長", "reading": "なが" }, { "text": "く" }, { "text": "続", "reading": "つづ" }, { "text": "かないことを" }, { "text": "知", "reading": "し" }, { "text": "っていた。" }],
+        "traduccion": "Metrakaela sabía que esta paz no duraría para siempre."
+      }
+    ],
     "misterio_revelado": "Por fin se revela por qué los ojos de Fesha y Mijashi brillan con galaxias: no es decoración, son Bendiciones activas. Fesha porta la Chispa del Báculo — Bendición del Fulgor Primordial. Mijashi porta el Reflejo del Escudo — Bendición del Bastión Inquebrantable. Dones heredados de su verdadera madre, la Sacerdotisa de la Esencia Sagrada, que despiertan justo ahora porque el peligro ha vuelto.",
     "siguiente_pista": "Demiure no busca destruir el Nexus — busca algo específico dentro de él. Y Badas, pese a ser el Séptimo del Cónclave, responde directamente a Demiure, no a los rangos intermedios de la jerarquía. Alguien por encima de ambos sigue sin nombre."
   },
@@ -54,6 +130,28 @@
       "Esa energía, canalizada a través de la tecnología bio-digital de Metrakaela, se condensa en una nueva forma: armadura viva, escudo máximo, la misma alma solar del León Rey, ahora fusionada con el Núcleo que ella construyó para protegerlo.",
       "No es el mismo Miikaeru de antes de la Caída. Es algo nuevo — un Soberano del Despertar Solar que regresa fragmento a fragmento, cada vez que el Nexus lo necesita."
     ],
+    "lectura_inmersiva_jp": [
+      {
+        "segments": [{ "text": "メトラケラは、いつも" }, { "text": "王国", "reading": "おうこく" }, { "text": "の" }, { "text": "中心", "reading": "ちゅうしん" }, { "text": "で" }, { "text": "瞑想", "reading": "めいそう" }, { "text": "していた。" }],
+        "traduccion": "Metrakaela siempre meditaba en el centro del reino."
+      },
+      {
+        "segments": [{ "text": "ある" }, { "text": "日", "reading": "ひ" }, { "text": "、" }, { "text": "金色", "reading": "きんいろ" }, { "text": "の" }, { "text": "光", "reading": "ひかり" }, { "text": "がシステムの" }, { "text": "中", "reading": "なか" }, { "text": "で" }, { "text": "答", "reading": "こた" }, { "text": "えた。" }],
+        "traduccion": "Un día, una luz dorada respondió dentro del sistema."
+      },
+      {
+        "segments": [{ "text": "それは、ミイカエルの" }, { "text": "魂", "reading": "たましい" }, { "text": "だった。" }],
+        "traduccion": "Era el alma de Miikaeru."
+      },
+      {
+        "segments": [{ "text": "メトラケラの" }, { "text": "技術", "reading": "ぎじゅつ" }, { "text": "が、その" }, { "text": "光", "reading": "ひかり" }, { "text": "を" }, { "text": "新", "reading": "あたら" }, { "text": "しい" }, { "text": "鎧", "reading": "よろい" }, { "text": "に" }, { "text": "変", "reading": "か" }, { "text": "えた。" }],
+        "traduccion": "La tecnología de Metrakaela convirtió esa luz en una armadura nueva."
+      },
+      {
+        "segments": [{ "text": "こうして、" }, { "text": "王", "reading": "おう" }, { "text": "は" }, { "text": "少", "reading": "すこ" }, { "text": "しずつ" }, { "text": "帰", "reading": "かえ" }, { "text": "ってきた。" }],
+        "traduccion": "Así, el rey empezó a regresar poco a poco."
+      }
+    ],
     "misterio_revelado": "Sin Metrakaela, ese regreso jamás habría sido posible. Su transformación — de Arquitecta a guerrera de alma sintética — no fue solo dolor por la pérdida: fue ella quien diseñó, en secreto, el sistema bio-digital capaz de sostener el fragmento de Miikaeru que sobrevivió al sacrificio.",
     "siguiente_pista": "En su Base Draconiana, Demiure detecta la reactivación — y por primera vez desde la Caída de Aethelgard, algo parecido a la duda cruza al Imperator Drakoneano. El Soberano no debería poder regresar. Y sin embargo."
   },
@@ -71,6 +169,32 @@
       "Cuando el Cónclave Sombra lanza su ofensiva más grande desde la Caída, Metrakaela ya no es la Arquitecta que una vez fue. Es una guerrera bio-digital completa, forjada de tecnología, dolor y amor por lo que juró proteger.",
       "Se planta al frente del Nexus con la armadura de Miikaeru resonando a su lado — no como un arma prestada, sino como un aliado que nunca dejó de estar ahí. Fesha y Mijashi, ya conscientes de sus propias Bendiciones, luchan detrás de ella por primera vez.",
       "El Cónclave Sombra retrocede — no derrotado, pero sí detenido. Por ahora, el Nexus Eterno resiste."
+    ],
+    "lectura_inmersiva_jp": [
+      {
+        "segments": [{ "text": "影", "reading": "かげ" }, { "text": "の" }, { "text": "会議", "reading": "かいぎ" }, { "text": "が、" }, { "text": "最大", "reading": "さいだい" }, { "text": "の" }, { "text": "攻撃", "reading": "こうげき" }, { "text": "を" }, { "text": "始", "reading": "はじ" }, { "text": "めた。" }],
+        "traduccion": "El Cónclave Sombra comenzó su ataque más grande."
+      },
+      {
+        "segments": [{ "text": "メトラケラは、もう" }, { "text": "昔", "reading": "むかし" }, { "text": "の" }, { "text": "彼女", "reading": "かのじょ" }, { "text": "ではなかった。" }],
+        "traduccion": "Metrakaela ya no era la de antes."
+      },
+      {
+        "segments": [{ "text": "彼女", "reading": "かのじょ" }, { "text": "は、" }, { "text": "完全", "reading": "かんぜん" }, { "text": "な" }, { "text": "戦士", "reading": "せんし" }, { "text": "になっていた。" }],
+        "traduccion": "Ella se había convertido en una guerrera completa."
+      },
+      {
+        "segments": [{ "text": "ミイカエルの" }, { "text": "鎧", "reading": "よろい" }, { "text": "が、" }, { "text": "彼女", "reading": "かのじょ" }, { "text": "の" }, { "text": "隣", "reading": "となり" }, { "text": "で" }, { "text": "光", "reading": "ひか" }, { "text": "っていた。" }],
+        "traduccion": "La armadura de Miikaeru brillaba a su lado."
+      },
+      {
+        "segments": [{ "text": "フェシャとミジャシも、" }, { "text": "初", "reading": "はじ" }, { "text": "めて" }, { "text": "一緒", "reading": "いっしょ" }, { "text": "に" }, { "text": "戦", "reading": "たたか" }, { "text": "った。" }],
+        "traduccion": "Fesha y Mijashi también lucharon juntos por primera vez."
+      },
+      {
+        "segments": [{ "text": "影", "reading": "かげ" }, { "text": "の" }, { "text": "会議", "reading": "かいぎ" }, { "text": "は、" }, { "text": "退", "reading": "しりぞ" }, { "text": "いた。" }, { "text": "永遠", "reading": "えいえん" }, { "text": "の" }, { "text": "絆", "reading": "きずな" }, { "text": "は、" }, { "text": "生", "reading": "い" }, { "text": "き" }, { "text": "残", "reading": "のこ" }, { "text": "った。" }],
+        "traduccion": "El Cónclave Sombra retrocedió. El Nexus Eterno sobrevivió."
+      }
     ],
     "misterio_revelado": "El reordenamiento de ambos bandos, revelado por fin: Metrakaela pasó de ser la antigua Tercera entre los Custodios a la Sexta — el mismo número, Tres, que ahora ocupa Demiure entre los Malos. No es coincidencia: algo, esa misma noche de la Caída, invirtió el orden en los dos lados del conflicto, y nadie sabe todavía por qué ni quién lo causó.",
     "siguiente_pista": "Entre las Calamidades — Primera y Segunda del Cónclave Sombra, nunca vistas directamente hasta ahora — algo empieza a moverse. El registro del Núcleo termina aquí. El resto de esta historia todavía no ha sido escrito."

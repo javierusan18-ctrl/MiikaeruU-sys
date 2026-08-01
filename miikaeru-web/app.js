@@ -8787,10 +8787,26 @@ document.addEventListener("DOMContentLoaded", () => {
       point.examples.forEach((ex) => {
         const exEl = document.createElement("div");
         exEl.className = "jp-grammar-card__example";
+        const jpRow = document.createElement("div");
+        jpRow.className = "jp-grammar-card__example-jp-row";
         const jp = document.createElement("p");
         jp.className = "jp-grammar-card__example-jp";
         jp.textContent = ex.jp;
-        exEl.appendChild(jp);
+        // Botón de audio (Web Speech API, mismo patrón que speakKana() en
+        // Trazos/Gojuon) — pedido explícito de "Control de Audio" para el
+        // módulo de aprendizaje. stopPropagation: el <button> vive dentro
+        // del header clickeable que expande/colapsa la tarjeta completa.
+        const audioBtn = document.createElement("button");
+        audioBtn.type = "button";
+        audioBtn.className = "jp-grammar-card__example-audio";
+        audioBtn.setAttribute("aria-label", "Escuchar pronunciación");
+        audioBtn.textContent = "🔊";
+        audioBtn.addEventListener("click", (event) => {
+          event.stopPropagation();
+          speakKana(ex.jp);
+        });
+        jpRow.append(jp, audioBtn);
+        exEl.appendChild(jpRow);
         // Lectura en hiragana accesible para nivel básico — solo se
         // agrega si el ejemplo la trae (todos los actuales la traen,
         // ver N5_GRAMMAR_POINTS más arriba).

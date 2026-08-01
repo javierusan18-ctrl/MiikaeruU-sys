@@ -1466,3 +1466,26 @@ Pedido de pulido "calidad de videojuego" con 3 partes: (1) quitar los fondos bla
 - Lore Oculto: Capítulo II (nivel requerido 10) probado en nivel 2 — portada y galería visibles, cuerpo con `.story-modal__body--locked` + overlay de bloqueo confirmados, Misterio/Pista ocultos.
 - 0 errores de consola en toda la sesión de pruebas.
 - Peso agregado al repo: ~20MB más en 8 archivos nuevos (`assets/skins/` pasó de ~21MB a ~41MB) — sigue sin haber herramienta de compresión en este entorno; a tener en cuenta para tiempos de carga en datos móviles si la carpeta sigue creciendo.
+
+---
+
+## Bloque 54 — Lectura Inmersiva de Japonés (furigana + audio + modo automático) en Lore e Idiomas
+
+Pedido: incorporar al módulo de aprendizaje e historia un lector estilo novela visual — texto japonés con furigana sobre los kanji, botón de audio por fragmento (Text-to-Speech), y un modo de "lectura automática" que resalte línea por línea a medida que avanza.
+
+**1. `readerEngine.js` — módulo nuevo, compartido por dos consumidores que no comparten closure.** El Japonés AI Coach vive dentro del `DOMContentLoaded` de `app.js`; el Modal de Lore vive en `storyEngine.js`. Para no duplicar la lógica de ruby/TTS/auto-lectura en los dos archivos, se armó un tercer módulo aparte (mismo patrón "punto de enchufe" que `MiikaeruStoryEngine`), cargado antes que ambos, expuesto como `window.MiikaeruReader.crearLector(contenedor, lineas, botonAuto)`. Contrato de datos de una línea: `{ segments: [{ text, reading }, ...], traduccion }` — un segmento sin `reading` se pinta como texto plano (partículas, puntuación, nombres propios en katakana), uno con `reading` se envuelve en `<ruby>texto<rt>lectura</rt></ruby>` real (no una imitación con CSS), que es como corresponde marcar furigana en HTML semántico.
+
+**2. Audio por línea y modo automático, ambos sobre Web Speech API nativa (`lang: "ja-JP"`)** — mismo mecanismo que ya usaba `speakKana()` en el módulo de Trazos, generalizado acá a oraciones completas. El modo automático encola las líneas una por una: resalta la línea activa (`.reader-line--active`, con `scrollIntoView`), reproduce su audio, y al terminar (evento `onend` de la síntesis) avanza a la siguiente — con una duración estimada de respaldo (~110ms/carácter) para navegadores sin voces instaladas, así el resaltado nunca se traba esperando un `onend` que no va a llegar. `crearLector()` devuelve `{ detener() }`, usado por ambos consumidores para cortar la voz en curso al cerrar su modal o cambiar de capítulo/vista — sin esto, la síntesis seguiría hablando de fondo con el modal ya cerrado.
+
+**3. Aplicado a la historia principal: los 4 capítulos de `storyData.json` recibieron un campo nuevo `lectura_inmersiva_jp`** — una traducción simplificada (nivel N5-N4, no una traducción literal palabra por palabra del español ornamentado original) de los mismos hechos narrativos, 5-12 líneas cortas por capítulo con su furigana segmentada a mano y su traducción al español línea por línea. El botón "🈺 Lectura Inmersiva 日本語" (nuevo, dentro de `#story-modal`) alterna entre el texto en español de siempre y este panel; sigue el mismo criterio de "Lore Oculto" del Bloque 53 — solo aparece si el capítulo YA está desbloqueado, porque es la narrativa real, no la vista previa ilustrativa.
+
+**4. Aplicado al Módulo de Aprendizaje: botón de audio 🔊 en cada uno de los ejemplos de `N5_GRAMMAR_POINTS`** (35 oraciones) — reutiliza `speakKana(ex.jp)`, ya existente, sin necesitar segmentación nueva porque esas tarjetas ya muestran kanji + lectura en hiragana + traducción por separado desde el Bloque 185/186. Alcance deliberadamente más liviano que el de la historia: los ejemplos de gramática no se reescribieron con `<ruby>` real porque ya tenían su propia UI de lectura funcionando; lo que pedía el punto 2 ("Control de Audio") era justamente lo que faltaba ahí.
+
+**5. `sw.js`:** se agregó `readerEngine.js` a `STATIC_ASSETS`. `CACHE_NAME` subido a `v20260801-28`.
+
+**Pruebas realizadas:**
+- Capítulo IV (nivel 30): botón de Lectura Inmersiva visible, alterna correctamente el texto en español por las 6 líneas en japonés — furigana renderizada como `<ruby>` real, confirmado inspeccionando el HTML generado.
+- Modo automático: al activarlo, resalta la línea 0 (`.reader-line--active`) y cambia el texto del botón a "⏹ Detener lectura"; detenido a mano sin dejar audio de fondo.
+- Módulo Japonés AI Coach → Gramática: botón 🔊 confirmado presente en la primera tarjeta de ejemplo tras expandirla.
+- 0 errores de consola en toda la sesión de pruebas.
+- Alcance declarado: los 4 capítulos de la historia tienen su pista de Lectura Inmersiva completa (29 líneas en total); los 35 ejemplos de gramática solo ganaron el botón de audio, no furigana `<ruby>` nueva — decisión de alcance explicada en el punto 4, no una limitación técnica.

@@ -22,7 +22,7 @@
 // index.html (ver ese archivo) — subirlo a mano en cada deploy real
 // hace que `activate` borre el caché viejo y todo se vuelva a guardar
 // fresco, evitando que un celular se quede pegado en una versión vieja.
-const CACHE_NAME = "miikaeru-cache-v20260801-27";
+const CACHE_NAME = "miikaeru-cache-v20260801-28";
 
 const STATIC_ASSETS = [
   "./",
@@ -32,6 +32,11 @@ const STATIC_ASSETS = [
   // storyEngine.js: módulo aparte del Modal de Lore (ver comentario más
   // abajo) — mismo "mejor esfuerzo" que el resto de este archivo.
   "storyEngine.js",
+  // readerEngine.js: Lectura Inmersiva de Japonés (furigana + audio +
+  // modo automático), compartido por el Japonés AI Coach y el Modal de
+  // Lore — ninguno de los dos lo trae embebido, así que necesita su
+  // propia entrada acá igual que storyEngine.js.
+  "readerEngine.js",
   "manifest.json",
   "assets/bg_main.png",
   "assets/bg_login.png",
