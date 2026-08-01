@@ -22,7 +22,7 @@
 // index.html (ver ese archivo) — subirlo a mano en cada deploy real
 // hace que `activate` borre el caché viejo y todo se vuelva a guardar
 // fresco, evitando que un celular se quede pegado en una versión vieja.
-const CACHE_NAME = "miikaeru-cache-v20260801-23";
+const CACHE_NAME = "miikaeru-cache-v20260801-25";
 
 const STATIC_ASSETS = [
   "./",
@@ -33,9 +33,6 @@ const STATIC_ASSETS = [
   // abajo) — mismo "mejor esfuerzo" que el resto de este archivo.
   "storyEngine.js",
   "manifest.json",
-  "assets/avatar_idle.png",
-  "assets/avatar_meditating.png",
-  "assets/avatar_boss_mode.png",
   "assets/bg_main.png",
   "assets/bg_login.png",
   "assets/bg_state_idle.png",
@@ -51,24 +48,28 @@ const STATIC_ASSETS = [
   // cuanto este .glb se agregue de verdad, la próxima instalación del SW
   // lo cachea solo, sin tocar código.
   "assets/models/leon_nivel1.glb",
-  // Modal de Lore (ver storyEngine.js) — data/storyData.json ya existe;
-  // las ilustraciones todavía no (mismo "mejor esfuerzo" de arriba).
-  // Nombres exactos = los que storyData.json ya referencia hoy; cuando se
-  // agreguen más capítulos con imágenes nuevas, sumarlas acá.
+  // "Mikaeru skin" (assets/skins/) — arte real que reemplaza los 3 PNG
+  // placeholder anteriores (avatar_idle/avatar_meditating/avatar_boss_mode,
+  // ya no referenciados en ningún lado). Sirve tanto al avatar principal
+  // del HUD (ver AVATAR_STATE_ASSETS/AVATAR_EMOTES en app.js) como a las
+  // ilustraciones del Modal de Lore (ver data/storyData.json).
+  "assets/skins/mikaeru_idle_chakras.png",
+  "assets/skins/mikaeru_meditando_neon.png",
+  "assets/skins/mikaeru_batalla_armadura.png",
+  "assets/skins/mikaeru_familia_portada.png",
+  "assets/skins/mikaeru_sacrificio_despertar.png",
+  "assets/skins/demiure_draconiano.png",
+  "assets/skins/badas_batalla.png",
+  "assets/skins/mikaeru_cachorro_kodomo.png",
+  "assets/skins/mikaeru_cachorro_cosmico_wakai.png",
+  "assets/skins/metrakaela_guerrera.png",
+  // Decoración del header del Modal de Lore (ver .story-modal__header-portrait
+  // en style.css) — estas 3 SÍ siguen sin existir todavía; degradan solas a
+  // un gradiente CSS mientras tanto, mismo "mejor esfuerzo" de arriba.
   "data/storyData.json",
   "assets/lion-base.png",
   "assets/mandala.png",
   "assets/lion-glow.png",
-  "assets/cachorro_fesha_kodomo.png",
-  "assets/cachorro_joven_wakai.png",
-  "assets/familia_real_portada.png",
-  "assets/metrakaela_y_cachorros.png",
-  "assets/miikaeru_sacrificio_despertar.png",
-  "assets/miikaeru_armadura_escudo.png",
-  "assets/miikaeru_meditacion_chakras.png",
-  "assets/batalla_badas_rottweiler.png",
-  "assets/demiure_draconiano_base.png",
-  "assets/cibor_mikaera.jpg",
 ];
 
 self.addEventListener("install", (event) => {

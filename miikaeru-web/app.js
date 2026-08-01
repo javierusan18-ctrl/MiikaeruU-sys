@@ -2060,19 +2060,15 @@ function t(key) {
 // temporalmente ante ciertos eventos (login, subir de nivel, victoria en
 // Boss Fight), volviendo solo a idle después de unos segundos.
 // ---------------------------------------------------
-// Remapeado a los 3 PNG reales de assets/ — los archivos originales
-// (avatar-welcome.png, avatar-levelup.jpg, avatar-victory.png) nunca
-// existieron en este assets/, así que daban 404 silencioso en cada
-// login/subida de nivel/victoria de Boss Fight. welcome usa la pose
-// meditando (cálida, distinta de idle); levelup y victory comparten la
-// pose boss_mode (ambos son momentos "de triunfo") — no hay arte nuevo
-// que inventar, se reutiliza lo que ya existe en vez de dejar una
-// imagen rota en un momento que se supone celebratorio.
+// Arte real de "Mikaeru skin" (assets/skins/, pedido explícito) en vez de
+// los 3 PNG placeholder anteriores — welcome usa la pose meditando
+// (cálida, distinta de idle); levelup y victory comparten la pose de
+// batalla/armadura (ambos son momentos "de triunfo").
 const AVATAR_EMOTES = {
-  idle: "assets/avatar_idle.png",
-  welcome: "assets/avatar_meditating.png",
-  levelup: "assets/avatar_boss_mode.png",
-  victory: "assets/avatar_boss_mode.png",
+  idle: "assets/skins/mikaeru_idle_chakras.png",
+  welcome: "assets/skins/mikaeru_meditando_neon.png",
+  levelup: "assets/skins/mikaeru_batalla_armadura.png",
+  victory: "assets/skins/mikaeru_batalla_armadura.png",
 };
 
 // Precarga las 4 imágenes al cargar el script para que los cambios de
@@ -2092,9 +2088,9 @@ Object.values(AVATAR_EMOTES).forEach((src) => {
 // invocarla desde cualquier parte de app.js o desde la consola.
 // ---------------------------------------------------
 const AVATAR_STATE_ASSETS = {
-  idle: { bg: "assets/bg_state_idle.png", lion: "assets/avatar_idle.png" },
-  meditating: { bg: "assets/bg_state_meditation.png", lion: "assets/avatar_meditating.png" },
-  boss: { bg: "assets/bg_main.png", lion: "assets/avatar_boss_mode.png" },
+  idle: { bg: "assets/bg_state_idle.png", lion: "assets/skins/mikaeru_idle_chakras.png" },
+  meditating: { bg: "assets/bg_state_meditation.png", lion: "assets/skins/mikaeru_meditando_neon.png" },
+  boss: { bg: "assets/bg_main.png", lion: "assets/skins/mikaeru_batalla_armadura.png" },
 };
 
 // Precarga también los assets de estado, mismo motivo que AVATAR_EMOTES
@@ -2145,14 +2141,12 @@ function setAvatarState(stateName) {
 }
 
 // ---------------------------------------------------
-// Carrusel ambiental del León: solo 3 artes reales existen hoy en
-// assets/ (avatar_idle.png, avatar_meditating.png, avatar_boss_mode.png)
-// y cada una ya está atada a un estado real de juego (reposo/meditación
-// implícita al arrancar/Boss Fight) — no hay "skins" adicionales que
-// inventar. En vez de fingir variedad que no existe, este carrusel rota
-// ÚNICAMENTE el retrato del León (capa .layer-lion) entre esas 3 artes
-// reales, EXCLUSIVAMENTE mientras `avatarCurrentState === "idle"` (fuera
-// de combate) y dejando el fondo (.layer-bg) intacto en el de reposo —
+// Carrusel ambiental del León: rota entre las 3 artes de assets/skins/
+// (idle/meditando/batalla), cada una ya atada a un estado real de juego
+// (reposo/meditación implícita al arrancar/Boss Fight). Rota ÚNICAMENTE
+// el retrato del León (capa .layer-lion), EXCLUSIVAMENTE mientras
+// `avatarCurrentState === "idle"` (fuera de combate) y dejando el fondo
+// (.layer-bg) intacto en el de reposo —
 // así nunca se confunde con un cambio real de estado (p. ej. entrar a
 // Boss Fight de verdad). Se pausa solo (no hace nada) durante combate y
 // retoma el ciclo apenas `setAvatarState("idle")` vuelve a llamarse.
@@ -7970,8 +7964,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const MPASS_TIER_COUNT = 20;
 
   function getMiikaPassReward(tier) {
-    if (tier === 10) return { type: "avatar", src: "assets/avatar_idle.png", label: t("miikaPassAvatarIdle") };
-    if (tier === 20) return { type: "avatar", src: "assets/avatar_boss_mode.png", label: t("miikaPassAvatarBoss") };
+    if (tier === 10) return { type: "avatar", src: "assets/skins/mikaeru_idle_chakras.png", label: t("miikaPassAvatarIdle") };
+    if (tier === 20) return { type: "avatar", src: "assets/skins/mikaeru_batalla_armadura.png", label: t("miikaPassAvatarBoss") };
     if (tier % 2 === 0) return { type: "diamonds", amount: tier };
     return { type: "gold", amount: tier * 10 };
   }

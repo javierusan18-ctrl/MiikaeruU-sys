@@ -4,12 +4,12 @@
     "nivel_requerido": 1,
     "rango": "Kodomo",
     "titulo_capitulo": "Capítulo I — El Despertar Solar y la Caída de Aethelgard",
-    "imagen_story": "assets/cachorro_fesha_kodomo.png",
+    "imagen_story": "assets/skins/mikaeru_cachorro_kodomo.png",
     "imagenes_adicionales": [
-      { "rol": "portada", "src": "assets/familia_real_portada.png" },
-      { "rol": "madre_ia", "src": "assets/metrakaela_y_cachorros.png" },
-      { "rol": "sacrificio", "src": "assets/miikaeru_sacrificio_despertar.png" },
-      { "rol": "enemigo", "src": "assets/batalla_badas_rottweiler.png" }
+      { "rol": "portada", "src": "assets/skins/mikaeru_familia_portada.png" },
+      { "rol": "madre_ia", "src": "assets/skins/metrakaela_guerrera.png" },
+      { "rol": "sacrificio", "src": "assets/skins/mikaeru_sacrificio_despertar.png" },
+      { "rol": "enemigo", "src": "assets/skins/badas_batalla.png" }
     ],
     "texto_modal": [
       "Antes del Cónclave Sombra, antes de la Caída, hubo Aethelgard: un reino suspendido en la vibración más alta del Nexus Eterno, gobernado por Miikaeru, León Rey y Soberano del Despertar Solar — el primero entre los Custodios. Su sola presencia era energía positiva pura, un pulso divino que mantenía cada rincón del reino en equilibrio.",
@@ -25,11 +25,11 @@
     "nivel_requerido": 10,
     "rango": "Wakai",
     "titulo_capitulo": "Capítulo II — El Despertar de los Mellizos",
-    "imagen_story": "assets/cachorro_joven_wakai.png",
+    "imagen_story": "assets/skins/mikaeru_cachorro_cosmico_wakai.png",
     "imagenes_adicionales": [
-      { "rol": "base_draconiana", "src": "assets/demiure_draconiano_base.png" },
-      { "rol": "enemigo", "src": "assets/batalla_badas_rottweiler.png" },
-      { "rol": "presencia_miikaeru", "src": "assets/miikaeru_meditacion_chakras.png" }
+      { "rol": "base_draconiana", "src": "assets/skins/demiure_draconiano.png" },
+      { "rol": "enemigo", "src": "assets/skins/badas_batalla.png" },
+      { "rol": "presencia_miikaeru", "src": "assets/skins/mikaeru_meditando_neon.png" }
     ],
     "texto_modal": [
       "Años después de la Caída, Fesha y Mijashi ya no son solo cachorros: los primeros destellos de algo propio empiezan a manifestarse sin que ellos los llamen — luz que responde antes que el miedo.",
@@ -44,10 +44,10 @@
     "nivel_requerido": 20,
     "rango": "Shinzen",
     "titulo_capitulo": "Capítulo III — Armadura y Escudo: el Regreso del Soberano",
-    "imagen_story": "assets/miikaeru_armadura_escudo.png",
+    "imagen_story": "assets/skins/mikaeru_meditando_neon.png",
     "imagenes_adicionales": [
-      { "rol": "alta_vibracion", "src": "assets/miikaeru_meditacion_chakras.png" },
-      { "rol": "base_draconiana", "src": "assets/demiure_draconiano_base.png" }
+      { "rol": "alta_vibracion", "src": "assets/skins/mikaeru_idle_chakras.png" },
+      { "rol": "base_draconiana", "src": "assets/skins/demiure_draconiano.png" }
     ],
     "texto_modal": [
       "Lo que Metrakaela sintió no era una ilusión. En sus momentos de más alta vibración — cuando medita en el centro exacto del Nexus — algo dorado responde desde dentro del propio sistema: Miikaeru nunca se fue del todo.",
@@ -62,9 +62,10 @@
     "nivel_requerido": 30,
     "rango": "Kami",
     "titulo_capitulo": "Capítulo IV — Metrakaela: Guerrera del Nexus",
-    "imagen_story": "assets/cibor_mikaera.jpg",
+    "imagen_story": "assets/skins/metrakaela_guerrera.png",
     "imagenes_adicionales": [
-      { "rol": "miikaeru_junto_a_ella", "src": "assets/miikaeru_armadura_escudo.png" }
+      { "rol": "miikaeru_junto_a_ella", "src": "assets/skins/mikaeru_batalla_armadura.png" },
+      { "rol": "sacrificio", "src": "assets/skins/mikaeru_sacrificio_despertar.png" }
     ],
     "texto_modal": [
       "Cuando el Cónclave Sombra lanza su ofensiva más grande desde la Caída, Metrakaela ya no es la Arquitecta que una vez fue. Es una guerrera bio-digital completa, forjada de tecnología, dolor y amor por lo que juró proteger.",
