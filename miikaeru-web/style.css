@@ -2137,6 +2137,26 @@ textarea,
   cursor: pointer;
 }
 
+/* Resplandor de base ("pedestal") bajo el León: con el fondo blanco de
+   assets/skins/ ya recortado a transparente (ver Bloque 53), el
+   personaje flotaba sin ningún punto de apoyo visual sobre la escena —
+   este brillo elíptico ancla el retrato al centro del contenedor, mismo
+   criterio "inmersivo y profesional" pedido. Vive detrás de .layer-lion
+   (z-index 3) y por delante de .layer-bg (z-index 1). */
+#avatarStage::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 8%;
+  width: 58%;
+  height: 16%;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at center, rgba(0, 240, 255, 0.35) 0%, rgba(255, 183, 0, 0.18) 45%, transparent 75%);
+  filter: blur(10px);
+  z-index: 2;
+  pointer-events: none;
+}
+
 #avatarStage:focus-visible {
   outline: 2px solid var(--neon-cyan);
   outline-offset: 6px;
@@ -5758,6 +5778,7 @@ textarea,
    — se lee como su propia "consola de datos", con tipografía monoespaciada
    sci-fi (pedido explícito) y scrollbar delgada a juego con .hud-dock. */
 .story-modal__body {
+  position: relative;
   max-height: 260px;
   overflow-y: auto;
   padding: 16px;
@@ -5769,6 +5790,43 @@ textarea,
   font-size: 0.82rem;
   line-height: 1.6;
   color: var(--text-primary);
+}
+
+/* "Lore Oculto": el capítulo todavía no alcanzado muestra su portada y
+   galería normal (vista previa ilustrativa), pero el texto real queda
+   montado y difuminado detrás del aviso de bloqueo — efecto spoiler
+   genuino en vez de un simple placeholder vacío. overflow:hidden evita
+   que el scroll deje ver el texto nítido en los bordes del blur. */
+.story-modal__body--locked {
+  overflow: hidden;
+}
+
+.story-modal__body--locked p {
+  filter: blur(6px);
+  user-select: none;
+}
+
+.story-modal__spoiler-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  text-align: center;
+  background: rgba(0, 10, 20, 0.55);
+  color: var(--text-primary);
+  font-family: "Inter", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.story-modal__spoiler-icon {
+  font-size: 1.6rem;
+  filter: drop-shadow(0 0 8px rgba(255, 183, 0, 0.6));
 }
 
 .story-modal__body::-webkit-scrollbar {
@@ -5841,6 +5899,112 @@ textarea,
 }
 
 .btn-story-close:hover {
+  background: var(--neon-cyan);
+  color: #04121a;
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+/* Modal de Skins del León (ver MIIKAERU_SKINS en app.js) — grid de
+   tarjetas cuadradas, mismo lenguaje visual "vidrio + borde neón" que el
+   resto de los modales. */
+.modal--skins {
+  max-width: 640px;
+}
+
+.skins-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 10px;
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: 4px 2px 16px;
+  margin-bottom: 12px;
+}
+
+.skin-card {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  background: rgba(0, 240, 255, 0.05);
+  overflow: hidden;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.2s ease;
+}
+
+.skin-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  display: block;
+}
+
+.skin-card:hover:not(.skin-card--locked) {
+  border-color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+  transform: translateY(-2px);
+}
+
+.skin-card--selected {
+  border-color: var(--neon-gold);
+  box-shadow: 0 0 14px rgba(255, 183, 0, 0.5);
+}
+
+.skin-card--selected::after {
+  content: "✓";
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--neon-gold);
+  color: #04121a;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.skin-card--locked {
+  cursor: not-allowed;
+}
+
+.skin-card--locked img {
+  filter: grayscale(0.9) brightness(0.35);
+}
+
+.skin-card__lock {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  color: var(--text-primary);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.btn-skins-close {
+  width: 100%;
+  padding: 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--neon-cyan);
+  background: rgba(0, 240, 255, 0.08);
+  color: var(--neon-cyan);
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-skins-close:hover {
   background: var(--neon-cyan);
   color: #04121a;
   box-shadow: var(--shadow-neon-cyan);

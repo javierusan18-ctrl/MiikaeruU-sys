@@ -872,6 +872,10 @@ const I18N = {
     storyModalMysteryTitle: "⚠ MISTERIO REVELADO",
     storyModalClueTitle: "📡 PRÓXIMA PISTA",
     storyModalCloseBtn: "🔌 CERRAR ENLACE",
+    skinsOpenBtn: "🎭 Skins del León",
+    skinsModalTitle: "🎭 Skins del León",
+    skinsModalSubtitle: "colección desbloqueable",
+    skinsModalCloseBtn: "Cerrar",
     cityMapTitle: "🌐 Expansión de Territorio",
     cityMapHeadline: "Próximamente: Ten tus deseos listos en tu ciudad",
     feedbackTitle: "🐞 Bugs & Sugerencias",
@@ -1334,6 +1338,10 @@ const I18N = {
     storyModalMysteryTitle: "⚠ MYSTERY REVEALED",
     storyModalClueTitle: "📡 NEXT CLUE",
     storyModalCloseBtn: "🔌 CLOSE LINK",
+    skinsOpenBtn: "🎭 Lion Skins",
+    skinsModalTitle: "🎭 Lion Skins",
+    skinsModalSubtitle: "unlockable collection",
+    skinsModalCloseBtn: "Close",
     cityMapTitle: "🌐 Territory Expansion",
     cityMapHeadline: "Coming soon: have your wishes ready in your city",
     feedbackTitle: "🐞 Bugs & Suggestions",
@@ -1796,6 +1804,10 @@ const I18N = {
     storyModalMysteryTitle: "⚠ 明かされた謎",
     storyModalClueTitle: "📡 次の手がかり",
     storyModalCloseBtn: "🔌 回線を切断",
+    skinsOpenBtn: "🎭 ライオンスキン",
+    skinsModalTitle: "🎭 ライオンスキン",
+    skinsModalSubtitle: "解放可能なコレクション",
+    skinsModalCloseBtn: "閉じる",
     cityMapTitle: "🌐 都市拡張",
     cityMapHeadline: "近日公開：あなたの街で願いを叶える準備を",
     feedbackTitle: "🐞 バグ＆提案",
@@ -2099,6 +2111,54 @@ const AVATAR_STATE_ASSETS = {
   boss: { bg: "assets/bg_main.png", lion: "assets/skins/mikaeru_batalla_armadura.png" },
 };
 
+// ---------------------------------------------------
+// Skins desbloqueables del León (galería "Mikaeru skin") — SOLO retratos
+// del propio Miikaeru (se excluyen a propósito metrakaela_guerrera.png/
+// demiure_draconiano.png/badas_batalla.png: son otros personajes del
+// lore, no variantes del avatar del Operador). `nivelRequerido` escala
+// junto con los rangos reales de RANKS (1/10/20/30/50) para que
+// desbloquear un skin nuevo se sienta ligado al progreso real, no a un
+// sistema paralelo. El Operador elige uno desde el modal de Skins
+// (#skins-modal, ver DOMContentLoaded más abajo); `state.selectedSkin`
+// guarda el id elegido y sustituye al carrusel ambiental de
+// startAvatarIdleCarousel() mientras esté activo (ver
+// currentIdleLionSrc()) — `null` vuelve a la rotación de 3 estados de
+// siempre.
+const MIIKAERU_SKINS = [
+  { id: "cachorro_kodomo", nivelRequerido: 1, src: "assets/skins/mikaeru_cachorro_kodomo.png" },
+  { id: "idle_chakras", nivelRequerido: 1, src: "assets/skins/mikaeru_idle_chakras.png" },
+  { id: "cachorro_dormido", nivelRequerido: 3, src: "assets/skins/mikaeru_skin_cachorro_dormido.png" },
+  { id: "meditando_neon", nivelRequerido: 5, src: "assets/skins/mikaeru_meditando_neon.png" },
+  { id: "cachorro_cosmico", nivelRequerido: 8, src: "assets/skins/mikaeru_cachorro_cosmico_wakai.png" },
+  { id: "cazador_neon", nivelRequerido: 10, src: "assets/skins/mikaeru_skin_cazador_neon.png" },
+  { id: "cristal_arcano", nivelRequerido: 12, src: "assets/skins/mikaeru_skin_cristal_arcano.png" },
+  { id: "sacrificio_despertar", nivelRequerido: 15, src: "assets/skins/mikaeru_sacrificio_despertar.png" },
+  { id: "familia_portada", nivelRequerido: 18, src: "assets/skins/mikaeru_familia_portada.png" },
+  { id: "guardian_templo", nivelRequerido: 20, src: "assets/skins/mikaeru_skin_guardian_templo.png" },
+  { id: "batalla_armadura", nivelRequerido: 24, src: "assets/skins/mikaeru_batalla_armadura.png" },
+  { id: "soberano_estelar", nivelRequerido: 28, src: "assets/skins/mikaeru_skin_soberano_estelar.png" },
+  { id: "comandante_ejercito", nivelRequerido: 30, src: "assets/skins/mikaeru_skin_comandante_ejercito.png" },
+  { id: "heraldo_rugiente", nivelRequerido: 35, src: "assets/skins/mikaeru_skin_heraldo_rugiente.png" },
+  { id: "deidad_meditante", nivelRequerido: 50, src: "assets/skins/mikaeru_skin_deidad_meditante.png" },
+];
+
+function skinUnlocked(skin, nivel) {
+  return nivel >= skin.nivelRequerido;
+}
+
+// Resuelve qué retrato usar para el estado "idle": el skin que el
+// Operador eligió a mano (si hay uno guardado) o, por defecto, el de
+// AVATAR_STATE_ASSETS.idle de siempre. `state` ya es top-level en este
+// archivo (ver `let state = loadState()` más abajo) así que se lee
+// directo, sin pasar nada por parámetro.
+function currentIdleLionSrc() {
+  if (state.selectedSkin) {
+    const skin = MIIKAERU_SKINS.find((entry) => entry.id === state.selectedSkin);
+    if (skin) return skin.src;
+  }
+  return AVATAR_STATE_ASSETS.idle.lion;
+}
+
 // Precarga también los assets de estado, mismo motivo que AVATAR_EMOTES
 // — EXCEPTO los fondos de escena (`bg`) en Mobile Lite (≤767px, ver
 // style.css): esas capas quedan con `display:none` ahí (el pedido pide
@@ -2143,7 +2203,8 @@ function setAvatarState(stateName) {
 
   avatarCurrentState = stateName;
   crossfadeAvatarLayer(document.querySelector(".layer-bg"), config.bg);
-  crossfadeAvatarLayer(document.getElementById("avatar-visual-img"), config.lion);
+  const lionSrc = stateName === "idle" ? currentIdleLionSrc() : config.lion;
+  crossfadeAvatarLayer(document.getElementById("avatar-visual-img"), lionSrc);
 }
 
 // ---------------------------------------------------
@@ -2165,6 +2226,7 @@ function startAvatarIdleCarousel() {
 
   setInterval(() => {
     if (avatarCurrentState !== "idle") return;
+    if (state.selectedSkin) return; // el Operador fijó un skin propio — no rotar por encima
     index = (index + 1) % lions.length;
     crossfadeAvatarLayer(document.getElementById("avatar-visual-img"), lions[index]);
   }, 9000);
@@ -3437,6 +3499,10 @@ function defaultState() {
     // que ningún flujo del juego debe volver a llamar addDiamonds().
     gold: 0,
     operatorName: null,
+    // Skin del León elegido a mano por el Operador en el modal de Skins
+    // (ver MIIKAERU_SKINS/currentIdleLionSrc() arriba) — `null` = usa el
+    // carrusel ambiental de siempre (idle/meditando/batalla rotando).
+    selectedSkin: null,
     // Mock temporal: % de misiones completadas esta semana. Reemplazar por
     // un cálculo real (historial de pilares) cuando exista esa lógica.
     weeklyMissions: { completed: 3, total: 5 },
@@ -4713,6 +4779,74 @@ document.addEventListener("DOMContentLoaded", () => {
     if (event.target === cityMapModal) closeCityMapModal();
   });
   if (cityMapOpenBtn) cityMapOpenBtn.addEventListener("click", openCityMapModal);
+
+  // Modal de Skins del León (ver MIIKAERU_SKINS/skinUnlocked/
+  // currentIdleLionSrc() arriba, fuera de este closure) — grid de
+  // tarjetas, click en una desbloqueada la fija como `state.selectedSkin`
+  // y refresca de inmediato el retrato si el avatar está en reposo.
+  const skinsOpenBtn = document.getElementById("skins-open-btn");
+  const skinsModal = document.getElementById("skins-modal");
+  const skinsModalClose = document.getElementById("skins-modal-close");
+  const skinsModalCloseBtn = document.getElementById("skins-modal-close-btn");
+  const skinsGrid = document.getElementById("skins-grid");
+
+  function renderSkinsGrid() {
+    skinsGrid.innerHTML = "";
+    MIIKAERU_SKINS.forEach((skin) => {
+      const unlocked = skinUnlocked(skin, state.level);
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className =
+        "skin-card" +
+        (unlocked ? "" : " skin-card--locked") +
+        (state.selectedSkin === skin.id ? " skin-card--selected" : "");
+      card.disabled = !unlocked;
+
+      const img = document.createElement("img");
+      img.src = skin.src;
+      img.alt = `Skin Nv. ${skin.nivelRequerido}`;
+      img.loading = "lazy";
+      card.appendChild(img);
+
+      if (!unlocked) {
+        const lockOverlay = document.createElement("span");
+        lockOverlay.className = "skin-card__lock";
+        lockOverlay.innerHTML = `🔒<span>Nv. ${skin.nivelRequerido}</span>`;
+        card.appendChild(lockOverlay);
+      } else {
+        card.addEventListener("click", () => selectSkin(skin.id));
+      }
+
+      skinsGrid.appendChild(card);
+    });
+  }
+
+  function selectSkin(skinId) {
+    state.selectedSkin = state.selectedSkin === skinId ? null : skinId; // click de nuevo sobre el ya elegido = volver al carrusel de siempre
+    persist();
+    renderSkinsGrid();
+    if (avatarCurrentState === "idle") {
+      crossfadeAvatarLayer(document.getElementById("avatar-visual-img"), currentIdleLionSrc());
+    }
+  }
+
+  function openSkinsModal() {
+    renderSkinsGrid();
+    skinsModal.hidden = false;
+  }
+
+  function closeSkinsModal() {
+    skinsModal.hidden = true;
+  }
+
+  if (skinsOpenBtn) skinsOpenBtn.addEventListener("click", openSkinsModal);
+  if (skinsModalClose) skinsModalClose.addEventListener("click", closeSkinsModal);
+  if (skinsModalCloseBtn) skinsModalCloseBtn.addEventListener("click", closeSkinsModal);
+  if (skinsModal) {
+    skinsModal.addEventListener("click", (event) => {
+      if (event.target === skinsModal) closeSkinsModal();
+    });
+  }
 
   // El Modal de Lore / Cuento Interactivo (se abre al hacer click en el
   // avatar/León) vive en su propio módulo, storyEngine.js — mismo patrón

@@ -207,7 +207,6 @@ const MiikaeruStoryEngine = (() => {
         "story-modal__tab" +
         (capitulo.id === idActivo ? " story-modal__tab--active" : "") +
         (desbloqueado ? "" : " story-modal__tab--locked");
-      tab.disabled = !desbloqueado;
 
       const lineaRango = document.createElement("span");
       lineaRango.textContent = capitulo.rango;
@@ -215,7 +214,12 @@ const MiikaeruStoryEngine = (() => {
       lineaNivel.textContent = desbloqueado ? `Nv. ${capitulo.nivel_requerido}` : `🔒 Nv. ${capitulo.nivel_requerido}`;
 
       tab.append(lineaRango, lineaNivel);
-      if (desbloqueado) tab.addEventListener("click", () => renderizarCapitulo(refs, capitulo.id, nivel));
+      // La pestaña queda clickeable incluso bloqueada — pedido explícito
+      // de "Lore Oculto": el Operador puede navegar la galería de
+      // portadas/miniaturas de TODOS los capítulos como vista previa,
+      // aunque el texto de los todavía no alcanzados se muestre en
+      // spoiler (ver renderizarCapitulo).
+      tab.addEventListener("click", () => renderizarCapitulo(refs, capitulo.id, nivel));
       refs.tabs.appendChild(tab);
     });
   }
@@ -225,22 +229,45 @@ const MiikaeruStoryEngine = (() => {
     const capitulo = capitulos.find((entrada) => entrada.id === idCapitulo);
     if (!capitulo) return; // fallback silencioso: id inexistente, no rompe el modal ya abierto
 
+    const desbloqueado = nivel >= capitulo.nivel_requerido;
+
     refs.titulo.textContent = capitulo.titulo_capitulo || "";
     refs.rango.textContent = capitulo.rango ? `${capitulo.rango} · Nv. ${capitulo.nivel_requerido}` : "";
 
+    // La imagen de portada y la galería secundaria se muestran SIEMPRE,
+    // estén o no desbloqueados — son la "vista previa ilustrativa" que
+    // pide el Lore Oculto: se puede curiosear el arte de un capítulo
+    // futuro sin poder leer todavía su historia.
     fijarImagenPrincipal(refs, capitulo.imagen_story, capitulo.titulo_capitulo);
     renderizarGaleria(refs, capitulo.imagenes_adicionales, capitulo.titulo_capitulo);
 
+    refs.cuerpo.classList.toggle("story-modal__body--locked", !desbloqueado);
     refs.cuerpo.innerHTML = "";
     (capitulo.texto_modal || []).forEach((parrafo) => {
       const p = document.createElement("p");
       p.textContent = parrafo;
       refs.cuerpo.appendChild(p);
     });
+
+    if (!desbloqueado) {
+      // El texto real queda montado en el DOM (para que el blur de
+      // .story-modal__body--locked tenga sobre qué difuminar, efecto
+      // "spoiler" real y no un simple placeholder vacío) y por encima se
+      // superpone el aviso de bloqueo con el nivel que hace falta.
+      const overlay = document.createElement("div");
+      overlay.className = "story-modal__spoiler-overlay";
+      overlay.innerHTML = `<span class="story-modal__spoiler-icon">🔒</span><span>Alcanza el Nivel ${capitulo.nivel_requerido} para desbloquear este registro</span>`;
+      refs.cuerpo.appendChild(overlay);
+    }
     refs.cuerpo.scrollTop = 0;
 
     refs.misterioTexto.textContent = capitulo.misterio_revelado || "";
     refs.pistaTexto.textContent = capitulo.siguiente_pista || "";
+    // El Misterio Revelado y la Próxima Pista son, por definición, spoilers
+    // de la propia historia — se ocultan enteros mientras el capítulo no
+    // esté desbloqueado, en vez de difuminarlos también.
+    if (refs.misterioBox) refs.misterioBox.hidden = !desbloqueado;
+    if (refs.pistaBox) refs.pistaBox.hidden = !desbloqueado;
 
     renderizarTabsCapitulos(refs, capitulos, idCapitulo, nivel);
   }

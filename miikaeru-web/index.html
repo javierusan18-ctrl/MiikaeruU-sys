@@ -16,7 +16,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260801-26" />
+  <link rel="stylesheet" href="style.css?v=20260801-27" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -201,6 +201,11 @@
            adentro del mismo modal (#city-map-modal) — cero funcionalidad
            perdida, solo reubicada. -->
       <button type="button" class="hud-dock__icon hud-dock__icon--citymap" id="city-map-open-btn" data-i18n-title="cityMapTitle" title="🌐 Expansión de Territorio">🌐</button>
+      <!-- Galería de Skins desbloqueables (ver MIIKAERU_SKINS en app.js) —
+           vive en el dock izquierdo junto a Chat/Wishlist/Mapa por el
+           mismo criterio: un ícono más, sin abrir un tercer cluster nuevo
+           en la pantalla. -->
+      <button type="button" class="hud-dock__icon hud-dock__icon--skins" id="skins-open-btn" data-i18n-title="skinsOpenBtn" title="🎭 Skins del León">🎭</button>
 
       <div class="hud-dock__divider"></div>
 
@@ -1515,6 +1520,25 @@
     </div>
   </div>
 
+  <!-- MODAL: SKINS DEL LEÓN — galería de las variantes de MIIKAERU_SKINS
+       (ver app.js). Grid renderizado por renderSkinsGrid(): cada tarjeta
+       muestra la miniatura del skin; los todavía no alcanzados quedan
+       atenuados con su nivel requerido (mismo criterio "visible pero
+       inerte" que .story-modal__tab--locked/.mpass-tier--locked), y los
+       desbloqueados se pueden seleccionar con un click para que
+       reemplacen el carrusel ambiental del León mientras esté en reposo. -->
+  <div class="modal-overlay" id="skins-modal" hidden>
+    <div class="modal glass modal--skins">
+      <button type="button" class="btn-modal-close" id="skins-modal-close" aria-label="Cerrar">✕</button>
+      <div class="panel__header">
+        <h2 data-i18n="skinsModalTitle">🎭 Skins del León</h2>
+        <span class="panel__tag" data-i18n="skinsModalSubtitle">colección desbloqueable</span>
+      </div>
+      <div class="skins-grid" id="skins-grid"></div>
+      <button type="button" class="btn-skins-close" id="skins-modal-close-btn" data-i18n="skinsModalCloseBtn">Cerrar</button>
+    </div>
+  </div>
+
   <!-- MODAL: EXPANSIÓN DE CIUDADES (mapa) — se abre desde el ícono 🌐 del
        dock izquierdo (ver #city-map-open-btn más arriba; hasta el Bloque
        50 este gesto vivía en el click del avatar/León, reemplazado ahora
@@ -1852,12 +1876,12 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260801-26"></script>
+  <script src="app.js?v=20260801-27"></script>
   <!-- Módulo de Lore (ver #story-modal más arriba) — punto de enchufe
        aparte, mismo patrón que MiikaeruHub, cargado después de app.js
        porque app.js llama a window.MiikaeruStoryEngine desde el click
        del avatar/León. -->
-  <script src="storyEngine.js?v=20260801-26"></script>
+  <script src="storyEngine.js?v=20260801-27"></script>
   <!-- Service Worker: estrategia Cache First para assets estáticos (ver
        sw.js) — carga instantánea en visitas repetidas y funcionamiento
        offline. Registro envuelto en try/catch + comprobación de

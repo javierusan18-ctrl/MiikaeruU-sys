@@ -22,7 +22,7 @@
 // index.html (ver ese archivo) — subirlo a mano en cada deploy real
 // hace que `activate` borre el caché viejo y todo se vuelva a guardar
 // fresco, evitando que un celular se quede pegado en una versión vieja.
-const CACHE_NAME = "miikaeru-cache-v20260801-26";
+const CACHE_NAME = "miikaeru-cache-v20260801-27";
 
 const STATIC_ASSETS = [
   "./",
@@ -63,6 +63,18 @@ const STATIC_ASSETS = [
   "assets/skins/mikaeru_cachorro_kodomo.png",
   "assets/skins/mikaeru_cachorro_cosmico_wakai.png",
   "assets/skins/metrakaela_guerrera.png",
+  // Skins desbloqueables adicionales (ver MIIKAERU_SKINS en app.js /
+  // #skins-modal) — curadas de la misma carpeta "Mikaeru skin", todas
+  // retratos del propio León (se excluyen a propósito los de otros
+  // personajes, ya cacheados arriba solo para el Modal de Lore).
+  "assets/skins/mikaeru_skin_cristal_arcano.png",
+  "assets/skins/mikaeru_skin_cazador_neon.png",
+  "assets/skins/mikaeru_skin_cachorro_dormido.png",
+  "assets/skins/mikaeru_skin_soberano_estelar.png",
+  "assets/skins/mikaeru_skin_guardian_templo.png",
+  "assets/skins/mikaeru_skin_comandante_ejercito.png",
+  "assets/skins/mikaeru_skin_deidad_meditante.png",
+  "assets/skins/mikaeru_skin_heraldo_rugiente.png",
   // Decoración del header del Modal de Lore (ver .story-modal__header-portrait
   // en style.css) — estas 3 SÍ siguen sin existir todavía; degradan solas a
   // un gradiente CSS mientras tanto, mismo "mejor esfuerzo" de arriba.
