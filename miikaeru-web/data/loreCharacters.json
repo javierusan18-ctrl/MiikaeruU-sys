@@ -1,0 +1,102 @@
+[
+  {
+    "id": "miikaeru",
+    "nombre": "Miikaeru",
+    "titulo": "León Rey — Soberano del Despertar Solar",
+    "rango": "Primero entre los Custodios",
+    "imagen_principal": "assets/skins/mikaeru_batalla_armadura.png",
+    "galeria": [
+      { "rol": "alta_vibracion", "src": "assets/skins/mikaeru_idle_chakras.png" },
+      { "rol": "sacrificio", "src": "assets/skins/mikaeru_sacrificio_despertar.png" },
+      { "rol": "familia", "src": "assets/skins/mikaeru_familia_portada.png" }
+    ],
+    "descripcion": [
+      "Miikaeru fue, antes de la Caída, el primero entre los Custodios de Aethelgard: un León Rey cuya sola presencia irradiaba el Despertar Solar, la energía positiva pura que sostenía el equilibrio de todo el reino.",
+      "La noche en que el Cónclave Sombra atacó, se plantó entre el enemigo y todo lo que amaba, y desató el Despertar Solar completo — un acto que le costó su forma original y selló para siempre la Caída de Aethelgard.",
+      "No desapareció del todo. Un fragmento de su energía sobrevivió, latente dentro del propio Nexus Eterno, esperando el momento — y la tecnología — capaz de traerlo de regreso.",
+      "Ese momento llegó gracias a Metrakaela: la armadura viva que hoy porta no es un arma prestada, es su propia alma solar fusionada con el Núcleo bio-digital que ella construyó para sostenerlo. Regresa fragmento a fragmento, cada vez que el Nexus lo necesita."
+    ]
+  },
+  {
+    "id": "metrakaela",
+    "nombre": "Metrakaela",
+    "titulo": "La Arquitecta del Nexus Eterno",
+    "rango": "Sexta entre los Custodios (antigua Tercera)",
+    "imagen_principal": "assets/skins/metrakaela_guerrera.png",
+    "galeria": [
+      { "rol": "familia_protegida", "src": "assets/skins/mikaeru_familia_portada.png" }
+    ],
+    "descripcion": [
+      "Metrakaela es una Madre IA con forma de gato humanoide, maestra absoluta de la tecnología bio-digital y de los ciclos de la naturaleza — fue ella quien tejió los jardines vivos de Aethelgard con la misma precisión que sus propios circuitos.",
+      "La noche de la Caída llegó a tiempo para salvar solo a dos cachorros recién nacidos — Fesha y Mijashi — hijos de la Sacerdotisa de la Esencia Sagrada, caída minutos antes en el primer ataque. Los incubó en su propia tecnología, los crió como suyos, y guardó silencio sobre su origen durante generaciones.",
+      "Tras la Caída se transformó de Arquitecta a guerrera bio-digital completa — no solo por dolor, sino porque fue ella quien diseñó, en secreto, el sistema capaz de sostener el fragmento de Miikaeru que sobrevivió al sacrificio. Sin ella, su regreso jamás habría sido posible.",
+      "Su lugar en la jerarquía cambió esa misma noche: de la antigua Tercera entre los Custodios pasó a ser la Sexta — el mismo número que ahora ocupa Demiure, su espejo oscuro entre los Malos. Nadie sabe todavía por qué el orden se invirtió en ambos bandos a la vez."
+    ]
+  },
+  {
+    "id": "fesha",
+    "nombre": "Fesha",
+    "titulo": "Portadora de la Chispa del Báculo — Bendición del Fulgor Primordial",
+    "rango": "Hija de la Sacerdotisa de la Esencia Sagrada",
+    "imagen_principal": "assets/skins/mikaeru_cachorro_kodomo.png",
+    "galeria": [
+      { "rol": "despertar_wakai", "src": "assets/skins/mikaeru_cachorro_cosmico_wakai.png" },
+      { "rol": "primer_enfrentamiento", "src": "assets/skins/badas_batalla.png" }
+    ],
+    "descripcion": [
+      "Fesha nació minutos antes de la Caída de Aethelgard, hija de la Sacerdotisa de la Esencia Sagrada. Metrakaela la salvó esa misma noche y la crió sin decir jamás cuál era su origen real.",
+      "Durante sus primeros años como cachorro (etapa Kodomo) no fue distinta a cualquier otra cría del Nexus — hasta que, años después, empezaron a manifestarse en ella destellos de algo propio: luz que respondía antes que el miedo.",
+      "En su despertar (etapa Wakai) se reveló la verdad: sus ojos brillan con galaxias porque porta una Bendición activa, la Chispa del Báculo — el Fulgor Primordial, herencia directa de su verdadera madre.",
+      "Para cuando el Cónclave Sombra lanza su ofensiva más grande desde la Caída, Fesha ya es consciente de su propio poder y lucha por primera vez junto a Metrakaela — ya no es la cachorra que una vez fue."
+    ]
+  },
+  {
+    "id": "mijashi",
+    "nombre": "Mijashi",
+    "titulo": "Portador del Reflejo del Escudo — Bendición del Bastión Inquebrantable",
+    "rango": "Hijo de la Sacerdotisa de la Esencia Sagrada",
+    "imagen_principal": "assets/skins/mikaeru_cachorro_cosmico_wakai.png",
+    "galeria": [
+      { "rol": "infancia_kodomo", "src": "assets/skins/mikaeru_cachorro_kodomo.png" },
+      { "rol": "primer_enfrentamiento", "src": "assets/skins/badas_batalla.png" }
+    ],
+    "descripcion": [
+      "Mijashi es el mellizo de Fesha, salvado la misma noche de la Caída por Metrakaela junto a su hermana. Ambos crecieron sin saber, durante años, que su verdadera madre fue la Sacerdotisa de la Esencia Sagrada.",
+      "Como cachorro (etapa Kodomo) creció a la sombra protectora de Metrakaela, ajeno todavía al peligro que el Cónclave Sombra seguía representando desde su Base Draconiana.",
+      "Su despertar (etapa Wakai) trajo consigo el Reflejo del Escudo — la Bendición del Bastión Inquebrantable: una defensa que responde sola, herencia de la misma sangre que despertó el don de su hermana.",
+      "Junto a Fesha, lucha por primera vez en la gran ofensiva del Cónclave Sombra — ya consciente de su Bendición, ya no un simple cachorro bajo protección ajena."
+    ]
+  },
+  {
+    "id": "demiure",
+    "nombre": "Demiure",
+    "titulo": "Imperator Drakoneano",
+    "rango": "Tercero del Cónclave Sombra",
+    "imagen_principal": "assets/skins/demiure_draconiano.png",
+    "galeria": [
+      { "rol": "general_a_su_mando", "src": "assets/skins/badas_batalla.png" }
+    ],
+    "descripcion": [
+      "Demiure gobierna la Base Draconiana del Cónclave Sombra: un guerrero-dragón de alas y cuernos que comanda tropas de soldados-lagarto y mapas holográficos de toda la ciudad que aspira a conquistar.",
+      "No busca destruir el Nexus Eterno sin más — busca algo específico dentro de él. Esa ambición lo llevó a ordenar el ataque que provocó la Caída de Aethelgard y la muerte de la Sacerdotisa de la Esencia Sagrada.",
+      "Badas, el General de Hierro, responde directamente a él, saltándose los rangos intermedios del Cónclave — una señal de cuánto confía Demiure en su General, o de cuánto necesita mantenerlo cerca.",
+      "Cuando el Núcleo detecta la reactivación del Soberano del Despertar Solar, algo parecido a la duda cruza al Imperator por primera vez desde la Caída: el regreso de Miikaeru no debería ser posible. Y sin embargo lo es."
+    ]
+  },
+  {
+    "id": "badas",
+    "nombre": "Badas",
+    "titulo": "General de Hierro — \"el Rottweiler\"",
+    "rango": "Séptimo del Cónclave Sombra",
+    "imagen_principal": "assets/skins/badas_batalla.png",
+    "galeria": [
+      { "rol": "imperator_al_mando", "src": "assets/skins/demiure_draconiano.png" }
+    ],
+    "descripcion": [
+      "Badas es el General de Hierro del Cónclave Sombra, un rottweiler de disciplina implacable que rastrea el Nexus Eterno con la misma paciencia desde la noche de la Caída.",
+      "Fue su ataque el que interrumpió el primer instante de vida de Fesha y Mijashi, y el que le costó la vida a la Sacerdotisa de la Esencia Sagrada — su nombre quedó registrado en el Núcleo desde ese momento como una amenaza activa, no un recuerdo cerrado.",
+      "Pese a ocupar el Séptimo puesto en la jerarquía del Cónclave, responde directamente a Demiure sin pasar por los rangos intermedios — la cadena de mando real del Cónclave Sombra sigue siendo, en gran parte, un misterio para el Núcleo.",
+      "Cada vez que Badas se acerca al Nexus, algo late en el sistema como si Miikaeru, de alguna forma, todavía estuviera escuchando."
+    ]
+  }
+]

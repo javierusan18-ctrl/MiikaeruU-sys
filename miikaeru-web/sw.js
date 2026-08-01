@@ -22,7 +22,7 @@
 // index.html (ver ese archivo) — subirlo a mano en cada deploy real
 // hace que `activate` borre el caché viejo y todo se vuelva a guardar
 // fresco, evitando que un celular se quede pegado en una versión vieja.
-const CACHE_NAME = "miikaeru-cache-v20260801-25";
+const CACHE_NAME = "miikaeru-cache-v20260801-26";
 
 const STATIC_ASSETS = [
   "./",
@@ -67,6 +67,10 @@ const STATIC_ASSETS = [
   // en style.css) — estas 3 SÍ siguen sin existir todavía; degradan solas a
   // un gradiente CSS mientras tanto, mismo "mejor esfuerzo" de arriba.
   "data/storyData.json",
+  // Enciclopedia de personajes de la vista "Personajes" del Modal de Lore
+  // (ver storyEngine.js) — mismas 10 imágenes de assets/skins/ de arriba,
+  // reutilizadas por rol; no agrega archivos nuevos aparte de este JSON.
+  "data/loreCharacters.json",
   "assets/lion-base.png",
   "assets/mandala.png",
   "assets/lion-glow.png",
