@@ -5547,13 +5547,19 @@ document.addEventListener("DOMContentLoaded", () => {
   // `automation_tasks` es la tabla que n8n (flujo externo, puerto 5678, ver
   // AUTOMATION_WORKFLOW.md) llena directo vía su propia API REST de
   // Supabase — no hay ningún webhook ni endpoint en este código que n8n
-  // llame. La app solo LEE esa tabla (y actualiza `status`/`notes` cuando
+  // llame. La app solo LEE esa tabla (y actualiza `status`/`payload` cuando
   // un admin marca una tarea completada/fallida), igual que ya hace con
-  // `feedback` en el Agente Inspector de arriba. Mismo esquema de campos
-  // que ya documentaba approved_tasks.json (id/title/description/type/
-  // affected_files/priority/status/source/created_at/completed_at/notes)
-  // para que el contrato sea el mismo sin importar si la tarea la
-  // consume un humano local (approved_tasks.json) o esta pestaña (Supabase).
+  // `feedback` en el Agente Inspector de arriba.
+  //
+  // Esquema REAL de la tabla (el usuario corrió una versión simplificada
+  // del SQL propuesto — solo id/title/status/payload jsonb/created_at/
+  // updated_at, sin columnas separadas para description/type/priority/
+  // affected_files/notes): el resto de los campos que documentaba
+  // approved_tasks.json vive adentro de `payload` como un objeto suelto
+  // (`payload.description`, `payload.type`, etc.) en vez de columnas
+  // propias — n8n decide qué mete ahí, este código solo lee lo que
+  // encuentra y no asume que ningún campo de `payload` vaya a estar
+  // presente.
   let automationRows = [];
   let automationRealtimeChannel = null;
 
@@ -5573,12 +5579,13 @@ document.addEventListener("DOMContentLoaded", () => {
     automationStatFailed.textContent = counts.failed;
   }
 
-  function updateAutomationTaskStatus(id, status, notes) {
+  function updateAutomationTaskStatus(row, status, notes) {
     if (!supabaseClient) return;
+    const payload = Object.assign({}, row.payload || {}, notes ? { notes } : {});
     supabaseClient
       .from("automation_tasks")
-      .update({ status, notes: notes || null, completed_at: new Date().toISOString() })
-      .eq("id", id)
+      .update({ status, payload, updated_at: new Date().toISOString() })
+      .eq("id", row.id)
       .then(({ error }) => {
         if (error) {
           console.warn("Supabase: no se pudo actualizar la tarea de automatización:", error.message);
@@ -5604,6 +5611,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     rows.forEach((row) => {
       const status = row.status || "pending";
+      const payload = row.payload || {};
       const card = document.createElement("div");
       card.className = "inspector-card";
 
@@ -5611,10 +5619,10 @@ document.addEventListener("DOMContentLoaded", () => {
       header.className = "inspector-card__header";
       const date = row.created_at ? new Date(row.created_at).toLocaleDateString(calendarLocale()) : "—";
       const metaSpan = document.createElement("span");
-      metaSpan.textContent = `${date} · ${row.type || "—"} · ${row.priority || "—"} · ${row.source || "—"}`;
+      metaSpan.textContent = `${date} · ${payload.type || "—"} · ${payload.priority || "—"} · ${payload.source || "—"}`;
       const statusSpan = document.createElement("span");
       statusSpan.className = `inspector-card__status inspector-card__status--${status}`;
-      statusSpan.textContent = t(`automationStatus_${status}`);
+      statusSpan.textContent = t(`automationStatus_${status}`) || status;
       header.append(metaSpan, statusSpan);
 
       const title = document.createElement("p");
@@ -5624,16 +5632,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const description = document.createElement("p");
       description.className = "inspector-card__message";
-      description.textContent = row.description || "";
+      description.textContent = payload.description || "";
 
       card.append(header, title, description);
 
-      if (Array.isArray(row.affected_files) && row.affected_files.length) {
+      if (Array.isArray(payload.affected_files) && payload.affected_files.length) {
         const files = document.createElement("p");
         files.className = "inspector-card__message";
         files.style.opacity = "0.7";
         files.style.fontSize = "0.75rem";
-        files.textContent = row.affected_files.join(", ");
+        files.textContent = payload.affected_files.join(", ");
         card.appendChild(files);
       }
 
@@ -5650,21 +5658,21 @@ document.addEventListener("DOMContentLoaded", () => {
         completeBtn.type = "button";
         completeBtn.className = "inspector-card__resolve";
         completeBtn.textContent = t("automationCompleteBtn");
-        completeBtn.addEventListener("click", () => updateAutomationTaskStatus(row.id, "completed", notesInput.value));
+        completeBtn.addEventListener("click", () => updateAutomationTaskStatus(row, "completed", notesInput.value));
 
         const failBtn = document.createElement("button");
         failBtn.type = "button";
         failBtn.className = "inspector-card__discard";
         failBtn.textContent = t("automationFailBtn");
-        failBtn.addEventListener("click", () => updateAutomationTaskStatus(row.id, "failed", notesInput.value));
+        failBtn.addEventListener("click", () => updateAutomationTaskStatus(row, "failed", notesInput.value));
 
         actions.append(completeBtn, failBtn);
         card.append(notesInput, actions);
-      } else if (row.notes) {
+      } else if (payload.notes) {
         const notes = document.createElement("p");
         notes.className = "inspector-card__message";
         notes.style.fontStyle = "italic";
-        notes.textContent = row.notes;
+        notes.textContent = payload.notes;
         card.appendChild(notes);
       }
 

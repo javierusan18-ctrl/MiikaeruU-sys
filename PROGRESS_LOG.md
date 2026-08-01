@@ -1608,3 +1608,19 @@ Punto 3 del pedido del Bloque 58 ("deja lista la estructura para que n8n se sinc
 - Estado mostrado tras el fetch: `"⚠️ No se pudo leer la tabla de Supabase: Could not find the table 'public.automation_tasks' in the schema cache"` — exactamente el mismo tipo de error controlado que ya mostraba el Agente Inspector antes de correr su SQL (Bloque 37), confirmando que el manejo de error funciona.
 - 0 errores de consola en toda la prueba.
 - **No verificado todavía** (requiere la tabla real): que una fila insertada por n8n aparezca vía realtime sin recargar, y que los botones "Marcar Completada"/"Marcar Fallida" escriban correctamente — ambos dependen de que el usuario corra el SQL primero.
+
+---
+
+## Bloque 60 — Adaptación al esquema real de `automation_tasks` + aviso de seguridad sobre la política RLS
+
+El usuario compartió el SQL que efectivamente pensaba correr (o ya corrió) para crear `automation_tasks` — una versión simplificada de la propuesta del Bloque 59: en vez de columnas separadas (`description`/`type`/`priority`/`affected_files`/`source`/`notes`/`completed_at`), solo `id`/`title`/`status`/`payload` (jsonb genérico)/`created_at`/`updated_at`.
+
+**1. `app.js` adaptado al esquema real.** `renderAutomationCards()` ahora lee `description`/`type`/`priority`/`source`/`affected_files`/`notes` desde `row.payload` (todos opcionales, sin asumir que n8n los vaya a mandar) en vez de columnas propias. `updateAutomationTaskStatus()` ya no escribe una columna `completed_at` que no existe — ahora recibe la fila completa (no solo el id) para poder fusionar la nota nueva dentro del `payload` existente sin pisar el resto de sus datos, y actualiza `updated_at` en su lugar.
+
+**2. Aviso de seguridad real, NO resuelto a propósito — es una decisión del usuario, no algo que este código deba cambiar por su cuenta.** La política que el usuario corrió (`for all using (true) with check (true)`) deja `automation_tasks` completamente abierta a través de la clave pública de Supabase — la misma que ya vive embebida en el JS servido al cliente. Eso es distinto de CUALQUIER otra tabla de este proyecto (`feedback`, `transactions`), que restringen lectura/escritura a `auth.jwt() ->> 'email' = 'admin@miikaeru.com'`. En la práctica: cualquier visitante del sitio, no solo el Administrador, puede leer/insertar/modificar/borrar filas de esta tabla llamando directo a la API REST de Supabase, sin pasar por la pestaña del Panel de Administrador — ese candado (`isSuperAdmin`) es solo un filtro de interfaz, no control de acceso real. Documentado en detalle, con el SQL de la política alternativa restringida a `ADMIN_EMAIL` lista para aplicar cuando el usuario decida, en `AUTOMATION_WORKFLOW.md`.
+
+**`sw.js`:** `CACHE_NAME` subido a `v20260801-36`.
+
+**Pruebas realizadas:**
+- 0 errores de consola tras el cambio.
+- Pestaña "Automatización" re-verificada: sigue degradando con gracia (mismo mensaje de tabla inexistente) — la tabla todavía no existe en el proyecto de Supabase que usa este entorno de pruebas, así que el flujo completo con datos reales sigue sin poder confirmarse hasta que el usuario corra el SQL contra su proyecto real.

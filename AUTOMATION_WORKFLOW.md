@@ -40,35 +40,56 @@ Vercel**, sin que eso implique tocar código ni hacer un redeploy:
   vida `pending → completed`/`failed` documentado abajo para el canal
   local, mismos nombres de estado.
 
-**SQL para crear la tabla (correr una sola vez en el SQL Editor de
-Supabase — no se guarda en este repo, igual que la política RLS de
-`feedback` de un bloque anterior):**
+**SQL que el usuario efectivamente corrió (versión simplificada de la
+propuesta original de arriba — esto es lo que existe hoy en Supabase, no
+se guarda como archivo `.sql` en este repo):**
 
 ```sql
 create table if not exists public.automation_tasks (
-  id uuid primary key default gen_random_uuid(),
+  id uuid default gen_random_uuid() primary key,
   title text not null,
-  description text not null,
-  type text not null default 'improvement'
-    check (type in ('bugfix', 'feature', 'improvement')),
-  affected_files jsonb not null default '[]'::jsonb,
-  priority text not null default 'medium'
-    check (priority in ('low', 'medium', 'high')),
-  status text not null default 'pending'
-    check (status in ('pending', 'completed', 'failed')),
-  source text not null default 'n8n',
-  created_at timestamptz not null default now(),
-  completed_at timestamptz,
-  notes text
+  status text not null default 'pending',
+  payload jsonb,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  updated_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
 alter table public.automation_tasks enable row level security;
 
--- n8n escribe con la service_role key, que ignora RLS por completo — no
--- hace falta ninguna política de INSERT para que n8n pueda encolar tareas.
+create policy "Permitir todo a service_role y acceso general" on public.automation_tasks
+  for all using (true) with check (true);
 
--- Solo ADMIN_EMAIL (mismo email que ya usa el resto del Panel de
--- Administrador) puede leer y actualizar tareas desde la app.
+alter publication supabase_realtime add table public.automation_tasks;
+```
+
+Diferencia real con la propuesta original: en vez de columnas separadas
+(`description`/`type`/`priority`/`affected_files`/`source`/`notes`), todo
+eso vive adentro de `payload` (jsonb) como un objeto suelto — el código de
+`app.js` (`renderAutomationCards()`/`updateAutomationTaskStatus()`) ya se
+adaptó a leer de ahí (`payload.description`, `payload.type`, etc., todos
+opcionales) en vez de columnas propias.
+
+**⚠️ Nota de seguridad, sin resolver a propósito — decisión que le
+corresponde al usuario, no algo que este código vaya a cambiar solo:**
+la política `for all using (true) with check (true)` deja la tabla
+completamente abierta a través de la **clave pública ("publishable
+key") de Supabase, que vive embebida en el JS del lado del cliente** (ver
+`initSupabaseClient()` en `app.js`) — es decir, cualquier visitante del
+sitio (no solo `ADMIN_EMAIL`, ni siquiera alguien logueado) puede leer,
+insertar, modificar o borrar filas de `automation_tasks` llamando directo
+a la API REST de Supabase, sin pasar por la UI del Panel de Administrador
+en absoluto (el candado `isSuperAdmin` de la pestaña es solo un filtro de
+interfaz, no control de acceso real). Esto es distinto de CUALQUIER otra
+tabla que ya usa este proyecto (`feedback`, `transactions`), que
+restringen lectura/escritura a `auth.jwt() ->> 'email' = 'admin@miikaeru.com'`.
+
+Si en algún momento se quiere cerrar esto sin tocar código (la pestaña ya
+lee/escribe igual con cualquiera de las dos políticas), reemplazar la
+política de arriba por:
+
+```sql
+drop policy "Permitir todo a service_role y acceso general" on public.automation_tasks;
+
 create policy "automation_tasks_select_admin"
   on public.automation_tasks for select
   using (auth.jwt() ->> 'email' = 'admin@miikaeru.com');
@@ -77,9 +98,8 @@ create policy "automation_tasks_update_admin"
   on public.automation_tasks for update
   using (auth.jwt() ->> 'email' = 'admin@miikaeru.com');
 
--- Habilita las notificaciones realtime que usa la pestaña "Automatización"
--- para actualizarse sola cuando n8n inserta una fila nueva.
-alter publication supabase_realtime add table public.automation_tasks;
+-- n8n sigue pudiendo insertar igual: su service_role key ignora RLS
+-- por completo, no necesita ninguna política de INSERT a su nombre.
 ```
 
 **Qué NO cambia:** `approved_tasks.json`/`tools/run_next_task.js` (el canal
