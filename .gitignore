@@ -8,3 +8,8 @@ Thumbs.db
 
 # Por si algún día se agrega tooling con dependencias
 node_modules/
+
+# IA Jugador (tools/ai-player/, Bloque 63) — credenciales locales, nunca
+# van al repo. .env.example SÍ se commitea (es la plantilla sin valores
+# reales de ANTHROPIC_API_KEY).
+tools/ai-player/.env

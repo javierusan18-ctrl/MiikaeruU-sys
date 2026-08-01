@@ -106,6 +106,30 @@ create policy "automation_tasks_update_admin"
 local, para desarrollo/código) siguen existiendo tal cual, sin tocar — son
 un flujo distinto y complementario, no reemplazado por este.
 
+## Actualización (Bloque 63, 2026-08-01): tercer origen — IA Jugador (`source: "ai-player"`)
+
+Un tercer productor de filas en `automation_tasks`, además de n8n y de un
+humano completando el formulario a mano: [`tools/ai-player/`](tools/ai-player/README.md),
+un script de Node que abre un navegador real (Playwright) contra el
+servidor de desarrollo **local**, le da el control a Claude (vía el Tool
+Runner del SDK oficial) para que juegue la app como un usuario nuevo, y
+cuando encuentra un bug visual/de lógica/de rendimiento lo inserta él mismo
+en `automation_tasks` con `payload.source: "ai-player"` — mismo esquema
+exacto documentado arriba, sin ningún cambio de tabla ni de RLS.
+
+No agrega ningún canal nuevo hacia esta app ni hacia Supabase: reutiliza la
+misma tabla, el mismo esquema (`payload.description`/`type`/`priority`/
+`source`/`affected_files`/`notes`), y la misma clave pública que ya usa
+`miikaeru-web/app.js`. Ver [`tools/ai-player/README.md`](tools/ai-player/README.md)
+para la arquitectura completa, y [`tools/ai-player/prompts/`](tools/ai-player/prompts/)
+para el comportamiento exacto y el criterio de qué reporta.
+
+**Candado de seguridad real, no una convención:** `tools/ai-player/config.js`
+se niega a arrancar si la URL objetivo no es `localhost`/`127.0.0.1` —
+la IA Jugador nunca "juega" contra producción, aunque escriba en la misma
+Supabase (es intencional: así los hallazgos llegan al Panel de
+Administrador real).
+
 ## Por qué vive fuera de `miikaeru-web/`
 
 `approved_tasks.json` y este documento están en la **raíz** del proyecto

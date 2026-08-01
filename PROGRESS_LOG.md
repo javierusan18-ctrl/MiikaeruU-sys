@@ -1662,3 +1662,35 @@ Punto 2 del pedido del Bloque 61: desarrollo/pruebas exclusivamente en local, de
 - No se pudo probar el workflow en vivo desde esta sesión (correr un GitHub Action requiere que el archivo ya esté en la rama por defecto del repo remoto, y activarlo desde la pestaña Actions de GitHub — un paso que le corresponde al usuario, no a una prueba local).
 - Sintaxis del cron verificada a mano: sábado 01:00 UTC − 5 horas = viernes 20:00 hora de Perú, confirmado correcto.
 - `DEPLOYMENT.md` releído para confirmar que no insinúa en ningún lado que el sistema ya está activo — el estado real ("NO tiene efecto todavía") está en la primera línea del documento.
+
+---
+
+## Bloque 63 — Andamio de la IA Jugador: tester autónoma (Playwright + Claude API) que encola sus propios hallazgos
+
+Confirmado el pipeline de despliegue del Bloque 62 (la rama `production` sigue sin existir en GitHub — falta que el usuario corra el workflow al menos una vez o llegue el viernes — no se tocó la memoria de sesión `feedback_autopush_policy` todavía, sigue pendiente esa confirmación). Pedido nuevo: diseñar el "próximo gran pilar", una IA Jugador que juegue la app sola, detecte bugs, y encole sugerencias estructuradas directo en `automation_tasks` para aprobar/descartar desde el Panel de Administrador — pidiendo específicamente la estructura de archivos para arrancar a configurar el comportamiento y los prompts.
+
+**1. Arquitectura: `tools/ai-player/`, un script de Node aparte del sitio (`miikaeru-web/`) — nunca corre en el navegador del usuario ni se despliega.** Primera vez que este repo tiene dependencias de npm reales (`package.json` nuevo con `@anthropic-ai/sdk`, `playwright`, `@supabase/supabase-js`, `dotenv`) — hasta ahora `tools/run_next_task.js` era un script sin dependencias. `node --check` en los 5 archivos, `npm install` real (incluyendo la descarga de ~300MB del binario de Chromium vía `postinstall: playwright install chromium`), y una batería de smoke tests reales contra el servidor de desarrollo local ya corriendo — no solo revisión de código.
+
+**2. Diseño de herramientas: mismo patrón `role`/`name` que ya uso yo mismo dentro de esta sesión para navegar la app** (`read_page` → clic/escritura por referencia), en vez del enfoque más caro y frágil de "computer use" por coordenadas de píxel. `read_page` devuelve el snapshot de accesibilidad como árbol estilo YAML — mismo formato que ya devuelve mi propia herramienta de navegador en esta sesión de Claude Code, así que el modelo ya sabe leerlo bien sin que haga falta aplanarlo a mano.
+
+**3. Bug real encontrado en el primer smoke test: `page.accessibility.snapshot()` (la API que iba a usar originalmente) ya no existe en Playwright moderno.** Tira `Cannot read properties of undefined (reading 'snapshot')` contra la v1.62 que instaló `npm install` (mi `^1.49.0` en `package.json` resolvió a la última compatible). El reemplazo real, confirmado leyendo los `.d.ts` instalados, es `locator.ariaSnapshot()` — devuelve texto, no un árbol de objetos JS, lo que en los hechos simplificó el código (`lib/browser.js` quedó más corto, sin la función de aplanado que ya no hacía falta).
+
+**4. Segundo bug real encontrado: `page.screenshot()` se cuelga 30 segundos enteros esperando que "carguen las fuentes"** — aunque la app no usa ninguna fuente web externa (confirmado con `grep` sobre `index.html`/`style.css`, sin resultados). Reproducible de forma consistente contra el servidor local real. Sin una opción documentada para saltear ese paso interno de Playwright, se resolvió con degradación con gracia: `timeout: 8000` explícito + `try/catch` que devuelve `null` en vez de tirar, y `claude-player.js` traduce ese `null` a un mensaje de texto ("no se pudo tomar la captura, seguí con read_page") en vez de crashear toda la sesión por un problema puntual del entorno, no de la app.
+
+**5. Verificado contra el SDK real instalado (no contra la documentación cacheada) que `betaTool`/`client.beta.messages.toolRunner` existen tal cual los usé** — `grep`/lectura directa de `node_modules/@anthropic-ai/sdk/helpers/beta/json-schema.d.ts` confirmó que `run()` acepta devolver `string | Array<BetaToolResultContentBlockParam>`, exactamente el shape que usa la herramienta `screenshot` (texto + bloque de imagen) para reportar hallazgos visuales.
+
+**6. Prompts reales, no placeholders — `prompts/system.md` y `prompts/bug-report-schema.md`.** El primero define el criterio explícito de qué SÍ y qué NO es un hallazgo reportable (para no inundar la cola con ruido: nada de contenido "Próximamente" documentado, ni candados de nivel, ni opiniones de diseño sin razón funcional concreta). El segundo documenta el esquema exacto de `report_finding` con un ejemplo completo, incluyendo cómo se traduce al `payload` real de la fila.
+
+**7. `AUTOMATION_WORKFLOW.md` actualizado** con una tercera sección de "origen" (`source: "ai-player"`) — no agrega ningún canal nuevo hacia la app ni hacia Supabase, reutiliza la tabla, el esquema y la clave pública que ya existían.
+
+**Qué NO se hizo en este bloque, a propósito:** no se corrió una sesión real de la IA Jugador contra la API de Claude (necesita una clave de Anthropic propia del usuario, con costo real, que todavía no está configurada — ver `tools/ai-player/README.md` § Prerrequisitos) ni se insertó ninguna fila de prueba en `automation_tasks` (mismo criterio del Bloque 60/61: no ensuciar datos reales del usuario sin necesidad).
+
+**Pruebas realizadas:**
+- `node --check` en los 5 archivos JS del módulo: sin errores de sintaxis.
+- `npm install` real, incluyendo la descarga del binario de Chromium — completado sin errores.
+- Verificación de imports contra el código fuente instalado (no contra documentación): `betaTool`, `Anthropic` (constructor), `createClient`, `chromium.launch`, `client.beta.messages.toolRunner` — los 5 confirmados como funciones reales en el módulo instalado.
+- `BrowserSession.readPage()` corrido contra `http://localhost:5500` real: título, URL, snapshot de accesibilidad (1717 caracteres) y texto visible devueltos correctamente.
+- `BrowserSession.click({role, name})` corrido contra un botón real de la pantalla de login: ejecuta sin error.
+- `BrowserSession.screenshot()`: confirmado que degrada a `null` en vez de crashear cuando Playwright se cuelga esperando fuentes.
+- `BrowserSession.readConsoleErrors()`: confirmado que devuelve un array (2 errores reales capturados durante las pruebas, sin investigar su contenido — fuera del alcance de este bloque).
+- `config.js`: confirmado que se niega a arrancar con el mensaje de error esperado cuando falta `ANTHROPIC_API_KEY` (no hay `.env` real todavía, solo `.env.example`).
