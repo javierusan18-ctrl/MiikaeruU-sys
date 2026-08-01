@@ -1583,3 +1583,28 @@ Pedido de "bloque final" que pedía CONFIRMAR (no rehacer) tres cosas ya constru
 - `grep` de todo `style.css` buscando el mismo patrón de comentario roto: sin otros casos encontrados.
 - Story modal + Miika Pass: verificados vía DOM (`getComputedStyle`, conteo de elementos) sin regresión respecto a los Bloques 55/56.
 - 0 errores de consola.
+
+---
+
+## Bloque 59 — Pestaña "Automatización (n8n)" en el Panel de Administrador: sincronización real vía Supabase
+
+Punto 3 del pedido del Bloque 58 ("deja lista la estructura para que n8n se sincronice limpio con el núcleo de la app"), resuelto tras confirmar con el usuario el alcance exacto: el flujo `n8n-flujo-metatron` (Docker, puerto 5678) debe sincronizar con la app YA PUBLICADA en Vercel, usando Supabase como backend — mismo mecanismo que ya usa el Agente Inspector con la tabla `feedback`.
+
+**1. Tabla nueva `automation_tasks` en Supabase, con el MISMO esquema que ya documentaba `approved_tasks.json`** (id/title/description/type/affected_files/priority/status/source/created_at/completed_at/notes) — a propósito, para que el contrato de datos sea idéntico sin importar si la tarea la consume un humano local (`tools/run_next_task.js`) o el Panel de Administrador en vivo. SQL completo (tabla + políticas RLS + habilitación de realtime) documentado en `AUTOMATION_WORKFLOW.md` — no se guarda como archivo `.sql` en el repo, mismo criterio que la política RLS de `feedback` de un bloque anterior: es configuración de Supabase, no código desplegado. **Pendiente que el usuario la corra una sola vez en el SQL Editor de Supabase** — no tengo acceso directo a su proyecto de Supabase para ejecutarla yo.
+
+**2. n8n escribe DIRECTO a Supabase con su `service_role key` — cero código nuevo en la PWA que n8n tenga que llamar.** Sigue siendo cierto lo que ya decía `AUTOMATION_WORKFLOW.md`: no hay ningún webhook ni endpoint expuesto por este proyecto. La sincronización es Supabase-a-Supabase (n8n escribe, la app lee), no PWA-a-n8n.
+
+**3. Pestaña nueva "🤖 Automatización (n8n)" dentro del Panel de Administrador** (`#admin-panel-tab-automation`, tercera pestaña junto a Transacciones e Inspector de Bugs) — mismo candado `ADMIN_EMAIL`/`isSuperAdmin` que ya protege las otras dos. `fetchAutomationTasks()`/`renderAutomationCards()`/`renderAutomationStats()` en `app.js` calcan el patrón ya probado de `fetchInspectorFeedback()` (Bloque 37): mismas cards de estado, mismo manejo de error si la tabla todavía no existe. Un admin puede marcar cada tarea `pending` como `completed`/`failed` con una nota opcional (`updateAutomationTaskStatus()`), mismo ciclo de vida que ya documentaba `approved_tasks.json` para el canal local.
+
+**4. Sincronización "en tiempo real" pedida explícitamente por el usuario: `wireAutomationRealtime()` abre un canal de Supabase Realtime** (`postgres_changes` sobre `automation_tasks`) la primera vez que se abre la pestaña — una fila que n8n inserte aparece sola, sin que el admin tenga que tocar "Actualizar". Esto es lo que distingue esta integración de simplemente "otra pestaña que lee una tabla al abrirla" (que es lo único que hacía el Agente Inspector hasta ahora).
+
+**5. `AUTOMATION_WORKFLOW.md` actualizado** con una sección nueva ("Actualización Bloque 58") que documenta este segundo canal sin tocar ni una palabra de lo ya escrito sobre el canal local — son dos flujos complementarios, no uno reemplazando al otro.
+
+**`sw.js`:** `CACHE_NAME` subido a `v20260801-35` (sin assets nuevos).
+
+**Pruebas realizadas (sin la tabla creada todavía, comportamiento esperado hasta que el usuario corra el SQL):**
+- Pestaña, botones, stats y contenedor de cards confirmados presentes en el DOM tras el cache-bust.
+- Click programático en la pestaña: 0 errores de JS, panel pasa a visible, dispara `fetchAutomationTasks()` + `wireAutomationRealtime()` sin excepciones.
+- Estado mostrado tras el fetch: `"⚠️ No se pudo leer la tabla de Supabase: Could not find the table 'public.automation_tasks' in the schema cache"` — exactamente el mismo tipo de error controlado que ya mostraba el Agente Inspector antes de correr su SQL (Bloque 37), confirmando que el manejo de error funciona.
+- 0 errores de consola en toda la prueba.
+- **No verificado todavía** (requiere la tabla real): que una fila insertada por n8n aparezca vía realtime sin recargar, y que los botones "Marcar Completada"/"Marcar Fallida" escriban correctamente — ambos dependen de que el usuario corra el SQL primero.

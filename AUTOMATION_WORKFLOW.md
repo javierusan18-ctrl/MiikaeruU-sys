@@ -11,6 +11,81 @@ JSON que n8n enviaría el día que esa integración se construya — pero hoy
 (por un humano, o por Claude Code en una sesión de trabajo). No hay ningún
 webhook, endpoint ni polling escuchando en la app.
 
+## Actualización (Bloque 58, 2026-08-01): segundo canal, vía Supabase, para la app en vivo
+
+Todo lo de arriba sigue siendo cierto para el canal **local** (código/
+desarrollo). Pero además existe ahora un segundo canal, pensado para que un
+flujo de n8n corriendo en la máquina del usuario (puerto 5678, contenedor
+Docker `n8n-flujo-metatron`) sincronice datos **con la PWA ya publicada en
+Vercel**, sin que eso implique tocar código ni hacer un redeploy:
+
+- Tabla nueva en Supabase: **`automation_tasks`** — mismo esquema de campos
+  que `approved_tasks.json` (ver más abajo), para que el contrato sea
+  idéntico sin importar qué canal se use.
+- n8n escribe ahí **directo, vía la API REST de Supabase** (con la
+  `service_role key`, que salta las políticas RLS) — no hay ningún webhook
+  ni endpoint expuesto por este código que n8n tenga que llamar. Sigue
+  siendo cierto que "no existe ninguna llamada real a n8n en el código":
+  la sincronización pasa por Supabase, no por la PWA.
+- La PWA **lee** esa tabla desde una pestaña nueva "🤖 Automatización (n8n)"
+  dentro del Panel de Administrador (mismo lugar que el Agente Inspector),
+  visible solo para `ADMIN_EMAIL` — mismo candado que ya protege
+  Transacciones e Inspector de Bugs.
+- **Tiempo real de verdad**: la pestaña abre una suscripción de Supabase
+  Realtime (`supabaseClient.channel(...).on("postgres_changes", ...)`)
+  sobre `automation_tasks` — una fila que n8n inserte aparece en la lista
+  sin que el admin tenga que tocar "Actualizar" ni recargar la página.
+- Un admin puede marcar cada tarea `pending` como `completed` o `failed`
+  (con una nota opcional) directamente desde esa pestaña — mismo ciclo de
+  vida `pending → completed`/`failed` documentado abajo para el canal
+  local, mismos nombres de estado.
+
+**SQL para crear la tabla (correr una sola vez en el SQL Editor de
+Supabase — no se guarda en este repo, igual que la política RLS de
+`feedback` de un bloque anterior):**
+
+```sql
+create table if not exists public.automation_tasks (
+  id uuid primary key default gen_random_uuid(),
+  title text not null,
+  description text not null,
+  type text not null default 'improvement'
+    check (type in ('bugfix', 'feature', 'improvement')),
+  affected_files jsonb not null default '[]'::jsonb,
+  priority text not null default 'medium'
+    check (priority in ('low', 'medium', 'high')),
+  status text not null default 'pending'
+    check (status in ('pending', 'completed', 'failed')),
+  source text not null default 'n8n',
+  created_at timestamptz not null default now(),
+  completed_at timestamptz,
+  notes text
+);
+
+alter table public.automation_tasks enable row level security;
+
+-- n8n escribe con la service_role key, que ignora RLS por completo — no
+-- hace falta ninguna política de INSERT para que n8n pueda encolar tareas.
+
+-- Solo ADMIN_EMAIL (mismo email que ya usa el resto del Panel de
+-- Administrador) puede leer y actualizar tareas desde la app.
+create policy "automation_tasks_select_admin"
+  on public.automation_tasks for select
+  using (auth.jwt() ->> 'email' = 'admin@miikaeru.com');
+
+create policy "automation_tasks_update_admin"
+  on public.automation_tasks for update
+  using (auth.jwt() ->> 'email' = 'admin@miikaeru.com');
+
+-- Habilita las notificaciones realtime que usa la pestaña "Automatización"
+-- para actualizarse sola cuando n8n inserta una fila nueva.
+alter publication supabase_realtime add table public.automation_tasks;
+```
+
+**Qué NO cambia:** `approved_tasks.json`/`tools/run_next_task.js` (el canal
+local, para desarrollo/código) siguen existiendo tal cual, sin tocar — son
+un flujo distinto y complementario, no reemplazado por este.
+
 ## Por qué vive fuera de `miikaeru-web/`
 
 `approved_tasks.json` y este documento están en la **raíz** del proyecto

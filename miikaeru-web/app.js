@@ -802,6 +802,7 @@ const I18N = {
     adminPanelTitle: "🛡️ Panel de Administrador",
     adminPanelTabTransactions: "💳 Transacciones",
     adminPanelTabInspector: "🕵️ Inspector de Bugs",
+    adminPanelTabAutomation: "🤖 Automatización (n8n)",
     adminPanelRefreshBtn: "🔄 Actualizar",
     adminPanelExportBtn: "📥 Exportar CSV",
     adminPanelColDate: "Fecha",
@@ -837,6 +838,17 @@ const I18N = {
     inspectorApproveBtn: "✅ Aprobar",
     inspectorDiscardBtn: "❌ Descartar",
     inspectorResolveBtn: "✔️ Marcar Resuelto",
+    automationStatTotal: "Total",
+    automationStatPending: "Pendientes",
+    automationStatCompleted: "Completadas",
+    automationStatFailed: "Fallidas",
+    automationStatus_pending: "Pendiente",
+    automationStatus_completed: "Completada",
+    automationStatus_failed: "Fallida",
+    automationCompleteBtn: "✅ Marcar Completada",
+    automationFailBtn: "❌ Marcar Fallida",
+    automationNotesPlaceholder: "Notas (qué se hizo o por qué falló)...",
+    automationEmptyState: "Sin tareas en cola. n8n las agrega automáticamente a la tabla automation_tasks de Supabase.",
     negocioCurrencyLabel: "Moneda del Negocio",
     negocioNombreLabel: "Nombre del Negocio",
     negocioColaboradorLabel: "Colaborador / Vendedor *",
@@ -1273,6 +1285,7 @@ const I18N = {
     adminPanelTitle: "🛡️ Admin Panel",
     adminPanelTabTransactions: "💳 Transactions",
     adminPanelTabInspector: "🕵️ Bug Inspector",
+    adminPanelTabAutomation: "🤖 Automation (n8n)",
     adminPanelRefreshBtn: "🔄 Refresh",
     adminPanelExportBtn: "📥 Export CSV",
     adminPanelColDate: "Date",
@@ -1308,6 +1321,17 @@ const I18N = {
     inspectorApproveBtn: "✅ Approve",
     inspectorDiscardBtn: "❌ Discard",
     inspectorResolveBtn: "✔️ Mark Resolved",
+    automationStatTotal: "Total",
+    automationStatPending: "Pending",
+    automationStatCompleted: "Completed",
+    automationStatFailed: "Failed",
+    automationStatus_pending: "Pending",
+    automationStatus_completed: "Completed",
+    automationStatus_failed: "Failed",
+    automationCompleteBtn: "✅ Mark Completed",
+    automationFailBtn: "❌ Mark Failed",
+    automationNotesPlaceholder: "Notes (what was done or why it failed)...",
+    automationEmptyState: "No tasks queued. n8n adds them automatically to Supabase's automation_tasks table.",
     negocioCurrencyLabel: "Business Currency",
     negocioNombreLabel: "Business Name",
     negocioColaboradorLabel: "Collaborator / Seller *",
@@ -1744,6 +1768,7 @@ const I18N = {
     adminPanelTitle: "🛡️ 管理者パネル",
     adminPanelTabTransactions: "💳 取引",
     adminPanelTabInspector: "🕵️ バグ検査",
+    adminPanelTabAutomation: "🤖 自動化（n8n）",
     adminPanelRefreshBtn: "🔄 更新",
     adminPanelExportBtn: "📥 CSVをエクスポート",
     adminPanelColDate: "日付",
@@ -1779,6 +1804,17 @@ const I18N = {
     inspectorApproveBtn: "✅ 承認",
     inspectorDiscardBtn: "❌ 却下",
     inspectorResolveBtn: "✔️ 解決済みにする",
+    automationStatTotal: "合計",
+    automationStatPending: "保留中",
+    automationStatCompleted: "完了",
+    automationStatFailed: "失敗",
+    automationStatus_pending: "保留中",
+    automationStatus_completed: "完了",
+    automationStatus_failed: "失敗",
+    automationCompleteBtn: "✅ 完了にする",
+    automationFailBtn: "❌ 失敗にする",
+    automationNotesPlaceholder: "メモ（実施内容や失敗の理由）...",
+    automationEmptyState: "キューにタスクはありません。n8nがSupabaseのautomation_tasksテーブルに自動で追加します。",
     negocioCurrencyLabel: "ビジネスの通貨",
     negocioNombreLabel: "ビジネス名",
     negocioColaboradorLabel: "協力者 / 販売員 *",
@@ -4198,6 +4234,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const adminPanelTabs = document.getElementById("admin-panel-tabs");
   const adminPanelTabTransactions = document.getElementById("admin-panel-tab-transactions");
   const adminPanelTabInspector = document.getElementById("admin-panel-tab-inspector");
+  const adminPanelTabAutomation = document.getElementById("admin-panel-tab-automation");
   const adminPanelRefreshBtn = document.getElementById("admin-panel-refresh-btn");
   const adminPanelExportBtn = document.getElementById("admin-panel-export-btn");
   const adminPanelStatus = document.getElementById("admin-panel-status");
@@ -4211,6 +4248,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const inspectorStatApproved = document.getElementById("inspector-stat-approved");
   const inspectorStatResolved = document.getElementById("inspector-stat-resolved");
   const inspectorCards = document.getElementById("inspector-cards");
+
+  // Automatización (pestaña dentro del Panel de Administrador) — lee
+  // `automation_tasks` de Supabase, la tabla donde escribe el flujo de n8n
+  // externo (ver AUTOMATION_WORKFLOW.md). Mismo patrón que Agente Inspector,
+  // más una suscripción realtime (ver wireAutomationRealtime()).
+  const automationRefreshBtn = document.getElementById("automation-refresh-btn");
+  const automationStatus = document.getElementById("automation-status");
+  const automationStatTotal = document.getElementById("automation-stat-total");
+  const automationStatPending = document.getElementById("automation-stat-pending");
+  const automationStatCompleted = document.getElementById("automation-stat-completed");
+  const automationStatFailed = document.getElementById("automation-stat-failed");
+  const automationCards = document.getElementById("automation-cards");
 
   // Login de Administrador (Supabase Auth real — ver ADMIN_EMAIL/
   // checkAdminSession() arriba del todo del archivo)
@@ -5220,7 +5269,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     adminPanelTabTransactions.hidden = target !== "transactions";
     adminPanelTabInspector.hidden = target !== "inspector";
+    adminPanelTabAutomation.hidden = target !== "automation";
     if (target === "inspector") fetchInspectorFeedback();
+    if (target === "automation") {
+      fetchAutomationTasks();
+      wireAutomationRealtime();
+    }
   }
 
   adminPanelTabs.addEventListener("click", (event) => {
@@ -5487,6 +5541,186 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   inspectorRefreshBtn.addEventListener("click", fetchInspectorFeedback);
+
+  // ---------------- Automatización (n8n → Supabase → esta pestaña) ----------------
+  //
+  // `automation_tasks` es la tabla que n8n (flujo externo, puerto 5678, ver
+  // AUTOMATION_WORKFLOW.md) llena directo vía su propia API REST de
+  // Supabase — no hay ningún webhook ni endpoint en este código que n8n
+  // llame. La app solo LEE esa tabla (y actualiza `status`/`notes` cuando
+  // un admin marca una tarea completada/fallida), igual que ya hace con
+  // `feedback` en el Agente Inspector de arriba. Mismo esquema de campos
+  // que ya documentaba approved_tasks.json (id/title/description/type/
+  // affected_files/priority/status/source/created_at/completed_at/notes)
+  // para que el contrato sea el mismo sin importar si la tarea la
+  // consume un humano local (approved_tasks.json) o esta pestaña (Supabase).
+  let automationRows = [];
+  let automationRealtimeChannel = null;
+
+  function setAutomationStatus(text) {
+    automationStatus.textContent = text;
+  }
+
+  function renderAutomationStats(rows) {
+    const counts = { pending: 0, completed: 0, failed: 0 };
+    rows.forEach((row) => {
+      const status = row.status || "pending";
+      if (counts[status] !== undefined) counts[status] += 1;
+    });
+    automationStatTotal.textContent = rows.length;
+    automationStatPending.textContent = counts.pending;
+    automationStatCompleted.textContent = counts.completed;
+    automationStatFailed.textContent = counts.failed;
+  }
+
+  function updateAutomationTaskStatus(id, status, notes) {
+    if (!supabaseClient) return;
+    supabaseClient
+      .from("automation_tasks")
+      .update({ status, notes: notes || null, completed_at: new Date().toISOString() })
+      .eq("id", id)
+      .then(({ error }) => {
+        if (error) {
+          console.warn("Supabase: no se pudo actualizar la tarea de automatización:", error.message);
+          setAutomationStatus(`${t("adminPanelError")} ${error.message}`);
+          return;
+        }
+        fetchAutomationTasks();
+      })
+      .catch((err) => {
+        console.warn("Supabase: fallo de red al actualizar la tarea de automatización:", err);
+        setAutomationStatus(t("adminPanelNetworkError"));
+      });
+  }
+
+  function renderAutomationCards(rows) {
+    automationCards.innerHTML = "";
+    if (!rows.length) {
+      const empty = document.createElement("p");
+      empty.className = "inspector-card__message";
+      empty.textContent = t("automationEmptyState");
+      automationCards.appendChild(empty);
+      return;
+    }
+    rows.forEach((row) => {
+      const status = row.status || "pending";
+      const card = document.createElement("div");
+      card.className = "inspector-card";
+
+      const header = document.createElement("div");
+      header.className = "inspector-card__header";
+      const date = row.created_at ? new Date(row.created_at).toLocaleDateString(calendarLocale()) : "—";
+      const metaSpan = document.createElement("span");
+      metaSpan.textContent = `${date} · ${row.type || "—"} · ${row.priority || "—"} · ${row.source || "—"}`;
+      const statusSpan = document.createElement("span");
+      statusSpan.className = `inspector-card__status inspector-card__status--${status}`;
+      statusSpan.textContent = t(`automationStatus_${status}`);
+      header.append(metaSpan, statusSpan);
+
+      const title = document.createElement("p");
+      title.className = "inspector-card__message";
+      title.style.fontWeight = "700";
+      title.textContent = row.title || "";
+
+      const description = document.createElement("p");
+      description.className = "inspector-card__message";
+      description.textContent = row.description || "";
+
+      card.append(header, title, description);
+
+      if (Array.isArray(row.affected_files) && row.affected_files.length) {
+        const files = document.createElement("p");
+        files.className = "inspector-card__message";
+        files.style.opacity = "0.7";
+        files.style.fontSize = "0.75rem";
+        files.textContent = row.affected_files.join(", ");
+        card.appendChild(files);
+      }
+
+      if (status === "pending") {
+        const notesInput = document.createElement("textarea");
+        notesInput.className = "automation-card__notes-input";
+        notesInput.rows = 2;
+        notesInput.placeholder = t("automationNotesPlaceholder");
+
+        const actions = document.createElement("div");
+        actions.className = "inspector-card__actions";
+
+        const completeBtn = document.createElement("button");
+        completeBtn.type = "button";
+        completeBtn.className = "inspector-card__resolve";
+        completeBtn.textContent = t("automationCompleteBtn");
+        completeBtn.addEventListener("click", () => updateAutomationTaskStatus(row.id, "completed", notesInput.value));
+
+        const failBtn = document.createElement("button");
+        failBtn.type = "button";
+        failBtn.className = "inspector-card__discard";
+        failBtn.textContent = t("automationFailBtn");
+        failBtn.addEventListener("click", () => updateAutomationTaskStatus(row.id, "failed", notesInput.value));
+
+        actions.append(completeBtn, failBtn);
+        card.append(notesInput, actions);
+      } else if (row.notes) {
+        const notes = document.createElement("p");
+        notes.className = "inspector-card__message";
+        notes.style.fontStyle = "italic";
+        notes.textContent = row.notes;
+        card.appendChild(notes);
+      }
+
+      automationCards.appendChild(card);
+    });
+  }
+
+  function fetchAutomationTasks() {
+    if (!supabaseClient) {
+      setAutomationStatus(t("adminPanelNoClient"));
+      return;
+    }
+    setAutomationStatus(t("adminPanelLoading"));
+    supabaseClient
+      .from("automation_tasks")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .then(({ data, error }) => {
+        if (error) {
+          // Caso esperado hasta que se corra el SQL que crea la tabla
+          // `automation_tasks` — ver AUTOMATION_WORKFLOW.md.
+          automationRows = [];
+          renderAutomationStats([]);
+          renderAutomationCards([]);
+          setAutomationStatus(`${t("adminPanelError")} ${error.message}`);
+          return;
+        }
+        automationRows = data || [];
+        renderAutomationStats(automationRows);
+        renderAutomationCards(automationRows);
+        setAutomationStatus(`${t("adminPanelRowCount")} ${automationRows.length}`);
+      })
+      .catch(() => {
+        automationRows = [];
+        setAutomationStatus(t("adminPanelNetworkError"));
+      });
+  }
+
+  // Suscripción realtime: una fila nueva que n8n inserte en Supabase
+  // aparece acá sin que el admin tenga que tocar "Actualizar" — pedido
+  // explícito de sincronización "en tiempo real". Se conecta una sola vez
+  // (guardia `automationRealtimeChannel`), la primera vez que se abre esta
+  // pestaña, y vive mientras dure la sesión de la página.
+  function wireAutomationRealtime() {
+    if (automationRealtimeChannel || !supabaseClient) return;
+    automationRealtimeChannel = supabaseClient
+      .channel("automation_tasks_changes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "automation_tasks" },
+        () => fetchAutomationTasks()
+      )
+      .subscribe();
+  }
+
+  automationRefreshBtn.addEventListener("click", fetchAutomationTasks);
 
   // ---------------- Chat ----------------
 

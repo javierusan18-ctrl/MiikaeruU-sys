@@ -16,7 +16,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260801-34" />
+  <link rel="stylesheet" href="style.css?v=20260801-35" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -1664,6 +1664,7 @@
       <div class="admin-panel-tabs" id="admin-panel-tabs">
         <button type="button" class="admin-panel-tab admin-panel-tab--active" data-admin-tab="transactions" data-i18n="adminPanelTabTransactions">💳 Transacciones</button>
         <button type="button" class="admin-panel-tab" data-admin-tab="inspector" data-i18n="adminPanelTabInspector">🕵️ Inspector de Bugs</button>
+        <button type="button" class="admin-panel-tab" data-admin-tab="automation" data-i18n="adminPanelTabAutomation">🤖 Automatización (n8n)</button>
       </div>
 
       <!-- Pestaña: Transacciones (contenido original, sin cambios de lógica) -->
@@ -1719,6 +1720,44 @@
         </div>
 
         <div class="inspector-cards" id="inspector-cards">
+          <!-- tarjetas renderizadas por app.js -->
+        </div>
+      </div>
+
+      <!-- Pestaña: Automatización — lee `automation_tasks` de Supabase,
+           la tabla donde el flujo de n8n (puerto 5678, corriendo aparte de
+           este repo) encola sugerencias/bugfixes vía su API REST directa.
+           Suscripción realtime (ver wireAutomationRealtime() en app.js):
+           una fila nueva insertada por n8n aparece acá sin recargar. Mismo
+           lenguaje visual que la pestaña Inspector (reutiliza .inspector-*),
+           mismo ciclo de vida pending→completed/failed documentado en
+           AUTOMATION_WORKFLOW.md. -->
+      <div id="admin-panel-tab-automation" hidden>
+        <div class="admin-panel__toolbar">
+          <button type="button" class="btn-scan" id="automation-refresh-btn" data-i18n="adminPanelRefreshBtn">🔄 Actualizar</button>
+        </div>
+        <p class="admin-panel__status" id="automation-status"></p>
+
+        <div class="inspector-stats" id="automation-stats">
+          <div class="inspector-stat">
+            <span class="inspector-stat__value" id="automation-stat-total">0</span>
+            <span class="inspector-stat__label" data-i18n="automationStatTotal">Total</span>
+          </div>
+          <div class="inspector-stat inspector-stat--pending">
+            <span class="inspector-stat__value" id="automation-stat-pending">0</span>
+            <span class="inspector-stat__label" data-i18n="automationStatPending">Pendientes</span>
+          </div>
+          <div class="inspector-stat inspector-stat--resolved">
+            <span class="inspector-stat__value" id="automation-stat-completed">0</span>
+            <span class="inspector-stat__label" data-i18n="automationStatCompleted">Completadas</span>
+          </div>
+          <div class="inspector-stat inspector-stat--discarded">
+            <span class="inspector-stat__value" id="automation-stat-failed">0</span>
+            <span class="inspector-stat__label" data-i18n="automationStatFailed">Fallidas</span>
+          </div>
+        </div>
+
+        <div class="inspector-cards" id="automation-cards">
           <!-- tarjetas renderizadas por app.js -->
         </div>
       </div>
@@ -1940,19 +1979,19 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260801-34"></script>
+  <script src="app.js?v=20260801-35"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de
        los dos comparte closure con el otro. Cargado ANTES que ambos: los
        dos consumidores llaman a window.MiikaeruReader.crearLector() recién
        al abrir su propia vista, nunca en la carga inicial. -->
-  <script src="readerEngine.js?v=20260801-34"></script>
+  <script src="readerEngine.js?v=20260801-35"></script>
   <!-- Módulo de Lore (ver #story-modal más arriba) — punto de enchufe
        aparte, mismo patrón que MiikaeruHub, cargado después de app.js
        porque app.js llama a window.MiikaeruStoryEngine desde el click
        del avatar/León. -->
-  <script src="storyEngine.js?v=20260801-34"></script>
+  <script src="storyEngine.js?v=20260801-35"></script>
   <!-- Service Worker: estrategia Cache First para assets estáticos (ver
        sw.js) — carga instantánea en visitas repetidas y funcionamiento
        offline. Registro envuelto en try/catch + comprobación de
