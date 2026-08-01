@@ -16,7 +16,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260801-29" />
+  <link rel="stylesheet" href="style.css?v=20260801-30" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -1514,7 +1514,7 @@
            en storyData.json; alterna entre el texto en español de arriba
            y las líneas con furigana + audio de acá abajo. -->
       <div class="story-modal__reader-toggle-row" id="story-modal-reader-toggle-row" hidden>
-        <button type="button" class="story-modal__reader-toggle" id="story-modal-reader-toggle">🈺 Lectura Inmersiva 日本語</button>
+        <button type="button" class="story-modal__reader-toggle" id="story-modal-reader-toggle">🈺 Entérate de la historia en japonés</button>
       </div>
       <div class="reader-panel" id="story-modal-reader-panel" hidden>
         <div class="reader-panel__controls">
@@ -1940,19 +1940,19 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260801-29"></script>
+  <script src="app.js?v=20260801-30"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de
        los dos comparte closure con el otro. Cargado ANTES que ambos: los
        dos consumidores llaman a window.MiikaeruReader.crearLector() recién
        al abrir su propia vista, nunca en la carga inicial. -->
-  <script src="readerEngine.js?v=20260801-29"></script>
+  <script src="readerEngine.js?v=20260801-30"></script>
   <!-- Módulo de Lore (ver #story-modal más arriba) — punto de enchufe
        aparte, mismo patrón que MiikaeruHub, cargado después de app.js
        porque app.js llama a window.MiikaeruStoryEngine desde el click
        del avatar/León. -->
-  <script src="storyEngine.js?v=20260801-29"></script>
+  <script src="storyEngine.js?v=20260801-30"></script>
   <!-- Service Worker: estrategia Cache First para assets estáticos (ver
        sw.js) — carga instantánea en visitas repetidas y funcionamiento
        offline. Registro envuelto en try/catch + comprobación de

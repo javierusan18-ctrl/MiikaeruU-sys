@@ -1511,3 +1511,23 @@ Pedido de 4 partes: (1) confirmar a Metrakaela como la madre oficial de los leon
 - Elegido Mijashi: `#character-modal` muestra "Cachorro Cósmico" (Kodomo · Nv. 1) como fase actual, con checkmark dorado en su tarjeta de la grilla y las 5 fases siguientes bloqueadas con su nivel — confirmado con `gridCount: 6`.
 - Modal de Lore → vista Personajes → Metrakaela: imagen confirmada como `metrakaela_madre_rosas.png`, título "Metrakaela — Madre de los Leones — La Arquitecta del Nexus Eterno", retrato completo visible (corona, escudo, ambos cachorros, rosas) sin ningún recorte — capturado en pantalla para confirmar visualmente, no solo por HTML.
 - 0 errores de consola en toda la sesión de pruebas.
+
+---
+
+## Bloque 56 — Corrección estética del HUD superior, acceso directo al lector de japonés, y Miika Pass vinculado a skins/evoluciones
+
+Pedido de 3 correcciones puntuales sobre trabajo ya construido en bloques anteriores de esta misma sesión.
+
+**1. Bug real encontrado y corregido: `.stat` (Nivel/XP/Rango/Racha/Balance Global/Brújula/Finanzas/Oro/Diamantes/Idioma) no tenía panel propio.** Cada bloque del HUD superior era texto suelto directo sobre el fondo semitransparente de `.hud` — sin borde ni relleno diferenciado, cuando `.hud__stats` hace wrap (sobre todo en mobile, donde cada `.stat` termina solo en su propia fila) se leía como una lista sin terminar de diseñar, sobre un fondo gris/plano. Se le dio a `.stat` su propio panel tecnológico consistente: borde neón sutil, degradé oscuro y resplandor interior — mismo lenguaje que ya usaba `.stat__value--rank` (ahora anidado adentro, se lee como badge-dentro-de-panel en vez de quedar duplicado). Corregido para TODOS los bloques del HUD, no solo los mencionados en el pedido.
+
+**2. Botón "Entérate de la historia en japonés" — renombrado y destacado.** El toggle de Lectura Inmersiva del Bloque 54 (`🈺 Lectura Inmersiva 日本語`) ya hacía exactamente lo pedido (enlazar al lector con furigana/audio/lectura automática), pero como copy no coincidía con el pedido explícito y visualmente era un botón discreto más. Renombrado a `🈺 Entérate de la historia en japonés` (en `index.html` y en los 2 puntos de `storyEngine.js` donde se resetea el texto) y con una animación de pulso sutil (`readerTogglePulse`, se pausa al pasar el mouse) para que se lea como el "acceso destacado" pedido, sin ser tan intenso como para molestar.
+
+**3. Miika Pass ampliado de 20 a 50 niveles, vinculado a `MIIKAERU_SKINS` y a la evolución del personaje elegido.** `getMiikaPassReward(tier)` dejó de tener un mapa hardcodeado de solo 2 recompensas "avatar" (Nv. 10/20) — ahora deriva la recompensa de los datos ya existentes: si el tier coincide con un `nivelRequerido` real de `MIIKAERU_SKINS` y/o de las evoluciones del personaje elegido (`FESHA_EVOLUTIONS`/`MIJASHI_EVOLUTIONS`, ver Bloque 55), la tarjeta muestra una o dos miniaturas — el skin del León y, si coincide, también la fase del personaje del Operador ese mismo nivel — "vinculados a la progresión de niveles del usuario" pedido explícitamente. `MPASS_TIER_COUNT` subido de 20 a 50: con el tope viejo, las fases "súper evolucionadas" (Nv. 30-50) nunca llegaban a mostrarse en el pase, aunque los datos ya existieran. `.mpass-tier--special` se ensancha sola (`flex-basis: 128px`) para los tiers con 2 miniaturas.
+
+**4. `sw.js`:** `CACHE_NAME` subido a `v20260801-30` (sin assets nuevos — esta pasada fue solo CSS/JS sobre archivos ya cacheados).
+
+**Pruebas realizadas:**
+- HUD superior: capturado en pantalla — los 9 bloques de stat ahora se ven como paneles tecnológicos individuales con borde y resplandor, ya no como texto plano.
+- Botón de japonés: confirmado texto `"🈺 Entérate de la historia en japonés"` en el capítulo IV tras abrir el modal.
+- Miika Pass: `totalTiers: 50`, `specialTiers: 15` (tiers con al menos un avatar), `doubleAvatarTiers: 5` (tiers donde coinciden un skin del León Y una fase del personaje elegido) — confirmado con Mijashi elegido, Nv. 1 muestra su cachorro cósmico + el skin `mikaeru_idle_chakras` lado a lado.
+- 0 errores de consola en toda la sesión de pruebas.

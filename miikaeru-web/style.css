@@ -230,10 +230,24 @@ body::before {
   flex-wrap: wrap;
 }
 
+/* Corrección estética pedida explícitamente: cada bloque de stat vivía
+   como texto suelto directo sobre el fondo semitransparente de .hud —
+   sin borde ni panel propio se leía "inacabado", sobre todo en mobile
+   (donde .hud__stats hace wrap y cada .stat queda solo en su fila,
+   contra el fondo Cyberpunk plano de la página). Se unifica cada uno en
+   su propio panel tecnológico: borde neón sutil + degradé oscuro +
+   resplandor interior, mismo lenguaje visual que .stat__value--rank ya
+   usaba (ahora anidado adentro, se lee como "badge dentro del panel"
+   en vez de quedar duplicado). */
 .stat {
   display: flex;
   align-items: center;
   gap: 10px;
+  padding: 6px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(0, 240, 255, 0.16);
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.06), rgba(4, 10, 20, 0.55));
+  box-shadow: inset 0 0 14px rgba(0, 240, 255, 0.05);
 }
 
 .stat__label {
@@ -2539,6 +2553,15 @@ textarea,
   margin-top: 2px;
 }
 
+/* Fila de miniaturas de un tier "avatar": 1 (solo skin del León) o 2 (skin
+   + fase del personaje elegido, ver getMiikaPassReward() en app.js) — la
+   tarjeta se ensancha sola vía .mpass-tier--special de abajo para que las
+   2 quepan sin apretarse. */
+.mpass-tier__avatar-row {
+  display: flex;
+  gap: 6px;
+}
+
 .mpass-tier__avatar {
   width: 40px;
   height: 40px;
@@ -2564,6 +2587,7 @@ textarea,
 }
 
 .mpass-tier--special {
+  flex-basis: 128px;
   border-width: 2px;
   background: rgba(255, 183, 0, 0.1);
 }
@@ -5867,23 +5891,34 @@ textarea,
   margin-bottom: 14px;
 }
 
+/* "Botón destacado" pedido explícito — antes era un toggle discreto más;
+   ahora pulsa suave para llamar la atención hacia el acceso directo al
+   lector de japonés, sin ser tan agresivo como para molestar (mismo
+   criterio de sutileza que .hud__title ya usa para su glow). */
 .story-modal__reader-toggle {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   border-radius: var(--radius-md);
-  border: 1px solid rgba(255, 46, 154, 0.4);
-  background: rgba(255, 46, 154, 0.08);
+  border: 1px solid rgba(255, 46, 154, 0.5);
+  background: linear-gradient(135deg, rgba(255, 46, 154, 0.12), rgba(0, 240, 255, 0.08));
   color: var(--neon-magenta);
   font-weight: 700;
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   letter-spacing: 0.3px;
   cursor: pointer;
   transition: all 0.2s ease;
+  animation: readerTogglePulse 2.6s ease-in-out infinite;
 }
 
 .story-modal__reader-toggle:hover {
   border-color: var(--neon-magenta);
-  box-shadow: 0 0 12px rgba(255, 46, 154, 0.35);
+  box-shadow: 0 0 18px rgba(255, 46, 154, 0.5);
+  animation-play-state: paused;
+}
+
+@keyframes readerTogglePulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(255, 46, 154, 0.25); }
+  50% { box-shadow: 0 0 18px rgba(255, 46, 154, 0.55); }
 }
 
 .reader-panel {

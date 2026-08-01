@@ -67,7 +67,7 @@ const MiikaeruStoryEngine = (() => {
       detenerLectorActivo();
       refs.readerPanel.hidden = true;
       refs.cuerpo.hidden = false;
-      refs.readerToggle.textContent = "🈺 Lectura Inmersiva 日本語";
+      refs.readerToggle.textContent = "🈺 Entérate de la historia en japonés";
       return;
     }
     refs.cuerpo.hidden = true;
@@ -331,7 +331,7 @@ const MiikaeruStoryEngine = (() => {
     refs.cuerpo.hidden = false;
     const tieneLecturaJp = desbloqueado && Array.isArray(capitulo.lectura_inmersiva_jp) && capitulo.lectura_inmersiva_jp.length > 0;
     if (refs.readerToggleRow) refs.readerToggleRow.hidden = !tieneLecturaJp;
-    if (refs.readerToggle) refs.readerToggle.textContent = "🈺 Lectura Inmersiva 日本語";
+    if (refs.readerToggle) refs.readerToggle.textContent = "🈺 Entérate de la historia en japonés";
     capituloEnPantalla = capitulo;
 
     renderizarTabsCapitulos(refs, capitulos, idCapitulo, nivel);

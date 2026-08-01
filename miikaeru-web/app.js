@@ -8257,15 +8257,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
   applyScalePrefs();
 
-  // ---------------- Miika Pass: pase de progresión (niveles 1-20) ----------------
+  // ---------------- Miika Pass: pase de progresión (niveles 1-50) ----------------
   // Visualización de progreso sobre el Nivel/XP ya existente (state.level)
   // — no es un sistema de misiones nuevo, cada nivel real desbloqueado
-  // por el jugador revela su recompensa en el pase.
-  const MPASS_TIER_COUNT = 20;
+  // por el jugador revela su recompensa en el pase. Ampliado de 20 a 50
+  // niveles (pedido explícito de mostrar "las fases más fuertes y súper
+  // evolucionadas") para poder llegar de verdad a los tramos altos de
+  // MIIKAERU_SKINS/FESHA_EVOLUTIONS/MIJASHI_EVOLUTIONS (hasta Nv. 50) —
+  // con el tope viejo de 20 esas imágenes nunca se llegaban a mostrar acá.
+  const MPASS_TIER_COUNT = 50;
 
+  // Recompensa de un tier: se deriva de los datos ya existentes en vez de
+  // hardcodear un mapa aparte — cualquier nivel que coincida con un
+  // desbloqueo real de MIIKAERU_SKINS y/o de la evolución del personaje
+  // elegido (Fesha/Mijashi, ver PLAYER_CHARACTERS) se muestra como
+  // recompensa "avatar" (una o dos miniaturas), el resto sigue cayendo en
+  // oro/diamantes como antes.
   function getMiikaPassReward(tier) {
-    if (tier === 10) return { type: "avatar", src: "assets/skins/mikaeru_idle_chakras.png", label: t("miikaPassAvatarIdle") };
-    if (tier === 20) return { type: "avatar", src: "assets/skins/mikaeru_batalla_armadura.png", label: t("miikaPassAvatarBoss") };
+    const skin = MIIKAERU_SKINS.find((entry) => entry.nivelRequerido === tier);
+    const personaje = state.playerCharacter ? PLAYER_CHARACTERS[state.playerCharacter] : null;
+    const fase = personaje ? personaje.evoluciones.find((entry) => entry.nivelRequerido === tier) : null;
+
+    if (skin || fase) {
+      return {
+        type: "avatar",
+        skinSrc: skin ? skin.src : null,
+        skinLabel: skin ? `Skin del León — Nv. ${tier}` : null,
+        faseSrc: fase ? fase.src : null,
+        faseLabel: fase ? `${personaje.nombre} — ${fase.titulo}` : null,
+      };
+    }
     if (tier % 2 === 0) return { type: "diamonds", amount: tier };
     return { type: "gold", amount: tier * 10 };
   }
@@ -8288,12 +8309,26 @@ document.addEventListener("DOMContentLoaded", () => {
       card.appendChild(num);
 
       if (reward.type === "avatar") {
-        const img = document.createElement("img");
-        img.className = "mpass-tier__avatar";
-        img.src = reward.src;
-        img.alt = reward.label;
-        img.title = reward.label;
-        card.appendChild(img);
+        // Hasta 2 miniaturas lado a lado: el skin del León y, si el tier
+        // coincide con una fase del personaje elegido, también su
+        // evolución — "vinculados a la progresión de niveles" pedido
+        // explícitamente.
+        const row = document.createElement("div");
+        row.className = "mpass-tier__avatar-row";
+        [
+          { src: reward.skinSrc, label: reward.skinLabel },
+          { src: reward.faseSrc, label: reward.faseLabel },
+        ].forEach(({ src, label }) => {
+          if (!src) return;
+          const img = document.createElement("img");
+          img.className = "mpass-tier__avatar";
+          img.src = src;
+          img.alt = label;
+          img.title = label;
+          img.loading = "lazy";
+          row.appendChild(img);
+        });
+        card.appendChild(row);
       } else {
         const rewardEl = document.createElement("div");
         rewardEl.className = "mpass-tier__reward";
