@@ -6762,32 +6762,13 @@ textarea,
   background: rgba(255, 183, 0, 0.15);
   color: var(--neon-gold);
 }
-.inspector-card__status--completed {
+.inspector-card__status--approved {
   background: rgba(0, 255, 156, 0.15);
   color: var(--neon-green);
 }
-.inspector-card__status--failed {
+.inspector-card__status--discarded {
   background: rgba(255, 46, 154, 0.15);
   color: var(--neon-magenta);
-}
-
-.automation-card__notes-input {
-  width: 100%;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(0, 240, 255, 0.3);
-  border-radius: var(--radius-sm);
-  padding: 8px 10px;
-  color: var(--text-primary);
-  font-family: var(--font-main);
-  font-size: 0.8rem;
-  outline: none;
-  resize: vertical;
-  margin-top: 8px;
-}
-
-.automation-card__notes-input:focus {
-  border-color: var(--neon-cyan);
-  box-shadow: var(--shadow-neon-cyan);
 }
 
 .inspector-card__message {

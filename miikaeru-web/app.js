@@ -840,14 +840,14 @@ const I18N = {
     inspectorResolveBtn: "✔️ Marcar Resuelto",
     automationStatTotal: "Total",
     automationStatPending: "Pendientes",
-    automationStatCompleted: "Completadas",
-    automationStatFailed: "Fallidas",
+    automationStatApproved: "Aprobadas",
+    automationStatDiscarded: "Descartadas",
     automationStatus_pending: "Pendiente",
-    automationStatus_completed: "Completada",
-    automationStatus_failed: "Fallida",
-    automationCompleteBtn: "✅ Marcar Completada",
-    automationFailBtn: "❌ Marcar Fallida",
-    automationNotesPlaceholder: "Notas (qué se hizo o por qué falló)...",
+    automationStatus_approved: "Aprobada",
+    automationStatus_discarded: "Descartada",
+    automationApproveBtn: "✅ Aprobar / Ejecutar",
+    automationDiscardBtn: "❌ Descartar",
+    automationRowCount: "Tareas encontradas:",
     automationEmptyState: "Sin tareas en cola. n8n las agrega automáticamente a la tabla automation_tasks de Supabase.",
     negocioCurrencyLabel: "Moneda del Negocio",
     negocioNombreLabel: "Nombre del Negocio",
@@ -1323,14 +1323,14 @@ const I18N = {
     inspectorResolveBtn: "✔️ Mark Resolved",
     automationStatTotal: "Total",
     automationStatPending: "Pending",
-    automationStatCompleted: "Completed",
-    automationStatFailed: "Failed",
+    automationStatApproved: "Approved",
+    automationStatDiscarded: "Discarded",
     automationStatus_pending: "Pending",
-    automationStatus_completed: "Completed",
-    automationStatus_failed: "Failed",
-    automationCompleteBtn: "✅ Mark Completed",
-    automationFailBtn: "❌ Mark Failed",
-    automationNotesPlaceholder: "Notes (what was done or why it failed)...",
+    automationStatus_approved: "Approved",
+    automationStatus_discarded: "Discarded",
+    automationApproveBtn: "✅ Approve / Execute",
+    automationDiscardBtn: "❌ Discard",
+    automationRowCount: "Tasks found:",
     automationEmptyState: "No tasks queued. n8n adds them automatically to Supabase's automation_tasks table.",
     negocioCurrencyLabel: "Business Currency",
     negocioNombreLabel: "Business Name",
@@ -1806,14 +1806,14 @@ const I18N = {
     inspectorResolveBtn: "✔️ 解決済みにする",
     automationStatTotal: "合計",
     automationStatPending: "保留中",
-    automationStatCompleted: "完了",
-    automationStatFailed: "失敗",
+    automationStatApproved: "承認済み",
+    automationStatDiscarded: "却下済み",
     automationStatus_pending: "保留中",
-    automationStatus_completed: "完了",
-    automationStatus_failed: "失敗",
-    automationCompleteBtn: "✅ 完了にする",
-    automationFailBtn: "❌ 失敗にする",
-    automationNotesPlaceholder: "メモ（実施内容や失敗の理由）...",
+    automationStatus_approved: "承認済み",
+    automationStatus_discarded: "却下済み",
+    automationApproveBtn: "✅ 承認 / 実行",
+    automationDiscardBtn: "❌ 却下",
+    automationRowCount: "見つかったタスク：",
     automationEmptyState: "キューにタスクはありません。n8nがSupabaseのautomation_tasksテーブルに自動で追加します。",
     negocioCurrencyLabel: "ビジネスの通貨",
     negocioNombreLabel: "ビジネス名",
@@ -4257,8 +4257,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const automationStatus = document.getElementById("automation-status");
   const automationStatTotal = document.getElementById("automation-stat-total");
   const automationStatPending = document.getElementById("automation-stat-pending");
-  const automationStatCompleted = document.getElementById("automation-stat-completed");
-  const automationStatFailed = document.getElementById("automation-stat-failed");
+  const automationStatApproved = document.getElementById("automation-stat-approved");
+  const automationStatDiscarded = document.getElementById("automation-stat-discarded");
   const automationCards = document.getElementById("automation-cards");
 
   // Login de Administrador (Supabase Auth real — ver ADMIN_EMAIL/
@@ -5568,15 +5568,15 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderAutomationStats(rows) {
-    const counts = { pending: 0, completed: 0, failed: 0 };
+    const counts = { pending: 0, approved: 0, discarded: 0 };
     rows.forEach((row) => {
       const status = row.status || "pending";
       if (counts[status] !== undefined) counts[status] += 1;
     });
     automationStatTotal.textContent = rows.length;
     automationStatPending.textContent = counts.pending;
-    automationStatCompleted.textContent = counts.completed;
-    automationStatFailed.textContent = counts.failed;
+    automationStatApproved.textContent = counts.approved;
+    automationStatDiscarded.textContent = counts.discarded;
   }
 
   function updateAutomationTaskStatus(row, status, notes) {
@@ -5646,28 +5646,29 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       if (status === "pending") {
-        const notesInput = document.createElement("textarea");
-        notesInput.className = "automation-card__notes-input";
-        notesInput.rows = 2;
-        notesInput.placeholder = t("automationNotesPlaceholder");
-
+        // Tres opciones pedidas explícitamente: Aprobar/Ejecutar, Descartar,
+        // o no tocar nada (se queda pendiente sola, sin acción). "Aprobar"
+        // solo cambia `status` a "approved" en Supabase — NO dispara ningún
+        // ejecutor automático de código (no existe ninguno, ver
+        // AUTOMATION_WORKFLOW.md); es la señal de "listo para pasar al
+        // flujo de desarrollo local", que hoy sigue siendo manual.
         const actions = document.createElement("div");
         actions.className = "inspector-card__actions";
 
-        const completeBtn = document.createElement("button");
-        completeBtn.type = "button";
-        completeBtn.className = "inspector-card__resolve";
-        completeBtn.textContent = t("automationCompleteBtn");
-        completeBtn.addEventListener("click", () => updateAutomationTaskStatus(row, "completed", notesInput.value));
+        const approveBtn = document.createElement("button");
+        approveBtn.type = "button";
+        approveBtn.className = "inspector-card__approve";
+        approveBtn.textContent = t("automationApproveBtn");
+        approveBtn.addEventListener("click", () => updateAutomationTaskStatus(row, "approved", null));
 
-        const failBtn = document.createElement("button");
-        failBtn.type = "button";
-        failBtn.className = "inspector-card__discard";
-        failBtn.textContent = t("automationFailBtn");
-        failBtn.addEventListener("click", () => updateAutomationTaskStatus(row, "failed", notesInput.value));
+        const discardBtn = document.createElement("button");
+        discardBtn.type = "button";
+        discardBtn.className = "inspector-card__discard";
+        discardBtn.textContent = t("automationDiscardBtn");
+        discardBtn.addEventListener("click", () => updateAutomationTaskStatus(row, "discarded", null));
 
-        actions.append(completeBtn, failBtn);
-        card.append(notesInput, actions);
+        actions.append(approveBtn, discardBtn);
+        card.appendChild(actions);
       } else if (payload.notes) {
         const notes = document.createElement("p");
         notes.className = "inspector-card__message";
@@ -5703,7 +5704,7 @@ document.addEventListener("DOMContentLoaded", () => {
         automationRows = data || [];
         renderAutomationStats(automationRows);
         renderAutomationCards(automationRows);
-        setAutomationStatus(`${t("adminPanelRowCount")} ${automationRows.length}`);
+        setAutomationStatus(`${t("automationRowCount")} ${automationRows.length}`);
       })
       .catch(() => {
         automationRows = [];
