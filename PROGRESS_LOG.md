@@ -1643,3 +1643,22 @@ Pedido de 4 partes sobre `automation_tasks` (el usuario ya había corrido el SQL
 - Confirmado en el navegador que `automation_tasks` ya existe y responde (antes daba "tabla no encontrada"; ahora "Tareas encontradas: 0") — la tabla está viva en el proyecto real de Supabase.
 - Pestaña re-abierta tras el cache-bust final: 0 errores de consola, texto correcto.
 - No se insertó ninguna fila de prueba contra la tabla real para no ensuciar los datos de producción del usuario — el flujo de aprobar/descartar se verificó por revisión de código (mismo patrón ya probado en Inspector Agent, Bloque 37) en vez de una prueba end-to-end con datos reales.
+
+---
+
+## Bloque 62 — Pipeline de despliegue: main como rama de trabajo, production como la única que Vercel publica
+
+Punto 2 del pedido del Bloque 61: desarrollo/pruebas exclusivamente en local, despliegue automático los viernes 8PM, botón de despliegue manual, y que nunca se rompa lo que ya funciona en producción. Este es el punto que se dejó pendiente de una decisión explícita del usuario antes de tocar nada — porque invierte un acuerdo ya tomado (`feedback_autopush_policy`: push a `main` = deploy inmediato, elegido a propósito por el usuario tras ser advertido del riesgo) y porque requiere un paso manual en el dashboard de Vercel al que este código no tiene acceso. Confirmado con el usuario: GitHub Actions (no n8n, para no depender de que su PC/Docker estén encendidos justo el viernes 8PM) y zona horaria Perú/Lima (UTC-5).
+
+**1. Modelo de dos ramas.** `main` pasa a ser exclusivamente la rama de trabajo — se le sigue haciendo push libremente (como siempre), pero deja de estar conectada a un deploy automático. `production` es la única rama que Vercel de verdad publica, y la única forma de que algo llegue ahí es a través del workflow nuevo — nunca un push a mano.
+
+**2. `.github/workflows/deploy.yml`** — un solo job (`promote-main-to-production`) que hace `git push origin HEAD:production` desde el estado actual de `main`. Dos disparadores: `schedule` con cron `0 1 * * 6` (sábado 01:00 UTC = viernes 20:00 Perú, sin corrección de horario de verano porque Perú no lo usa) y `workflow_dispatch` (botón "Run workflow" en la pestaña Actions de GitHub, o `gh workflow run deploy.yml` desde terminal) — el botón manual pedido explícitamente. `permissions: contents: write` declarado a mano porque GitHub últimamente por defecto deja el `GITHUB_TOKEN` en solo-lectura. Sin credenciales de Vercel de ningún tipo: el workflow solo empuja una rama dentro del mismo repo: es el propio git-integration de Vercel (ya conectado desde el Bloque de deployment inicial) el que dispara el build al ver un push en `production`.
+
+**3. `DEPLOYMENT.md` — documenta el ÚNICO paso manual que falta y que Code no puede hacer solo:** cambiar la "Production Branch" en Settings → Git del dashboard de Vercel, de `main` a `production`. Documentado con honestidad que, HASTA que se haga ese cambio, este pipeline nuevo no tiene ningún efecto real — Vercel sigue viendo pushes a `main` y desplegando al toque, exactamente como hasta ahora. Se dejó un Paso 2 de confirmación explícito: recién cuando el usuario confirme que hizo el cambio y lo probó, se debe actualizar la memoria de sesión `feedback_autopush_policy` (que hoy dice, correctamente todavía, que push a `main` = producción) — no se tocó esa memoria en este bloque a propósito, para no mentirle a una sesión futura sobre el estado real del pipeline.
+
+**4. Protección de datos (parte del punto 3 del pedido original, ya resuelta en el Bloque 61 vía `supabase/migrations/`)** — el despliegue de código estático no toca la base de datos en absoluto; separar `main`/`production` solo controla CUÁNDO llega el código nuevo a los usuarios, no interactúa con las migraciones de esquema, que siguen su propio proceso versionado aparte.
+
+**Pruebas realizadas:**
+- No se pudo probar el workflow en vivo desde esta sesión (correr un GitHub Action requiere que el archivo ya esté en la rama por defecto del repo remoto, y activarlo desde la pestaña Actions de GitHub — un paso que le corresponde al usuario, no a una prueba local).
+- Sintaxis del cron verificada a mano: sábado 01:00 UTC − 5 horas = viernes 20:00 hora de Perú, confirmado correcto.
+- `DEPLOYMENT.md` releído para confirmar que no insinúa en ningún lado que el sistema ya está activo — el estado real ("NO tiene efecto todavía") está en la primera línea del documento.

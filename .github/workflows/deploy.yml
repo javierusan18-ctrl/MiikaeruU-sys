@@ -1,0 +1,42 @@
+name: Deploy to production
+
+# Bloque 61 — separa "trabajar en main" (nunca toca producción, sin importar
+# cuántas veces se le haga push en el día) de "publicar en producción"
+# (SOLO pasa acá: cada viernes 8PM hora de Perú, o cuando alguien dispare
+# este workflow a mano). Ver DEPLOYMENT.md para el paso manual único que
+# hace falta en el dashboard de Vercel antes de que esto tenga efecto real.
+#
+# Qué hace: toma el estado actual de `main` y lo empuja a la rama
+# `production` (creándola si todavía no existe). Vercel está configurado
+# (una vez que se complete el paso de DEPLOYMENT.md) para desplegar SOLO
+# la rama `production` — este workflow es el único disparador de esa rama,
+# nunca se le hace push a mano.
+
+on:
+  schedule:
+    # Viernes 20:00 hora de Perú (UTC-5, sin horario de verano) =
+    # sábado 01:00 UTC. Sintaxis cron de GitHub Actions: minuto hora
+    # día-mes mes día-semana (día-semana en UTC, 6 = sábado).
+    - cron: "0 1 * * 6"
+  workflow_dispatch:
+    # Botón de despliegue manual — pestaña "Actions" de este repo en
+    # GitHub, elegir este workflow y tocar "Run workflow". También se
+    # puede disparar desde la terminal con `gh workflow run deploy.yml`
+    # (requiere GitHub CLI autenticado, `gh auth login` una sola vez).
+
+permissions:
+  contents: write
+
+jobs:
+  promote-main-to-production:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Push main -> production
+        run: |
+          git push origin HEAD:production
