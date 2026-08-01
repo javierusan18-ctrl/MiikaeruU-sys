@@ -1553,3 +1553,33 @@ Pedido urgente de 3 puntos sobre el HUD superior en mobile: (1) eliminar el espa
 - `.hud__stats`: confirmado `scrollWidth: 1369px` vs `clientWidth: 351px` — los 11 stats en una sola fila con scroll horizontal, no apilados.
 - Texto de la franja: confirmado `getComputedStyle` con los colores neón correctos tras la recarga con caché fría (antes de la recarga mostraba el color viejo — ver nota de depuración).
 - 0 errores de consola.
+
+---
+
+## Bloque 58 — Bug real encontrado en la propia corrección del Bloque 57: comentario CSS que se auto-cerraba y tumbaba la regla de color
+
+Pedido de "bloque final" que pedía CONFIRMAR (no rehacer) tres cosas ya construidas en bloques previos de esta sesión: (1) HUD superior con fondo sólido y texto legible (Bloque 57), (2) enlace "Entérate de la historia en japonés" + Miika Pass con evoluciones (Bloques 54/56). Al verificar el punto 1 en el navegador con una recarga de caché realmente fría (un query-string nunca antes usado, no solo el número de versión ya subido), se encontró que el texto SEGUÍA sin verse — el propio Bloque 57 tenía un bug que no se había detectado porque la sesión anterior lo dio por confirmado con una recarga que, en retrospectiva, puede haber reusado una respuesta cacheada.
+
+**Causa real: dos comentarios CSS contenían la secuencia `*/` en medio de su propio texto, cerrándose solos antes de tiempo.** Los comentarios explicaban la decisión de diseño mencionando nombres de variables como `--neon-*/--shadow-neon-*` — la barra `/` pegada al asterisco de cierre de esas dos variables, leída por el parser de CSS, ES el token de cierre de comentario (`*/`), sin importar que la intención fuera solo separar dos nombres de variable. El primer comentario se cerraba decenas de líneas antes de lo escrito; el texto real hasta el siguiente `*/` (dentro del segundo comentario, que tenía el MISMO bug) quedaba como CSS suelto e inválido, y el navegador — al no encontrar ahí una regla bien formada — descartaba en silencio la siguiente regla completa (`.hud__title, .hud__logo, .stat__value, .hud__profile-name, .btn-profile-switch, .currency-select, .language-select, .hud-banner { color: #00F0FF !important; }`) sin lanzar ningún error de consola, porque un selector/valor inválido dentro de una hoja de estilos no es un error de JavaScript. Confirmado leyendo `document.styleSheets[0].cssRules` dentro del media query de 767px: la regla de color literalmente no existía en el CSSOM (28 reglas en vez de las 29 esperadas), aunque el archivo servido por HTTP sí la contenía tal cual — la pista de que era un problema de PARSEO, no de caché ni de cascada.
+
+**Corrección:** ambos comentarios reescritos sin la secuencia `-*/-` — "`--neon-*/--shadow-neon-*`" pasó a "`--neon-* y --shadow-neon-*`" (con la palabra "y" en vez de la barra). Se recorrió el resto del archivo buscando el mismo patrón para descartar que existiera en otro lado — no se encontró ningún otro caso.
+
+**Nota para prompts/comentarios futuros:** al describir en un comentario CSS un par de custom properties relacionadas, nunca escribirlas pegadas con una barra entre ellas si la primera termina en `*` (wildcard/prefijo) — cualquier combinación tipo `--algo-*/--otro-*` es, sin excepción, una secuencia de cierre de comentario disfrazada de prosa.
+
+**Verificado tras la corrección:** `getComputedStyle` sobre `.hud__title` y `#profile-name` ahora sí devuelve `rgb(0, 240, 255)` (`#00F0FF`) con una recarga de caché fría verdadera (URL con query-string nunca antes solicitada, no solo el número de versión). Conteo de reglas del media query subió de 28 a 29, confirmando que la regla ya se parsea. Capturado en pantalla: "TestOperator" y el resto del texto de la franja ahora legibles en cian brillante sobre el panel oscuro, donde antes se leían en un gris casi invisible.
+
+**Puntos 2 y 3 del pedido — estado:**
+- Enlace "🈺 Entérate de la historia en japonés": confirmado presente y visible dentro de `#story-modal` (`display: block`), capítulo I cargado correctamente con imagen en `object-fit: contain` (sin recortes, fix del Bloque 55 sigue intacto).
+- Miika Pass: confirmado `totalTiers: 50`, `specialTiers: 15`, `20` miniaturas de avatar renderizadas — coincide exactamente con lo documentado en el Bloque 56, sin regresión.
+- Integración con n8n (puerto 5678): pendiente — ver nota abajo.
+
+**`sw.js`:** `CACHE_NAME` subido a `v20260801-34`.
+
+**Nota sobre el punto 3 del pedido (n8n):** `AUTOMATION_WORKFLOW.md` (documento previo, fuera de `miikaeru-web/`) ya explicó por qué no existe todavía un ejecutor automático — en ese momento el bloqueante era "no hay git inicializado"; ese bloqueante ya no aplica (el repo tiene git y push a GitHub/Vercel funcionando desde hace varios bloques). El bloqueante real ahora es de DISEÑO, no técnico: hay más de un mecanismo válido para que n8n "se sincronice limpio" con una PWA estática sin backend propio (vía Supabase, que ya es el único backend real de la app — ver Inspector Agent — o vía el archivo `approved_tasks.json` local, que solo tiene sentido si n8n corre en la misma máquina con acceso al repo). Construir la estructura equivocada sin saber cuál de los dos usa el flujo `n8n-flujo-metatron` ya armado sería trabajo descartable — pendiente de una respuesta del usuario antes de tocar código.
+
+**Pruebas realizadas:**
+- `getComputedStyle` confirmado en `rgb(0, 240, 255)` tras recarga de caché verdaderamente fría.
+- Conteo de reglas CSSOM del media query 767px: 29 (antes 28).
+- `grep` de todo `style.css` buscando el mismo patrón de comentario roto: sin otros casos encontrados.
+- Story modal + Miika Pass: verificados vía DOM (`getComputedStyle`, conteo de elementos) sin regresión respecto a los Bloques 55/56.
+- 0 errores de consola.

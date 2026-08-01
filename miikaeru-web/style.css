@@ -7659,12 +7659,12 @@ button:active,
      arriba se apaga en TODA la app por batería) — el resultado eran
      rectángulos grises opacos sueltos flotando sobre el fondo ahora claro
      del body: los "parches grises" y el "corte visual" reportados.
-     Redeclarar las variables --neon-*/--shadow-neon-* SOLO adentro de
+     Redeclarar las variables --neon-* y --shadow-neon-* SOLO adentro de
      `.hud`/`.hud-banner` reintroduce color vivo únicamente en esta franja
      (el resto de la app sigue con los tonos atenuados de arriba, sin
      tocarlos) — mismo mecanismo de cascada de custom properties que ya
      usa el resto del archivo, solo que un nivel más profundo. */
-  /* Redeclarar las custom properties --neon-*/--text-* dentro de .hud no
+  /* Redeclarar las custom properties --neon-* y --text-* dentro de .hud no
      alcanzó de forma confiable (la cascada de custom properties heredadas
      por elementos lejanos no siempre se recalcula como cabría esperar) —
      en vez de perseguir eso, se fija el color final DIRECTO en cada
