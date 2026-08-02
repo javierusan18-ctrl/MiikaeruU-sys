@@ -520,6 +520,34 @@ const CURRENCIES = {
   USD: { symbol: "$", locale: "en-US" },
 };
 
+// Los 18 rubros oficiales de 必要経費 (gastos necesarios) del formulario
+// japonés de ingresos y gastos para autónomos/個人事業主 (青色申告決算書 —
+// también la base del 収支内訳書 más simple del régimen blanco/白色申告),
+// en el mismo orden en que aparecen impresos en el formulario real. `jp`
+// es el término oficial (se muestra siempre, sin traducir — es lo que hay
+// que ubicar en el papel/e-Tax); `titleKey` resuelve la descripción en
+// español/inglés/japonés vía t(), igual que el resto del i18n de la app.
+const TAX_EXPENSE_CATEGORIES = [
+  { id: "taxesDues", jp: "租税公課", titleKey: "taxCatTaxesDues" },
+  { id: "shipping", jp: "荷造運賃", titleKey: "taxCatShipping" },
+  { id: "utilities", jp: "水道光熱費", titleKey: "taxCatUtilities" },
+  { id: "travel", jp: "旅費交通費", titleKey: "taxCatTravel" },
+  { id: "communications", jp: "通信費", titleKey: "taxCatCommunications" },
+  { id: "advertising", jp: "広告宣伝費", titleKey: "taxCatAdvertising" },
+  { id: "entertainment", jp: "接待交際費", titleKey: "taxCatEntertainment" },
+  { id: "insurance", jp: "損害保険料", titleKey: "taxCatInsurance" },
+  { id: "repairs", jp: "修繕費", titleKey: "taxCatRepairs" },
+  { id: "supplies", jp: "消耗品費", titleKey: "taxCatSupplies" },
+  { id: "depreciation", jp: "減価償却費", titleKey: "taxCatDepreciation" },
+  { id: "welfare", jp: "福利厚生費", titleKey: "taxCatWelfare" },
+  { id: "wages", jp: "給料賃金", titleKey: "taxCatWages" },
+  { id: "outsourcing", jp: "外注工賃", titleKey: "taxCatOutsourcing" },
+  { id: "interest", jp: "利子割引料", titleKey: "taxCatInterest" },
+  { id: "rent", jp: "地代家賃", titleKey: "taxCatRent" },
+  { id: "badDebt", jp: "貸倒金", titleKey: "taxCatBadDebt" },
+  { id: "misc", jp: "雑費", titleKey: "taxCatMisc" },
+];
+
 // ---------------------------------------------------
 // i18n: diccionario de traducciones para el HUD, el chat y el Boss Fight.
 // applyLanguage() recorre [data-i18n] / [data-i18n-placeholder] /
@@ -891,6 +919,44 @@ const I18N = {
     negocioIngresosLabel: "Ingresos por Ventas/Servicios",
     negocioGastosDirectosLabel: "Gastos Directos (por transacción)",
     negocioBeneficioNetoLabel: "Beneficio Neto Real del Negocio",
+    taxDeclarationOpenBtn: "📋 Declaración de Impuestos (収入・支出内訳書)",
+    taxDeclarationTitle: "📋 Declaración de Impuestos (収入・支出内訳書)",
+    taxDeclarationSubtitle: "Organiza tus gastos según los rubros exactos del formulario japonés para autónomos (個人事業主) — no reemplaza asesoría profesional ni el software oficial de e-Tax, pero deja cada casilla lista para copiar.",
+    taxEntryFormTitle: "➕ Registrar Gasto",
+    taxEntryDateLabel: "Fecha",
+    taxEntryCategoryLabel: "Rubro del Formulario",
+    taxEntryConceptoLabel: "Concepto",
+    taxEntryConceptoPlaceholder: "Alquiler de oficina, Internet del mes...",
+    taxEntryMixedUseLabel: "Este gasto es de uso mixto (hogar/oficina) — prorratear",
+    taxEntryMontoLabel: "Monto",
+    taxEntryMontoTotalLabel: "Monto Total de la Factura",
+    taxEntryPorcentajeLabel: "% de Uso para el Negocio",
+    taxEntryMontoDeducibleLabel: "Monto Deducible (calculado)",
+    taxEntryEvidenceBtn: "📎 Adjuntar Comprobante (領収書)",
+    taxEntryEvidenceSaved: "Comprobante adjunto.",
+    taxEntryAddBtn: "+ Agregar Gasto",
+    taxEntryListTitle: "🧾 Gastos Registrados",
+    taxSummaryTitle: "📊 Resumen para el Formulario",
+    taxSummaryHint: "Cada fila es una casilla del formulario 収入・支出内訳書 — copia el monto exacto tal cual aparece acá.",
+    taxSummaryTotalLabel: "Total de Gastos Necesarios (必要経費 合計)",
+    taxCatTaxesDues: "Impuestos y Tasas",
+    taxCatShipping: "Empaque y Envío",
+    taxCatUtilities: "Servicios (Agua/Luz/Gas)",
+    taxCatTravel: "Viajes y Transporte",
+    taxCatCommunications: "Comunicaciones (Internet/Teléfono)",
+    taxCatAdvertising: "Publicidad",
+    taxCatEntertainment: "Atención a Clientes",
+    taxCatInsurance: "Seguros",
+    taxCatRepairs: "Reparaciones",
+    taxCatSupplies: "Insumos/Materiales",
+    taxCatDepreciation: "Depreciación",
+    taxCatWelfare: "Bienestar del Personal",
+    taxCatWages: "Sueldos de Empleados",
+    taxCatOutsourcing: "Subcontratación",
+    taxCatInterest: "Intereses/Descuentos",
+    taxCatRent: "Alquiler",
+    taxCatBadDebt: "Cuentas Incobrables",
+    taxCatMisc: "Gastos Varios",
     storyModalEyebrow: "NÚCLEO MIIKAERU // REGISTRO CUÁNTICO DE LORE",
     storyModalViewChapters: "📖 Capítulos",
     storyModalViewCharacters: "🧬 Entidades del Nexus",
@@ -1405,6 +1471,44 @@ const I18N = {
     negocioIngresosLabel: "Sales / Service Income",
     negocioGastosDirectosLabel: "Direct Expenses (per transaction)",
     negocioBeneficioNetoLabel: "Real Net Business Profit",
+    taxDeclarationOpenBtn: "📋 Tax Declaration (Income/Expense Statement)",
+    taxDeclarationTitle: "📋 Tax Declaration (収入・支出内訳書)",
+    taxDeclarationSubtitle: "Organize your expenses by the exact categories on the Japanese self-employment (個人事業主) income/expense form — doesn't replace professional advice or the official e-Tax software, but leaves every box ready to copy.",
+    taxEntryFormTitle: "➕ Log Expense",
+    taxEntryDateLabel: "Date",
+    taxEntryCategoryLabel: "Form Category",
+    taxEntryConceptoLabel: "Description",
+    taxEntryConceptoPlaceholder: "Office rent, this month's internet...",
+    taxEntryMixedUseLabel: "This is a mixed-use expense (home/office) — prorate it",
+    taxEntryMontoLabel: "Amount",
+    taxEntryMontoTotalLabel: "Total Bill Amount",
+    taxEntryPorcentajeLabel: "% Used for Business",
+    taxEntryMontoDeducibleLabel: "Deductible Amount (calculated)",
+    taxEntryEvidenceBtn: "📎 Attach Receipt (領収書)",
+    taxEntryEvidenceSaved: "Receipt attached.",
+    taxEntryAddBtn: "+ Add Expense",
+    taxEntryListTitle: "🧾 Logged Expenses",
+    taxSummaryTitle: "📊 Form Summary",
+    taxSummaryHint: "Each row is a box on the 収入・支出内訳書 form — copy the exact amount as it appears here.",
+    taxSummaryTotalLabel: "Total Necessary Expenses (必要経費 合計)",
+    taxCatTaxesDues: "Taxes and Dues",
+    taxCatShipping: "Packing and Shipping",
+    taxCatUtilities: "Utilities (Water/Electricity/Gas)",
+    taxCatTravel: "Travel and Transportation",
+    taxCatCommunications: "Communications (Internet/Phone)",
+    taxCatAdvertising: "Advertising",
+    taxCatEntertainment: "Client Entertainment",
+    taxCatInsurance: "Insurance",
+    taxCatRepairs: "Repairs",
+    taxCatSupplies: "Supplies/Materials",
+    taxCatDepreciation: "Depreciation",
+    taxCatWelfare: "Staff Welfare",
+    taxCatWages: "Employee Wages",
+    taxCatOutsourcing: "Outsourcing",
+    taxCatInterest: "Interest/Discount Fees",
+    taxCatRent: "Rent",
+    taxCatBadDebt: "Bad Debt",
+    taxCatMisc: "Miscellaneous",
     storyModalEyebrow: "MIIKAERU CORE // QUANTUM LORE REGISTRY",
     storyModalViewChapters: "📖 Chapters",
     storyModalViewCharacters: "🧬 Nexus Entities",
@@ -1919,6 +2023,44 @@ const I18N = {
     negocioIngresosLabel: "売上・サービス収入",
     negocioGastosDirectosLabel: "直接経費（取引ごと）",
     negocioBeneficioNetoLabel: "事業の実質純利益",
+    taxDeclarationOpenBtn: "📋 収入・支出内訳書（確定申告）",
+    taxDeclarationTitle: "📋 収入・支出内訳書",
+    taxDeclarationSubtitle: "個人事業主向けの正式な経費科目に沿って支出を整理します — 専門家のアドバイスやe-Taxの公式ソフトの代わりにはなりませんが、各欄にそのまま転記できる形にします。",
+    taxEntryFormTitle: "➕ 経費を記録",
+    taxEntryDateLabel: "日付",
+    taxEntryCategoryLabel: "科目",
+    taxEntryConceptoLabel: "内容",
+    taxEntryConceptoPlaceholder: "事務所家賃、今月のインターネット代...",
+    taxEntryMixedUseLabel: "家事按分が必要な経費（自宅兼事務所など）",
+    taxEntryMontoLabel: "金額",
+    taxEntryMontoTotalLabel: "請求書の合計金額",
+    taxEntryPorcentajeLabel: "事業使用割合（%）",
+    taxEntryMontoDeducibleLabel: "経費計上額（自動計算）",
+    taxEntryEvidenceBtn: "📎 領収書を添付",
+    taxEntryEvidenceSaved: "領収書を添付しました。",
+    taxEntryAddBtn: "+ 経費を追加",
+    taxEntryListTitle: "🧾 記録した経費",
+    taxSummaryTitle: "📊 申告用サマリー",
+    taxSummaryHint: "各行が収入・支出内訳書の1欄に対応します — 表示された金額をそのまま転記してください。",
+    taxSummaryTotalLabel: "必要経費 合計",
+    taxCatTaxesDues: "租税公課",
+    taxCatShipping: "荷造運賃",
+    taxCatUtilities: "水道光熱費",
+    taxCatTravel: "旅費交通費",
+    taxCatCommunications: "通信費",
+    taxCatAdvertising: "広告宣伝費",
+    taxCatEntertainment: "接待交際費",
+    taxCatInsurance: "損害保険料",
+    taxCatRepairs: "修繕費",
+    taxCatSupplies: "消耗品費",
+    taxCatDepreciation: "減価償却費",
+    taxCatWelfare: "福利厚生費",
+    taxCatWages: "給料賃金",
+    taxCatOutsourcing: "外注工賃",
+    taxCatInterest: "利子割引料",
+    taxCatRent: "地代家賃",
+    taxCatBadDebt: "貸倒金",
+    taxCatMisc: "雑費",
     storyModalEyebrow: "ミイカエル核心 // 量子ロア記録",
     storyModalViewChapters: "📖 チャプター",
     storyModalViewCharacters: "🧬 ネクサスの存在",
@@ -3786,6 +3928,20 @@ function defaultState() {
         // { id, concepto, monto }. Ver renderNegocioGastosOperativos()/
         // renderFinanzasGlobalSummary() más abajo.
         negocioGastosOperativos: [],
+        // Declaración de Impuestos (収入・支出内訳書) — pedido explícito:
+        // gastos categorizados según los 18 rubros oficiales del
+        // formulario japonés para autónomos (ver TAX_EXPENSE_CATEGORIES),
+        // TOTALMENTE separado de negocioGastosOperativos de arriba (ese
+        // es un cálculo rápido de "cuánto gano de verdad"; esto es la
+        // categorización exacta para presentar ante el Zeimusho — un
+        // mismo gasto real puede necesitar anotarse en los dos lugares a
+        // propósito, no son intercambiables). Cada entrada:
+        // { id, date, categoryId, concepto, monto, mixedUse,
+        //   montoTotal, porcentajeNegocio, evidenceImage }. `monto` es
+        // siempre el monto YA deducible (si mixedUse, ya viene
+        // multiplicado por el % de negocio) — ver
+        // computeTaxEntryMonto()/renderTaxSummary() más abajo.
+        taxDeclaration: { entries: [] },
         // items: desglose de gastos individuales de la categoría (ver
         // modal "Desglose de Gastos"). Cuando tiene elementos, `amount`
         // pasa a ser la SUMA de items (auto-sincronizada) en vez de un
@@ -4478,6 +4634,31 @@ document.addEventListener("DOMContentLoaded", () => {
   const negocioGastosOpConceptoInput = document.getElementById("negocio-gastos-op-concepto");
   const negocioGastosOpMontoInput = document.getElementById("negocio-gastos-op-monto");
   const negocioGastosOpMontoSymbol = document.getElementById("negocio-gastos-op-monto-symbol");
+
+  const taxDeclarationOpenBtn = document.getElementById("tax-declaration-open-btn");
+  const taxDeclarationModal = document.getElementById("tax-declaration-modal");
+  const taxDeclarationModalClose = document.getElementById("tax-declaration-modal-close");
+  const taxEntryFechaInput = document.getElementById("tax-entry-fecha");
+  const taxEntryCategoriaSelect = document.getElementById("tax-entry-categoria");
+  const taxEntryConceptoInput = document.getElementById("tax-entry-concepto");
+  const taxEntryMixedUseCheckbox = document.getElementById("tax-entry-mixed-use");
+  const taxEntryMontoRow = document.getElementById("tax-entry-monto-row");
+  const taxEntryMontoInput = document.getElementById("tax-entry-monto");
+  const taxEntryMontoSymbol = document.getElementById("tax-entry-monto-symbol");
+  const taxEntryMixedUseFields = document.getElementById("tax-entry-mixed-use-fields");
+  const taxEntryMontoTotalInput = document.getElementById("tax-entry-monto-total");
+  const taxEntryMontoTotalSymbol = document.getElementById("tax-entry-monto-total-symbol");
+  const taxEntryPorcentajeInput = document.getElementById("tax-entry-porcentaje");
+  const taxEntryMontoDeducibleEl = document.getElementById("tax-entry-monto-deducible");
+  const taxEntryEvidenceInput = document.getElementById("tax-entry-evidence-input");
+  const taxEntryEvidenceBtn = document.getElementById("tax-entry-evidence-btn");
+  const taxEntryEvidenceStatus = document.getElementById("tax-entry-evidence-status");
+  const taxEntryEvidencePreview = document.getElementById("tax-entry-evidence-preview");
+  const taxEntryAddBtn = document.getElementById("tax-entry-add-btn");
+  const taxEntryList = document.getElementById("tax-entry-list");
+  const taxSummaryList = document.getElementById("tax-summary-list");
+  const taxSummaryTotalEl = document.getElementById("tax-summary-total");
+
   const dashboardRankingToggle = document.getElementById("dashboard-ranking-toggle");
   const dashboardRankingList = document.getElementById("dashboard-ranking-list");
   const dashboardTableBody = document.getElementById("dashboard-table-body");
@@ -6463,6 +6644,212 @@ document.addEventListener("DOMContentLoaded", () => {
     negocioGastosOpConceptoInput.value = "";
     negocioGastosOpMontoInput.value = "";
     negocioGastosOpConceptoInput.focus();
+  });
+
+  // ---------------- Declaración de Impuestos (収入・支出内訳書) ----------------
+  // Categoriza gastos según los 18 rubros oficiales del formulario
+  // japonés de ingresos/gastos para autónomos (ver TAX_EXPENSE_CATEGORIES
+  // arriba). Soporta prorrateo de uso mixto (家事按分 — alquiler, luz,
+  // internet compartidos entre hogar y negocio) y guarda el comprobante
+  // (領収書) como foto — mismo patrón honesto que el resto de la app: la
+  // foto se GUARDA como evidencia, nunca se "lee" con un scan falso.
+
+  function populateTaxCategorySelect() {
+    taxEntryCategoriaSelect.innerHTML = "";
+    TAX_EXPENSE_CATEGORIES.forEach((cat) => {
+      const option = document.createElement("option");
+      option.value = cat.id;
+      option.textContent = `${cat.jp} — ${t(cat.titleKey)}`;
+      taxEntryCategoriaSelect.appendChild(option);
+    });
+  }
+
+  function updateTaxCurrencySymbols() {
+    const symbol = (CURRENCIES[state.currency] || CURRENCIES.PEN).symbol;
+    taxEntryMontoSymbol.textContent = symbol;
+    taxEntryMontoTotalSymbol.textContent = symbol;
+  }
+
+  // Prorrateo de uso mixto: el monto deducible es SOLO la proporción de
+  // uso real del negocio sobre la factura total — nunca el 100% de un
+  // gasto compartido con la vivienda, que es exactamente lo que exige el
+  // criterio de 家事按分 de la Agencia Tributaria japonesa.
+  function computeTaxEntryMonto() {
+    if (taxEntryMixedUseCheckbox.checked) {
+      const montoTotal = Number(taxEntryMontoTotalInput.value) || 0;
+      const porcentaje = Number(taxEntryPorcentajeInput.value) || 0;
+      return Math.round(montoTotal * (porcentaje / 100) * 100) / 100;
+    }
+    return Number(taxEntryMontoInput.value) || 0;
+  }
+
+  function updateTaxEntryMontoDeducible() {
+    taxEntryMontoDeducibleEl.textContent = formatCurrency(computeTaxEntryMonto(), state.currency);
+  }
+
+  function toggleTaxMixedUseFields() {
+    const mixed = taxEntryMixedUseCheckbox.checked;
+    taxEntryMontoRow.hidden = mixed;
+    taxEntryMixedUseFields.hidden = !mixed;
+    updateTaxEntryMontoDeducible();
+  }
+
+  function renderTaxEntryList() {
+    const entries = state.pillars.finanzas.taxDeclaration.entries;
+    taxEntryList.innerHTML = "";
+    entries.forEach((entry) => {
+      const cat = TAX_EXPENSE_CATEGORIES.find((c) => c.id === entry.categoryId);
+      const row = document.createElement("div");
+      row.className = "tax-entry-row";
+
+      const main = document.createElement("div");
+      main.className = "tax-entry-row__main";
+
+      const concepto = document.createElement("span");
+      concepto.className = "tax-entry-row__concepto";
+      concepto.textContent = entry.mixedUse ? `🏠/🏢 ${entry.concepto || ""}` : (entry.concepto || "");
+      main.appendChild(concepto);
+
+      const category = document.createElement("span");
+      category.className = "tax-entry-row__category";
+      category.textContent = cat ? `${cat.jp} — ${t(cat.titleKey)}` : entry.categoryId;
+      main.appendChild(category);
+
+      const monto = document.createElement("span");
+      monto.className = "tax-entry-row__monto";
+      monto.textContent = formatCurrency(entry.monto, state.currency);
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.type = "button";
+      deleteBtn.className = "tax-entry-row__delete";
+      deleteBtn.setAttribute("aria-label", "Eliminar");
+      deleteBtn.textContent = "✕";
+      deleteBtn.addEventListener("click", () => {
+        state.pillars.finanzas.taxDeclaration.entries = state.pillars.finanzas.taxDeclaration.entries.filter((e) => e.id !== entry.id);
+        persist();
+        renderTaxEntryList();
+        renderTaxSummary();
+      });
+
+      row.append(main, monto, deleteBtn);
+      taxEntryList.appendChild(row);
+    });
+  }
+
+  // El resumen SIEMPRE muestra los 18 rubros, aunque estén en 0 — pedido
+  // explícito: "qué cantidad exacta va en cada casilla", y una casilla
+  // ausente es más fácil de pasar por alto que una casilla en S/ 0.
+  function renderTaxSummary() {
+    const entries = state.pillars.finanzas.taxDeclaration.entries;
+    taxSummaryList.innerHTML = "";
+    let total = 0;
+
+    TAX_EXPENSE_CATEGORIES.forEach((cat) => {
+      const subtotal = entries.filter((e) => e.categoryId === cat.id).reduce((sum, e) => sum + e.monto, 0);
+      total += subtotal;
+
+      const row = document.createElement("div");
+      row.className = "tax-summary-row";
+      if (subtotal > 0) row.classList.add("tax-summary-row--filled");
+
+      const label = document.createElement("span");
+      label.className = "tax-summary-row__label";
+      const jp = document.createElement("span");
+      jp.className = "tax-summary-row__jp";
+      jp.textContent = cat.jp;
+      label.appendChild(jp);
+      label.appendChild(document.createTextNode(t(cat.titleKey)));
+
+      const value = document.createElement("span");
+      value.className = "tax-summary-row__value";
+      value.textContent = formatCurrency(subtotal, state.currency);
+
+      row.append(label, value);
+      taxSummaryList.appendChild(row);
+    });
+
+    taxSummaryTotalEl.textContent = formatCurrency(total, state.currency);
+  }
+
+  function openTaxDeclarationModal() {
+    populateTaxCategorySelect();
+    updateTaxCurrencySymbols();
+    taxEntryFechaInput.value = new Date().toISOString().slice(0, 10);
+    renderTaxEntryList();
+    renderTaxSummary();
+    taxDeclarationModal.hidden = false;
+  }
+
+  function closeTaxDeclarationModal() {
+    taxDeclarationModal.hidden = true;
+  }
+
+  taxDeclarationOpenBtn.addEventListener("click", openTaxDeclarationModal);
+  taxDeclarationModalClose.addEventListener("click", closeTaxDeclarationModal);
+  taxDeclarationModal.addEventListener("click", (event) => {
+    if (event.target === taxDeclarationModal) closeTaxDeclarationModal();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !taxDeclarationModal.hidden) closeTaxDeclarationModal();
+  });
+
+  taxEntryMixedUseCheckbox.addEventListener("change", toggleTaxMixedUseFields);
+  [taxEntryMontoInput, taxEntryMontoTotalInput, taxEntryPorcentajeInput].forEach((input) => {
+    input.addEventListener("input", updateTaxEntryMontoDeducible);
+  });
+
+  // Comprobante (領収書) — SOLO se guarda como archivo adjunto de
+  // referencia, igual que en Auditoría de Nómina (ver nota honesta ahí):
+  // no hay backend de visión conectado, así que no se "lee" ni autocompleta
+  // nada a partir de la foto.
+  let taxPendingEvidenceImage = null;
+  taxEntryEvidenceBtn.addEventListener("click", () => taxEntryEvidenceInput.click());
+  taxEntryEvidenceInput.addEventListener("change", () => {
+    const file = taxEntryEvidenceInput.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      taxPendingEvidenceImage = reader.result;
+      taxEntryEvidencePreview.src = taxPendingEvidenceImage;
+      taxEntryEvidenceStatus.hidden = false;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  taxEntryAddBtn.addEventListener("click", () => {
+    const concepto = taxEntryConceptoInput.value.trim();
+    const mixedUse = taxEntryMixedUseCheckbox.checked;
+    const monto = computeTaxEntryMonto();
+    if (!concepto || monto <= 0) return;
+
+    const entry = {
+      id: `tax-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      date: taxEntryFechaInput.value || new Date().toISOString().slice(0, 10),
+      categoryId: taxEntryCategoriaSelect.value,
+      concepto,
+      monto,
+      mixedUse,
+      montoTotal: mixedUse ? Number(taxEntryMontoTotalInput.value) || 0 : null,
+      porcentajeNegocio: mixedUse ? Number(taxEntryPorcentajeInput.value) || 0 : null,
+      evidenceImage: taxPendingEvidenceImage,
+    };
+    state.pillars.finanzas.taxDeclaration.entries.push(entry);
+    persist();
+    renderTaxEntryList();
+    renderTaxSummary();
+    addGold(2);
+    grantXP(5);
+
+    taxEntryConceptoInput.value = "";
+    taxEntryMontoInput.value = "";
+    taxEntryMontoTotalInput.value = "";
+    taxEntryPorcentajeInput.value = "";
+    taxEntryMixedUseCheckbox.checked = false;
+    toggleTaxMixedUseFields();
+    taxEntryEvidenceStatus.hidden = true;
+    taxEntryEvidenceInput.value = "";
+    taxPendingEvidenceImage = null;
+    taxEntryConceptoInput.focus();
   });
 
   financeOpenDashboardBtn.addEventListener("click", openDashboardModal);

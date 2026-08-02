@@ -16,7 +16,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260802-05" />
+  <link rel="stylesheet" href="style.css?v=20260802-06" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -696,6 +696,15 @@
 
           <button type="button" class="btn-register" id="negocio-registrar-btn" data-i18n="negocioRegistrarBtn">+ Registrar Transacción</button>
 
+          <!-- Declaración de Impuestos (収入・支出内訳書) — pedido explícito,
+               herramienta SEPARADA de "Gastos Operativos" de abajo: esa es
+               un cálculo rápido de "cuánto gano de verdad"; esto es la
+               categorización EXACTA que exige el formulario japonés de
+               ingresos y gastos para autónomos (個人事業主), con
+               prorrateo de uso mixto y comprobantes — ver
+               #tax-declaration-modal más abajo. -->
+          <button type="button" class="btn-payroll-audit" id="tax-declaration-open-btn" data-i18n="taxDeclarationOpenBtn">📋 Declaración de Impuestos (収入・支出内訳書)</button>
+
           <!-- Gastos Operativos del Negocio (alquiler, sueldos de
                trabajadoras, etc.) — pedido explícito: antes NO existía
                ningún lugar para este tipo de costo fijo/recurrente, así
@@ -1022,6 +1031,104 @@
       </div>
 
       <button type="button" class="btn-register" id="payroll-apply-btn" data-i18n="payrollApplyBtn">✓ Usar como Ingreso Mensual</button>
+    </div>
+  </div>
+
+  <!-- MODAL: DECLARACIÓN DE IMPUESTOS (収入・支出内訳書) — pedido explícito:
+       categoriza gastos según los 18 rubros oficiales del formulario
+       japonés de ingresos/gastos para autónomos (個人事業主), calcula el
+       prorrateo de gastos de uso mixto (家事按分 — hogar/oficina: luz,
+       internet, alquiler) y guarda el comprobante (領収書) de cada uno.
+       La sección de Resumen al final muestra la suma exacta que va en
+       cada casilla del formulario real. NO reemplaza asesoría
+       profesional ni el software oficial de e-Tax — es una ayuda de
+       organización, aclarado en el subtítulo. Se abre desde el botón
+       [📋 Declaración de Impuestos] dentro de Servicios/Negocio. -->
+  <div class="modal-overlay" id="tax-declaration-modal" hidden>
+    <div class="modal glass modal--tax-declaration">
+      <button type="button" class="btn-modal-close" id="tax-declaration-modal-close" aria-label="Cerrar">✕</button>
+      <h2 class="modal-app__title" data-i18n="taxDeclarationTitle">📋 Declaración de Impuestos (収入・支出内訳書)</h2>
+      <p class="modal__subtitle" data-i18n="taxDeclarationSubtitle">Organiza tus gastos según los rubros exactos del formulario japonés para autónomos (個人事業主) — no reemplaza asesoría profesional ni el software oficial de e-Tax, pero deja cada casilla lista para copiar.</p>
+
+      <h3 class="payroll-section-title" data-i18n="taxEntryFormTitle">➕ Registrar Gasto</h3>
+      <div class="finanzas-panel__row">
+        <label for="tax-entry-fecha" data-i18n="taxEntryDateLabel">Fecha</label>
+        <input type="date" id="tax-entry-fecha" />
+      </div>
+      <div class="finanzas-panel__row">
+        <label for="tax-entry-categoria" data-i18n="taxEntryCategoryLabel">Rubro del Formulario</label>
+        <select id="tax-entry-categoria">
+          <!-- opciones renderizadas por app.js (TAX_EXPENSE_CATEGORIES) -->
+        </select>
+      </div>
+      <div class="finanzas-panel__row">
+        <label for="tax-entry-concepto" data-i18n="taxEntryConceptoLabel">Concepto</label>
+        <input type="text" id="tax-entry-concepto" data-i18n-placeholder="taxEntryConceptoPlaceholder" placeholder="Alquiler de oficina, Internet del mes..." autocomplete="off" />
+      </div>
+
+      <!-- Prorrateo de uso mixto (家事按分) — pedido explícito: alquiler,
+           luz, internet compartidos entre hogar y negocio no se deducen
+           al 100%, solo la proporción de uso real del negocio. Cualquier
+           rubro puede marcarse como mixto, no solo estos tres — la
+           decisión de cuáles suelen serlo es del usuario/su contador,
+           no algo que esta app deba restringir. -->
+      <label class="tax-mixed-use-toggle" for="tax-entry-mixed-use">
+        <input type="checkbox" id="tax-entry-mixed-use" />
+        <span data-i18n="taxEntryMixedUseLabel">Este gasto es de uso mixto (hogar/oficina) — prorratear</span>
+      </label>
+
+      <div class="finanzas-panel__row" id="tax-entry-monto-row">
+        <label for="tax-entry-monto" data-i18n="taxEntryMontoLabel">Monto</label>
+        <span class="finanzas-currency-symbol" id="tax-entry-monto-symbol">S/</span>
+        <input type="number" id="tax-entry-monto" min="0" step="0.01" placeholder="0.00" />
+      </div>
+
+      <div id="tax-entry-mixed-use-fields" hidden>
+        <div class="finanzas-panel__row">
+          <label for="tax-entry-monto-total" data-i18n="taxEntryMontoTotalLabel">Monto Total de la Factura</label>
+          <span class="finanzas-currency-symbol" id="tax-entry-monto-total-symbol">S/</span>
+          <input type="number" id="tax-entry-monto-total" min="0" step="0.01" placeholder="0.00" />
+        </div>
+        <div class="finanzas-panel__row">
+          <label for="tax-entry-porcentaje" data-i18n="taxEntryPorcentajeLabel">% de Uso para el Negocio</label>
+          <input type="number" id="tax-entry-porcentaje" min="0" max="100" step="1" placeholder="30" />
+          <span class="finanzas-servicio-comision-suffix">%</span>
+        </div>
+        <div class="finanzas-panel__row finanzas-panel__row--computed">
+          <label data-i18n="taxEntryMontoDeducibleLabel">Monto Deducible (calculado)</label>
+          <span id="tax-entry-monto-deducible">S/ 0.00</span>
+        </div>
+      </div>
+
+      <div class="negocio-scan-toolbar">
+        <input type="file" id="tax-entry-evidence-input" accept="image/png, image/jpeg" hidden />
+        <button type="button" class="btn-scan" id="tax-entry-evidence-btn" data-i18n="taxEntryEvidenceBtn">📎 Adjuntar Comprobante (領収書)</button>
+      </div>
+      <div class="negocio-scan-status" id="tax-entry-evidence-status" hidden>
+        <img id="tax-entry-evidence-preview" class="negocio-scan-preview" alt="" />
+        <span data-i18n="taxEntryEvidenceSaved">Comprobante adjunto.</span>
+      </div>
+
+      <button type="button" class="btn-register" id="tax-entry-add-btn" data-i18n="taxEntryAddBtn">+ Agregar Gasto</button>
+
+      <h3 class="payroll-section-title" data-i18n="taxEntryListTitle">🧾 Gastos Registrados</h3>
+      <div class="tax-entry-list" id="tax-entry-list">
+        <!-- filas renderizadas por app.js -->
+      </div>
+
+      <!-- Resumen / mapeo al formulario — pedido explícito: "qué cantidad
+           exacta va en cada casilla". Siempre muestra los 18 rubros
+           oficiales, incluso en S/ 0, para que quede claro que nada se
+           dejó afuera por error. -->
+      <h3 class="payroll-section-title" data-i18n="taxSummaryTitle">📊 Resumen para el Formulario</h3>
+      <p class="negocio-gastos-op-hint" data-i18n="taxSummaryHint">Cada fila es una casilla del formulario 収入・支出内訳書 — copia el monto exacto tal cual aparece acá.</p>
+      <div class="tax-summary-list" id="tax-summary-list">
+        <!-- filas renderizadas por app.js -->
+      </div>
+      <div class="finanzas-panel__row finanzas-panel__row--computed finanzas-panel__row--neto">
+        <label data-i18n="taxSummaryTotalLabel">Total de Gastos Necesarios (必要経費 合計)</label>
+        <span id="tax-summary-total">S/ 0</span>
+      </div>
     </div>
   </div>
 
@@ -2183,7 +2290,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260802-05"></script>
+  <script src="app.js?v=20260802-06"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de

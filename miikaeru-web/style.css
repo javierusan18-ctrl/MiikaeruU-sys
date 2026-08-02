@@ -5085,6 +5085,140 @@ textarea,
   border-top: none;
 }
 
+/* ===================== MODAL: DECLARACIÓN DE IMPUESTOS (収入・支出内訳書) ===================== */
+
+.modal--tax-declaration {
+  max-width: 560px;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 44px 26px 26px;
+  text-align: left;
+  position: relative;
+}
+
+.tax-mixed-use-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  margin: 4px 0 10px;
+  cursor: pointer;
+}
+
+.tax-mixed-use-toggle input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--neon-gold);
+  cursor: pointer;
+}
+
+/* Lista de gastos registrados — mismo patrón que .negocio-gastos-op-row,
+   con una línea extra para el rubro oficial (jp + traducción) y un
+   indicador chico "🏠/🏢" cuando el monto vino de un prorrateo. */
+.tax-entry-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.tax-entry-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 183, 0, 0.25);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 183, 0, 0.04);
+}
+
+.tax-entry-row__main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.tax-entry-row__concepto {
+  font-size: 0.78rem;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tax-entry-row__category {
+  font-size: 0.62rem;
+  color: var(--text-secondary);
+}
+
+.tax-entry-row__monto {
+  flex-shrink: 0;
+  color: var(--neon-gold);
+  font-weight: 700;
+  font-size: 0.78rem;
+}
+
+.tax-entry-row__delete {
+  background: none;
+  border: 1px solid rgba(255, 46, 154, 0.4);
+  color: var(--neon-magenta);
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  font-size: 0.68rem;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* Resumen/mapeo al formulario — una fila por cada uno de los 18 rubros
+   oficiales, siempre visibles (incluso en S/ 0) para que el usuario vea
+   que no falta ninguna casilla por revisar antes de presentar. */
+.tax-summary-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+  font-size: 0.72rem;
+}
+
+.tax-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.tax-summary-row--filled {
+  background: rgba(255, 183, 0, 0.08);
+  border: 1px solid rgba(255, 183, 0, 0.25);
+}
+
+.tax-summary-row__label {
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tax-summary-row__jp {
+  color: var(--text-primary);
+  font-weight: 600;
+  margin-right: 4px;
+}
+
+.tax-summary-row__value {
+  flex-shrink: 0;
+  color: var(--neon-gold);
+  font-weight: 700;
+}
+
 /* ===================== MODAL: DESGLOSE DE GASTOS POR CATEGORÍA =====================
    Items individuales: mismo patrón visual que .wishlist-req-* (lista +
    fila + formulario de alta), pero con 2 inputs (concepto/monto) en vez
