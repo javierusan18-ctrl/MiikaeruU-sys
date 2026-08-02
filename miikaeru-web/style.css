@@ -5628,6 +5628,22 @@ textarea,
   box-shadow: 0 0 12px rgba(255, 46, 154, 0.5);
 }
 
+/* Examen de Nivel — dorado (mismo tono que dominio/XP en toda la app):
+   es el único botón de este toolbar que de verdad desbloquea progresión,
+   así que se destaca del resto en vez de quedar igual que "Vocabulario"/
+   "Gramática" (consulta libre, sin efecto en el nivel). */
+.jp-level-exam-open-btn {
+  border-color: rgba(255, 183, 0, 0.4);
+  background: rgba(255, 183, 0, 0.08);
+  color: var(--neon-gold);
+}
+
+.jp-level-exam-open-btn:hover {
+  background: var(--neon-gold);
+  color: #1a1200;
+  box-shadow: 0 0 12px rgba(255, 183, 0, 0.5);
+}
+
 .modal--hanzi-writer {
   max-width: 640px;
   max-height: 88vh;
@@ -5656,6 +5672,101 @@ textarea,
 .hanzi-grid-section:first-child .hanzi-grid-section__title {
   padding-top: 0;
   border-top: none;
+}
+
+/* Búsqueda de palabra/frase/dirección para trámites — vive como una
+   sección más arriba de las cuadrículas curadas, mismo look de
+   ".hanzi-grid-section" pero con acento magenta (mismo tono que
+   "Trazos Reales" en el toolbar del módulo Japonés) para distinguirla
+   como la entrada "libre" en vez de una lista fija más. */
+.hanzi-search-section {
+  padding-bottom: 14px;
+  margin-bottom: 4px;
+  border-bottom: 1px dashed rgba(255, 46, 154, 0.3);
+}
+
+.hanzi-search-section .hanzi-grid-section__title {
+  color: var(--neon-magenta);
+  border-top: none;
+  padding-top: 0;
+}
+
+.hanzi-search-hint {
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin: 0 0 8px;
+}
+
+.hanzi-search-bar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.hanzi-search-bar input[type="text"] {
+  flex: 1;
+  min-width: 160px;
+}
+
+.hanzi-search-results {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.hanzi-search-chip {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--neon-magenta);
+  background: rgba(255, 46, 154, 0.08);
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.hanzi-search-chip:hover {
+  background: var(--neon-magenta);
+  color: #1a0410;
+  box-shadow: 0 0 10px rgba(255, 46, 154, 0.5);
+}
+
+/* Navegación Anterior/Siguiente dentro del lienzo de práctica — solo
+   visible cuando se llegó ahí desde una búsqueda (ver
+   updateHanziSearchNav() en app.js), para hojear los caracteres de la
+   palabra/frase tipeada sin volver a la cuadrícula entre cada uno. */
+.hanzi-search-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+.hanzi-search-nav button {
+  border: 1px solid rgba(255, 46, 154, 0.4);
+  background: rgba(255, 46, 154, 0.06);
+  color: var(--neon-magenta);
+  border-radius: var(--radius-sm);
+  padding: 5px 10px;
+  font-size: 0.68rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.hanzi-search-nav button:hover:not(:disabled) {
+  background: var(--neon-magenta);
+  color: #1a0410;
+}
+
+.hanzi-search-nav button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
 }
 
 .hanzi-char-grid {

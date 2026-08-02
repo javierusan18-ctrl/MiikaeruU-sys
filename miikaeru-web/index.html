@@ -16,7 +16,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260802-04" />
+  <link rel="stylesheet" href="style.css?v=20260802-05" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -1389,6 +1389,10 @@
             <button type="button" class="jp-script-btn" data-script="kanji" data-i18n="jpScriptKanji">Kanji N5</button>
           </div>
           <button type="button" class="btn-register jp-general-btn" id="jp-general-practice-btn" data-i18n="jpGeneralPractice">🎯 Práctica General</button>
+          <!-- Examen de Nivel: distinto de "Práctica General" — este SÍ
+               desbloquea progresión (ver startJpLevelExam() en app.js),
+               la práctica general solo repasa lo ya desbloqueado. -->
+          <button type="button" class="btn-register jp-general-btn jp-level-exam-open-btn" id="jp-level-exam-open-btn" data-i18n="jpLevelExamOpenBtn">📝 Examen de Nivel</button>
           <button type="button" class="btn-register jp-general-btn jp-hanzi-writer-open-btn" id="jp-hanzi-writer-open-btn" data-i18n="jpHanziWriterOpenBtn">✍️ Trazos Reales</button>
           <button type="button" class="btn-register jp-general-btn" id="jp-vocab-open-btn" data-i18n="jpVocabOpenBtn">📚 Vocabulario N5</button>
           <button type="button" class="btn-register jp-general-btn" id="jp-grammar-open-btn" data-i18n="jpGrammarOpenBtn">📖 Gramática N5</button>
@@ -1558,24 +1562,65 @@
         <p class="jp-quiz-feedback" id="jp-mini-quiz-feedback" hidden></p>
         <p class="jp-mini-quiz-score" id="jp-mini-quiz-score"></p>
       </div>
+
+      <!-- Sub-vista: Examen de Nivel — distinto del "Modo Examen" general
+           (jpMode, elegido en #jp-config-modal al entrar al módulo, que
+           sigue existiendo tal cual): esto es un flujo corto y dedicado
+           para DESBLOQUEAR progresión de kana/kanji bloqueada, pedido
+           explícito. Empieza en la fila/kanji justo arriba de lo ya
+           desbloqueado; si falla, repite con otro carácter de la MISMA
+           fila (una sola vez); si vuelve a fallar ahí, el examen termina
+           y ese es "su nivel real" — ver startJpLevelExam()/
+           handleJpLevelExamAnswer() en app.js. -->
+      <div class="jp-view" id="jp-view-level-exam" hidden>
+        <button type="button" class="btn-jp-back" id="jp-level-exam-back-btn" data-i18n="jpBackToGrid">← Volver</button>
+        <p class="jp-quiz-prompt" id="jp-level-exam-label"></p>
+        <div class="jp-char-row jp-char-row--center">
+          <span class="jp-quiz-char" id="jp-level-exam-char"></span>
+          <button type="button" class="btn-jp-speak" id="jp-level-exam-speak-btn" aria-label="Escuchar pronunciación" data-i18n-title="jpListen" title="Escuchar pronunciación">🔊</button>
+        </div>
+        <div class="jp-quiz-options" id="jp-level-exam-options">
+          <!-- opciones renderizadas por app.js -->
+        </div>
+        <p class="jp-quiz-feedback" id="jp-level-exam-feedback" hidden></p>
+      </div>
     </div>
   </div>
 
   <!-- MODAL: PRÁCTICA DE TRAZOS REALES (Hanzi Writer / datos KanjiVG).
-       Módulo separado del Japonés (arriba): ese usa una guía de trazos
-       SIMPLIFICADA/orientativa dibujada a mano (getStrokeGuide()); este
+       Módulo separado del Japonés (arriba): ese usa cuadros SVG estáticos
+       de fase (Trazos por Fases, ver renderJpPhaseRow() en app.js); este
        usa la librería Hanzi Writer con datos de trazos reales, con
        lienzo interactivo, animación y modo Quiz con feedback táctil
-       (verde = trazo correcto, rojo = orden/dirección incorrecta). Se
-       abre desde el botón [✍️ Trazos Reales] dentro del modal Japonés. -->
+       (verde = trazo correcto, rojo = orden/dirección incorrecta). Ambos
+       comparten el mismo dataset real (fetchHanziStrokeData(), KanjiVG) —
+       ver comentario junto a esa función en app.js. Se abre desde el
+       botón [✍️ Trazos Reales] dentro del modal Japonés. -->
   <div class="modal-overlay" id="hanzi-writer-modal" hidden>
     <div class="modal modal--hanzi-writer glass">
       <button type="button" class="btn-modal-close" id="hanzi-writer-modal-close" aria-label="Cerrar">✕</button>
       <h3 class="modal__title" data-i18n="hanziWriterTitle">✍️ Práctica de Trazos Reales</h3>
-      <p class="modal__subtitle" data-i18n="hanziWriterSubtitle">Basado en datos de trazos reales (KanjiVG). Elige un carácter para animarlo o practicarlo trazo por trazo.</p>
+      <p class="modal__subtitle" data-i18n="hanziWriterSubtitle">Basado en datos de trazos reales (KanjiVG). Elige un carácter de la cuadrícula, o escribe una palabra/frase/dirección para practicarla completa — ideal para rellenar formularios en Japón (ayuntamiento, correo, etc.).</p>
 
-      <!-- Sub-vista 1: cuadrícula de caracteres (Hiragana + Katakana + Kanji N5) -->
+      <!-- Sub-vista 1: cuadrícula de caracteres (Hiragana + Katakana + Kanji N5)
+           + búsqueda libre de palabra/frase/dirección arriba — pedido
+           explícito: "módulo de trazos de kanji para trámites en Japón".
+           fetchHanziStrokeData() (app.js) ya es un fetch genérico por
+           carácter, no limitado a la lista curada de abajo — la búsqueda
+           solo separa el texto tipeado en caracteres y reutiliza
+           openHanziPractice() para cada uno, sin lógica nueva de trazos. -->
       <div class="hanzi-view" id="hanzi-view-grid">
+        <div class="hanzi-search-section">
+          <h4 class="hanzi-grid-section__title" data-i18n="hanziSearchTitle">🏢 Para Trámites: Palabra, Frase o Dirección</h4>
+          <p class="hanzi-search-hint" data-i18n="hanziSearchHint">Escribe cualquier texto en kanji/kana — cada carácter queda listo para practicar su orden de trazos, uno por uno.</p>
+          <form class="hanzi-search-bar" id="hanzi-search-form">
+            <input type="text" id="hanzi-search-input" data-i18n-placeholder="hanziSearchPlaceholder" placeholder="ej. 東京都渋谷区１−２−３" autocomplete="off" />
+            <button type="submit" class="btn-register" data-i18n="hanziSearchBtn">🔎 Buscar</button>
+          </form>
+          <div class="hanzi-search-results" id="hanzi-search-results" hidden>
+            <!-- chips renderizados por app.js (renderHanziSearchResults), uno por carácter tipeado -->
+          </div>
+        </div>
         <div class="hanzi-grid-section">
           <h4 class="hanzi-grid-section__title" data-i18n="hanziWriterHiraganaTitle">Hiragana</h4>
           <div class="hanzi-char-grid" id="hanzi-hiragana-grid"><!-- renderizado por app.js --></div>
@@ -1593,6 +1638,15 @@
       <!-- Sub-vista 2: lienzo de práctica -->
       <div class="hanzi-view" id="hanzi-view-practice" hidden>
         <button type="button" class="btn-jp-back" id="hanzi-practice-back-btn" data-i18n="jpBackToGrid">← Volver</button>
+
+        <!-- Navegación entre caracteres de la búsqueda — oculta si se
+             entró desde la cuadrícula (un solo carácter, sin "siguiente"
+             lógico). Ver updateHanziSearchNav() en app.js. -->
+        <div class="hanzi-search-nav" id="hanzi-search-nav" hidden>
+          <button type="button" id="hanzi-search-prev-btn" data-i18n="hanziSearchPrev">◀ Anterior</button>
+          <span id="hanzi-search-position"></span>
+          <button type="button" id="hanzi-search-next-btn" data-i18n="hanziSearchNext">Siguiente ▶</button>
+        </div>
 
         <div class="hanzi-canvas-wrap">
           <div class="hanzi-canvas-stage" id="hanzi-canvas-stage">
@@ -2129,7 +2183,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260802-04"></script>
+  <script src="app.js?v=20260802-05"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de

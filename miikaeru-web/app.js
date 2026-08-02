@@ -1114,6 +1114,13 @@ const I18N = {
     jpParticleQuizPrompt: "Completa la partícula que falta:",
     jpLockedAt: "Se desbloquea en el Nivel",
     jpLockedKeepGoing: "Sigue ganando XP para desbloquearlo.",
+    jpLevelExamOpenBtn: "📝 Examen de Nivel",
+    jpLevelExamAllUnlocked: "🎉 ¡Ya tienes todo desbloqueado en este script! Cambia de Hiragana/Katakana/Kanji arriba para examinarte de otro.",
+    jpLevelExamRowLabel: "Examinando:",
+    jpLevelExamRetryHint: "si fallas 2 veces acá, el examen termina.",
+    jpLevelExamRetry: "❌ Incorrecto — una oportunidad más con otro carácter de esta misma fila.",
+    jpLevelExamPassedUpTo: "¡Aprobaste el Examen de Nivel hasta",
+    jpLevelExamNoProgress: "Tu nivel real está justo donde ya estabas — sigue practicando esta fila y vuelve a intentarlo.",
     jpMiniQuizDone: "🎉 ¡Quiz completo!",
     jpMiniQuizScore: "Puntaje:",
     n5CatGreetings: "Saludos",
@@ -1149,7 +1156,13 @@ const I18N = {
     n5GramTokiTitle: "とき — Cuando",
     n5GramMouMadaTitle: "もう / まだ — Ya / Todavía",
     hanziWriterTitle: "✍️ Práctica de Trazos Reales",
-    hanziWriterSubtitle: "Basado en datos de trazos reales (KanjiVG). Elige un carácter para animarlo o practicarlo trazo por trazo.",
+    hanziWriterSubtitle: "Basado en datos de trazos reales (KanjiVG). Elige un carácter de la cuadrícula, o escribe una palabra/frase/dirección para practicarla completa — ideal para rellenar formularios en Japón (ayuntamiento, correo, etc.).",
+    hanziSearchTitle: "🏢 Para Trámites: Palabra, Frase o Dirección",
+    hanziSearchHint: "Escribe cualquier texto en kanji/kana — cada carácter queda listo para practicar su orden de trazos, uno por uno.",
+    hanziSearchPlaceholder: "ej. 東京都渋谷区１−２−３",
+    hanziSearchBtn: "🔎 Buscar",
+    hanziSearchPrev: "◀ Anterior",
+    hanziSearchNext: "Siguiente ▶",
     hanziWriterHiraganaTitle: "Hiragana",
     hanziWriterKatakanaTitle: "Katakana",
     hanziWriterKanjiTitle: "Kanji Básicos (N5)",
@@ -1615,6 +1628,13 @@ const I18N = {
     jpParticleQuizPrompt: "Fill in the missing particle:",
     jpLockedAt: "Unlocks at Level",
     jpLockedKeepGoing: "Keep earning XP to unlock it.",
+    jpLevelExamOpenBtn: "📝 Level Exam",
+    jpLevelExamAllUnlocked: "🎉 You already have everything unlocked for this script! Switch Hiragana/Katakana/Kanji above to test another.",
+    jpLevelExamRowLabel: "Testing:",
+    jpLevelExamRetryHint: "fail twice here and the exam ends.",
+    jpLevelExamRetry: "❌ Incorrect — one more try with another character from this same row.",
+    jpLevelExamPassedUpTo: "You passed the Level Exam up to",
+    jpLevelExamNoProgress: "Your real level is exactly where you already were — keep practicing this row and try again.",
     jpMiniQuizDone: "🎉 Quiz complete!",
     jpMiniQuizScore: "Score:",
     n5CatGreetings: "Greetings",
@@ -1650,7 +1670,13 @@ const I18N = {
     n5GramTokiTitle: "とき — When",
     n5GramMouMadaTitle: "もう / まだ — Already / Not yet",
     hanziWriterTitle: "✍️ Real Stroke Practice",
-    hanziWriterSubtitle: "Based on real stroke data (KanjiVG). Pick a character to animate it or practice it stroke by stroke.",
+    hanziWriterSubtitle: "Based on real stroke data (KanjiVG). Pick a character from the grid, or type a word/phrase/address to practice it in full — great for filling out forms in Japan (city hall, post office, etc.).",
+    hanziSearchTitle: "🏢 For Paperwork: Word, Phrase or Address",
+    hanziSearchHint: "Type any kanji/kana text — each character becomes ready to practice its stroke order, one at a time.",
+    hanziSearchPlaceholder: "e.g. 東京都渋谷区１−２−３",
+    hanziSearchBtn: "🔎 Search",
+    hanziSearchPrev: "◀ Previous",
+    hanziSearchNext: "Next ▶",
     hanziWriterHiraganaTitle: "Hiragana",
     hanziWriterKatakanaTitle: "Katakana",
     hanziWriterKanjiTitle: "Basic Kanji (N5)",
@@ -2116,6 +2142,13 @@ const I18N = {
     jpParticleQuizPrompt: "抜けている助詞を入力してください：",
     jpLockedAt: "レベルで解放:",
     jpLockedKeepGoing: "XPを稼いで解放しよう。",
+    jpLevelExamOpenBtn: "📝 レベル試験",
+    jpLevelExamAllUnlocked: "🎉 このスクリプトはすべて解放済みです！上のひらがな/カタカナ/漢字を切り替えて他を試験しよう。",
+    jpLevelExamRowLabel: "試験中：",
+    jpLevelExamRetryHint: "ここで2回間違えると試験終了。",
+    jpLevelExamRetry: "❌ 不正解 — 同じ行の別の文字でもう一度挑戦できます。",
+    jpLevelExamPassedUpTo: "レベル試験に合格しました：",
+    jpLevelExamNoProgress: "実際のレベルはすでにいた場所のままです — この行を練習してまた挑戦しよう。",
     jpMiniQuizDone: "🎉 クイズ完了！",
     jpMiniQuizScore: "スコア：",
     n5CatGreetings: "挨拶",
@@ -2151,7 +2184,13 @@ const I18N = {
     n5GramTokiTitle: "とき — 時",
     n5GramMouMadaTitle: "もう / まだ — 完了と未完了",
     hanziWriterTitle: "✍️ 書き順練習（実データ）",
-    hanziWriterSubtitle: "実際の筆順データ（KanjiVG）に基づいています。文字を選んでアニメーションで見るか、書き順を練習しましょう。",
+    hanziWriterSubtitle: "実際の筆順データ（KanjiVG）に基づいています。表から文字を選ぶか、単語・フレーズ・住所を入力してまとめて練習 — 日本での手続き（役所、郵便局など）の書類記入に最適です。",
+    hanziSearchTitle: "🏢 手続き用：単語・フレーズ・住所",
+    hanziSearchHint: "漢字・かなの文章を入力すると、一文字ずつ書き順を練習できます。",
+    hanziSearchPlaceholder: "例：東京都渋谷区１−２−３",
+    hanziSearchBtn: "🔎 検索",
+    hanziSearchPrev: "◀ 前へ",
+    hanziSearchNext: "次へ ▶",
     hanziWriterHiraganaTitle: "ひらがな",
     hanziWriterKatakanaTitle: "カタカナ",
     hanziWriterKanjiTitle: "基本漢字（N5）",
@@ -3560,17 +3599,22 @@ const N5_GRAMMAR_POINTS = [
 const JP_MASTERY_THRESHOLD = 3; // respuestas correctas para brillo dorado + 3 estrellas
 
 // ---------------- Progresión por Nivel del Módulo Japonés ----------------
-// Pedido explícito: Nivel 1 = lo más básico absoluto (vocales, fila "a") y
-// la dificultad escala de forma gradual hasta terminar en los kanji N5 más
-// avanzados que hay en el dataset. En vez de guardar un campo "nivel
-// requerido" a mano en cada una de las ~300 entradas de GOJUON_ROWS/
-// YOON_ROWS/N5_VOCAB_CATEGORIES/N5_GRAMMAR_POINTS/KANJI_N5 (alto riesgo de
+// Pedido explícito (revisado en un bloque posterior): SOLO la escritura
+// (kana/kanji, practicada vía Trazos + el Examen de Nivel más abajo) sigue
+// gobernada por nivel, empezando en lo más básico absoluto (vocales, fila
+// "a" = Nivel 1) y escalando hasta los kanji N5 más avanzados del dataset.
+// Vocabulario, Gramática N5 y Práctica de Partículas pasaron a ser consulta
+// libre sin candado (ver renderN5VocabCategories()/renderN5GrammarList()/
+// getParticlePoints() — ya no llaman a isJpLevelUnlocked()), así que sus
+// funciones de "nivel requerido" (jpVocabCategoryUnlockLevel/
+// jpGrammarUnlockLevel) se eliminaron por completo en vez de dejarlas sin
+// uso. En vez de guardar un campo "nivel requerido" a mano en cada una de
+// las ~120 entradas de GOJUON_ROWS/YOON_ROWS/KANJI_N5 (alto riesgo de
 // tipear mal un valor en medio de contenido curricular ya verificado), el
 // nivel requerido se COMPUTA a partir de la posición de cada entrada en su
 // array — el orden de esos arrays YA sigue una progresión pedagógica
-// razonable (vocales → filas Gojuon → dakuten/handakuten → yōon → mayor
-// vocabulario/gramática → kanji), así que ese orden es la fuente de verdad
-// única, sin duplicar el dato en dos lugares que podrían desincronizarse.
+// razonable (vocales → filas Gojuon → dakuten/handakuten → yōon → kanji),
+// así que ese orden es la fuente de verdad única.
 //
 // Nota de alcance honesta: el dataset actual solo cubre kanji N5 (no hay
 // N4-N1 todavía, ver #jp-level-toggle "Próximamente" en index.html) — "los
@@ -3583,14 +3627,31 @@ function jpKanaRowUnlockLevel(rowIndex) {
 function jpYoonRowUnlockLevel(rowIndex) {
   return 17 + rowIndex; // arranca justo después de la última fila Gojuon
 }
-function jpGrammarUnlockLevel(pointIndex) {
-  return 20 + pointIndex * 2; // 22 puntos → Niveles 20-62
-}
-function jpVocabCategoryUnlockLevel(catIndex) {
-  return 22 + catIndex * 3; // 10 categorías → Niveles 22-49
-}
 function jpKanjiUnlockLevel(kanjiIndex) {
   return 30 + Math.floor(kanjiIndex / 2); // ~107 kanji, 2 por nivel → Niveles 30-83
+}
+
+// Cuánta XP hace falta ganar (desde el estado actual) para que state.level
+// llegue a targetLevel — misma fórmula de crecimiento que grantXP() (+15%
+// redondeado por nivel), usada por el Examen de Nivel para otorgar
+// exactamente la XP necesaria al demostrar que ya domina contenido
+// bloqueado, en vez de mover state.level a mano (eso violaría "los
+// usuarios no suben de nivel de forma arbitraria, ganan XP" — pedido
+// explícito de un bloque anterior). Sigue siendo XP real, solo que en un
+// solo pago grande en vez de goteado en muchas sesiones.
+function xpNeededToReachLevel(targetLevel) {
+  if (targetLevel <= state.level) return 0;
+  let xp = state.xp;
+  let xpToNext = state.xpToNext;
+  let level = state.level;
+  let needed = 0;
+  while (level < targetLevel) {
+    needed += xpToNext - xp;
+    xp = 0;
+    xpToNext = Math.round(xpToNext * 1.15);
+    level += 1;
+  }
+  return needed;
 }
 
 function isJpLevelUnlocked(requiredLevel) {
@@ -4539,6 +4600,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const jpScriptToggle = document.getElementById("jp-script-toggle");
   const jpGeneralPracticeBtn = document.getElementById("jp-general-practice-btn");
   const jpParticlesOpenBtn = document.getElementById("jp-particles-open-btn");
+  const jpLevelExamOpenBtn = document.getElementById("jp-level-exam-open-btn");
   const jpRowsEl = document.getElementById("jp-rows");
   const jpViewGrid = document.getElementById("jp-view-grid");
   const jpViewPhases = document.getElementById("jp-view-phases");
@@ -4549,6 +4611,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const jpViewGrammar = document.getElementById("jp-view-grammar");
   const jpViewYoon = document.getElementById("jp-view-yoon");
   const jpViewMiniQuiz = document.getElementById("jp-view-mini-quiz");
+  const jpViewLevelExam = document.getElementById("jp-view-level-exam");
 
   const jpVocabOpenBtn = document.getElementById("jp-vocab-open-btn");
   const jpVocabBackBtn = document.getElementById("jp-vocab-back-btn");
@@ -4575,6 +4638,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const jpMiniQuizOptions = document.getElementById("jp-mini-quiz-options");
   const jpMiniQuizFeedback = document.getElementById("jp-mini-quiz-feedback");
   const jpMiniQuizScore = document.getElementById("jp-mini-quiz-score");
+
+  const jpLevelExamBackBtn = document.getElementById("jp-level-exam-back-btn");
+  const jpLevelExamLabel = document.getElementById("jp-level-exam-label");
+  const jpLevelExamChar = document.getElementById("jp-level-exam-char");
+  const jpLevelExamSpeakBtn = document.getElementById("jp-level-exam-speak-btn");
+  const jpLevelExamOptions = document.getElementById("jp-level-exam-options");
+  const jpLevelExamFeedback = document.getElementById("jp-level-exam-feedback");
 
   const jpPhasesChar = document.getElementById("jp-phases-char");
   const jpPhasesProgress = document.getElementById("jp-phases-progress");
@@ -4612,6 +4682,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const hanziHiraganaGrid = document.getElementById("hanzi-hiragana-grid");
   const hanziKatakanaGrid = document.getElementById("hanzi-katakana-grid");
   const hanziKanjiGrid = document.getElementById("hanzi-kanji-grid");
+  const hanziSearchForm = document.getElementById("hanzi-search-form");
+  const hanziSearchInput = document.getElementById("hanzi-search-input");
+  const hanziSearchResults = document.getElementById("hanzi-search-results");
+  const hanziSearchNav = document.getElementById("hanzi-search-nav");
+  const hanziSearchPosition = document.getElementById("hanzi-search-position");
+  const hanziSearchPrevBtn = document.getElementById("hanzi-search-prev-btn");
+  const hanziSearchNextBtn = document.getElementById("hanzi-search-next-btn");
   const hanziPracticeBackBtn = document.getElementById("hanzi-practice-back-btn");
   const hanziWriterTarget = document.getElementById("hanzi-writer-target");
   const hanziCanvasStage = document.getElementById("hanzi-canvas-stage");
@@ -9268,6 +9345,7 @@ document.addEventListener("DOMContentLoaded", () => {
     jpViewGrammar.hidden = view !== "grammar";
     jpViewYoon.hidden = view !== "yoon";
     jpViewMiniQuiz.hidden = view !== "mini-quiz";
+    jpViewLevelExam.hidden = view !== "level-exam";
     if (view === "grid") renderGojuonGrid();
     if (view === "vocab") renderN5VocabCategories();
     if (view === "grammar") renderN5GrammarList();
@@ -9399,12 +9477,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let activeN5Category = null;
 
+  // Vocabulario N5: consulta libre, sin candado — pedido explícito ("todo
+  // el vocabulario general... debe estar completamente desbloqueado desde
+  // el inicio, funcionando como una consulta libre de diccionario"). Solo
+  // la progresión de kana/kanji (Examen de Nivel, ver más abajo) sigue
+  // gobernada por nivel.
   function renderN5VocabCategories() {
     jpVocabCatGrid.innerHTML = "";
-    N5_VOCAB_CATEGORIES.forEach((cat, catIndex) => {
-      const requiredLevel = jpVocabCategoryUnlockLevel(catIndex);
-      const locked = !isJpLevelUnlocked(requiredLevel);
-
+    N5_VOCAB_CATEGORIES.forEach((cat) => {
       const card = document.createElement("button");
       card.type = "button";
       card.className = "jp-vocab-cat-card";
@@ -9423,23 +9503,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
       card.append(icon, title, count);
 
-      if (locked) {
-        card.disabled = true;
-        card.classList.add("jp-vocab-cat-card--locked");
-        const lock = document.createElement("span");
-        lock.className = "jp-lock-badge";
-        lock.textContent = `🔒 ${t("jpLockedAt")} ${requiredLevel}`;
-        card.appendChild(lock);
-      } else {
-        const progress = n5ProgressCache[`vocab:${cat.id}`];
-        if (progress) {
-          const badge = document.createElement("span");
-          badge.className = "jp-vocab-cat-card__badge";
-          badge.textContent = `✓ ${progress.score}/${progress.total}`;
-          card.appendChild(badge);
-        }
-        card.addEventListener("click", () => openN5VocabWords(cat));
+      const progress = n5ProgressCache[`vocab:${cat.id}`];
+      if (progress) {
+        const badge = document.createElement("span");
+        badge.className = "jp-vocab-cat-card__badge";
+        badge.textContent = `✓ ${progress.score}/${progress.total}`;
+        card.appendChild(badge);
       }
+      card.addEventListener("click", () => openN5VocabWords(cat));
 
       jpVocabCatGrid.appendChild(card);
     });
@@ -9497,10 +9568,7 @@ document.addEventListener("DOMContentLoaded", () => {
       jpGrammarList.appendChild(banner);
     }
 
-    N5_GRAMMAR_POINTS.forEach((point, pointIndex) => {
-      const requiredLevel = jpGrammarUnlockLevel(pointIndex);
-      const locked = !isJpLevelUnlocked(requiredLevel);
-
+    N5_GRAMMAR_POINTS.forEach((point) => {
       const card = document.createElement("div");
       card.className = "jp-grammar-card";
 
@@ -9514,17 +9582,6 @@ document.addEventListener("DOMContentLoaded", () => {
       pattern.textContent = point.pattern;
       header.append(label, pattern);
       card.appendChild(header);
-
-      if (locked) {
-        card.classList.add("jp-grammar-card--locked");
-        const lock = document.createElement("span");
-        lock.className = "jp-lock-badge";
-        lock.textContent = `🔒 ${t("jpLockedAt")} ${requiredLevel}`;
-        header.appendChild(lock);
-        card.addEventListener("click", () => notifyJpLocked(requiredLevel));
-        jpGrammarList.appendChild(card);
-        return;
-      }
 
       const body = document.createElement("div");
       body.className = "jp-grammar-card__body";
@@ -9693,11 +9750,11 @@ document.addEventListener("DOMContentLoaded", () => {
   // compartida entre el quiz de Gramática (una oración por punto) y el
   // módulo dedicado de Práctica de Partículas (todas las oraciones de
   // ejemplo, para más variedad).
-  function getUnlockedParticlePoints() {
-    return N5_GRAMMAR_POINTS
-      .map((point, pointIndex) => ({ point, pointIndex }))
-      .filter(({ point, pointIndex }) => point.label.length <= 2 && isJpLevelUnlocked(jpGrammarUnlockLevel(pointIndex)))
-      .map(({ point }) => point);
+  // Práctica de Partículas: libre y sin candado desde el inicio — pedido
+  // explícito ("la sección de práctica de partículas debe estar libre y
+  // accesible en todo momento, sin restricciones de nivel").
+  function getParticlePoints() {
+    return N5_GRAMMAR_POINTS.filter((point) => point.label.length <= 2);
   }
 
   function blankParticleExample(point, example) {
@@ -9714,7 +9771,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Toma UNA oración de ejemplo por punto gramatical y esconde su
     // partícula/label — el resto de los labels de otros puntos actúan
     // como distractores.
-    const particlePoints = getUnlockedParticlePoints();
+    const particlePoints = getParticlePoints();
     return shuffleArrayLocal(particlePoints).map((point) => {
       const { blanked, blankedReading } = blankParticleExample(point, point.examples[0]);
       const distractors = shuffleArrayLocal(particlePoints.filter((p) => p !== point)).slice(0, 3).map((p) => p.label);
@@ -9736,7 +9793,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // TODAS las oraciones de ejemplo de cada punto (no solo la primera) para
   // más variedad de práctica.
   function buildParticleQuizItems() {
-    const particlePoints = getUnlockedParticlePoints();
+    const particlePoints = getParticlePoints();
     const allExamples = particlePoints.flatMap((point) => point.examples.map((example) => ({ point, example })));
     return shuffleArrayLocal(allExamples).map(({ point, example }) => {
       const { blanked, blankedReading } = blankParticleExample(point, example);
@@ -9826,12 +9883,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // cuadrícula principal (ver botón junto a Vocabulario/Gramática/Yōon en
   // index.html), sin pasar primero por Gramática N5.
   jpParticlesOpenBtn.addEventListener("click", () => {
-    const items = buildParticleQuizItems();
-    if (items.length === 0) {
-      notifyJpLocked(jpGrammarUnlockLevel(0));
-      return;
-    }
-    startMiniQuiz(items, "grid", "particles");
+    startMiniQuiz(buildParticleQuizItems(), "grid", "particles");
   });
 
   // "Volver" claro desde la pantalla principal del módulo — antes solo
@@ -9839,6 +9891,167 @@ document.addEventListener("DOMContentLoaded", () => {
   // regreso accesible, sobre todo ahora que el módulo pasa a pantalla
   // completa en celular (ver style.css @media Mobile Lite).
   jpGridBackBtn.addEventListener("click", closeAllAppModals);
+
+  // ---------------- Examen de Nivel (placement adaptativo) ----------------
+  // Distinto del "Modo Examen" general (jpMode, elegido al entrar al
+  // módulo — sigue existiendo tal cual, solo repasa lo YA desbloqueado).
+  // Este es el único camino que de verdad DESBLOQUEA fila/kanji nuevos —
+  // pedido explícito: "el usuario da el examen... para desbloquear nuevos
+  // rangos". Prueba UNA fila (o UN kanji) a la vez, empezando justo en la
+  // frontera de lo bloqueado para el script activo (jpScript). Si falla,
+  // repite con OTRO carácter de la MISMA fila (una sola vez, "el sistema
+  // le da otra pregunta del mismo nivel"); si vuelve a fallar ahí, el
+  // examen termina — "detecta su nivel real" simplemente significa que no
+  // se inventa un desbloqueo que no demostró, no un descenso de nivel (no
+  // existe forma de "bajar" nivel en esta app, ni falta que hace).
+  //
+  // El desbloqueo en sí NUNCA mueve state.level a mano — grantXP(
+  // xpNeededToReachLevel(...)) le da exactamente la XP que le faltaba
+  // para cruzar el umbral real, mismo mecanismo de siempre ("gana XP para
+  // subir de nivel", pedido explícito de un bloque anterior), solo que en
+  // un pago único en vez de goteado en muchas sesiones.
+  let jpLevelExamUnitIndex = -1;
+  let jpLevelExamStartFrontier = -1;
+  let jpLevelExamHighestCleared = -1;
+  let jpLevelExamRetried = false;
+  let jpLevelExamCurrentItem = null;
+
+  function jpLevelExamUnitCount() {
+    return jpScript === "kanji" ? KANJI_N5.length : GOJUON_ROWS.length;
+  }
+
+  function jpLevelExamUnitAt(index) {
+    if (jpScript === "kanji") {
+      const k = KANJI_N5[index];
+      if (!k) return null;
+      return {
+        requiredLevel: jpKanjiUnlockLevel(index),
+        label: t("jpKanjiN5Title"),
+        pool: [{ char: k.char, answer: k.meaning, script: "kanji" }],
+      };
+    }
+    const row = GOJUON_ROWS[index];
+    if (!row) return null;
+    return {
+      requiredLevel: jpKanaRowUnlockLevel(index),
+      label: formatGojuonRowLabel(row),
+      pool: row[jpScript].map((char, i) => ({ char, answer: row.romajiList[i], script: jpScript })),
+    };
+  }
+
+  function jpLevelExamFrontierIndex() {
+    const count = jpLevelExamUnitCount();
+    for (let i = 0; i < count; i++) {
+      if (!isJpLevelUnlocked(jpLevelExamUnitAt(i).requiredLevel)) return i;
+    }
+    return -1; // ya está todo desbloqueado para este script
+  }
+
+  // Pool de distractores de opción múltiple — deliberadamente NO filtrado
+  // por desbloqueo (son solo ruido de respuestas incorrectas, no
+  // contenido que se enseña ni se revela con explicación).
+  function jpLevelExamAllAnswers() {
+    return jpScript === "kanji" ? KANJI_N5.map((k) => k.meaning) : GOJUON_ROWS.flatMap((row) => row.romajiList);
+  }
+
+  function startJpLevelExam() {
+    const frontier = jpLevelExamFrontierIndex();
+    if (frontier === -1) {
+      setAvatarSpeech(t("jpLevelExamAllUnlocked"));
+      return;
+    }
+    jpLevelExamUnitIndex = frontier;
+    jpLevelExamStartFrontier = frontier;
+    jpLevelExamHighestCleared = frontier - 1;
+    jpLevelExamRetried = false;
+    showJpView("level-exam");
+    renderJpLevelExamQuestion();
+  }
+
+  function renderJpLevelExamQuestion() {
+    const unit = jpLevelExamUnitAt(jpLevelExamUnitIndex);
+    const item = unit.pool[Math.floor(Math.random() * unit.pool.length)];
+    jpLevelExamCurrentItem = item;
+    jpLevelExamLabel.textContent = `${t("jpLevelExamRowLabel")} ${unit.label} — ${t("jpLevelExamRetryHint")}`;
+    jpLevelExamChar.textContent = item.char;
+    jpLevelExamFeedback.hidden = true;
+
+    const distractors = shuffleArrayLocal(jpLevelExamAllAnswers().filter((a) => a !== item.answer)).slice(0, 3);
+    const options = shuffleArrayLocal([item.answer, ...distractors]);
+    jpLevelExamOptions.innerHTML = "";
+    options.forEach((opt) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "jp-quiz-option-btn";
+      btn.textContent = opt;
+      btn.addEventListener("click", () => handleJpLevelExamAnswer(opt, item));
+      jpLevelExamOptions.appendChild(btn);
+    });
+    speakKana(item.char);
+  }
+
+  function handleJpLevelExamAnswer(selected, item) {
+    const correct = selected === item.answer;
+    Array.from(jpLevelExamOptions.children).forEach((btn) => {
+      btn.disabled = true;
+      if (btn.textContent === item.answer) btn.classList.add("jp-quiz-option-btn--correct");
+      else if (btn.textContent === selected) btn.classList.add("jp-quiz-option-btn--wrong");
+    });
+    jpLevelExamFeedback.hidden = false;
+
+    if (correct) {
+      jpLevelExamFeedback.textContent = t("jpQuizCorrect");
+      jpLevelExamFeedback.className = "jp-quiz-feedback jp-quiz-feedback--correct";
+      jpLevelExamHighestCleared = jpLevelExamUnitIndex;
+      jpLevelExamRetried = false;
+      jpLevelExamUnitIndex += 1;
+      setTimeout(() => {
+        if (!jpLevelExamUnitAt(jpLevelExamUnitIndex)) finishJpLevelExam();
+        else renderJpLevelExamQuestion();
+      }, 900);
+      return;
+    }
+
+    if (!jpLevelExamRetried) {
+      // Pedido explícito: "le da otra pregunta del mismo nivel" — un solo
+      // reintento, con otro carácter al azar de la MISMA fila/kanji.
+      jpLevelExamRetried = true;
+      jpLevelExamFeedback.textContent = t("jpLevelExamRetry");
+      jpLevelExamFeedback.className = "jp-quiz-feedback jp-quiz-feedback--incorrect";
+      setTimeout(renderJpLevelExamQuestion, 1300);
+      return;
+    }
+
+    // Segunda falla en la misma fila/kanji: el examen termina acá.
+    jpLevelExamFeedback.textContent = t("jpQuizIncorrect") + ` "${item.answer}"`;
+    jpLevelExamFeedback.className = "jp-quiz-feedback jp-quiz-feedback--incorrect";
+    setTimeout(finishJpLevelExam, 1500);
+  }
+
+  function finishJpLevelExam() {
+    if (jpLevelExamHighestCleared >= jpLevelExamStartFrontier) {
+      const unit = jpLevelExamUnitAt(jpLevelExamHighestCleared);
+      const xpNeeded = xpNeededToReachLevel(unit.requiredLevel);
+      if (xpNeeded > 0) grantXP(xpNeeded);
+      addGold(10);
+      setAvatarSpeech(`🎉 ${t("jpLevelExamPassedUpTo")} "${unit.label}"!`);
+      addMessage({
+        author: "SISTEMA",
+        text: `${t("jpLevelExamPassedUpTo")} ${unit.label}.${xpNeeded > 0 ? ` +${xpNeeded} XP` : ""}`,
+        variant: "system",
+      });
+    } else {
+      addGold(2);
+      setAvatarSpeech(t("jpLevelExamNoProgress"));
+    }
+    showJpView("grid");
+  }
+
+  jpLevelExamOpenBtn.addEventListener("click", startJpLevelExam);
+  jpLevelExamBackBtn.addEventListener("click", () => showJpView("grid"));
+  jpLevelExamSpeakBtn.addEventListener("click", () => {
+    if (jpLevelExamCurrentItem) speakKana(jpLevelExamCurrentItem.char);
+  });
 
   // Reparte según el modo elegido en #jp-config-modal: Práctica va directo
   // a Fases + Vocabulario (sin evaluación); Examen empieza por la Prueba 1
@@ -10322,7 +10535,12 @@ document.addEventListener("DOMContentLoaded", () => {
       btn.type = "button";
       btn.className = "hanzi-char-btn";
       btn.textContent = char;
-      btn.addEventListener("click", () => openHanziPractice(char));
+      // -1: entrando desde la cuadrícula curada, no desde una búsqueda —
+      // sin "carácter siguiente" lógico, ver updateHanziSearchNav().
+      btn.addEventListener("click", () => {
+        hanziSearchIndex = -1;
+        openHanziPractice(char);
+      });
       container.appendChild(btn);
     });
   }
@@ -10331,6 +10549,50 @@ document.addEventListener("DOMContentLoaded", () => {
     renderHanziCharGrid(hanziHiraganaGrid, HANZI_WRITER_HIRAGANA);
     renderHanziCharGrid(hanziKatakanaGrid, HANZI_WRITER_KATAKANA);
     renderHanziCharGrid(hanziKanjiGrid, KANJI_N5.map((k) => k.char));
+  }
+
+  // ---------------- Búsqueda de palabra/frase/dirección (Trámites) ----------------
+  // Pedido explícito: "herramienta de búsqueda... el usuario pueda
+  // ingresar una palabra, frase o dirección en kanjis". No es un
+  // diccionario ni valida que el texto "exista" — simplemente separa el
+  // texto tipeado en caracteres reales (Array.from, correcto con
+  // sorrogate pairs) y arma chips clicables, cada uno reutilizando
+  // openHanziPractice() tal cual — CERO lógica de trazos nueva, ese
+  // fetch/render ya es genérico por carácter (fetchHanziStrokeData()).
+  let hanziSearchQueue = [];
+  let hanziSearchIndex = -1;
+
+  function renderHanziSearchResults(text) {
+    const chars = Array.from(text).filter((c) => c.trim() !== "");
+    hanziSearchQueue = chars;
+    hanziSearchResults.innerHTML = "";
+
+    if (!chars.length) {
+      hanziSearchResults.hidden = true;
+      return;
+    }
+
+    hanziSearchResults.hidden = false;
+    chars.forEach((char, index) => {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "hanzi-search-chip";
+      chip.textContent = char;
+      chip.addEventListener("click", () => {
+        hanziSearchIndex = index;
+        openHanziPractice(char);
+      });
+      hanziSearchResults.appendChild(chip);
+    });
+  }
+
+  function updateHanziSearchNav() {
+    const active = hanziSearchIndex >= 0 && hanziSearchIndex < hanziSearchQueue.length;
+    hanziSearchNav.hidden = !active;
+    if (!active) return;
+    hanziSearchPosition.textContent = `${hanziSearchIndex + 1} / ${hanziSearchQueue.length}`;
+    hanziSearchPrevBtn.disabled = hanziSearchIndex === 0;
+    hanziSearchNextBtn.disabled = hanziSearchIndex === hanziSearchQueue.length - 1;
   }
 
   function setHanziFeedback(text, variant) {
@@ -10394,6 +10656,8 @@ document.addEventListener("DOMContentLoaded", () => {
       // como antes) — mismo mensaje honesto en vez de un lienzo roto.
       onLoadCharDataError: () => setHanziFeedback(t("hanziCharDataUnavailable"), "wrong"),
     });
+
+    updateHanziSearchNav();
   }
 
   // hanziWriter.animateCharacter()/quiz() lanzan una excepción síncrona si
@@ -10458,6 +10722,22 @@ document.addEventListener("DOMContentLoaded", () => {
     hanziActiveChar = null;
     hanziViewPractice.hidden = true;
     hanziViewGrid.hidden = false;
+  });
+
+  hanziSearchForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    renderHanziSearchResults(hanziSearchInput.value);
+  });
+
+  hanziSearchPrevBtn.addEventListener("click", () => {
+    if (hanziSearchIndex <= 0) return;
+    hanziSearchIndex -= 1;
+    openHanziPractice(hanziSearchQueue[hanziSearchIndex]);
+  });
+  hanziSearchNextBtn.addEventListener("click", () => {
+    if (hanziSearchIndex < 0 || hanziSearchIndex >= hanziSearchQueue.length - 1) return;
+    hanziSearchIndex += 1;
+    openHanziPractice(hanziSearchQueue[hanziSearchIndex]);
   });
 
   hanziAnimateBtn.addEventListener("click", () => {
