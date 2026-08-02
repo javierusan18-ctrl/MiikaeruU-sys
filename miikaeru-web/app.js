@@ -674,8 +674,8 @@ const I18N = {
     statCompass: "Brújula",
     statFinance: "Finanzas",
     statStreakTitle: "Racha de aprendizaje",
-    statBalanceGlobalTitle: "Balance Global",
-    statBalanceGlobal: "Balance Global",
+    statBalanceGlobalTitle: "Beneficio real del negocio (ventas/servicios menos gastos operativos) — nunca incluye tu Ingreso Mensual personal",
+    statBalanceGlobal: "Balance Negocio",
     hudBannerPhrase1: "TOMA EL CONTROL DE TU NEGOCIO",
     hudBannerPhrase2: "MANTÉN TU RACHA DE APRENDIZAJE",
     hudBannerPhrase3: "CADA DÍA CUENTA PARA TU FUTURO",
@@ -761,9 +761,10 @@ const I18N = {
     payrollAuditOpenTitle: "Auditoría y Control de Nómina",
     payrollAuditTitle: "📋 Auditoría y Control de Nómina",
     payrollAuditSubtitle: "Estructura de boleta japonesa (給与明細書) — registra tus horas e ingresos para calcular tu sueldo neto real.",
-    payrollScanBtn: "📷 Subir Boleta / Hoja de Horas",
-    payrollScanScanning: "Escaneando documento...",
-    payrollScanDone: "Documento leído — campos actualizados.",
+    payrollManualNote: "✍️ Completa los montos exactos de tu boleta a mano — así el cálculo es siempre correcto, carácter por carácter.",
+    payrollScanBtn: "📎 Adjuntar Foto de Comprobante",
+    payrollScanScanning: "Guardando comprobante...",
+    payrollScanDone: "Comprobante guardado.",
     payrollEvidenceSavedText: "Comprobante guardado.",
     payrollHoursTitle: "⏱️ Días / Horas Trabajadas",
     payrollHorasBaseLabel: "Horas Base (出勤時間)",
@@ -773,10 +774,14 @@ const I18N = {
     payrollSueldoBaseLabel: "Sueldo Base (基本給)",
     payrollBonosLabel: "Bonos / Incentivos",
     payrollDeductionsTitle: "➖ Descuentos",
-    payrollSegurosLabel: "Seguros (社会保険)",
-    payrollImpuestosLabel: "Impuestos (所得税)",
-    payrollAdelantosLabel: "Adelantos (前払い)",
-    payrollNetoFinalLabel: "Sueldo Neto Final",
+    payrollSeguroSaludLabel: "Seguro de Salud (健康保険料)",
+    payrollPensionLabel: "Pensión (厚生年金保険料)",
+    payrollSeguroEmpleoLabel: "Seguro de Empleo (雇用保険料)",
+    payrollImpuestoRentaLabel: "Impuesto a la Renta (所得税)",
+    payrollImpuestoResidenciaLabel: "Impuesto Residencial (住民税)",
+    payrollAdelantosLabel: "Adelantos / Otros Descuentos (前払い等)",
+    payrollDescuentosTotalLabel: "Total Descuentos (控除合計額)",
+    payrollNetoFinalLabel: "Sueldo Neto Final (差引支給額)",
     payrollApplyBtn: "✓ Usar como Ingreso Mensual",
     payrollAppliedMessage: "Apliqué mi Auditoría de Nómina: Sueldo Neto Final de {amount} como Ingreso Mensual.",
     categoryBreakdownOpenTitle: "Ver desglose de gastos",
@@ -878,6 +883,14 @@ const I18N = {
     negocioVentaGananciaFinalLabel: "Ganancia Neta Final",
     negocioGananciaPreviewLabel: "Ganancia Neta (vista previa)",
     negocioRegistrarBtn: "+ Registrar Transacción",
+    negocioGastosOpTitle: "🏢 Gastos Operativos del Negocio",
+    negocioGastosOpHint: "Costos fijos/recurrentes del negocio — alquiler, sueldos de trabajadoras, servicios, etc. (no un costo de una venta puntual, eso va en \"Gastos Directos\" arriba).",
+    negocioGastosOpConceptoPlaceholder: "Alquiler del local, Sueldo Ryana...",
+    negocioGastosOpAddBtn: "+ Agregar",
+    negocioGastosOpTotalLabel: "Gastos Operativos",
+    negocioIngresosLabel: "Ingresos por Ventas/Servicios",
+    negocioGastosDirectosLabel: "Gastos Directos (por transacción)",
+    negocioBeneficioNetoLabel: "Beneficio Neto Real del Negocio",
     storyModalEyebrow: "NÚCLEO MIIKAERU // REGISTRO CUÁNTICO DE LORE",
     storyModalViewChapters: "📖 Capítulos",
     storyModalViewCharacters: "🧬 Entidades del Nexus",
@@ -1162,8 +1175,8 @@ const I18N = {
     statCompass: "Compass",
     statFinance: "Finance",
     statStreakTitle: "Learning streak",
-    statBalanceGlobalTitle: "Global Balance",
-    statBalanceGlobal: "Global Balance",
+    statBalanceGlobalTitle: "Real business profit (sales/services minus operating expenses) — never includes your personal Monthly Income",
+    statBalanceGlobal: "Business Balance",
     hudBannerPhrase1: "TAKE CONTROL OF YOUR BUSINESS",
     hudBannerPhrase2: "KEEP YOUR LEARNING STREAK ALIVE",
     hudBannerPhrase3: "EVERY DAY COUNTS TOWARD YOUR FUTURE",
@@ -1249,9 +1262,10 @@ const I18N = {
     payrollAuditOpenTitle: "Payroll Audit & Control",
     payrollAuditTitle: "📋 Payroll Audit & Control",
     payrollAuditSubtitle: "Japanese payslip structure (給与明細書) — log your hours and income to calculate your real net pay.",
-    payrollScanBtn: "📷 Upload Payslip / Timesheet",
-    payrollScanScanning: "Scanning document...",
-    payrollScanDone: "Document read — fields updated.",
+    payrollManualNote: "✍️ Enter the exact amounts from your payslip by hand — that way the calculation is always correct, digit for digit.",
+    payrollScanBtn: "📎 Attach Receipt Photo",
+    payrollScanScanning: "Saving receipt...",
+    payrollScanDone: "Receipt saved.",
     payrollEvidenceSavedText: "Receipt saved.",
     payrollHoursTitle: "⏱️ Days / Hours Worked",
     payrollHorasBaseLabel: "Base Hours (出勤時間)",
@@ -1261,10 +1275,14 @@ const I18N = {
     payrollSueldoBaseLabel: "Base Salary (基本給)",
     payrollBonosLabel: "Bonuses / Incentives",
     payrollDeductionsTitle: "➖ Deductions",
-    payrollSegurosLabel: "Insurance (社会保険)",
-    payrollImpuestosLabel: "Taxes (所得税)",
-    payrollAdelantosLabel: "Advances (前払い)",
-    payrollNetoFinalLabel: "Final Net Pay",
+    payrollSeguroSaludLabel: "Health Insurance (健康保険料)",
+    payrollPensionLabel: "Pension (厚生年金保険料)",
+    payrollSeguroEmpleoLabel: "Employment Insurance (雇用保険料)",
+    payrollImpuestoRentaLabel: "Income Tax (所得税)",
+    payrollImpuestoResidenciaLabel: "Resident Tax (住民税)",
+    payrollAdelantosLabel: "Advances / Other Deductions (前払い等)",
+    payrollDescuentosTotalLabel: "Total Deductions (控除合計額)",
+    payrollNetoFinalLabel: "Final Net Pay (差引支給額)",
     payrollApplyBtn: "✓ Use as Monthly Income",
     payrollAppliedMessage: "I applied my Payroll Audit: Final Net Pay of {amount} as Monthly Income.",
     categoryBreakdownOpenTitle: "View expense breakdown",
@@ -1366,6 +1384,14 @@ const I18N = {
     negocioVentaGananciaFinalLabel: "Final Net Profit",
     negocioGananciaPreviewLabel: "Net Profit (preview)",
     negocioRegistrarBtn: "+ Log Transaction",
+    negocioGastosOpTitle: "🏢 Business Operating Expenses",
+    negocioGastosOpHint: "Fixed/recurring business costs — rent, staff wages, utilities, etc. (not a cost tied to one specific sale, that goes under \"Direct Expenses\" above).",
+    negocioGastosOpConceptoPlaceholder: "Shop rent, Ryana's wage...",
+    negocioGastosOpAddBtn: "+ Add",
+    negocioGastosOpTotalLabel: "Operating Expenses",
+    negocioIngresosLabel: "Sales / Service Income",
+    negocioGastosDirectosLabel: "Direct Expenses (per transaction)",
+    negocioBeneficioNetoLabel: "Real Net Business Profit",
     storyModalEyebrow: "MIIKAERU CORE // QUANTUM LORE REGISTRY",
     storyModalViewChapters: "📖 Chapters",
     storyModalViewCharacters: "🧬 Nexus Entities",
@@ -1650,8 +1676,8 @@ const I18N = {
     statCompass: "コンパス",
     statFinance: "財務",
     statStreakTitle: "学習の連続記録",
-    statBalanceGlobalTitle: "グローバル残高",
-    statBalanceGlobal: "グローバル残高",
+    statBalanceGlobalTitle: "事業の実質利益（売上・サービス収入から運営費を引いた額）— 個人の月収は含みません",
+    statBalanceGlobal: "事業残高",
     hudBannerPhrase1: "ビジネスの主導権を握れ",
     hudBannerPhrase2: "学習の連続記録を維持しよう",
     hudBannerPhrase3: "毎日が未来につながる",
@@ -1737,9 +1763,10 @@ const I18N = {
     payrollAuditOpenTitle: "給与監査・管理",
     payrollAuditTitle: "📋 給与監査・管理",
     payrollAuditSubtitle: "日本の給与明細書の構成 — 勤務時間と収入を記録して実際の手取り額を計算します。",
-    payrollScanBtn: "📷 給与明細書 / 勤怠表をアップロード",
-    payrollScanScanning: "書類をスキャン中...",
-    payrollScanDone: "書類を読み取りました — 項目を更新しました。",
+    payrollManualNote: "✍️ 給与明細書の正確な金額を手入力してください — そうすれば計算は常に正確です。",
+    payrollScanBtn: "📎 証憑写真を添付",
+    payrollScanScanning: "証憑を保存中...",
+    payrollScanDone: "証憑を保存しました。",
     payrollEvidenceSavedText: "証憑を保存しました。",
     payrollHoursTitle: "⏱️ 勤務日数・時間",
     payrollHorasBaseLabel: "出勤時間",
@@ -1749,10 +1776,14 @@ const I18N = {
     payrollSueldoBaseLabel: "基本給",
     payrollBonosLabel: "ボーナス・手当",
     payrollDeductionsTitle: "➖ 控除",
-    payrollSegurosLabel: "社会保険",
-    payrollImpuestosLabel: "所得税",
-    payrollAdelantosLabel: "前払い",
-    payrollNetoFinalLabel: "最終手取り額",
+    payrollSeguroSaludLabel: "健康保険料",
+    payrollPensionLabel: "厚生年金保険料",
+    payrollSeguroEmpleoLabel: "雇用保険料",
+    payrollImpuestoRentaLabel: "所得税",
+    payrollImpuestoResidenciaLabel: "住民税",
+    payrollAdelantosLabel: "前払い等",
+    payrollDescuentosTotalLabel: "控除合計額",
+    payrollNetoFinalLabel: "差引支給額",
     payrollApplyBtn: "✓ 月収として使用",
     payrollAppliedMessage: "給与監査を適用しました：最終手取り額{amount}を月収として設定しました。",
     categoryBreakdownOpenTitle: "支出内訳を見る",
@@ -1854,6 +1885,14 @@ const I18N = {
     negocioVentaGananciaFinalLabel: "最終純利益",
     negocioGananciaPreviewLabel: "純利益（プレビュー）",
     negocioRegistrarBtn: "+ 取引を登録",
+    negocioGastosOpTitle: "🏢 事業運営費",
+    negocioGastosOpHint: "家賃、従業員の給与、光熱費など固定・定期的な事業コスト（特定の販売に紐づくコストは上の「直接経費」へ）。",
+    negocioGastosOpConceptoPlaceholder: "店舗家賃、Ryanaの給与...",
+    negocioGastosOpAddBtn: "+ 追加",
+    negocioGastosOpTotalLabel: "運営費",
+    negocioIngresosLabel: "売上・サービス収入",
+    negocioGastosDirectosLabel: "直接経費（取引ごと）",
+    negocioBeneficioNetoLabel: "事業の実質純利益",
     storyModalEyebrow: "ミイカエル核心 // 量子ロア記録",
     storyModalViewChapters: "📖 チャプター",
     storyModalViewCharacters: "🧬 ネクサスの存在",
@@ -3678,6 +3717,14 @@ function defaultState() {
         balance: 0,
         tier: 0,
         ingresoMensual: 0,
+        // Gastos operativos FIJOS/RECURRENTES del negocio (alquiler,
+        // sueldos de trabajadoras, servicios, etc.) — separado de
+        // businessLedger (que es un registro de TRANSACCIONES puntuales de
+        // venta/servicio) porque son dos conceptos distintos: un costo
+        // operativo no está atado a una venta específica. Cada entrada:
+        // { id, concepto, monto }. Ver renderNegocioGastosOperativos()/
+        // renderFinanzasGlobalSummary() más abajo.
+        negocioGastosOperativos: [],
         // items: desglose de gastos individuales de la categoría (ver
         // modal "Desglose de Gastos"). Cuando tiene elementos, `amount`
         // pasa a ser la SUMA de items (auto-sincronizada) en vez de un
@@ -3699,8 +3746,15 @@ function defaultState() {
           horasNocturnas: 0,
           sueldoBase: 0,
           bonos: 0,
-          seguros: 0,
-          impuestos: 0,
+          // Desglose exacto (antes "seguros"+"impuestos" en un solo campo
+          // cada uno, perdiendo detalle real de boleta) — ver
+          // loadPayrollAuditIntoForm() para la migración de snapshots
+          // viejos que todavía tengan los campos anteriores guardados.
+          seguroSalud: 0,
+          pension: 0,
+          seguroEmpleo: 0,
+          impuestoRenta: 0,
+          impuestoResidencia: 0,
           adelantos: 0,
           evidenceImage: null,
         },
@@ -4188,12 +4242,19 @@ document.addEventListener("DOMContentLoaded", () => {
   const payrollSueldoBaseSymbol = document.getElementById("payroll-sueldo-base-symbol");
   const payrollBonosInput = document.getElementById("payroll-bonos");
   const payrollBonosSymbol = document.getElementById("payroll-bonos-symbol");
-  const payrollSegurosInput = document.getElementById("payroll-seguros");
-  const payrollSegurosSymbol = document.getElementById("payroll-seguros-symbol");
-  const payrollImpuestosInput = document.getElementById("payroll-impuestos");
-  const payrollImpuestosSymbol = document.getElementById("payroll-impuestos-symbol");
+  const payrollSeguroSaludInput = document.getElementById("payroll-seguro-salud");
+  const payrollSeguroSaludSymbol = document.getElementById("payroll-seguro-salud-symbol");
+  const payrollPensionInput = document.getElementById("payroll-pension");
+  const payrollPensionSymbol = document.getElementById("payroll-pension-symbol");
+  const payrollSeguroEmpleoInput = document.getElementById("payroll-seguro-empleo");
+  const payrollSeguroEmpleoSymbol = document.getElementById("payroll-seguro-empleo-symbol");
+  const payrollImpuestoRentaInput = document.getElementById("payroll-impuesto-renta");
+  const payrollImpuestoRentaSymbol = document.getElementById("payroll-impuesto-renta-symbol");
+  const payrollImpuestoResidenciaInput = document.getElementById("payroll-impuesto-residencia");
+  const payrollImpuestoResidenciaSymbol = document.getElementById("payroll-impuesto-residencia-symbol");
   const payrollAdelantosInput = document.getElementById("payroll-adelantos");
   const payrollAdelantosSymbol = document.getElementById("payroll-adelantos-symbol");
+  const payrollDescuentosTotalEl = document.getElementById("payroll-descuentos-total");
   const payrollNetoFinalEl = document.getElementById("payroll-neto-final");
   const payrollApplyBtn = document.getElementById("payroll-apply-btn");
 
@@ -4348,8 +4409,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const financeGlobalIngresosEl = document.getElementById("finanzas-global-ingresos");
   const financeGlobalGastosEl = document.getElementById("finanzas-global-gastos");
+  const financeGlobalGastosOperativosEl = document.getElementById("finanzas-global-gastos-operativos");
   const financeGlobalBalanceEl = document.getElementById("finanzas-global-balance");
   const financeOpenDashboardBtn = document.getElementById("finanzas-open-dashboard-btn");
+  const negocioGastosOpList = document.getElementById("negocio-gastos-op-list");
+  const negocioGastosOpForm = document.getElementById("negocio-gastos-op-form");
+  const negocioGastosOpConceptoInput = document.getElementById("negocio-gastos-op-concepto");
+  const negocioGastosOpMontoInput = document.getElementById("negocio-gastos-op-monto");
+  const negocioGastosOpMontoSymbol = document.getElementById("negocio-gastos-op-monto-symbol");
   const dashboardRankingToggle = document.getElementById("dashboard-ranking-toggle");
   const dashboardRankingList = document.getElementById("dashboard-ranking-list");
   const dashboardTableBody = document.getElementById("dashboard-table-body");
@@ -6242,16 +6309,84 @@ document.addEventListener("DOMContentLoaded", () => {
   // avatar). A diferencia de renderDashboard(), que calcula sobre `rows`
   // ya filtrado por negocio/colaborador, este siempre suma TODO
   // businessLedger sin filtrar — es el panorama global, no uno acotado.
+  // Beneficio Neto Real del Negocio = ingresos por ventas/servicios −
+  // gastos directos de cada transacción (comisiones, costo de compra,
+  // etc. — ya vienen sumados en txn.egresos) − gastos operativos FIJOS
+  // (alquiler, sueldos, ver negocioGastosOperativos). Antes solo restaba
+  // los gastos directos, así que un negocio con alquiler/sueldos altos
+  // podía mostrar "ganancia" que en realidad ya estaba comprometida —
+  // pedido explícito de que esta cifra sea el beneficio real, no solo el
+  // bruto de transacciones.
   function renderFinanzasGlobalSummary() {
     const totalIngresos = businessLedger.reduce((sum, txn) => sum + txn.ingresoBruto, 0);
     const totalGastos = businessLedger.reduce((sum, txn) => sum + txn.egresos, 0);
+    const totalGastosOperativos = state.pillars.finanzas.negocioGastosOperativos.reduce((sum, g) => sum + g.monto, 0);
+    const beneficioNeto = totalIngresos - totalGastos - totalGastosOperativos;
+
     financeGlobalIngresosEl.textContent = formatCurrency(totalIngresos, businessCurrency);
     financeGlobalGastosEl.textContent = formatCurrency(totalGastos, businessCurrency);
-    financeGlobalBalanceEl.textContent = formatCurrency(totalIngresos - totalGastos, businessCurrency);
+    financeGlobalGastosOperativosEl.textContent = formatCurrency(totalGastosOperativos, businessCurrency);
+    financeGlobalBalanceEl.textContent = formatCurrency(beneficioNeto, businessCurrency);
     // Mismo valor, reflejado también en el resumen rápido del HUD superior
-    // (pedido explícito del rediseño estilo HUD de juego).
-    hudBalanceGlobalEl.textContent = formatCurrency(totalIngresos - totalGastos, businessCurrency);
+    // (pedido explícito del rediseño estilo HUD de juego) — antes decía
+    // "Balance Global" (ver statBalanceGlobal en los diccionarios i18n),
+    // renombrado a "Balance Negocio" porque siempre fue 100% el negocio,
+    // nunca incluyó Ingreso Mensual/gastos personales.
+    hudBalanceGlobalEl.textContent = formatCurrency(beneficioNeto, businessCurrency);
   }
+
+  // ---- Gastos Operativos del Negocio (alquiler, sueldos, etc.) ----
+  function renderNegocioGastosOperativos() {
+    const list = state.pillars.finanzas.negocioGastosOperativos;
+    negocioGastosOpList.innerHTML = "";
+    list.forEach((gasto) => {
+      const row = document.createElement("div");
+      row.className = "negocio-gastos-op-row";
+
+      const concepto = document.createElement("span");
+      concepto.className = "negocio-gastos-op-row__concepto";
+      concepto.textContent = gasto.concepto;
+
+      const monto = document.createElement("span");
+      monto.className = "negocio-gastos-op-row__monto";
+      monto.textContent = formatCurrency(gasto.monto, businessCurrency);
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.type = "button";
+      deleteBtn.className = "negocio-gastos-op-row__delete";
+      deleteBtn.setAttribute("aria-label", "Eliminar");
+      deleteBtn.textContent = "✕";
+      deleteBtn.addEventListener("click", () => {
+        state.pillars.finanzas.negocioGastosOperativos = state.pillars.finanzas.negocioGastosOperativos.filter((g) => g.id !== gasto.id);
+        persist();
+        renderNegocioGastosOperativos();
+        renderFinanzasGlobalSummary();
+      });
+
+      row.append(concepto, monto, deleteBtn);
+      negocioGastosOpList.appendChild(row);
+    });
+  }
+
+  negocioGastosOpForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const concepto = negocioGastosOpConceptoInput.value.trim();
+    const monto = Number(negocioGastosOpMontoInput.value) || 0;
+    if (!concepto || monto <= 0) return;
+
+    state.pillars.finanzas.negocioGastosOperativos.push({
+      id: `gop-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      concepto,
+      monto,
+    });
+    persist();
+    renderNegocioGastosOperativos();
+    renderFinanzasGlobalSummary();
+
+    negocioGastosOpConceptoInput.value = "";
+    negocioGastosOpMontoInput.value = "";
+    negocioGastosOpConceptoInput.focus();
+  });
 
   financeOpenDashboardBtn.addEventListener("click", openDashboardModal);
 
@@ -6278,24 +6413,35 @@ document.addEventListener("DOMContentLoaded", () => {
     const symbol = (CURRENCIES[state.currency] || CURRENCIES.PEN).symbol;
     payrollSueldoBaseSymbol.textContent = symbol;
     payrollBonosSymbol.textContent = symbol;
-    payrollSegurosSymbol.textContent = symbol;
-    payrollImpuestosSymbol.textContent = symbol;
+    payrollSeguroSaludSymbol.textContent = symbol;
+    payrollPensionSymbol.textContent = symbol;
+    payrollSeguroEmpleoSymbol.textContent = symbol;
+    payrollImpuestoRentaSymbol.textContent = symbol;
+    payrollImpuestoResidenciaSymbol.textContent = symbol;
     payrollAdelantosSymbol.textContent = symbol;
   }
 
+  // Desglose exacto (pedido explícito, boleta japonesa real como
+  // referencia): 5 líneas de descuento en vez de 2 campos genéricos, para
+  // poder copiar cada renglón de 控除 (deducciones) de la boleta física
+  // tal cual viene, sin tener que sumar nada mentalmente antes de tipear.
   function computePayrollNeto() {
     const sueldoBase = Number(payrollSueldoBaseInput.value) || 0;
     const bonos = Number(payrollBonosInput.value) || 0;
-    const seguros = Number(payrollSegurosInput.value) || 0;
-    const impuestos = Number(payrollImpuestosInput.value) || 0;
+    const seguroSalud = Number(payrollSeguroSaludInput.value) || 0;
+    const pension = Number(payrollPensionInput.value) || 0;
+    const seguroEmpleo = Number(payrollSeguroEmpleoInput.value) || 0;
+    const impuestoRenta = Number(payrollImpuestoRentaInput.value) || 0;
+    const impuestoResidencia = Number(payrollImpuestoResidenciaInput.value) || 0;
     const adelantos = Number(payrollAdelantosInput.value) || 0;
     const ingresosBrutos = sueldoBase + bonos;
-    const descuentos = seguros + impuestos + adelantos;
+    const descuentos = seguroSalud + pension + seguroEmpleo + impuestoRenta + impuestoResidencia + adelantos;
     return { ingresosBrutos, descuentos, neto: ingresosBrutos - descuentos };
   }
 
   function updatePayrollNeto() {
-    const { neto } = computePayrollNeto();
+    const { descuentos, neto } = computePayrollNeto();
+    payrollDescuentosTotalEl.textContent = formatCurrency(descuentos, state.currency);
     payrollNetoFinalEl.textContent = formatCurrency(neto, state.currency);
   }
 
@@ -6306,21 +6452,35 @@ document.addEventListener("DOMContentLoaded", () => {
     audit.horasNocturnas = Number(payrollHorasNocturnasInput.value) || 0;
     audit.sueldoBase = Number(payrollSueldoBaseInput.value) || 0;
     audit.bonos = Number(payrollBonosInput.value) || 0;
-    audit.seguros = Number(payrollSegurosInput.value) || 0;
-    audit.impuestos = Number(payrollImpuestosInput.value) || 0;
+    audit.seguroSalud = Number(payrollSeguroSaludInput.value) || 0;
+    audit.pension = Number(payrollPensionInput.value) || 0;
+    audit.seguroEmpleo = Number(payrollSeguroEmpleoInput.value) || 0;
+    audit.impuestoRenta = Number(payrollImpuestoRentaInput.value) || 0;
+    audit.impuestoResidencia = Number(payrollImpuestoResidenciaInput.value) || 0;
     audit.adelantos = Number(payrollAdelantosInput.value) || 0;
     persist();
   }
 
   function loadPayrollAuditIntoForm() {
     const audit = state.pillars.finanzas.payrollAudit || {};
+    // Migración de snapshots viejos (antes de este Bloque): "seguros" e
+    // "impuestos" eran un solo campo cada uno — si el nuevo desglose
+    // todavía está vacío pero el snapshot viejo tenía algo guardado, ese
+    // monto se vuelca al primer campo del desglose nuevo en vez de
+    // perderse (mejor-esfuerzo: el usuario puede reacomodarlo a mano).
+    if (!audit.seguroSalud && audit.seguros) audit.seguroSalud = audit.seguros;
+    if (!audit.impuestoRenta && audit.impuestos) audit.impuestoRenta = audit.impuestos;
+
     payrollHorasBaseInput.value = audit.horasBase || "";
     payrollHorasExtraInput.value = audit.horasExtra || "";
     payrollHorasNocturnasInput.value = audit.horasNocturnas || "";
     payrollSueldoBaseInput.value = audit.sueldoBase || "";
     payrollBonosInput.value = audit.bonos || "";
-    payrollSegurosInput.value = audit.seguros || "";
-    payrollImpuestosInput.value = audit.impuestos || "";
+    payrollSeguroSaludInput.value = audit.seguroSalud || "";
+    payrollPensionInput.value = audit.pension || "";
+    payrollSeguroEmpleoInput.value = audit.seguroEmpleo || "";
+    payrollImpuestoRentaInput.value = audit.impuestoRenta || "";
+    payrollImpuestoResidenciaInput.value = audit.impuestoResidencia || "";
     payrollAdelantosInput.value = audit.adelantos || "";
 
     if (audit.evidenceImage) {
@@ -6362,8 +6522,11 @@ document.addEventListener("DOMContentLoaded", () => {
     payrollHorasNocturnasInput,
     payrollSueldoBaseInput,
     payrollBonosInput,
-    payrollSegurosInput,
-    payrollImpuestosInput,
+    payrollSeguroSaludInput,
+    payrollPensionInput,
+    payrollSeguroEmpleoInput,
+    payrollImpuestoRentaInput,
+    payrollImpuestoResidenciaInput,
     payrollAdelantosInput,
   ].forEach((input) => {
     const handler = () => {
@@ -6390,37 +6553,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
   payrollScanBtn.addEventListener("click", () => payrollScanInput.click());
 
-  // A diferencia de negocioScanPreview (URL.createObjectURL, temporal),
-  // acá se usa FileReader → dataURL: el pedido explícito quiere la foto
-  // "guardada en localStorage" como comprobante — un blob: URL se
-  // invalida al recargar la página, un data: URL sí sobrevive.
+  // Antes esto llamaba a scanPayrollDocument() y volcaba su resultado
+  // (pseudo-aleatorio, ver nota en index.html junto a este botón) encima
+  // de los campos que el usuario ya había tipeado — reportado como bug
+  // real: sobrescribía números correctos con basura sin relación a la
+  // imagen. Ahora SOLO guarda la foto como comprobante de referencia
+  // (FileReader → dataURL, igual que antes, sobrevive a un reload) — cero
+  // auto-fill, los campos de abajo son 100% lo que el usuario tipeó.
   payrollScanInput.addEventListener("change", () => {
     const file = payrollScanInput.files[0];
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = async () => {
+    reader.onload = () => {
       const dataUrl = reader.result;
       payrollScanPreview.src = dataUrl;
       payrollScanStatus.hidden = false;
-      payrollScanStatusText.textContent = t("payrollScanScanning");
-
-      const result = await scanPayrollDocument(file);
-
-      payrollHorasBaseInput.value = result.horasBase;
-      payrollHorasExtraInput.value = result.horasExtra;
-      payrollHorasNocturnasInput.value = result.horasNocturnas;
-      payrollSueldoBaseInput.value = result.sueldoBase;
-      payrollBonosInput.value = result.bonos;
-      payrollSegurosInput.value = result.seguros;
-      payrollImpuestosInput.value = result.impuestos;
-      payrollAdelantosInput.value = result.adelantos;
 
       state.pillars.finanzas.payrollAudit.evidenceImage = dataUrl;
-      persistPayrollAuditFromForm();
-      updatePayrollNeto();
+      persist();
 
-      payrollScanStatusText.textContent = t("payrollScanDone");
+      payrollScanStatusText.textContent = t("payrollEvidenceSavedText");
       payrollScanInput.value = "";
     };
     reader.readAsDataURL(file);
@@ -6628,6 +6781,7 @@ document.addEventListener("DOMContentLoaded", () => {
     negocioServicioGastosSymbol.textContent = symbol;
     negocioVentaPrecioUnitarioSymbol.textContent = symbol;
     negocioVentaMontoCobradoSymbol.textContent = symbol;
+    negocioGastosOpMontoSymbol.textContent = symbol;
     // El sufijo de la comisión de Venta muestra el símbolo de moneda solo
     // en modo "Monto Fijo" — en modo "%" muestra el signo de porcentaje.
     negocioVentaComisionSuffix.textContent = negocioVentaComisionModo === "fijo" ? symbol : "%";
@@ -6836,25 +6990,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Simulación de lectura de boleta de sueldo / hoja de asistencia
-  // (給与明細書 / 勤怠管理表) — mismo criterio determinístico que arriba.
-  function scanPayrollDocument(file) {
-    const seed = seedFromFile(file);
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          horasBase: 150 + (seed % 30),
-          horasExtra: seed % 25,
-          horasNocturnas: seed % 15,
-          sueldoBase: 150000 + (seed % 20) * 5000,
-          bonos: (seed % 5) * 5000,
-          seguros: 12000 + (seed % 10) * 500,
-          impuestos: 8000 + (seed % 8) * 400,
-          adelantos: seed % 4 === 0 ? (seed % 10) * 1000 : 0,
-        });
-      }, 1200);
-    });
-  }
+  // scanPayrollDocument() (simulación pseudo-aleatoria de lectura de
+  // boleta de sueldo) se eliminó acá — ver nota junto a #payroll-scan-btn
+  // en index.html y al handler de payrollScanInput más abajo: generaba
+  // números sin relación a la imagen real, reportado como bug.
 
   // Simulación de lectura de recibo/boleta de compra personal — el
   // concepto se elige según la categoría de gasto que se está
@@ -10626,6 +10765,7 @@ document.addEventListener("DOMContentLoaded", () => {
   financeIngresoInput.value = state.pillars.finanzas.ingresoMensual || "";
   renderFinanzasCategories();
   updateFinanzasSummary();
+  renderNegocioGastosOperativos();
   renderFinanzasGlobalSummary();
   refreshNegocioSuggestions();
   updateNegocioGananciaPreview();

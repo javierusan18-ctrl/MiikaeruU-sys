@@ -1447,6 +1447,99 @@ textarea,
   font-size: 0.85rem;
 }
 
+/* Fila del Sueldo Neto Final (差引支給額) — mismo look que
+   .finanzas-panel__row--computed pero con más énfasis, es el número que
+   de verdad importa de toda la Auditoría de Nómina. */
+.finanzas-panel__row--neto {
+  border-color: rgba(255, 183, 0, 0.5);
+  background: rgba(255, 183, 0, 0.06);
+}
+.finanzas-panel__row--neto span {
+  color: var(--neon-gold);
+  font-size: 1rem;
+}
+
+.payroll-manual-note {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin: 0 0 8px;
+}
+
+/* Gastos Operativos del Negocio (alquiler, sueldos, etc.) — mismo patrón
+   visual que .category-item-row (Desglose de Gastos por Categoría), para
+   consistencia entre las dos listas CRUD chicas de la app. */
+.negocio-gastos-op-hint {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin: 0 0 8px;
+}
+
+.negocio-gastos-op-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.negocio-gastos-op-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 46, 154, 0.25);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 46, 154, 0.04);
+}
+
+.negocio-gastos-op-row__concepto {
+  flex: 1;
+  min-width: 0;
+  color: var(--text-primary);
+  font-size: 0.78rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.negocio-gastos-op-row__monto {
+  flex-shrink: 0;
+  color: var(--neon-magenta);
+  font-weight: 700;
+  font-size: 0.78rem;
+}
+
+.negocio-gastos-op-row__delete {
+  background: none;
+  border: 1px solid rgba(255, 46, 154, 0.4);
+  color: var(--neon-magenta);
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  font-size: 0.68rem;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.negocio-gastos-op-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.negocio-gastos-op-form input[type="text"] {
+  flex: 1;
+  min-width: 140px;
+}
+
+.negocio-gastos-op-form input[type="number"] {
+  width: 100px;
+}
+
 .finanzas-servicio-comision-suffix {
   font-size: 0.75rem;
   color: var(--neon-cyan);

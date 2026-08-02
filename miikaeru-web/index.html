@@ -16,7 +16,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260802-03" />
+  <link rel="stylesheet" href="style.css?v=20260802-04" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -114,8 +114,8 @@
       <!-- Balance Global (todo el ledger de negocios, sin filtrar) — mismo
            cálculo que renderFinanzasGlobalSummary() dentro del Cuadro de
            Finanzas, reflejado también acá para el resumen rápido del HUD. -->
-      <div class="stat stat--balance-global" data-i18n-title="statBalanceGlobalTitle" title="Balance Global">
-        <span class="stat__label" data-i18n="statBalanceGlobal">Balance Global</span>
+      <div class="stat stat--balance-global" data-i18n-title="statBalanceGlobalTitle" title="Beneficio real del negocio — nunca incluye tu Ingreso Mensual personal">
+        <span class="stat__label" data-i18n="statBalanceGlobal">Balance Negocio</span>
         <span class="stat__value stat__value--balance-global" id="hud-balance-global">S/ 0</span>
       </div>
 
@@ -488,38 +488,6 @@
           <button type="button" class="finanzas-tab" data-finanzas-tab="servicios" data-i18n="financeTabServicios">Servicios / Negocio</button>
         </div>
 
-        <!-- Resumen General Financiero: antes vivía SOLO dentro del Dashboard
-             (modal aparte, se abría con clic en el avatar). Ahora vive acá,
-             permanente y scannable, visible sin importar qué pestaña esté
-             activa (Personales o Servicios/Negocio) — se calcula sobre TODO
-             el ledger de negocios sin filtrar, a diferencia de las tarjetas
-             del Dashboard que sí responden al filtro de negocio/colaborador.
-             Como el avatar ahora abre el mapa de Expansión de Ciudades (ver
-             #city-map-modal), este botón queda como la puerta de entrada al
-             Dashboard completo (ranking, tabla, impresión/PDF). -->
-        <div class="finanzas-global-summary" id="finanzas-global-summary">
-          <div class="finanzas-global-summary__card finanzas-global-summary__card--income">
-            <span class="finanzas-global-summary__label" data-i18n="dashboardCardIncome">Total Ingresos</span>
-            <span class="finanzas-global-summary__value" id="finanzas-global-ingresos">S/ 0</span>
-          </div>
-          <div class="finanzas-global-summary__card finanzas-global-summary__card--expense">
-            <span class="finanzas-global-summary__label" data-i18n="dashboardCardExpense">Total Gastos</span>
-            <span class="finanzas-global-summary__value" id="finanzas-global-gastos">S/ 0</span>
-          </div>
-          <div class="finanzas-global-summary__card finanzas-global-summary__card--balance">
-            <span class="finanzas-global-summary__label" data-i18n="dashboardCardBalance">Balance Neto Global</span>
-            <span class="finanzas-global-summary__value" id="finanzas-global-balance">S/ 0</span>
-          </div>
-          <button type="button" class="finanzas-global-summary__dashboard-btn" id="finanzas-open-dashboard-btn" data-i18n="financeOpenDashboardBtn">📊 Ver Dashboard Completo</button>
-          <!-- Ocultos por defecto en el HTML (no solo vía JS) para que
-               nunca haya ni un parpadeo visible antes de que
-               checkAdminSession() confirme la sesión — ver
-               applySuperAdminVisibility() en app.js. Solo se revelan si
-               la sesión real de Supabase Auth coincide con ADMIN_EMAIL. -->
-          <button type="button" class="finanzas-global-summary__admin-btn" id="admin-panel-open-btn" data-i18n="adminPanelOpenBtn" hidden>🛡️ Panel de Administrador</button>
-          <button type="button" class="finanzas-global-summary__admin-btn finanzas-global-summary__admin-btn--inspector" id="inspector-open-btn" data-i18n="inspectorOpenBtn" hidden>🕵️ Agente Inspector</button>
-        </div>
-
         <!-- Pestaña 1: Gastos Personales (contenido original, sin cambios de lógica) -->
         <div class="finanzas-tab-panel" id="finanzas-tab-personal">
           <div class="finanzas-panel__row">
@@ -727,6 +695,64 @@
           </div>
 
           <button type="button" class="btn-register" id="negocio-registrar-btn" data-i18n="negocioRegistrarBtn">+ Registrar Transacción</button>
+
+          <!-- Gastos Operativos del Negocio (alquiler, sueldos de
+               trabajadoras, etc.) — pedido explícito: antes NO existía
+               ningún lugar para este tipo de costo fijo/recurrente, así
+               que terminaba mezclado como gasto personal (categoría
+               Vivienda) o forzado dentro de "Gastos Directos" de una
+               transacción puntual, ninguno de los dos correcto. Lista
+               simple, separada del ledger de transacciones — ver
+               state.pillars.finanzas.negocioGastosOperativos en app.js. -->
+          <h3 class="payroll-section-title" data-i18n="negocioGastosOpTitle">🏢 Gastos Operativos del Negocio</h3>
+          <p class="negocio-gastos-op-hint" data-i18n="negocioGastosOpHint">Costos fijos/recurrentes del negocio — alquiler, sueldos de trabajadoras, servicios, etc. (no un costo de una venta puntual, eso va en "Gastos Directos" arriba).</p>
+          <div class="negocio-gastos-op-list" id="negocio-gastos-op-list">
+            <!-- filas renderizadas por app.js -->
+          </div>
+          <form class="negocio-gastos-op-form" id="negocio-gastos-op-form">
+            <input type="text" id="negocio-gastos-op-concepto" data-i18n-placeholder="negocioGastosOpConceptoPlaceholder" placeholder="Alquiler del local, Sueldo Ryana..." autocomplete="off" required />
+            <span class="finanzas-currency-symbol" id="negocio-gastos-op-monto-symbol">S/</span>
+            <input type="number" id="negocio-gastos-op-monto" min="0" step="0.01" placeholder="0.00" required />
+            <button type="submit" class="btn-add" data-i18n="negocioGastosOpAddBtn">+ Agregar</button>
+          </form>
+
+          <!-- Sumatoria del Negocio, AL FINAL de la sección (pedido
+               explícito) — reemplaza al viejo "Resumen General
+               Financiero" que vivía SIEMPRE visible arriba de ambas
+               pestañas (Personales incluida) sin aclarar que solo
+               sumaba el negocio, la causa real de la confusión
+               "ingresos personales mezclados con el negocio" reportada:
+               numéricamente nunca se mezclaron (dos localStorage
+               separados, ver businessLedger en app.js), pero el cartel
+               genérico "Balance Neto Global" visible todo el tiempo sí
+               lo parecía. Ahora vive solo acá, con nombres explícitos, y
+               de verdad descuenta los gastos operativos de arriba. -->
+          <div class="finanzas-global-summary" id="finanzas-global-summary">
+            <div class="finanzas-global-summary__card finanzas-global-summary__card--income">
+              <span class="finanzas-global-summary__label" data-i18n="negocioIngresosLabel">Ingresos por Ventas/Servicios</span>
+              <span class="finanzas-global-summary__value" id="finanzas-global-ingresos">S/ 0</span>
+            </div>
+            <div class="finanzas-global-summary__card finanzas-global-summary__card--expense">
+              <span class="finanzas-global-summary__label" data-i18n="negocioGastosDirectosLabel">Gastos Directos (por transacción)</span>
+              <span class="finanzas-global-summary__value" id="finanzas-global-gastos">S/ 0</span>
+            </div>
+            <div class="finanzas-global-summary__card finanzas-global-summary__card--expense">
+              <span class="finanzas-global-summary__label" data-i18n="negocioGastosOpTotalLabel">Gastos Operativos</span>
+              <span class="finanzas-global-summary__value" id="finanzas-global-gastos-operativos">S/ 0</span>
+            </div>
+            <div class="finanzas-global-summary__card finanzas-global-summary__card--balance">
+              <span class="finanzas-global-summary__label" data-i18n="negocioBeneficioNetoLabel">Beneficio Neto Real del Negocio</span>
+              <span class="finanzas-global-summary__value" id="finanzas-global-balance">S/ 0</span>
+            </div>
+            <button type="button" class="finanzas-global-summary__dashboard-btn" id="finanzas-open-dashboard-btn" data-i18n="financeOpenDashboardBtn">📊 Ver Dashboard Completo</button>
+            <!-- Ocultos por defecto en el HTML (no solo vía JS) para que
+                 nunca haya ni un parpadeo visible antes de que
+                 checkAdminSession() confirme la sesión — ver
+                 applySuperAdminVisibility() en app.js. Solo se revelan si
+                 la sesión real de Supabase Auth coincide con ADMIN_EMAIL. -->
+            <button type="button" class="finanzas-global-summary__admin-btn" id="admin-panel-open-btn" data-i18n="adminPanelOpenBtn" hidden>🛡️ Panel de Administrador</button>
+            <button type="button" class="finanzas-global-summary__admin-btn finanzas-global-summary__admin-btn--inspector" id="inspector-open-btn" data-i18n="inspectorOpenBtn" hidden>🕵️ Agente Inspector</button>
+          </div>
         </div>
 
         <button type="button" class="btn-register" id="finanzas-save-btn" data-i18n="financeSave">Guardar</button>
@@ -901,9 +927,21 @@
       <h2 class="modal-app__title" data-i18n="payrollAuditTitle">📋 Auditoría y Control de Nómina</h2>
       <p class="modal__subtitle" data-i18n="payrollAuditSubtitle">Estructura de boleta japonesa (給与明細書) — registra tus horas e ingresos para calcular tu sueldo neto real.</p>
 
+      <!-- Antes este botón llamaba a scanPayrollDocument() (app.js), que
+           pese al nombre nunca leyó la imagen — generaba un número
+           pseudo-aleatorio a partir de nombre/tamaño/fecha del archivo y
+           lo hacía pasar por una lectura real. Reportado por un usuario
+           real (boleta japonesa con Sashihiki Shikyuugaku 302,070 leída
+           como 237,700 — un número sin relación con la imagen). Se
+           reemplaza por lo único honesto posible sin backend de visión
+           real conectado: adjuntar la foto SOLO como comprobante de
+           referencia (se guarda, no se "lee") — los campos de abajo son
+           los que de verdad importan, y ya se llenaban a mano
+           perfectamente bien. -->
+      <p class="payroll-manual-note" data-i18n="payrollManualNote">✍️ Completa los montos exactos de tu boleta a mano — así el cálculo es siempre correcto, carácter por carácter.</p>
       <div class="negocio-scan-toolbar">
         <input type="file" id="payroll-scan-input" accept="image/png, image/jpeg" hidden />
-        <button type="button" class="btn-scan" id="payroll-scan-btn" data-i18n="payrollScanBtn">📷 Subir Boleta / Hoja de Horas</button>
+        <button type="button" class="btn-scan" id="payroll-scan-btn" data-i18n="payrollScanBtn">📎 Adjuntar Foto de Comprobante</button>
       </div>
       <div class="negocio-scan-status" id="payroll-scan-status" hidden>
         <img id="payroll-scan-preview" class="negocio-scan-preview" alt="" />
@@ -936,25 +974,50 @@
         <input type="number" id="payroll-bonos" min="0" placeholder="0" />
       </div>
 
+      <!-- Desglose exacto pedido explícito (antes era un solo campo
+           "Seguros" + un solo campo "Impuestos", perdiendo el detalle
+           real de la boleta) — ahora un campo por cada línea real de
+           控除 (descuentos) de una boleta japonesa estándar, para poder
+           copiar el número exacto de cada renglón sin tener que sumar
+           nada a mano antes de tipear. -->
       <h3 class="payroll-section-title" data-i18n="payrollDeductionsTitle">➖ Descuentos</h3>
       <div class="finanzas-panel__row">
-        <label for="payroll-seguros" data-i18n="payrollSegurosLabel">Seguros (社会保険)</label>
-        <span class="finanzas-currency-symbol" id="payroll-seguros-symbol">S/</span>
-        <input type="number" id="payroll-seguros" min="0" placeholder="0" />
+        <label for="payroll-seguro-salud" data-i18n="payrollSeguroSaludLabel">Seguro de Salud (健康保険料)</label>
+        <span class="finanzas-currency-symbol" id="payroll-seguro-salud-symbol">S/</span>
+        <input type="number" id="payroll-seguro-salud" min="0" placeholder="0" />
       </div>
       <div class="finanzas-panel__row">
-        <label for="payroll-impuestos" data-i18n="payrollImpuestosLabel">Impuestos (所得税)</label>
-        <span class="finanzas-currency-symbol" id="payroll-impuestos-symbol">S/</span>
-        <input type="number" id="payroll-impuestos" min="0" placeholder="0" />
+        <label for="payroll-pension" data-i18n="payrollPensionLabel">Pensión (厚生年金保険料)</label>
+        <span class="finanzas-currency-symbol" id="payroll-pension-symbol">S/</span>
+        <input type="number" id="payroll-pension" min="0" placeholder="0" />
       </div>
       <div class="finanzas-panel__row">
-        <label for="payroll-adelantos" data-i18n="payrollAdelantosLabel">Adelantos (前払い)</label>
+        <label for="payroll-seguro-empleo" data-i18n="payrollSeguroEmpleoLabel">Seguro de Empleo (雇用保険料)</label>
+        <span class="finanzas-currency-symbol" id="payroll-seguro-empleo-symbol">S/</span>
+        <input type="number" id="payroll-seguro-empleo" min="0" placeholder="0" />
+      </div>
+      <div class="finanzas-panel__row">
+        <label for="payroll-impuesto-renta" data-i18n="payrollImpuestoRentaLabel">Impuesto a la Renta (所得税)</label>
+        <span class="finanzas-currency-symbol" id="payroll-impuesto-renta-symbol">S/</span>
+        <input type="number" id="payroll-impuesto-renta" min="0" placeholder="0" />
+      </div>
+      <div class="finanzas-panel__row">
+        <label for="payroll-impuesto-residencia" data-i18n="payrollImpuestoResidenciaLabel">Impuesto Residencial (住民税)</label>
+        <span class="finanzas-currency-symbol" id="payroll-impuesto-residencia-symbol">S/</span>
+        <input type="number" id="payroll-impuesto-residencia" min="0" placeholder="0" />
+      </div>
+      <div class="finanzas-panel__row">
+        <label for="payroll-adelantos" data-i18n="payrollAdelantosLabel">Adelantos / Otros Descuentos (前払い等)</label>
         <span class="finanzas-currency-symbol" id="payroll-adelantos-symbol">S/</span>
         <input type="number" id="payroll-adelantos" min="0" placeholder="0" />
       </div>
-
       <div class="finanzas-panel__row finanzas-panel__row--computed">
-        <label data-i18n="payrollNetoFinalLabel">Sueldo Neto Final</label>
+        <label data-i18n="payrollDescuentosTotalLabel">Total Descuentos (控除合計額)</label>
+        <span id="payroll-descuentos-total">S/ 0</span>
+      </div>
+
+      <div class="finanzas-panel__row finanzas-panel__row--computed finanzas-panel__row--neto">
+        <label data-i18n="payrollNetoFinalLabel">Sueldo Neto Final (差引支給額)</label>
         <span id="payroll-neto-final">S/ 0</span>
       </div>
 
@@ -2066,7 +2129,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260802-03"></script>
+  <script src="app.js?v=20260802-04"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de
