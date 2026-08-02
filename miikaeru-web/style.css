@@ -7043,6 +7043,14 @@ textarea,
   min-height: 60vh;
 }
 
+/* Tablero de comando central (ver index.html #cyber-grid): oculto por
+   default — SOLO se activa dentro del @media Mobile Lite (≤767px) más
+   abajo. En desktop/tablet esta regla es la única que lo toca, así que
+   el león y los docks laterales de esos tamaños quedan intactos. */
+.cyber-grid {
+  display: none;
+}
+
 /* El avatar pasa a ser la pieza central del lobby: mucho más grande que
    en el layout de 3 columnas de antes (donde compartía sidebar con el
    App Hub). Sin .resizable a propósito — un centro fijo y prolijo es
@@ -7798,4 +7806,78 @@ button:active,
     border-bottom: 1px solid rgba(0, 240, 255, 0.15);
     padding: 5px 12px 8px;
   }
+
+  /* ---- Tablero de comando central (#cyber-grid, ver index.html) ----
+     Excepción explícita al tema claro de Mobile Lite, mismo mecanismo
+     que la franja superior de arriba: colores hex directos + !important
+     donde compite con el reset global de `*` (text-shadow/animation) —
+     pedido explícito de "estilo futurista/neón" puntual para esta
+     grilla, mientras el resto de Mobile Lite se queda en tema claro/
+     liviano. Reemplaza al león: se ocultan .panel--avatar y ambos
+     hud-dock — su contenido real (pilares, apps, íconos de utilidad)
+     sigue intacto en el DOM y sigue recibiendo los clicks reenviados
+     desde acá (ver data-forward + el listener nuevo en app.js), solo
+     deja de pintarse. Cero cambios en desktop/tablet: esta sección vive
+     entera dentro del @media ≤767px. */
+  .hud-dock--left,
+  .hud-dock--right,
+  .hud-center .panel--avatar {
+    display: none !important;
+  }
+
+  .hud-center {
+    display: block;
+    min-height: 0;
+  }
+
+  .cyber-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    width: 100%;
+    padding: 4px 2px 24px;
+  }
+
+  .cyber-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 96px;
+    padding: 10px 6px;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .cyber-tile:active {
+    transform: scale(0.94);
+  }
+
+  .cyber-tile__icon {
+    font-size: 1.9rem;
+    line-height: 1;
+    filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.4));
+  }
+
+  .cyber-tile__label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+    color: #FFFFFF !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55) !important;
+  }
+
+  .cyber-tile--cyan    { background: linear-gradient(145deg, #063b47, #0a9cc9); box-shadow: 0 0 0 1px rgba(0, 240, 255, 0.5), 0 4px 16px rgba(0, 200, 255, 0.35); }
+  .cyber-tile--blue    { background: linear-gradient(145deg, #0b1f5c, #2450e0); box-shadow: 0 0 0 1px rgba(70, 130, 255, 0.5), 0 4px 16px rgba(50, 100, 255, 0.35); }
+  .cyber-tile--green   { background: linear-gradient(145deg, #063d24, #0eb862); box-shadow: 0 0 0 1px rgba(0, 255, 156, 0.5), 0 4px 16px rgba(0, 255, 156, 0.3); }
+  .cyber-tile--purple  { background: linear-gradient(145deg, #2b0b52, #7d24e0); box-shadow: 0 0 0 1px rgba(180, 90, 255, 0.5), 0 4px 16px rgba(160, 70, 255, 0.35); }
+  .cyber-tile--magenta { background: linear-gradient(145deg, #4a0b34, #e02591); box-shadow: 0 0 0 1px rgba(255, 60, 180, 0.5), 0 4px 16px rgba(255, 40, 160, 0.3); }
+  .cyber-tile--gold    { background: linear-gradient(145deg, #4a2f00, #e0960a); box-shadow: 0 0 0 1px rgba(255, 183, 0, 0.55), 0 4px 16px rgba(255, 183, 0, 0.3); }
+  .cyber-tile--red     { background: linear-gradient(145deg, #4a0808, #e02a22); box-shadow: 0 0 0 1px rgba(255, 70, 60, 0.5), 0 4px 16px rgba(255, 50, 40, 0.3); }
+  .cyber-tile--orange  { background: linear-gradient(145deg, #4a2200, #f0741f); box-shadow: 0 0 0 1px rgba(255, 150, 50, 0.5), 0 4px 16px rgba(255, 130, 40, 0.3); }
 }

@@ -8129,6 +8129,26 @@ document.addEventListener("DOMContentLoaded", () => {
     selectApp(card.dataset.app);
   });
 
+  // Tablero de comando central (#cyber-grid, ver index.html) — grilla
+  // colorida que reemplaza al león SOLO en Mobile Lite (≤767px, ver
+  // style.css). No duplica ninguna lógica: cada tile guarda en
+  // data-forward el selector del botón REAL (.pillar-btn / .app-card /
+  // #chat-open-btn, etc., todos ya cableados arriba), y clickearlo acá
+  // simplemente dispara un click sintético sobre ese botón original —
+  // funciona aunque esté oculto (display:none no impide .click()), así
+  // que estados dinámicos (candados, tarjeta activa, etc.) siguen
+  // gobernados por el mismo código de siempre, sin ningún caso especial.
+  const cyberGrid = document.getElementById("cyber-grid");
+  if (cyberGrid) {
+    cyberGrid.addEventListener("click", (event) => {
+      const tile = event.target.closest(".cyber-tile");
+      if (!tile) return;
+      const selector = tile.dataset.forward;
+      const target = selector && document.querySelector(selector);
+      if (target) target.click();
+    });
+  }
+
   addAppBtn.addEventListener("click", () => {
     addMessage({ author: "SISTEMA", text: t("appAddedMessage"), variant: "system" });
   });

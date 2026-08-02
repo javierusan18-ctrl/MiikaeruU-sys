@@ -16,7 +16,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260801-38" />
+  <link rel="stylesheet" href="style.css?v=20260802-01" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -231,6 +231,81 @@
     <!-- CENTRO: solo el avatar, agrandado — "lobby despejado" pedido
          explícito, el fondo Cyberpunk del body ya hace de mapa neón. -->
     <div class="hud-center">
+
+      <!-- TABLERO DE COMANDO (grilla central, solo celular ≤767px, ver
+           style.css @media Mobile Lite): reemplaza el león + docks
+           laterales por bloques de colores neón — pedido explícito de
+           "pantalla llena, sin espacios vacíos". En desktop/tablet queda
+           en `display:none` y no se toca nada (el león y los docks
+           siguen exactamente igual). Cada tile NO duplica lógica: solo
+           reenvía el click al botón real correspondiente (mismo
+           #chat-open-btn / .pillar-btn / .app-card de siempre, ver
+           data-forward + el listener nuevo en app.js), así que estados
+           dinámicos (candados, colaborador activo, etc.) siguen
+           gobernados por el mismo código de siempre. -->
+      <div class="cyber-grid" id="cyber-grid" role="navigation" aria-label="Menú principal">
+        <button type="button" class="cyber-tile cyber-tile--gold" data-forward='.pillar-btn[data-pillar="finanzas"]'>
+          <span class="cyber-tile__icon">💰</span>
+          <span class="cyber-tile__label" data-i18n="pillarFinanzas">Finanzas</span>
+        </button>
+        <button type="button" class="cyber-tile cyber-tile--red" data-forward='.pillar-btn[data-pillar="fisico"]'>
+          <span class="cyber-tile__icon">💪</span>
+          <span class="cyber-tile__label" data-i18n="pillarFisico">Estado Físico</span>
+        </button>
+        <button type="button" class="cyber-tile cyber-tile--cyan" data-forward='.pillar-btn[data-pillar="espiritual"]'>
+          <span class="cyber-tile__icon">🧭</span>
+          <span class="cyber-tile__label" data-i18n="pillarEspiritual">Estado Espiritual</span>
+        </button>
+        <button type="button" class="cyber-tile cyber-tile--purple" data-forward='.pillar-btn[data-pillar="aprendizaje"]'>
+          <span class="cyber-tile__icon">🧠</span>
+          <span class="cyber-tile__label" data-i18n="pillarAprendizaje">Aprendizaje</span>
+        </button>
+        <button type="button" class="cyber-tile cyber-tile--red" data-forward='.app-card[data-app="bossfight"]'>
+          <span class="cyber-tile__icon">⚔️</span>
+          <span class="cyber-tile__label" data-i18n="appBossFightName">Boss Fight</span>
+        </button>
+        <button type="button" class="cyber-tile cyber-tile--magenta" data-forward='.app-card[data-app="japanese"]'>
+          <span class="cyber-tile__icon">🎌</span>
+          <span class="cyber-tile__label" data-i18n="appJapaneseName">Japonés AI Coach</span>
+        </button>
+        <button type="button" class="cyber-tile cyber-tile--green" data-forward='.app-card[data-app="habits"]'>
+          <span class="cyber-tile__icon">📈</span>
+          <span class="cyber-tile__label" data-i18n="appHabitsName">Tracker de Hábitos</span>
+        </button>
+        <button type="button" class="cyber-tile cyber-tile--blue" data-forward='.app-card[data-app="calendar"]'>
+          <span class="cyber-tile__icon">📅</span>
+          <span class="cyber-tile__label" data-i18n="appCalendarName">Calendario &amp; Eventos</span>
+        </button>
+        <button type="button" class="cyber-tile cyber-tile--magenta" data-forward='.app-card[data-app="biosync"]'>
+          <span class="cyber-tile__icon">❤️</span>
+          <span class="cyber-tile__label" data-i18n="appBiosyncName">Bio-Sync</span>
+        </button>
+        <button type="button" class="cyber-tile cyber-tile--orange" data-forward='.app-card[data-app="karaoke"]'>
+          <span class="cyber-tile__icon">🎤</span>
+          <span class="cyber-tile__label" data-i18n="appKaraokeName">Karaoke</span>
+        </button>
+        <button type="button" class="cyber-tile cyber-tile--cyan" data-forward="#chat-open-btn">
+          <span class="cyber-tile__icon">💬</span>
+          <span class="cyber-tile__label" data-i18n="chatTitle">Feed // Chat</span>
+        </button>
+        <button type="button" class="cyber-tile cyber-tile--purple" data-forward="#wishlist-open-btn">
+          <span class="cyber-tile__icon">🎁</span>
+          <span class="cyber-tile__label" data-i18n="wishlistTitle">Wishlist // Garage</span>
+        </button>
+        <button type="button" class="cyber-tile cyber-tile--green" data-forward="#city-map-open-btn">
+          <span class="cyber-tile__icon">🌐</span>
+          <span class="cyber-tile__label" data-i18n="cityMapTitle">Expansión de Territorio</span>
+        </button>
+        <button type="button" class="cyber-tile cyber-tile--gold" data-forward="#skins-open-btn">
+          <span class="cyber-tile__icon">🎭</span>
+          <span class="cyber-tile__label" data-i18n="skinsOpenBtn">Skins del León</span>
+        </button>
+        <button type="button" class="cyber-tile cyber-tile--blue" data-forward="#character-open-btn">
+          <span class="cyber-tile__icon">🧬</span>
+          <span class="cyber-tile__label" data-i18n="characterOpenBtn">Mi Personaje</span>
+        </button>
+      </div>
+
       <div class="panel panel--avatar glass scanlines">
         <!-- Globo de diálogo del asistente: mensajes dinámicos de guía,
              actualizados por app.js (bienvenida, subir de nivel, victoria en
@@ -1981,7 +2056,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260801-38"></script>
+  <script src="app.js?v=20260802-01"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de
