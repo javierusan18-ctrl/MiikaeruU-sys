@@ -1096,6 +1096,11 @@ const I18N = {
     jpVocabWordsCount: "palabras",
     jpMiniQuizVocabPrompt: "¿Qué significa esta palabra?",
     jpMiniQuizGrammarPrompt: "¿Qué partícula falta?",
+    jpBackToMenu: "← Volver al Menú",
+    jpParticlesOpenBtn: "🧩 Práctica de Partículas",
+    jpParticleQuizPrompt: "Completa la partícula que falta:",
+    jpLockedAt: "Se desbloquea en el Nivel",
+    jpLockedKeepGoing: "Sigue ganando XP para desbloquearlo.",
     jpMiniQuizDone: "🎉 ¡Quiz completo!",
     jpMiniQuizScore: "Puntaje:",
     n5CatGreetings: "Saludos",
@@ -1579,6 +1584,11 @@ const I18N = {
     jpVocabWordsCount: "words",
     jpMiniQuizVocabPrompt: "What does this word mean?",
     jpMiniQuizGrammarPrompt: "Which particle is missing?",
+    jpBackToMenu: "← Back to Menu",
+    jpParticlesOpenBtn: "🧩 Particle Practice",
+    jpParticleQuizPrompt: "Fill in the missing particle:",
+    jpLockedAt: "Unlocks at Level",
+    jpLockedKeepGoing: "Keep earning XP to unlock it.",
     jpMiniQuizDone: "🎉 Quiz complete!",
     jpMiniQuizScore: "Score:",
     n5CatGreetings: "Greetings",
@@ -2062,6 +2072,11 @@ const I18N = {
     jpVocabWordsCount: "単語",
     jpMiniQuizVocabPrompt: "この単語の意味は？",
     jpMiniQuizGrammarPrompt: "どの助詞が抜けている？",
+    jpBackToMenu: "← メニューに戻る",
+    jpParticlesOpenBtn: "🧩 助詞の練習",
+    jpParticleQuizPrompt: "抜けている助詞を入力してください：",
+    jpLockedAt: "レベルで解放:",
+    jpLockedKeepGoing: "XPを稼いで解放しよう。",
     jpMiniQuizDone: "🎉 クイズ完了！",
     jpMiniQuizScore: "スコア：",
     n5CatGreetings: "挨拶",
@@ -3505,6 +3520,47 @@ const N5_GRAMMAR_POINTS = [
 
 const JP_MASTERY_THRESHOLD = 3; // respuestas correctas para brillo dorado + 3 estrellas
 
+// ---------------- Progresión por Nivel del Módulo Japonés ----------------
+// Pedido explícito: Nivel 1 = lo más básico absoluto (vocales, fila "a") y
+// la dificultad escala de forma gradual hasta terminar en los kanji N5 más
+// avanzados que hay en el dataset. En vez de guardar un campo "nivel
+// requerido" a mano en cada una de las ~300 entradas de GOJUON_ROWS/
+// YOON_ROWS/N5_VOCAB_CATEGORIES/N5_GRAMMAR_POINTS/KANJI_N5 (alto riesgo de
+// tipear mal un valor en medio de contenido curricular ya verificado), el
+// nivel requerido se COMPUTA a partir de la posición de cada entrada en su
+// array — el orden de esos arrays YA sigue una progresión pedagógica
+// razonable (vocales → filas Gojuon → dakuten/handakuten → yōon → mayor
+// vocabulario/gramática → kanji), así que ese orden es la fuente de verdad
+// única, sin duplicar el dato en dos lugares que podrían desincronizarse.
+//
+// Nota de alcance honesta: el dataset actual solo cubre kanji N5 (no hay
+// N4-N1 todavía, ver #jp-level-toggle "Próximamente" en index.html) — "los
+// niveles más altos... culminando en kanjis avanzados" se cumple dentro de
+// lo que existe hoy (los últimos KANJI_N5 quedan al tope de la curva), no
+// implica kanji más allá de N5 porque ese contenido no está escrito aún.
+function jpKanaRowUnlockLevel(rowIndex) {
+  return rowIndex + 1; // fila "a" (あいうえお) = Nivel 1, ..., "pa" = Nivel 16
+}
+function jpYoonRowUnlockLevel(rowIndex) {
+  return 17 + rowIndex; // arranca justo después de la última fila Gojuon
+}
+function jpGrammarUnlockLevel(pointIndex) {
+  return 20 + pointIndex * 2; // 22 puntos → Niveles 20-62
+}
+function jpVocabCategoryUnlockLevel(catIndex) {
+  return 22 + catIndex * 3; // 10 categorías → Niveles 22-49
+}
+function jpKanjiUnlockLevel(kanjiIndex) {
+  return 30 + Math.floor(kanjiIndex / 2); // ~107 kanji, 2 por nivel → Niveles 30-83
+}
+
+function isJpLevelUnlocked(requiredLevel) {
+  return state.level >= requiredLevel;
+}
+
+// notifyJpLocked() vive dentro de la IIFE principal más abajo (necesita
+// setAvatarSpeech(), que es local a ese scope) — ver junto a applyJpLock().
+
 // "Fila KA" / "Row KA" en es/en, "KA行" en ja (sufijo, no prefijo — así
 // se nombran las filas del Gojuon en japonés real).
 function formatGojuonRowLabel(row) {
@@ -3515,10 +3571,13 @@ function formatGojuonRowLabel(row) {
 // Lista plana para practicar/quizzear, con forma uniforme sin importar
 // el script: `answer` es la romanización para hiragana/katakana, o el
 // significado en español para kanji — así showJpQuiz()/handleJpAnswer()
-// no necesitan ninguna rama especial por tipo.
+// no necesitan ninguna rama especial por tipo. Filtra contenido todavía
+// no desbloqueado por nivel (ver arriba) — así "Práctica General" y la
+// práctica por fila nunca preguntan por algo que la cuadrícula muestra
+// como candado.
 function getKanaList(script) {
   if (script === "kanji") {
-    return KANJI_N5.map((k) => ({
+    return KANJI_N5.filter((k, i) => isJpLevelUnlocked(jpKanjiUnlockLevel(i))).map((k) => ({
       char: k.char,
       answer: k.meaning,
       rowId: "kanji-n5",
@@ -3529,7 +3588,8 @@ function getKanaList(script) {
     }));
   }
   const list = [];
-  GOJUON_ROWS.forEach((row) => {
+  GOJUON_ROWS.forEach((row, rowIndex) => {
+    if (!isJpLevelUnlocked(jpKanaRowUnlockLevel(rowIndex))) return;
     row[script].forEach((char, i) => {
       list.push({ char, answer: row.romajiList[i], rowId: row.id, script });
     });
@@ -4408,8 +4468,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const japaneseModal = document.getElementById("japanese-modal");
   const japaneseModalClose = document.getElementById("japanese-modal-close");
+  const jpGridBackBtn = document.getElementById("jp-grid-back-btn");
   const jpScriptToggle = document.getElementById("jp-script-toggle");
   const jpGeneralPracticeBtn = document.getElementById("jp-general-practice-btn");
+  const jpParticlesOpenBtn = document.getElementById("jp-particles-open-btn");
   const jpRowsEl = document.getElementById("jp-rows");
   const jpViewGrid = document.getElementById("jp-view-grid");
   const jpViewPhases = document.getElementById("jp-view-phases");
@@ -5818,7 +5880,28 @@ document.addEventListener("DOMContentLoaded", () => {
     persist();
   }
 
+  // Animación flotante "+N XP" + pulso en la barra — pedido explícito de
+  // "animaciones visuales fluidas y futuristas cuando el usuario gane XP".
+  // Vive dentro de #xp-fill/.xp-bar__fill (position:relative ya existía en
+  // .xp-bar) así que no hace falta tocar el layout del HUD. Se auto-limpia
+  // al terminar la animación (animationend) — nunca deja nodos huérfanos
+  // aunque se dispare muy seguido (varios grantXP() en cadena).
+  function showXpGainFx(amount) {
+    if (!xpFill || !xpFill.parentElement) return;
+    const fx = document.createElement("span");
+    fx.className = "xp-gain-fx";
+    fx.textContent = `+${amount} XP`;
+    xpFill.parentElement.appendChild(fx);
+    fx.addEventListener("animationend", () => fx.remove());
+    setTimeout(() => fx.remove(), 2000); // red de seguridad si animationend no dispara (tab en 2do plano, etc.)
+
+    xpFill.classList.remove("xp-fill--pulse");
+    void xpFill.offsetWidth; // fuerza reflow para poder re-disparar la misma animación en cadena
+    xpFill.classList.add("xp-fill--pulse");
+  }
+
   function grantXP(amount) {
+    showXpGainFx(amount);
     state.xp += amount;
     let levelsGained = 0;
 
@@ -8883,6 +8966,38 @@ document.addEventListener("DOMContentLoaded", () => {
   // kanji, así que se listan todos juntos bajo un solo encabezado.
   // Reutiliza exactamente las mismas clases .jp-row/.jp-kana-btn, sin
   // CSS nuevo.
+  // Pequeño empujón de feedback (globo de diálogo del León, mismo patrón
+  // que el resto de la app) cuando se toca contenido bloqueado — no
+  // interrumpe con un modal, solo informa. Vive ACÁ (dentro de la IIFE
+  // principal) y no junto a jp*UnlockLevel()/isJpLevelUnlocked() más
+  // arriba porque necesita setAvatarSpeech(), que es local a este scope.
+  function notifyJpLocked(requiredLevel) {
+    setAvatarSpeech(`🔒 ${t("jpLockedAt")} ${requiredLevel}. ${t("jpLockedKeepGoing")}`);
+  }
+
+  // Aplica el candado visual/funcional de progresión (ver
+  // jp*UnlockLevel()/isJpLevelUnlocked() más arriba) a un botón de
+  // kana/kanji ya construido — usa `disabled` NATIVO en vez de una bandera
+  // manual: un <button disabled> ya no dispara "click" en absoluto (ni
+  // siquiera con event delegation), así que no hace falta ningún chequeo
+  // extra en jpRowsEl.addEventListener más abajo.
+  function applyJpLock(btn, requiredLevel) {
+    if (isJpLevelUnlocked(requiredLevel)) return;
+    btn.disabled = true;
+    btn.classList.add("jp-kana-btn--locked");
+    btn.title = `🔒 ${t("jpLockedAt")} ${requiredLevel}`;
+    const lock = document.createElement("span");
+    lock.className = "jp-lock-badge jp-lock-badge--kana";
+    lock.textContent = "🔒";
+    btn.appendChild(lock);
+  }
+
+  // Un único "renglón" con todos los Kanji N5 — a diferencia de
+  // hiragana/katakana no existe una estructura de filas Gojuon para
+  // kanji, así que se listan todos juntos bajo un solo encabezado.
+  // Reutiliza exactamente las mismas clases .jp-row/.jp-kana-btn, sin
+  // CSS nuevo. Cada kanji individual (no la fila entera) lleva su propio
+  // candado por nivel — ver jpKanjiUnlockLevel().
   function renderKanjiGrid() {
     const rowEl = document.createElement("div");
     rowEl.className = "jp-row";
@@ -8906,7 +9021,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const kanaWrap = document.createElement("div");
     kanaWrap.className = "jp-row__kana";
 
-    KANJI_N5.forEach((k) => {
+    KANJI_N5.forEach((k, kanjiIndex) => {
       const key = `kanji:${k.char}`;
       const level = state.pillars.aprendizaje.mastery[key] || 0;
 
@@ -8925,6 +9040,7 @@ document.addEventListener("DOMContentLoaded", () => {
         btn.appendChild(stars);
       }
 
+      applyJpLock(btn, jpKanjiUnlockLevel(kanjiIndex));
       kanaWrap.appendChild(btn);
     });
 
@@ -8940,9 +9056,13 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    GOJUON_ROWS.forEach((row) => {
+    GOJUON_ROWS.forEach((row, rowIndex) => {
+      const rowUnlockLevel = jpKanaRowUnlockLevel(rowIndex);
+      const rowLocked = !isJpLevelUnlocked(rowUnlockLevel);
+
       const rowEl = document.createElement("div");
       rowEl.className = "jp-row";
+      if (rowLocked) rowEl.classList.add("jp-row--locked");
 
       const header = document.createElement("div");
       header.className = "jp-row__header";
@@ -8950,6 +9070,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const label = document.createElement("span");
       label.className = "jp-row__label";
       label.textContent = formatGojuonRowLabel(row);
+      if (rowLocked) {
+        const lock = document.createElement("span");
+        lock.className = "jp-lock-badge";
+        lock.textContent = `🔒 ${t("jpLockedAt")} ${rowUnlockLevel}`;
+        label.appendChild(lock);
+      }
 
       const practiceBtn = document.createElement("button");
       practiceBtn.type = "button";
@@ -8957,6 +9083,7 @@ document.addEventListener("DOMContentLoaded", () => {
       practiceBtn.dataset.rowPractice = row.id;
       practiceBtn.title = `${t("jpPracticeRow")} ${formatGojuonRowLabel(row)}`;
       practiceBtn.textContent = "▶";
+      practiceBtn.disabled = rowLocked;
 
       header.append(label, practiceBtn);
 
@@ -8983,6 +9110,7 @@ document.addEventListener("DOMContentLoaded", () => {
           btn.appendChild(stars);
         }
 
+        applyJpLock(btn, rowUnlockLevel);
         kanaWrap.appendChild(btn);
       });
 
@@ -9134,7 +9262,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderN5VocabCategories() {
     jpVocabCatGrid.innerHTML = "";
-    N5_VOCAB_CATEGORIES.forEach((cat) => {
+    N5_VOCAB_CATEGORIES.forEach((cat, catIndex) => {
+      const requiredLevel = jpVocabCategoryUnlockLevel(catIndex);
+      const locked = !isJpLevelUnlocked(requiredLevel);
+
       const card = document.createElement("button");
       card.type = "button";
       card.className = "jp-vocab-cat-card";
@@ -9153,15 +9284,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
       card.append(icon, title, count);
 
-      const progress = n5ProgressCache[`vocab:${cat.id}`];
-      if (progress) {
-        const badge = document.createElement("span");
-        badge.className = "jp-vocab-cat-card__badge";
-        badge.textContent = `✓ ${progress.score}/${progress.total}`;
-        card.appendChild(badge);
+      if (locked) {
+        card.disabled = true;
+        card.classList.add("jp-vocab-cat-card--locked");
+        const lock = document.createElement("span");
+        lock.className = "jp-lock-badge";
+        lock.textContent = `🔒 ${t("jpLockedAt")} ${requiredLevel}`;
+        card.appendChild(lock);
+      } else {
+        const progress = n5ProgressCache[`vocab:${cat.id}`];
+        if (progress) {
+          const badge = document.createElement("span");
+          badge.className = "jp-vocab-cat-card__badge";
+          badge.textContent = `✓ ${progress.score}/${progress.total}`;
+          card.appendChild(badge);
+        }
+        card.addEventListener("click", () => openN5VocabWords(cat));
       }
 
-      card.addEventListener("click", () => openN5VocabWords(cat));
       jpVocabCatGrid.appendChild(card);
     });
   }
@@ -9218,7 +9358,10 @@ document.addEventListener("DOMContentLoaded", () => {
       jpGrammarList.appendChild(banner);
     }
 
-    N5_GRAMMAR_POINTS.forEach((point) => {
+    N5_GRAMMAR_POINTS.forEach((point, pointIndex) => {
+      const requiredLevel = jpGrammarUnlockLevel(pointIndex);
+      const locked = !isJpLevelUnlocked(requiredLevel);
+
       const card = document.createElement("div");
       card.className = "jp-grammar-card";
 
@@ -9232,6 +9375,17 @@ document.addEventListener("DOMContentLoaded", () => {
       pattern.textContent = point.pattern;
       header.append(label, pattern);
       card.appendChild(header);
+
+      if (locked) {
+        card.classList.add("jp-grammar-card--locked");
+        const lock = document.createElement("span");
+        lock.className = "jp-lock-badge";
+        lock.textContent = `🔒 ${t("jpLockedAt")} ${requiredLevel}`;
+        header.appendChild(lock);
+        card.addEventListener("click", () => notifyJpLocked(requiredLevel));
+        jpGrammarList.appendChild(card);
+        return;
+      }
 
       const body = document.createElement("div");
       body.className = "jp-grammar-card__body";
@@ -9305,24 +9459,28 @@ document.addEventListener("DOMContentLoaded", () => {
   // combo, mismo criterio que las palabras de Vocabulario N5.
   function renderYoonGrid() {
     jpYoonGrid.innerHTML = "";
-    YOON_ROWS.forEach((row) => {
+    YOON_ROWS.forEach((row, rowIndex) => {
+      const requiredLevel = jpYoonRowUnlockLevel(rowIndex);
+      const locked = !isJpLevelUnlocked(requiredLevel);
+
       row.hiragana.forEach((hiragana, i) => {
         const card = document.createElement("div");
         card.className = "jp-yoon-card";
 
         const hiraganaEl = document.createElement("span");
         hiraganaEl.className = "jp-yoon-card__hiragana";
-        hiraganaEl.textContent = hiragana;
+        hiraganaEl.textContent = locked ? "🔒" : hiragana;
 
         const katakanaEl = document.createElement("span");
         katakanaEl.className = "jp-yoon-card__katakana";
-        katakanaEl.textContent = row.katakana[i];
+        katakanaEl.textContent = locked ? `${t("jpLockedAt")} ${requiredLevel}` : row.katakana[i];
 
         const romajiEl = document.createElement("span");
         romajiEl.className = "jp-yoon-card__romaji";
-        romajiEl.textContent = row.romajiList[i];
+        romajiEl.textContent = locked ? "" : row.romajiList[i];
 
         card.append(hiraganaEl, katakanaEl, romajiEl);
+        if (locked) card.classList.add("jp-yoon-card--locked");
         jpYoonGrid.appendChild(card);
       });
     });
@@ -9333,7 +9491,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // practicable, y reutiliza el mismo motor genérico que Vocabulario/
   // Gramática en vez de tocar el quiz de kana/kanji existente.
   function buildYoonQuizItems() {
-    const pool = YOON_ROWS.flatMap((row) => row.hiragana.map((hiragana, i) => ({ hiragana, romaji: row.romajiList[i] })));
+    const pool = YOON_ROWS
+      .filter((row, rowIndex) => isJpLevelUnlocked(jpYoonRowUnlockLevel(rowIndex)))
+      .flatMap((row) => row.hiragana.map((hiragana, i) => ({ hiragana, romaji: row.romajiList[i] })));
     return shuffleArrayLocal(pool).map((entry) => {
       const distractors = shuffleArrayLocal(pool.filter((p) => p.romaji !== entry.romaji)).slice(0, 3).map((p) => p.romaji);
       return {
@@ -9389,26 +9549,63 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Puntos gramaticales cuyo label es una partícula real (no un patrón
+  // completo como "い-adj / な-adj") Y ya desbloqueados por nivel — base
+  // compartida entre el quiz de Gramática (una oración por punto) y el
+  // módulo dedicado de Práctica de Partículas (todas las oraciones de
+  // ejemplo, para más variedad).
+  function getUnlockedParticlePoints() {
+    return N5_GRAMMAR_POINTS
+      .map((point, pointIndex) => ({ point, pointIndex }))
+      .filter(({ point, pointIndex }) => point.label.length <= 2 && isJpLevelUnlocked(jpGrammarUnlockLevel(pointIndex)))
+      .map(({ point }) => point);
+  }
+
+  function blankParticleExample(point, example) {
+    const blanked = example.jp.replace(point.label, "＿");
+    // La lectura en hiragana se blanquea con el mismo ＿, en la misma
+    // posición — la partícula (は/も/を/に/で/が/の/から/しか/とき) ya es
+    // hiragana en el texto real, así que el reemplazo cae exactamente en
+    // el mismo lugar sin revelar la respuesta. Ver #jp-mini-quiz-reading.
+    const blankedReading = example.reading ? example.reading.replace(point.label, "＿") : null;
+    return { blanked, blankedReading };
+  }
+
   function buildGrammarQuizItems() {
     // Toma UNA oración de ejemplo por punto gramatical y esconde su
     // partícula/label — el resto de los labels de otros puntos actúan
-    // como distractores. Solo usa puntos donde el label es corto (una
-    // partícula real, no un patrón completo como "い-adj / な-adj") para
-    // que el blank tenga sentido dentro de la oración.
-    const particlePoints = N5_GRAMMAR_POINTS.filter((p) => p.label.length <= 2);
+    // como distractores.
+    const particlePoints = getUnlockedParticlePoints();
     return shuffleArrayLocal(particlePoints).map((point) => {
-      const example = point.examples[0];
-      const blanked = example.jp.replace(point.label, "＿");
-      // La lectura en hiragana se blanquea con el mismo ＿, en la misma
-      // posición — la partícula (は/も/を/に/で/が/の/から/しか/とき) ya es
-      // hiragana en el texto real, así que el reemplazo cae exactamente
-      // en el mismo lugar sin revelar la respuesta. Ver #jp-mini-quiz-reading.
-      const blankedReading = example.reading ? example.reading.replace(point.label, "＿") : null;
+      const { blanked, blankedReading } = blankParticleExample(point, point.examples[0]);
       const distractors = shuffleArrayLocal(particlePoints.filter((p) => p !== point)).slice(0, 3).map((p) => p.label);
       return {
         char: blanked,
         charReading: blankedReading,
         prompt: t("jpMiniQuizGrammarPrompt"),
+        answer: point.label,
+        options: shuffleArrayLocal([point.label, ...distractors]),
+      };
+    });
+  }
+
+  // ---------------- Práctica de Partículas (módulo dedicado) ----------------
+  // Mismo mecanismo que buildGrammarQuizItems() (completar la partícula que
+  // falta en una oración real) pero como su propia entrada desde la
+  // cuadrícula principal, no escondido dentro de Gramática N5 — pedido
+  // explícito de un módulo de práctica de partículas independiente. Usa
+  // TODAS las oraciones de ejemplo de cada punto (no solo la primera) para
+  // más variedad de práctica.
+  function buildParticleQuizItems() {
+    const particlePoints = getUnlockedParticlePoints();
+    const allExamples = particlePoints.flatMap((point) => point.examples.map((example) => ({ point, example })));
+    return shuffleArrayLocal(allExamples).map(({ point, example }) => {
+      const { blanked, blankedReading } = blankParticleExample(point, example);
+      const distractors = shuffleArrayLocal(particlePoints.filter((p) => p !== point)).slice(0, 3).map((p) => p.label);
+      return {
+        char: blanked,
+        charReading: blankedReading,
+        prompt: t("jpParticleQuizPrompt"),
         answer: point.label,
         options: shuffleArrayLocal([point.label, ...distractors]),
       };
@@ -9485,6 +9682,24 @@ document.addEventListener("DOMContentLoaded", () => {
     startMiniQuiz(buildGrammarQuizItems(), "grammar", "grammar");
   });
   jpMiniQuizBackBtn.addEventListener("click", () => showJpView(miniQuizReturnView));
+
+  // Módulo dedicado de Práctica de Partículas — entra directo desde la
+  // cuadrícula principal (ver botón junto a Vocabulario/Gramática/Yōon en
+  // index.html), sin pasar primero por Gramática N5.
+  jpParticlesOpenBtn.addEventListener("click", () => {
+    const items = buildParticleQuizItems();
+    if (items.length === 0) {
+      notifyJpLocked(jpGrammarUnlockLevel(0));
+      return;
+    }
+    startMiniQuiz(items, "grid", "particles");
+  });
+
+  // "Volver" claro desde la pantalla principal del módulo — antes solo
+  // existía el [✕] chico de la esquina; pedido explícito de un botón de
+  // regreso accesible, sobre todo ahora que el módulo pasa a pantalla
+  // completa en celular (ver style.css @media Mobile Lite).
+  jpGridBackBtn.addEventListener("click", closeAllAppModals);
 
   // Reparte según el modo elegido en #jp-config-modal: Práctica va directo
   // a Fases + Vocabulario (sin evaluación); Examen empieza por la Prueba 1
@@ -9779,7 +9994,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (correct) {
       jpSessionCorrect += 1;
-      state.pillars.aprendizaje.mastery[key] = Math.min(JP_MASTERY_THRESHOLD, (state.pillars.aprendizaje.mastery[key] || 0) + 1);
+      const prevLevel = state.pillars.aprendizaje.mastery[key] || 0;
+      const newLevel = Math.min(JP_MASTERY_THRESHOLD, prevLevel + 1);
+      state.pillars.aprendizaje.mastery[key] = newLevel;
+      // "...o complete palabras en su vocabulario" (pedido explícito) — el
+      // equivalente más cercano hoy a "completar una palabra" es que un
+      // kana/kanji cruce el umbral de dominio (JP_MASTERY_THRESHOLD, 3
+      // aciertos) por primera vez: brillo dorado + estrellas ya existían,
+      // acá se agrega el estallido visual + una recompensa chica extra.
+      if (newLevel >= JP_MASTERY_THRESHOLD && prevLevel < JP_MASTERY_THRESHOLD) {
+        jpQuizChar.classList.remove("jp-mastery-pop");
+        void jpQuizChar.offsetWidth;
+        jpQuizChar.classList.add("jp-mastery-pop");
+        grantXP(5);
+      }
     }
     persist();
 

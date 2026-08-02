@@ -16,7 +16,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260802-01" />
+  <link rel="stylesheet" href="style.css?v=20260802-03" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -1286,6 +1286,12 @@
 
       <!-- Sub-vista 1: cuadrícula Gojuon, elegir fila o práctica general -->
       <div class="jp-view" id="jp-view-grid">
+        <!-- "Volver" claro y accesible al menú principal — antes esta
+             pantalla (a diferencia de TODAS las demás sub-vistas del
+             módulo) no tenía ningún botón de regreso, solo el [✕] chico
+             de la esquina. Pedido explícito, más relevante ahora que el
+             módulo pasa a pantalla completa en celular. -->
+        <button type="button" class="btn-jp-back" id="jp-grid-back-btn" data-i18n="jpBackToMenu">← Volver al Menú</button>
         <!-- Selector de nivel JLPT: N5 es el único con contenido real hoy;
              N4-N1 se muestran a propósito (no se ocultan) para que quede
              claro que el currículum va a seguir creciendo — mismo criterio
@@ -1323,6 +1329,10 @@
           <button type="button" class="btn-register jp-general-btn jp-hanzi-writer-open-btn" id="jp-hanzi-writer-open-btn" data-i18n="jpHanziWriterOpenBtn">✍️ Trazos Reales</button>
           <button type="button" class="btn-register jp-general-btn" id="jp-vocab-open-btn" data-i18n="jpVocabOpenBtn">📚 Vocabulario N5</button>
           <button type="button" class="btn-register jp-general-btn" id="jp-grammar-open-btn" data-i18n="jpGrammarOpenBtn">📖 Gramática N5</button>
+          <!-- Módulo dedicado de partículas — pedido explícito: reutiliza
+               buildParticleQuizItems() (app.js), entra directo desde acá
+               en vez de estar escondido dentro de Gramática N5. -->
+          <button type="button" class="btn-register jp-general-btn" id="jp-particles-open-btn" data-i18n="jpParticlesOpenBtn">🧩 Práctica de Partículas</button>
           <button type="button" class="btn-register jp-general-btn" id="jp-yoon-open-btn" data-i18n="jpYoonOpenBtn">🈴 Yōon</button>
         </div>
         <div class="jp-rows" id="jp-rows">
@@ -2056,7 +2066,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260802-01"></script>
+  <script src="app.js?v=20260802-03"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de

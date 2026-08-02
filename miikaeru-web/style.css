@@ -513,6 +513,81 @@ body::before {
   filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.9));
 }
 
+/* ==================== Animación de ganancia de XP ====================
+   Pedido explícito: "animaciones visuales fluidas y futuristas cuando el
+   usuario gane XP". Se dispara desde grantXP() (ver showXpGainFx() en
+   app.js) cada vez que se llama, no solo al subir de nivel. Vive dentro
+   de .xp-bar (ya tiene position:relative) y se auto-elimina al terminar
+   (animationend, con timeout de red). */
+.xp-gain-fx {
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--neon-gold);
+  text-shadow: 0 0 6px rgba(255, 183, 0, 0.8);
+  pointer-events: none;
+  z-index: 5;
+  animation: xpGainFloat 1.4s ease-out forwards;
+}
+
+@keyframes xpGainFloat {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 6px) scale(0.8);
+  }
+  15% {
+    opacity: 1;
+    transform: translate(-50%, -4px) scale(1.05);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -34px) scale(1);
+  }
+}
+
+.xp-fill--pulse {
+  animation: xpFillPulse 0.6s ease-out;
+}
+
+@keyframes xpFillPulse {
+  0% {
+    filter: drop-shadow(0 0 2px rgba(0, 240, 255, 0.35));
+  }
+  40% {
+    filter: drop-shadow(0 0 14px rgba(0, 240, 255, 1)) brightness(1.3);
+  }
+  100% {
+    filter: drop-shadow(0 0 2px rgba(0, 240, 255, 0.35));
+  }
+}
+
+/* Palabra/kana recién dominado (JP_MASTERY_THRESHOLD alcanzado por
+   primera vez, ver handleJpAnswer() en app.js) — estallido de escala +
+   resplandor dorado sobre el carácter mostrado en el quiz. */
+.jp-mastery-pop {
+  display: inline-block;
+  animation: jpMasteryPop 0.9s ease-out;
+}
+
+@keyframes jpMasteryPop {
+  0% {
+    transform: scale(1);
+    text-shadow: 0 0 0 rgba(255, 215, 0, 0);
+  }
+  30% {
+    transform: scale(1.5);
+    text-shadow: 0 0 24px rgba(255, 215, 0, 0.95);
+  }
+  100% {
+    transform: scale(1);
+    text-shadow: 0 0 0 rgba(255, 215, 0, 0);
+  }
+}
+
 .xp-bar__text {
   position: absolute;
   inset: 0;
@@ -3590,6 +3665,52 @@ textarea,
   letter-spacing: 1px;
   white-space: nowrap;
   text-shadow: 0 0 4px rgba(255, 215, 0, 0.8);
+}
+
+/* ==================== Progresión por Nivel: candados ====================
+   Contenido no desbloqueado todavía (ver jp*UnlockLevel()/isJpLevelUnlocked()
+   en app.js) — mismo criterio visual "atenuado + escala de grises" que ya
+   usa el resto de la app para candados (.mpass-tier--locked, tarjetas de
+   Skins), aplicado acá a kana/kanji/filas/categorías/puntos de gramática/
+   yōon. `.jp-kana-btn--locked` se apoya en el atributo `disabled` NATIVO
+   del botón (ver applyJpLock() en app.js) — no hace falta pointer-events:
+   none porque un <button disabled> ya no es interactivo. */
+.jp-kana-btn--locked,
+.jp-vocab-cat-card--locked,
+.jp-grammar-card--locked,
+.jp-yoon-card--locked {
+  opacity: 0.4;
+  filter: grayscale(0.85);
+  cursor: not-allowed;
+}
+
+.jp-row--locked .jp-row__label {
+  color: var(--text-secondary);
+}
+
+.jp-kana-btn--locked .jp-lock-badge--kana {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  font-size: 0.7rem;
+  filter: none;
+  opacity: 1;
+}
+
+.jp-lock-badge {
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 0.62rem;
+  letter-spacing: 0.3px;
+  color: var(--neon-gold);
+  white-space: nowrap;
+}
+
+.jp-grammar-card--locked {
+  cursor: not-allowed;
+}
+.jp-grammar-card--locked .jp-grammar-card__header {
+  cursor: not-allowed;
 }
 
 /* ---- Sub-vista: trazo ---- */
@@ -7880,4 +8001,65 @@ button:active,
   .cyber-tile--gold    { background: linear-gradient(145deg, #4a2f00, #e0960a); box-shadow: 0 0 0 1px rgba(255, 183, 0, 0.55), 0 4px 16px rgba(255, 183, 0, 0.3); }
   .cyber-tile--red     { background: linear-gradient(145deg, #4a0808, #e02a22); box-shadow: 0 0 0 1px rgba(255, 70, 60, 0.5), 0 4px 16px rgba(255, 50, 40, 0.3); }
   .cyber-tile--orange  { background: linear-gradient(145deg, #4a2200, #f0741f); box-shadow: 0 0 0 1px rgba(255, 150, 50, 0.5), 0 4px 16px rgba(255, 130, 40, 0.3); }
+
+  /* ---- Módulo Japonés: pantalla completa en celular ----
+     Pedido explícito: "que la interfaz de las lecciones ocupe toda la
+     pantalla del dispositivo". El resto de los modales de la app se
+     quedan como estaban (centrados, con padding) — esto es exclusivo
+     de #japanese-modal/.modal--japanese. */
+  #japanese-modal {
+    padding: 0;
+  }
+  .modal--japanese {
+    width: 100vw;
+    height: 100vh;
+    max-width: 100vw;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+
+  /* ---- Corrección de contraste: tarjetas de Vocabulario/Yōon ----
+     Mismo bug que ya se corrigió para .jp-phase-box/.jp-kana-btn más
+     arriba: estas dos tarjetas traían un fondo azul marino HARDCODEADO
+     (no una variable de tema), así que se quedaban oscuras cuando el
+     texto encima (var(--text-primary)/var(--neon-gold)) pasaba a tonos
+     oscuros de Mobile Lite — texto casi negro sobre fondo gris azulado,
+     el "bug de legibilidad" reportado. Mismo patrón de arreglo: forzar
+     un fondo claro acá también. */
+  .jp-vocab-card,
+  .jp-yoon-card {
+    background: #FFFFFF !important;
+    border: 1px solid rgba(15, 23, 42, 0.15) !important;
+    box-shadow: none !important;
+  }
+
+  /* Segundo bug de contraste encontrado al verificar el fix de arriba:
+     las tarjetas pares (nth-child(even)) pintan su kana con un rosa claro
+     HARDCODEADO (#ffd6ec, mismo tono que .jp-yoon-card__katakana) pensado
+     para leerse sobre el fondo azul marino oscuro de siempre — sobre el
+     fondo blanco de arriba queda casi invisible. --neon-magenta ya tiene
+     un valor oscuro/saturado definido para Mobile Lite (ver :root más
+     arriba en este mismo media query), así que reusarlo en vez de
+     hardcodear un tercer color resuelve esto con el mismo mecanismo que
+     ya usa el resto del archivo. */
+  .jp-vocab-card:nth-child(even) .jp-vocab-card__kana,
+  .jp-yoon-card__katakana {
+    color: var(--neon-magenta) !important;
+  }
+
+  /* ---- Animaciones de ganancia de XP / palabra dominada ----
+     Excepción explícita al "sin animaciones en bucle" de Mobile Lite
+     (mismo mecanismo que la franja superior del HUD, más arriba): estas
+     3 son animaciones FINITAS de un solo disparo (no consumen batería en
+     reposo, terminan solas), y el usuario las pidió explícitamente
+     ("animaciones visuales fluidas y futuristas cuando gane XP"). */
+  .xp-gain-fx {
+    animation: xpGainFloat 1.4s ease-out forwards !important;
+  }
+  .xp-fill--pulse {
+    animation: xpFillPulse 0.6s ease-out !important;
+  }
+  .jp-mastery-pop {
+    animation: jpMasteryPop 0.9s ease-out !important;
+  }
 }
