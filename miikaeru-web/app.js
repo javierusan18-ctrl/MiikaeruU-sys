@@ -2359,6 +2359,14 @@ function t(key) {
   return dict[key] || I18N.es[key] || key;
 }
 
+// Mismo patrón que t(), pero para campos {es,en,ja} embebidos en datasets
+// (KANJI_N5.meaning, JP_VOCAB, N5_VOCAB_CATEGORIES) en vez de I18N — top-
+// level (no closure) para que funciones como getKanaList() puedan
+// resolver el idioma correcto sin pertenecer a la IIFE principal.
+function resolveJpMeaning(meaning) {
+  return meaning[currentLanguage] || meaning.es;
+}
+
 // ---------------------------------------------------
 // Avatar: sistema de "emotes". Siempre parte en idle y cambia
 // temporalmente ante ciertos eventos (login, subir de nivel, victoria en
@@ -2635,121 +2643,128 @@ const YOON_ROWS = [
 // exacto. Las lecturas se verificaron una por una contra el uso
 // estándar N5 (no son lecturas exhaustivas del kanji — solo la/s más
 // relevante/s para este nivel).
+// meaning es/en/ja MISMO patrón que JP_VOCAB/N5_VOCAB_CATEGORIES (ver
+// resolveJpMeaning()) — el "ja" NO es una traducción literal palabra por
+// palabra: es el glosario nativo real (normalmente derivado del kun'yomi)
+// que un hablante japonés usaría para explicar el significado del kanji
+// en su propio idioma, para que el examen tenga sentido con la interfaz
+// ya en 日本語 (pedido explícito: nada de contenido de examen "pegado" en
+// español cuando cambia el idioma de la app).
 const KANJI_N5 = [
   // Números
-  { char: "一", onyomi: "イチ", kunyomi: "ひと(つ)", meaning: "uno" },
-  { char: "二", onyomi: "ニ", kunyomi: "ふた(つ)", meaning: "dos" },
-  { char: "三", onyomi: "サン", kunyomi: "み(つ)", meaning: "tres" },
-  { char: "四", onyomi: "シ", kunyomi: "よん / よ(つ)", meaning: "cuatro" },
-  { char: "五", onyomi: "ゴ", kunyomi: "いつ(つ)", meaning: "cinco" },
-  { char: "六", onyomi: "ロク", kunyomi: "む(つ)", meaning: "seis" },
-  { char: "七", onyomi: "シチ", kunyomi: "なな(つ)", meaning: "siete" },
-  { char: "八", onyomi: "ハチ", kunyomi: "や(つ)", meaning: "ocho" },
-  { char: "九", onyomi: "キュウ", kunyomi: "ここの(つ)", meaning: "nueve" },
-  { char: "十", onyomi: "ジュウ", kunyomi: "とお", meaning: "diez" },
-  { char: "百", onyomi: "ヒャク", kunyomi: "—", meaning: "cien" },
-  { char: "千", onyomi: "セン", kunyomi: "—", meaning: "mil" },
-  { char: "万", onyomi: "マン", kunyomi: "—", meaning: "diez mil" },
-  { char: "円", onyomi: "エン", kunyomi: "まる(い)", meaning: "yen / círculo" },
+  { char: "一", onyomi: "イチ", kunyomi: "ひと(つ)", meaning: { es: "uno", en: "one", ja: "いち" } },
+  { char: "二", onyomi: "ニ", kunyomi: "ふた(つ)", meaning: { es: "dos", en: "two", ja: "に" } },
+  { char: "三", onyomi: "サン", kunyomi: "み(つ)", meaning: { es: "tres", en: "three", ja: "さん" } },
+  { char: "四", onyomi: "シ", kunyomi: "よん / よ(つ)", meaning: { es: "cuatro", en: "four", ja: "よん" } },
+  { char: "五", onyomi: "ゴ", kunyomi: "いつ(つ)", meaning: { es: "cinco", en: "five", ja: "ご" } },
+  { char: "六", onyomi: "ロク", kunyomi: "む(つ)", meaning: { es: "seis", en: "six", ja: "ろく" } },
+  { char: "七", onyomi: "シチ", kunyomi: "なな(つ)", meaning: { es: "siete", en: "seven", ja: "なな" } },
+  { char: "八", onyomi: "ハチ", kunyomi: "や(つ)", meaning: { es: "ocho", en: "eight", ja: "はち" } },
+  { char: "九", onyomi: "キュウ", kunyomi: "ここの(つ)", meaning: { es: "nueve", en: "nine", ja: "きゅう" } },
+  { char: "十", onyomi: "ジュウ", kunyomi: "とお", meaning: { es: "diez", en: "ten", ja: "じゅう" } },
+  { char: "百", onyomi: "ヒャク", kunyomi: "—", meaning: { es: "cien", en: "hundred", ja: "ひゃく" } },
+  { char: "千", onyomi: "セン", kunyomi: "—", meaning: { es: "mil", en: "thousand", ja: "せん" } },
+  { char: "万", onyomi: "マン", kunyomi: "—", meaning: { es: "diez mil", en: "ten thousand", ja: "まん" } },
+  { char: "円", onyomi: "エン", kunyomi: "まる(い)", meaning: { es: "yen / círculo", en: "yen / circle", ja: "えん・まる" } },
   // Tiempo
-  { char: "日", onyomi: "ニチ", kunyomi: "ひ", meaning: "sol / día" },
-  { char: "月", onyomi: "ゲツ", kunyomi: "つき", meaning: "luna / mes" },
-  { char: "火", onyomi: "カ", kunyomi: "ひ", meaning: "fuego" },
-  { char: "水", onyomi: "スイ", kunyomi: "みず", meaning: "agua" },
-  { char: "木", onyomi: "モク", kunyomi: "き", meaning: "árbol" },
-  { char: "金", onyomi: "キン", kunyomi: "かね", meaning: "oro / dinero" },
-  { char: "土", onyomi: "ド", kunyomi: "つち", meaning: "tierra" },
-  { char: "年", onyomi: "ネン", kunyomi: "とし", meaning: "año" },
-  { char: "時", onyomi: "ジ", kunyomi: "とき", meaning: "hora / tiempo" },
-  { char: "分", onyomi: "フン", kunyomi: "わ(かる)", meaning: "minuto / entender" },
-  { char: "半", onyomi: "ハン", kunyomi: "なか(ば)", meaning: "mitad" },
-  { char: "今", onyomi: "コン", kunyomi: "いま", meaning: "ahora" },
-  { char: "週", onyomi: "シュウ", kunyomi: "—", meaning: "semana" },
-  { char: "曜", onyomi: "ヨウ", kunyomi: "—", meaning: "día de la semana" },
-  { char: "毎", onyomi: "マイ", kunyomi: "—", meaning: "cada" },
+  { char: "日", onyomi: "ニチ", kunyomi: "ひ", meaning: { es: "sol / día", en: "sun / day", ja: "ひ" } },
+  { char: "月", onyomi: "ゲツ", kunyomi: "つき", meaning: { es: "luna / mes", en: "moon / month", ja: "つき" } },
+  { char: "火", onyomi: "カ", kunyomi: "ひ", meaning: { es: "fuego", en: "fire", ja: "ひ" } },
+  { char: "水", onyomi: "スイ", kunyomi: "みず", meaning: { es: "agua", en: "water", ja: "みず" } },
+  { char: "木", onyomi: "モク", kunyomi: "き", meaning: { es: "árbol", en: "tree", ja: "き" } },
+  { char: "金", onyomi: "キン", kunyomi: "かね", meaning: { es: "oro / dinero", en: "gold / money", ja: "かね" } },
+  { char: "土", onyomi: "ド", kunyomi: "つち", meaning: { es: "tierra", en: "earth", ja: "つち" } },
+  { char: "年", onyomi: "ネン", kunyomi: "とし", meaning: { es: "año", en: "year", ja: "とし" } },
+  { char: "時", onyomi: "ジ", kunyomi: "とき", meaning: { es: "hora / tiempo", en: "hour / time", ja: "とき" } },
+  { char: "分", onyomi: "フン", kunyomi: "わ(かる)", meaning: { es: "minuto / entender", en: "minute / understand", ja: "ふん・わかる" } },
+  { char: "半", onyomi: "ハン", kunyomi: "なか(ば)", meaning: { es: "mitad", en: "half", ja: "なかば" } },
+  { char: "今", onyomi: "コン", kunyomi: "いま", meaning: { es: "ahora", en: "now", ja: "いま" } },
+  { char: "週", onyomi: "シュウ", kunyomi: "—", meaning: { es: "semana", en: "week", ja: "しゅう" } },
+  { char: "曜", onyomi: "ヨウ", kunyomi: "—", meaning: { es: "día de la semana", en: "day of the week", ja: "ようび" } },
+  { char: "毎", onyomi: "マイ", kunyomi: "—", meaning: { es: "cada", en: "every", ja: "まい" } },
   // Naturaleza
-  { char: "山", onyomi: "サン", kunyomi: "やま", meaning: "montaña" },
-  { char: "川", onyomi: "セン", kunyomi: "かわ", meaning: "río" },
-  { char: "天", onyomi: "テン", kunyomi: "あめ", meaning: "cielo" },
-  { char: "気", onyomi: "キ", kunyomi: "—", meaning: "espíritu / aire" },
-  { char: "空", onyomi: "クウ", kunyomi: "そら", meaning: "cielo / vacío" },
-  { char: "雨", onyomi: "ウ", kunyomi: "あめ", meaning: "lluvia" },
-  { char: "花", onyomi: "カ", kunyomi: "はな", meaning: "flor" },
-  { char: "草", onyomi: "ソウ", kunyomi: "くさ", meaning: "hierba" },
+  { char: "山", onyomi: "サン", kunyomi: "やま", meaning: { es: "montaña", en: "mountain", ja: "やま" } },
+  { char: "川", onyomi: "セン", kunyomi: "かわ", meaning: { es: "río", en: "river", ja: "かわ" } },
+  { char: "天", onyomi: "テン", kunyomi: "あめ", meaning: { es: "cielo", en: "sky", ja: "てん" } },
+  { char: "気", onyomi: "キ", kunyomi: "—", meaning: { es: "espíritu / aire", en: "spirit / air", ja: "き" } },
+  { char: "空", onyomi: "クウ", kunyomi: "そら", meaning: { es: "cielo / vacío", en: "sky / empty", ja: "そら" } },
+  { char: "雨", onyomi: "ウ", kunyomi: "あめ", meaning: { es: "lluvia", en: "rain", ja: "あめ" } },
+  { char: "花", onyomi: "カ", kunyomi: "はな", meaning: { es: "flor", en: "flower", ja: "はな" } },
+  { char: "草", onyomi: "ソウ", kunyomi: "くさ", meaning: { es: "hierba", en: "grass", ja: "くさ" } },
   // Personas / familia
-  { char: "人", onyomi: "ジン", kunyomi: "ひと", meaning: "persona" },
-  { char: "女", onyomi: "ジョ", kunyomi: "おんな", meaning: "mujer" },
-  { char: "男", onyomi: "ダン", kunyomi: "おとこ", meaning: "hombre" },
-  { char: "子", onyomi: "シ", kunyomi: "こ", meaning: "niño / niña" },
-  { char: "父", onyomi: "フ", kunyomi: "ちち", meaning: "padre" },
-  { char: "母", onyomi: "ボ", kunyomi: "はは", meaning: "madre" },
-  { char: "友", onyomi: "ユウ", kunyomi: "とも", meaning: "amigo/a" },
-  { char: "名", onyomi: "メイ", kunyomi: "な", meaning: "nombre" },
-  { char: "私", onyomi: "シ", kunyomi: "わたし", meaning: "yo" },
+  { char: "人", onyomi: "ジン", kunyomi: "ひと", meaning: { es: "persona", en: "person", ja: "ひと" } },
+  { char: "女", onyomi: "ジョ", kunyomi: "おんな", meaning: { es: "mujer", en: "woman", ja: "おんな" } },
+  { char: "男", onyomi: "ダン", kunyomi: "おとこ", meaning: { es: "hombre", en: "man", ja: "おとこ" } },
+  { char: "子", onyomi: "シ", kunyomi: "こ", meaning: { es: "niño / niña", en: "child", ja: "こ" } },
+  { char: "父", onyomi: "フ", kunyomi: "ちち", meaning: { es: "padre", en: "father", ja: "ちち" } },
+  { char: "母", onyomi: "ボ", kunyomi: "はは", meaning: { es: "madre", en: "mother", ja: "はは" } },
+  { char: "友", onyomi: "ユウ", kunyomi: "とも", meaning: { es: "amigo/a", en: "friend", ja: "とも" } },
+  { char: "名", onyomi: "メイ", kunyomi: "な", meaning: { es: "nombre", en: "name", ja: "な" } },
+  { char: "私", onyomi: "シ", kunyomi: "わたし", meaning: { es: "yo", en: "I / me", ja: "わたし" } },
   // Lugares / direcciones
-  { char: "上", onyomi: "ジョウ", kunyomi: "うえ", meaning: "arriba" },
-  { char: "下", onyomi: "カ", kunyomi: "した", meaning: "abajo" },
-  { char: "中", onyomi: "チュウ", kunyomi: "なか", meaning: "dentro / medio" },
-  { char: "外", onyomi: "ガイ", kunyomi: "そと", meaning: "fuera" },
-  { char: "左", onyomi: "サ", kunyomi: "ひだり", meaning: "izquierda" },
-  { char: "右", onyomi: "ウ", kunyomi: "みぎ", meaning: "derecha" },
-  { char: "前", onyomi: "ゼン", kunyomi: "まえ", meaning: "antes / adelante" },
-  { char: "後", onyomi: "ゴ", kunyomi: "あと / うし(ろ)", meaning: "después / atrás" },
-  { char: "学", onyomi: "ガク", kunyomi: "まな(ぶ)", meaning: "estudiar" },
-  { char: "校", onyomi: "コウ", kunyomi: "—", meaning: "escuela" },
-  { char: "生", onyomi: "セイ", kunyomi: "い(きる)", meaning: "vida / nacer" },
-  { char: "先", onyomi: "セン", kunyomi: "さき", meaning: "antes / punta" },
-  { char: "国", onyomi: "コク", kunyomi: "くに", meaning: "país" },
-  { char: "語", onyomi: "ゴ", kunyomi: "かた(る)", meaning: "idioma / hablar" },
-  { char: "車", onyomi: "シャ", kunyomi: "くるま", meaning: "auto" },
-  { char: "電", onyomi: "デン", kunyomi: "—", meaning: "electricidad" },
-  { char: "駅", onyomi: "エキ", kunyomi: "—", meaning: "estación" },
-  { char: "道", onyomi: "ドウ", kunyomi: "みち", meaning: "camino" },
-  { char: "何", onyomi: "カ", kunyomi: "なに / なん", meaning: "qué" },
-  { char: "店", onyomi: "テン", kunyomi: "みせ", meaning: "tienda" },
-  { char: "病", onyomi: "ビョウ", kunyomi: "や(む)", meaning: "enfermedad" },
-  { char: "院", onyomi: "イン", kunyomi: "—", meaning: "institución" },
-  { char: "口", onyomi: "コウ", kunyomi: "くち", meaning: "boca" },
+  { char: "上", onyomi: "ジョウ", kunyomi: "うえ", meaning: { es: "arriba", en: "up", ja: "うえ" } },
+  { char: "下", onyomi: "カ", kunyomi: "した", meaning: { es: "abajo", en: "down", ja: "した" } },
+  { char: "中", onyomi: "チュウ", kunyomi: "なか", meaning: { es: "dentro / medio", en: "inside / middle", ja: "なか" } },
+  { char: "外", onyomi: "ガイ", kunyomi: "そと", meaning: { es: "fuera", en: "outside", ja: "そと" } },
+  { char: "左", onyomi: "サ", kunyomi: "ひだり", meaning: { es: "izquierda", en: "left", ja: "ひだり" } },
+  { char: "右", onyomi: "ウ", kunyomi: "みぎ", meaning: { es: "derecha", en: "right", ja: "みぎ" } },
+  { char: "前", onyomi: "ゼン", kunyomi: "まえ", meaning: { es: "antes / adelante", en: "before / front", ja: "まえ" } },
+  { char: "後", onyomi: "ゴ", kunyomi: "あと / うし(ろ)", meaning: { es: "después / atrás", en: "after / behind", ja: "あと・うしろ" } },
+  { char: "学", onyomi: "ガク", kunyomi: "まな(ぶ)", meaning: { es: "estudiar", en: "study", ja: "まなぶ" } },
+  { char: "校", onyomi: "コウ", kunyomi: "—", meaning: { es: "escuela", en: "school", ja: "がっこう" } },
+  { char: "生", onyomi: "セイ", kunyomi: "い(きる)", meaning: { es: "vida / nacer", en: "life / be born", ja: "いきる" } },
+  { char: "先", onyomi: "セン", kunyomi: "さき", meaning: { es: "antes / punta", en: "before / tip", ja: "さき" } },
+  { char: "国", onyomi: "コク", kunyomi: "くに", meaning: { es: "país", en: "country", ja: "くに" } },
+  { char: "語", onyomi: "ゴ", kunyomi: "かた(る)", meaning: { es: "idioma / hablar", en: "language / speak", ja: "ことば・かたる" } },
+  { char: "車", onyomi: "シャ", kunyomi: "くるま", meaning: { es: "auto", en: "car", ja: "くるま" } },
+  { char: "電", onyomi: "デン", kunyomi: "—", meaning: { es: "electricidad", en: "electricity", ja: "でんき" } },
+  { char: "駅", onyomi: "エキ", kunyomi: "—", meaning: { es: "estación", en: "station", ja: "えき" } },
+  { char: "道", onyomi: "ドウ", kunyomi: "みち", meaning: { es: "camino", en: "road", ja: "みち" } },
+  { char: "何", onyomi: "カ", kunyomi: "なに / なん", meaning: { es: "qué", en: "what", ja: "なに" } },
+  { char: "店", onyomi: "テン", kunyomi: "みせ", meaning: { es: "tienda", en: "store", ja: "みせ" } },
+  { char: "病", onyomi: "ビョウ", kunyomi: "や(む)", meaning: { es: "enfermedad", en: "illness", ja: "びょうき" } },
+  { char: "院", onyomi: "イン", kunyomi: "—", meaning: { es: "institución", en: "institution", ja: "しせつ" } },
+  { char: "口", onyomi: "コウ", kunyomi: "くち", meaning: { es: "boca", en: "mouth", ja: "くち" } },
   // Verbos básicos
-  { char: "食", onyomi: "ショク", kunyomi: "た(べる)", meaning: "comer" },
-  { char: "飲", onyomi: "イン", kunyomi: "の(む)", meaning: "beber" },
-  { char: "見", onyomi: "ケン", kunyomi: "み(る)", meaning: "ver" },
-  { char: "聞", onyomi: "ブン", kunyomi: "き(く)", meaning: "oír / preguntar" },
-  { char: "言", onyomi: "ゲン", kunyomi: "い(う)", meaning: "decir" },
-  { char: "話", onyomi: "ワ", kunyomi: "はな(す)", meaning: "hablar" },
-  { char: "読", onyomi: "ドク", kunyomi: "よ(む)", meaning: "leer" },
-  { char: "書", onyomi: "ショ", kunyomi: "か(く)", meaning: "escribir" },
-  { char: "行", onyomi: "コウ", kunyomi: "い(く)", meaning: "ir" },
-  { char: "来", onyomi: "ライ", kunyomi: "く(る)", meaning: "venir" },
-  { char: "出", onyomi: "シュツ", kunyomi: "で(る)", meaning: "salir" },
-  { char: "入", onyomi: "ニュウ", kunyomi: "はい(る)", meaning: "entrar" },
-  { char: "立", onyomi: "リツ", kunyomi: "た(つ)", meaning: "pararse" },
-  { char: "休", onyomi: "キュウ", kunyomi: "やす(む)", meaning: "descansar" },
-  { char: "買", onyomi: "バイ", kunyomi: "か(う)", meaning: "comprar" },
-  { char: "走", onyomi: "ソウ", kunyomi: "はし(る)", meaning: "correr" },
-  { char: "起", onyomi: "キ", kunyomi: "お(きる)", meaning: "levantarse" },
-  { char: "寝", onyomi: "シン", kunyomi: "ね(る)", meaning: "dormir" },
-  { char: "会", onyomi: "カイ", kunyomi: "あ(う)", meaning: "encontrarse / reunión" },
-  { char: "思", onyomi: "シ", kunyomi: "おも(う)", meaning: "pensar" },
-  { char: "作", onyomi: "サク", kunyomi: "つく(る)", meaning: "hacer / crear" },
+  { char: "食", onyomi: "ショク", kunyomi: "た(べる)", meaning: { es: "comer", en: "eat", ja: "たべる" } },
+  { char: "飲", onyomi: "イン", kunyomi: "の(む)", meaning: { es: "beber", en: "drink", ja: "のむ" } },
+  { char: "見", onyomi: "ケン", kunyomi: "み(る)", meaning: { es: "ver", en: "see", ja: "みる" } },
+  { char: "聞", onyomi: "ブン", kunyomi: "き(く)", meaning: { es: "oír / preguntar", en: "hear / ask", ja: "きく" } },
+  { char: "言", onyomi: "ゲン", kunyomi: "い(う)", meaning: { es: "decir", en: "say", ja: "いう" } },
+  { char: "話", onyomi: "ワ", kunyomi: "はな(す)", meaning: { es: "hablar", en: "speak", ja: "はなす" } },
+  { char: "読", onyomi: "ドク", kunyomi: "よ(む)", meaning: { es: "leer", en: "read", ja: "よむ" } },
+  { char: "書", onyomi: "ショ", kunyomi: "か(く)", meaning: { es: "escribir", en: "write", ja: "かく" } },
+  { char: "行", onyomi: "コウ", kunyomi: "い(く)", meaning: { es: "ir", en: "go", ja: "いく" } },
+  { char: "来", onyomi: "ライ", kunyomi: "く(る)", meaning: { es: "venir", en: "come", ja: "くる" } },
+  { char: "出", onyomi: "シュツ", kunyomi: "で(る)", meaning: { es: "salir", en: "go out", ja: "でる" } },
+  { char: "入", onyomi: "ニュウ", kunyomi: "はい(る)", meaning: { es: "entrar", en: "enter", ja: "はいる" } },
+  { char: "立", onyomi: "リツ", kunyomi: "た(つ)", meaning: { es: "pararse", en: "stand", ja: "たつ" } },
+  { char: "休", onyomi: "キュウ", kunyomi: "やす(む)", meaning: { es: "descansar", en: "rest", ja: "やすむ" } },
+  { char: "買", onyomi: "バイ", kunyomi: "か(う)", meaning: { es: "comprar", en: "buy", ja: "かう" } },
+  { char: "走", onyomi: "ソウ", kunyomi: "はし(る)", meaning: { es: "correr", en: "run", ja: "はしる" } },
+  { char: "起", onyomi: "キ", kunyomi: "お(きる)", meaning: { es: "levantarse", en: "get up", ja: "おきる" } },
+  { char: "寝", onyomi: "シン", kunyomi: "ね(る)", meaning: { es: "dormir", en: "sleep", ja: "ねる" } },
+  { char: "会", onyomi: "カイ", kunyomi: "あ(う)", meaning: { es: "encontrarse / reunión", en: "meet / meeting", ja: "あう" } },
+  { char: "思", onyomi: "シ", kunyomi: "おも(う)", meaning: { es: "pensar", en: "think", ja: "おもう" } },
+  { char: "作", onyomi: "サク", kunyomi: "つく(る)", meaning: { es: "hacer / crear", en: "make / create", ja: "つくる" } },
   // Adjetivos / descripciones comunes
-  { char: "大", onyomi: "ダイ", kunyomi: "おお(きい)", meaning: "grande" },
-  { char: "小", onyomi: "ショウ", kunyomi: "ちい(さい)", meaning: "pequeño" },
-  { char: "高", onyomi: "コウ", kunyomi: "たか(い)", meaning: "alto / caro" },
-  { char: "安", onyomi: "アン", kunyomi: "やす(い)", meaning: "barato / tranquilo" },
-  { char: "新", onyomi: "シン", kunyomi: "あたら(しい)", meaning: "nuevo" },
-  { char: "古", onyomi: "コ", kunyomi: "ふる(い)", meaning: "viejo" },
-  { char: "長", onyomi: "チョウ", kunyomi: "なが(い)", meaning: "largo" },
-  { char: "多", onyomi: "タ", kunyomi: "おお(い)", meaning: "mucho" },
-  { char: "少", onyomi: "ショウ", kunyomi: "すこ(し)", meaning: "poco" },
-  { char: "白", onyomi: "ハク", kunyomi: "しろ(い)", meaning: "blanco" },
-  { char: "黒", onyomi: "コク", kunyomi: "くろ(い)", meaning: "negro" },
-  { char: "早", onyomi: "ソウ", kunyomi: "はや(い)", meaning: "temprano / rápido" },
+  { char: "大", onyomi: "ダイ", kunyomi: "おお(きい)", meaning: { es: "grande", en: "big", ja: "おおきい" } },
+  { char: "小", onyomi: "ショウ", kunyomi: "ちい(さい)", meaning: { es: "pequeño", en: "small", ja: "ちいさい" } },
+  { char: "高", onyomi: "コウ", kunyomi: "たか(い)", meaning: { es: "alto / caro", en: "tall / expensive", ja: "たかい" } },
+  { char: "安", onyomi: "アン", kunyomi: "やす(い)", meaning: { es: "barato / tranquilo", en: "cheap / calm", ja: "やすい" } },
+  { char: "新", onyomi: "シン", kunyomi: "あたら(しい)", meaning: { es: "nuevo", en: "new", ja: "あたらしい" } },
+  { char: "古", onyomi: "コ", kunyomi: "ふる(い)", meaning: { es: "viejo", en: "old", ja: "ふるい" } },
+  { char: "長", onyomi: "チョウ", kunyomi: "なが(い)", meaning: { es: "largo", en: "long", ja: "ながい" } },
+  { char: "多", onyomi: "タ", kunyomi: "おお(い)", meaning: { es: "mucho", en: "many / much", ja: "おおい" } },
+  { char: "少", onyomi: "ショウ", kunyomi: "すこ(し)", meaning: { es: "poco", en: "few / little", ja: "すこし" } },
+  { char: "白", onyomi: "ハク", kunyomi: "しろ(い)", meaning: { es: "blanco", en: "white", ja: "しろい" } },
+  { char: "黒", onyomi: "コク", kunyomi: "くろ(い)", meaning: { es: "negro", en: "black", ja: "くろい" } },
+  { char: "早", onyomi: "ソウ", kunyomi: "はや(い)", meaning: { es: "temprano / rápido", en: "early / fast", ja: "はやい" } },
   // Cuerpo
-  { char: "手", onyomi: "シュ", kunyomi: "て", meaning: "mano" },
-  { char: "目", onyomi: "モク", kunyomi: "め", meaning: "ojo" },
-  { char: "耳", onyomi: "ジ", kunyomi: "みみ", meaning: "oreja" },
-  { char: "足", onyomi: "ソク", kunyomi: "あし", meaning: "pie / pierna" },
+  { char: "手", onyomi: "シュ", kunyomi: "て", meaning: { es: "mano", en: "hand", ja: "て" } },
+  { char: "目", onyomi: "モク", kunyomi: "め", meaning: { es: "ojo", en: "eye", ja: "め" } },
+  { char: "耳", onyomi: "ジ", kunyomi: "みみ", meaning: { es: "oreja", en: "ear", ja: "みみ" } },
+  { char: "足", onyomi: "ソク", kunyomi: "あし", meaning: { es: "pie / pierna", en: "foot / leg", ja: "あし" } },
 ];
 
 // Palabras Clave por kana (módulo Japonés, Modo Práctica — "Vocabulario
@@ -3821,12 +3836,12 @@ function getKanaList(script) {
   if (script === "kanji") {
     return KANJI_N5.filter((k, i) => isJpLevelUnlocked(jpKanjiUnlockLevel(i))).map((k) => ({
       char: k.char,
-      answer: k.meaning,
+      answer: resolveJpMeaning(k.meaning),
       rowId: "kanji-n5",
       script,
       onyomi: k.onyomi,
       kunyomi: k.kunyomi,
-      meaning: k.meaning,
+      meaning: resolveJpMeaning(k.meaning),
     }));
   }
   const list = [];
@@ -3857,6 +3872,20 @@ function speakKana(char) {
   const utterance = new SpeechSynthesisUtterance(char);
   utterance.lang = "ja-JP";
   window.speechSynthesis.speak(utterance);
+}
+
+// Restricción de audio SOLO para los EXÁMENES (evaluación con opciones de
+// respuesta, no las vistas de práctica/vocabulario) — pedido explícito:
+// en Hiragana/Katakana la pronunciación literalmente ES la respuesta
+// correcta (romaji), así que el botón 🔊 queda completamente oculto ahí;
+// en Kanji se pregunta el SIGNIFICADO, no la lectura, pero igual solo se
+// permite reproducir el audio cuando la interfaz ya está en 日本語 (para
+// no dar ninguna pista fuera del modo inmersivo). Los llamados a
+// speakKana() en las vistas de práctica (Fases, tarjetas de vocabulario)
+// NO pasan por acá — ahí escuchar es parte de estudiar, no de evaluarse.
+function isJpExamAudioAllowed(script) {
+  if (script === "kanji") return currentLanguage === "ja";
+  return false;
 }
 
 
@@ -9633,7 +9662,7 @@ document.addEventListener("DOMContentLoaded", () => {
       btn.className = "jp-kana-btn";
       if (level >= JP_MASTERY_THRESHOLD) btn.classList.add("jp-kana-btn--mastered");
       btn.dataset.rowId = "kanji-n5";
-      btn.title = `${k.meaning} — ${k.kunyomi} / ${k.onyomi}`;
+      btn.title = `${resolveJpMeaning(k.meaning)} — ${k.kunyomi} / ${k.onyomi}`;
       btn.textContent = k.char;
 
       if (level > 0) {
@@ -10314,7 +10343,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return {
         requiredLevel: jpKanjiUnlockLevel(index),
         label: t("jpKanjiN5Title"),
-        pool: [{ char: k.char, answer: k.meaning, script: "kanji" }],
+        pool: [{ char: k.char, answer: resolveJpMeaning(k.meaning), script: "kanji" }],
       };
     }
     const row = GOJUON_ROWS[index];
@@ -10338,7 +10367,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // por desbloqueo (son solo ruido de respuestas incorrectas, no
   // contenido que se enseña ni se revela con explicación).
   function jpLevelExamAllAnswers() {
-    return jpScript === "kanji" ? KANJI_N5.map((k) => k.meaning) : GOJUON_ROWS.flatMap((row) => row.romajiList);
+    return jpScript === "kanji" ? KANJI_N5.map((k) => resolveJpMeaning(k.meaning)) : GOJUON_ROWS.flatMap((row) => row.romajiList);
   }
 
   function startJpLevelExam() {
@@ -10374,7 +10403,11 @@ document.addEventListener("DOMContentLoaded", () => {
       btn.addEventListener("click", () => handleJpLevelExamAnswer(opt, item));
       jpLevelExamOptions.appendChild(btn);
     });
-    speakKana(item.char);
+    // Misma restricción de audio de examen que showJpQuiz() — ver
+    // isJpExamAudioAllowed(). jpScript gobierna el script activo del
+    // Examen de Nivel entero (no varía por ítem individual).
+    jpLevelExamSpeakBtn.hidden = jpScript !== "kanji";
+    if (isJpExamAudioAllowed(jpScript)) speakKana(item.char);
   }
 
   function handleJpLevelExamAnswer(selected, item) {
@@ -10437,7 +10470,7 @@ document.addEventListener("DOMContentLoaded", () => {
   jpLevelExamOpenBtn.addEventListener("click", startJpLevelExam);
   jpLevelExamBackBtn.addEventListener("click", () => showJpView("grid"));
   jpLevelExamSpeakBtn.addEventListener("click", () => {
-    if (jpLevelExamCurrentItem) speakKana(jpLevelExamCurrentItem.char);
+    if (jpLevelExamCurrentItem && isJpExamAudioAllowed(jpScript)) speakKana(jpLevelExamCurrentItem.char);
   });
 
   // Reparte según el modo elegido en #jp-config-modal: Práctica va directo
@@ -10715,10 +10748,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     showJpView("quiz");
-    // "Al cargar la pregunta" (pedido explícito): reproduce la
-    // pronunciación automáticamente además de dejar el botón 🔊 para
-    // volver a escucharla.
-    speakKana(item.char);
+    // Restricción de audio en examen (pedido explícito, ver
+    // isJpExamAudioAllowed): en Hiragana/Katakana el botón 🔊 ni siquiera
+    // se muestra (la pronunciación es la respuesta); en Kanji se muestra
+    // pero solo suena si la interfaz ya está en 日本語.
+    jpQuizSpeakBtn.hidden = item.script !== "kanji";
+    if (isJpExamAudioAllowed(item.script)) speakKana(item.char);
   }
 
   function handleJpAnswer(selected, item) {
@@ -10800,7 +10835,10 @@ document.addEventListener("DOMContentLoaded", () => {
   jpExamstrokeBackBtn.addEventListener("click", () => showJpView("grid"));
 
   jpQuizBackBtn.addEventListener("click", () => showJpView("grid"));
-  jpQuizSpeakBtn.addEventListener("click", () => speakKana(jpQueue[jpQueueIndex].char));
+  jpQuizSpeakBtn.addEventListener("click", () => {
+    const item = jpQueue[jpQueueIndex];
+    if (item && isJpExamAudioAllowed(item.script)) speakKana(item.char);
+  });
 
   // ---------------- Configuración de Idiomas: pantalla inicial del módulo Japonés ----------------
   // El idioma de interfaz reutiliza applyLanguage() — el MISMO sistema
