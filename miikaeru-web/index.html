@@ -9,14 +9,17 @@
        apple-mobile-web-app-* cubre el mismo caso en iOS/Safari, que no
        lee manifest.json para esto. -->
   <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#070912" />
+  <meta name="theme-color" content="#0b0f19" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <link rel="apple-touch-icon" href="assets/avatar_idle.png" />
+  <meta name="apple-mobile-web-app-title" content="Miikaeru" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="48x48" href="assets/icons/favicon-48.png" />
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260802-12" />
+  <link rel="stylesheet" href="style.css?v=20260802-13" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -164,6 +167,12 @@
     </div>
 
     <div class="hud__profile" id="hud-profile">
+      <!-- Botón de instalación PWA — oculto por defecto (ver
+           installAppBtn en app.js): solo se muestra cuando el navegador
+           realmente disparó `beforeinstallprompt` (soporte real de
+           instalación), nunca como promesa vacía en navegadores/SO que
+           no lo soportan (ej. Firefox de escritorio, iOS Safari). -->
+      <button class="btn-install-app" id="install-app-btn" type="button" data-i18n="installAppBtn" hidden>⬇️ Instalar App</button>
       <button class="btn-profile-switch" id="profile-switch-btn" type="button" data-i18n-title="profileSwitchBtnTitle" title="Cambiar de perfil">
         👤 <span id="active-profile-name">Admin</span>
       </button>
@@ -2387,7 +2396,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260802-12"></script>
+  <script src="app.js?v=20260802-13"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de

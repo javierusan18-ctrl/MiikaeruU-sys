@@ -495,6 +495,40 @@ body::before {
   filter: drop-shadow(0 0 8px rgba(255, 183, 0, 0.85));
 }
 
+/* Botón de instalación PWA — mismo criterio visual de "acción especial"
+   que .btn-miika-pass (pulso + degradado), en verde neón para el
+   significado universal de "descargar/instalar". Solo se muestra cuando
+   app.js confirma soporte real vía el evento beforeinstallprompt (ver
+   installAppBtn.hidden ahí) — el CSS no decide su visibilidad, solo su
+   apariencia cuando ya está visible. */
+.btn-install-app {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #04121a;
+  background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
+  border: none;
+  padding: 6px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+  transition: filter 0.2s ease, transform 0.2s ease;
+  animation: installBtnPulse 2.6s ease-in-out infinite;
+}
+
+.btn-install-app:hover {
+  transform: translateY(-1px);
+  filter: drop-shadow(0 0 10px rgba(0, 255, 156, 0.7));
+}
+
+@keyframes installBtnPulse {
+  0%, 100% { box-shadow: 0 0 6px rgba(0, 255, 156, 0.4); }
+  50% { box-shadow: 0 0 14px rgba(0, 240, 255, 0.6); }
+}
+
 .xp-bar {
   position: relative;
   width: 180px;

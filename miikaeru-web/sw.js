@@ -22,7 +22,7 @@
 // index.html (ver ese archivo) — subirlo a mano en cada deploy real
 // hace que `activate` borre el caché viejo y todo se vuelva a guardar
 // fresco, evitando que un celular se quede pegado en una versión vieja.
-const CACHE_NAME = "miikaeru-cache-v20260802-12";
+const CACHE_NAME = "miikaeru-cache-v20260802-13";
 
 const STATIC_ASSETS = [
   "./",
@@ -38,6 +38,17 @@ const STATIC_ASSETS = [
   // propia entrada acá igual que storyEngine.js.
   "readerEngine.js",
   "manifest.json",
+  // Iconos PWA (ver manifest.json + <link rel="apple-touch-icon"/icon">
+  // en index.html) — sin estos, el prompt de instalación y el ícono de
+  // pantalla de inicio caerían al ícono genérico del navegador si el
+  // usuario instala la app estando offline la primera vez.
+  "assets/icons/icon-192.png",
+  "assets/icons/icon-512.png",
+  "assets/icons/icon-maskable-192.png",
+  "assets/icons/icon-maskable-512.png",
+  "assets/icons/apple-touch-icon.png",
+  "assets/icons/favicon-32.png",
+  "assets/icons/favicon-48.png",
   "assets/bg_main.png",
   "assets/bg_login.png",
   "assets/bg_state_idle.png",

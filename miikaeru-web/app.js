@@ -726,6 +726,7 @@ const I18N = {
     masterAuthGoRegister: "¿No tienes cuenta? Crear una",
     masterAuthGoLogin: "¿Ya tienes cuenta? Iniciar sesión",
     profileSwitchBtnTitle: "Cambiar de perfil",
+    installAppBtn: "⬇️ Instalar App",
     miikaPassBtn: "🎫 Miika Pass",
     miikaPassTitle: "🎫 MIIKA PASS",
     miikaPassLore: "Cada nivel que alcanzas desbloquea una recompensa del núcleo Miikaeru.",
@@ -1364,6 +1365,7 @@ const I18N = {
     masterAuthGoRegister: "Don't have an account? Create one",
     masterAuthGoLogin: "Already have an account? Log in",
     profileSwitchBtnTitle: "Switch profile",
+    installAppBtn: "⬇️ Install App",
     miikaPassBtn: "🎫 Miika Pass",
     miikaPassTitle: "🎫 MIIKA PASS",
     miikaPassLore: "Every level you reach unlocks a reward from the Miikaeru core.",
@@ -2002,6 +2004,7 @@ const I18N = {
     masterAuthGoRegister: "アカウントをお持ちでないですか？作成する",
     masterAuthGoLogin: "すでにアカウントをお持ちですか？ログイン",
     profileSwitchBtnTitle: "プロフィールを切り替える",
+    installAppBtn: "⬇️ アプリをインストール",
     miikaPassBtn: "🎫 ミイカパス",
     miikaPassTitle: "🎫 ミイカパス",
     miikaPassLore: "到達したレベルごとに、ミイカエルのコアから報酬が解放されます。",
@@ -5417,6 +5420,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const operatorNameInput = document.getElementById("operator-name-input");
   const profileName = document.getElementById("profile-name");
   const logoutBtn = document.getElementById("logout-btn");
+  const installAppBtn = document.getElementById("install-app-btn");
 
   // Perfiles de Usuario (cuentas separadas, distinto de operatorName)
   const profileSwitchBtn = document.getElementById("profile-switch-btn");
@@ -9930,6 +9934,47 @@ document.addEventListener("DOMContentLoaded", () => {
       window.location.href = `${window.location.pathname}?forcecache=${Date.now()}`;
     });
   }
+
+  // ---------------- Instalación PWA (botón "Instalar App") ----------------
+  // El evento beforeinstallprompt SOLO lo dispara el navegador cuando ya
+  // verificó que el sitio cumple los requisitos de instalación (manifest
+  // válido, HTTPS/localhost, Service Worker registrado) — por eso el
+  // botón arranca oculto (ver index.html) y solo se muestra si ese
+  // evento realmente llega. Firefox de escritorio e iOS Safari nunca lo
+  // disparan (no soportan instalación programática vía JS), así que ahí
+  // el botón se queda oculto para siempre en vez de prometer algo que no
+  // puede cumplir.
+  let deferredInstallPrompt = null;
+  const runningStandalone =
+    window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+
+  if (!runningStandalone) {
+    window.addEventListener("beforeinstallprompt", (event) => {
+      event.preventDefault();
+      deferredInstallPrompt = event;
+      if (installAppBtn) installAppBtn.hidden = false;
+    });
+  }
+
+  if (installAppBtn) {
+    installAppBtn.addEventListener("click", async () => {
+      if (!deferredInstallPrompt) return;
+      installAppBtn.disabled = true;
+      deferredInstallPrompt.prompt();
+      try {
+        await deferredInstallPrompt.userChoice;
+      } finally {
+        deferredInstallPrompt = null;
+        installAppBtn.disabled = false;
+        installAppBtn.hidden = true;
+      }
+    });
+  }
+
+  window.addEventListener("appinstalled", () => {
+    deferredInstallPrompt = null;
+    if (installAppBtn) installAppBtn.hidden = true;
+  });
 
   // ---------------- Controles de escala (León / Chat) ----------------
   // Solo escriben las custom properties --avatar-scale/--chat-scale que
