@@ -777,6 +777,24 @@ const I18N = {
     temploTabBiosync: "❤️ Bio-Sync",
     temploTabNutricion: "🥗 Nutrición",
     temploTabEspiritu: "🧭 Espíritu",
+    nutriGoalSectionTitle: "🎯 Elige tu Meta",
+    nutriGoalActiveBadge: "Meta Activa",
+    nutriLogSectionTitle: "📋 Registro Diario",
+    nutriLogHint: "Completa tus 4 comidas y tu meta de agua hoy para sumar oro y XP.",
+    nutriLogCompleteMsg: "¡Día nutricional completo!",
+    nutriMealBreakfast: "Desayuno",
+    nutriMealLunch: "Almuerzo",
+    nutriMealDinner: "Cena",
+    nutriMealSnack: "Snack Saludable",
+    nutriMealWater: "Meta de Agua",
+    nutriGoalLoseTitle: "Bajar de Peso",
+    nutriGoalLoseDesc: "Prioriza un déficit calórico moderado y sostenible (300-500 kcal por debajo de tu gasto diario). Mantén la proteína alta (1.6-2.0 g por kg de peso) para conservar masa muscular mientras pierdes grasa. Prefiere alimentos con volumen y fibra que sacien más con menos calorías. Evita déficits extremos: son difíciles de sostener y suelen terminar en efecto rebote.",
+    nutriGoalGainTitle: "Ganar Peso",
+    nutriGoalGainDesc: "Busca un superávit calórico moderado (300-500 kcal por encima de tu gasto diario) en vez de comer sin control. Distribuye la proteína (1.6-2.2 g/kg) y los carbohidratos a lo largo del día para sostener energía y recuperación. Prioriza calorías de calidad — frutos secos, avena, lácteos enteros, aceite de oliva — antes que ultraprocesados. Sé constante: ganar peso saludable toma semanas, no días.",
+    nutriGoalMuscleTitle: "Aumentar Masa Muscular",
+    nutriGoalMuscleDesc: "Combina un ligero superávit calórico con entrenamiento de fuerza progresivo — sin estímulo de entrenamiento, el superávit solo suma grasa. Apunta a 1.6-2.2 g de proteína por kg de peso, repartida en 3-4 comidas para optimizar la síntesis muscular. No descuides los carbohidratos: son el combustible principal para entrenar fuerte. Duerme bien — la recuperación es donde el músculo realmente crece.",
+    nutriGoalCutTitle: "Definición",
+    nutriGoalCutDesc: "Mantén un déficit calórico moderado mientras conservas proteína alta (2.0-2.2 g/kg) para minimizar la pérdida de músculo. Sigue entrenando fuerza durante la definición — es la señal que le dice al cuerpo qué tejido conservar. Los carbohidratos alrededor del entrenamiento ayudan a mantener el rendimiento incluso en déficit. Ten paciencia: una definición sostenible es más lenta que las dietas extremas, pero se mantiene en el tiempo.",
     aprendizajeTitle: "🧠 Aprendizaje",
     aprendizajeHint: "Este pilar está en construcción. Pronto vas a poder registrar tu progreso de aprendizaje aquí.",
     courseAiName: "Sistemas con Inteligencia Artificial",
@@ -1422,6 +1440,24 @@ const I18N = {
     temploTabBiosync: "❤️ Bio-Sync",
     temploTabNutricion: "🥗 Nutrition",
     temploTabEspiritu: "🧭 Spirit",
+    nutriGoalSectionTitle: "🎯 Choose Your Goal",
+    nutriGoalActiveBadge: "Active Goal",
+    nutriLogSectionTitle: "📋 Daily Log",
+    nutriLogHint: "Complete your 4 meals and water goal today to earn gold and XP.",
+    nutriLogCompleteMsg: "Nutrition day complete!",
+    nutriMealBreakfast: "Breakfast",
+    nutriMealLunch: "Lunch",
+    nutriMealDinner: "Dinner",
+    nutriMealSnack: "Healthy Snack",
+    nutriMealWater: "Water Goal",
+    nutriGoalLoseTitle: "Lose Weight",
+    nutriGoalLoseDesc: "Aim for a moderate, sustainable caloric deficit (300-500 kcal below your daily expenditure). Keep protein high (1.6-2.0 g per kg of bodyweight) to preserve muscle while losing fat. Favor high-volume, high-fiber foods that fill you up for fewer calories. Avoid extreme deficits — they're hard to sustain and often lead to rebound weight gain.",
+    nutriGoalGainTitle: "Gain Weight",
+    nutriGoalGainDesc: "Aim for a moderate caloric surplus (300-500 kcal above your daily expenditure) instead of eating without limits. Spread protein (1.6-2.2 g/kg) and carbs throughout the day to sustain energy and recovery. Prioritize quality calories — nuts, oats, whole dairy, olive oil — over ultra-processed food. Be consistent: healthy weight gain takes weeks, not days.",
+    nutriGoalMuscleTitle: "Build Muscle",
+    nutriGoalMuscleDesc: "Combine a slight caloric surplus with progressive strength training — without a training stimulus, the surplus just adds fat. Target 1.6-2.2 g of protein per kg of bodyweight, spread across 3-4 meals to optimize muscle protein synthesis. Don't skimp on carbs — they're your main fuel for training hard. Sleep well — recovery is where muscle actually grows.",
+    nutriGoalCutTitle: "Cutting",
+    nutriGoalCutDesc: "Keep a moderate caloric deficit while maintaining high protein (2.0-2.2 g/kg) to minimize muscle loss. Keep strength training during a cut — it's the signal that tells your body which tissue to keep. Carbs around your workouts help maintain performance even in a deficit. Be patient: a sustainable cut is slower than crash diets, but it actually sticks.",
     aprendizajeTitle: "🧠 Learning",
     aprendizajeHint: "This pillar is under construction. Soon you'll be able to track your learning progress here.",
     courseAiName: "AI Systems",
@@ -2067,6 +2103,24 @@ const I18N = {
     temploTabBiosync: "❤️ バイオシンク",
     temploTabNutricion: "🥗 栄養",
     temploTabEspiritu: "🧭 精神",
+    nutriGoalSectionTitle: "🎯 目標を選ぶ",
+    nutriGoalActiveBadge: "選択中の目標",
+    nutriLogSectionTitle: "📋 デイリー記録",
+    nutriLogHint: "今日の4食と水分目標を達成すると、ゴールドとXPがもらえます。",
+    nutriLogCompleteMsg: "栄養デーを達成しました！",
+    nutriMealBreakfast: "朝食",
+    nutriMealLunch: "昼食",
+    nutriMealDinner: "夕食",
+    nutriMealSnack: "健康的な間食",
+    nutriMealWater: "水分目標",
+    nutriGoalLoseTitle: "減量",
+    nutriGoalLoseDesc: "1日の消費カロリーより300〜500kcal少ない、無理のない適度なカロリー不足を目指しましょう。筋肉を落とさないよう、体重1kgあたり1.6〜2.0gの高いタンパク質摂取を維持してください。少ないカロリーで満腹感が得られる、食物繊維の多い食品を選びましょう。極端なカロリー制限は続けにくく、リバウンドの原因になりやすいので避けましょう。",
+    nutriGoalGainTitle: "増量",
+    nutriGoalGainDesc: "無制限に食べるのではなく、1日の消費カロリーより300〜500kcal多い適度なカロリー過剰を目指しましょう。タンパク質（体重1kgあたり1.6〜2.2g）と炭水化物を1日を通してバランスよく摂り、エネルギーと回復を支えましょう。加工食品より、ナッツ、オートミール、乳製品、オリーブオイルなど質の良いカロリー源を優先してください。健康的な増量には数週間かかります、焦らず続けましょう。",
+    nutriGoalMuscleTitle: "筋肉量増加",
+    nutriGoalMuscleDesc: "軽いカロリー過剰と漸進的な筋力トレーニングを組み合わせましょう — トレーニング刺激がなければ、過剰分は脂肪になるだけです。体重1kgあたり1.6〜2.2gのタンパク質を目安に、1日3〜4食に分けて摂ると筋タンパク質合成に効果的です。炭水化物も軽視せず、しっかりトレーニングするための主要なエネルギー源として摂りましょう。良い睡眠を — 回復こそが筋肉が実際に成長するタイミングです。",
+    nutriGoalCutTitle: "減脂・絞り込み",
+    nutriGoalCutDesc: "筋肉量の減少を最小限に抑えるため、高いタンパク質摂取（体重1kgあたり2.0〜2.2g）を維持しながら適度なカロリー不足を保ちましょう。減量期も筋力トレーニングを続けることが、体にどの組織を残すべきかを伝える合図になります。トレーニング前後の炭水化物摂取は、カロリー不足の中でもパフォーマンスの維持に役立ちます。焦らずに — 持続可能な減脂は極端なダイエットより時間がかかりますが、その分リバウンドしにくいです。",
     aprendizajeTitle: "🧠 学習",
     aprendizajeHint: "この柱は現在準備中です。もうすぐここで学習の進捗を記録できるようになります。",
     courseAiName: "AIシステム",
@@ -4691,6 +4745,78 @@ let habitsLog = loadHabitsLog();
 let habitsMeta = loadHabitsMeta();
 
 // ---------------------------------------------------
+// Módulo Nutrición (dentro de Templo): una meta activa (bajar peso/
+// ganar peso/masa muscular/definición) + un registro diario de comidas
+// y agua — mismo patrón de persistencia que Hábitos (log por fecha,
+// recompensa de oro/XP guardada contra re-farmeo con un "lastRewardDate"
+// igual que habitsMeta.lastStreakDate).
+// ---------------------------------------------------
+const NUTRITION_GOALS = [
+  { id: "lose", icon: "📉", titleKey: "nutriGoalLoseTitle", descKey: "nutriGoalLoseDesc" },
+  { id: "gain", icon: "📈", titleKey: "nutriGoalGainTitle", descKey: "nutriGoalGainDesc" },
+  { id: "muscle", icon: "💪", titleKey: "nutriGoalMuscleTitle", descKey: "nutriGoalMuscleDesc" },
+  { id: "cut", icon: "🔪", titleKey: "nutriGoalCutTitle", descKey: "nutriGoalCutDesc" },
+];
+
+const NUTRITION_MEALS = [
+  { id: "breakfast", icon: "🍳", i18nKey: "nutriMealBreakfast" },
+  { id: "lunch", icon: "🍛", i18nKey: "nutriMealLunch" },
+  { id: "dinner", icon: "🍲", i18nKey: "nutriMealDinner" },
+  { id: "snack", icon: "🥗", i18nKey: "nutriMealSnack" },
+  { id: "water", icon: "💧", i18nKey: "nutriMealWater" },
+];
+
+const NUTRITION_GOAL_KEY = scopedKey("miikaeru_nutrition_goal", activeProfileId); // id de NUTRITION_GOALS, o null
+const NUTRITION_LOG_KEY = scopedKey("miikaeru_nutrition_log", activeProfileId); // { "YYYY-MM-DD": { mealId: true, ... } }
+const NUTRITION_META_KEY = scopedKey("miikaeru_nutrition_meta", activeProfileId); // { lastRewardDate }
+
+function loadNutritionGoal() {
+  try {
+    const raw = localStorage.getItem(NUTRITION_GOAL_KEY);
+    return raw && NUTRITION_GOALS.some((goal) => goal.id === raw) ? raw : null;
+  } catch (err) {
+    return null;
+  }
+}
+
+function persistNutritionGoal() {
+  if (nutritionGoal) localStorage.setItem(NUTRITION_GOAL_KEY, nutritionGoal);
+  else localStorage.removeItem(NUTRITION_GOAL_KEY);
+}
+
+function loadNutritionLog() {
+  try {
+    const raw = localStorage.getItem(NUTRITION_LOG_KEY);
+    const parsed = raw ? JSON.parse(raw) : {};
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch (err) {
+    return {};
+  }
+}
+
+function persistNutritionLog() {
+  localStorage.setItem(NUTRITION_LOG_KEY, JSON.stringify(nutritionLog));
+}
+
+function loadNutritionMeta() {
+  try {
+    const raw = localStorage.getItem(NUTRITION_META_KEY);
+    const parsed = raw ? JSON.parse(raw) : null;
+    return parsed && typeof parsed === "object" ? { lastRewardDate: null, ...parsed } : { lastRewardDate: null };
+  } catch (err) {
+    return { lastRewardDate: null };
+  }
+}
+
+function persistNutritionMeta() {
+  localStorage.setItem(NUTRITION_META_KEY, JSON.stringify(nutritionMeta));
+}
+
+let nutritionGoal = loadNutritionGoal();
+let nutritionLog = loadNutritionLog();
+let nutritionMeta = loadNutritionMeta();
+
+// ---------------------------------------------------
 // Módulo Rutina de Ejercicios: plan semanal (enfoque por día, editable
 // por el usuario) + historial de series/repeticiones/peso registrado.
 // Mismo patrón de persistencia independiente que biometricsLog/hábitos.
@@ -5162,6 +5288,7 @@ document.addEventListener("DOMContentLoaded", () => {
     nutricion: document.getElementById("templo-tab-nutricion"),
     espiritu: document.getElementById("templo-tab-espiritu"),
   };
+  const nutritionContent = document.getElementById("nutrition-content");
 
   const playBtn = document.getElementById("play-btn");
   const minigameViewport = document.getElementById("minigame-viewport");
@@ -6937,9 +7064,124 @@ document.addEventListener("DOMContentLoaded", () => {
     runTemploTabOpenEffects(tab);
   }
 
-  // Stub temporal — el módulo real de Nutrición (metas + registro diario)
-  // se construye en el siguiente checkpoint de esta misma feature.
-  function renderNutritionTab() {}
+  // ---- Nutrición: meta activa + registro diario (dentro de Templo) ----
+  // Reutiliza el patrón visual de "elegir una de N" de
+  // .routine-category-grid/.routine-category-card (Rutinas Estructuradas)
+  // para las 4 metas, y el de .habits-grid/.habit-card (Hábitos Diarios)
+  // para el checklist — cero lenguaje visual nuevo.
+  const NUTRITION_GOAL_ACCENT = { lose: "cyan", gain: "gold", muscle: "magenta", cut: "green" };
+
+  function renderNutritionTab() {
+    nutritionContent.innerHTML = "";
+
+    const goalTitle = document.createElement("h3");
+    goalTitle.className = "payroll-section-title";
+    goalTitle.textContent = t("nutriGoalSectionTitle");
+    nutritionContent.appendChild(goalTitle);
+
+    const goalGrid = document.createElement("div");
+    goalGrid.className = "routine-category-grid";
+    NUTRITION_GOALS.forEach((goal) => {
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className = `routine-category-card routine-category-card--${NUTRITION_GOAL_ACCENT[goal.id]}`;
+      const isActive = nutritionGoal === goal.id;
+      card.classList.toggle("routine-category-card--suggested", isActive);
+
+      const icon = document.createElement("span");
+      icon.className = "routine-category-card__icon";
+      icon.textContent = goal.icon;
+
+      const title = document.createElement("span");
+      title.className = "routine-category-card__title";
+      title.textContent = t(goal.titleKey);
+
+      const desc = document.createElement("span");
+      desc.className = "routine-category-card__desc";
+      desc.textContent = t(goal.descKey);
+
+      card.append(icon, title, desc);
+
+      if (isActive) {
+        const badge = document.createElement("span");
+        badge.className = "routine-category-card__badge";
+        badge.textContent = `✅ ${t("nutriGoalActiveBadge")}`;
+        card.appendChild(badge);
+      }
+
+      card.addEventListener("click", () => selectNutritionGoal(goal.id));
+      goalGrid.appendChild(card);
+    });
+    nutritionContent.appendChild(goalGrid);
+
+    const logTitle = document.createElement("h3");
+    logTitle.className = "payroll-section-title";
+    logTitle.textContent = t("nutriLogSectionTitle");
+    nutritionContent.appendChild(logTitle);
+
+    const todayEntry = nutritionLog[todayKey()] || {};
+    const mealGrid = document.createElement("div");
+    mealGrid.className = "habits-grid";
+    NUTRITION_MEALS.forEach((meal) => {
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className = "habit-card";
+      card.classList.toggle("habit-card--done", !!todayEntry[meal.id]);
+
+      const icon = document.createElement("span");
+      icon.className = "habit-card__icon";
+      icon.textContent = meal.icon;
+
+      const label = document.createElement("span");
+      label.className = "habit-card__label";
+      label.textContent = t(meal.i18nKey);
+
+      card.append(icon, label);
+      card.addEventListener("click", () => toggleNutritionMeal(meal.id));
+      mealGrid.appendChild(card);
+    });
+    nutritionContent.appendChild(mealGrid);
+
+    const hint = document.createElement("p");
+    hint.className = "habits-hint";
+    hint.textContent = t("nutriLogHint");
+    nutritionContent.appendChild(hint);
+  }
+
+  // Click de nuevo sobre la meta ya activa = deseleccionar (permite no
+  // tener ninguna meta fija todavía, en vez de forzar una).
+  function selectNutritionGoal(goalId) {
+    nutritionGoal = nutritionGoal === goalId ? null : goalId;
+    persistNutritionGoal();
+    renderNutritionTab();
+  }
+
+  // Mismo criterio anti-farmeo que toggleHabit(): la recompensa de oro/XP
+  // se guarda una sola vez por fecha en nutritionMeta.lastRewardDate, así
+  // que destildar/volver a tildar el mismo día no la vuelve a dar.
+  function toggleNutritionMeal(mealId) {
+    const today = todayKey();
+    const todayEntry = { ...(nutritionLog[today] || {}) };
+    todayEntry[mealId] = !todayEntry[mealId];
+    nutritionLog[today] = todayEntry;
+    persistNutritionLog();
+    renderNutritionTab();
+
+    const allDone = NUTRITION_MEALS.every((meal) => todayEntry[meal.id]);
+    if (allDone && nutritionMeta.lastRewardDate !== today) {
+      nutritionMeta.lastRewardDate = today;
+      persistNutritionMeta();
+      addGold(5);
+      grantXP(20);
+      pulseAvatarStage();
+      setAvatarSpeech(t("nutriLogCompleteMsg"));
+      addMessage({
+        author: "SISTEMA",
+        text: `${t("nutriLogCompleteMsg")} +20 XP · +5 🪙`,
+        variant: "system",
+      });
+    }
+  }
 
   function openTemploModal() {
     activePillar = "templo";
