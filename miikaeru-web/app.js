@@ -768,9 +768,15 @@ const I18N = {
     chatPlaceholder: "Escribe un mensaje a Miikaeru...",
     chatSend: "Enviar",
     pillarFinanzas: "Finanzas",
+    pillarTemplo: "Templo",
     pillarFisico: "Estado Físico",
     pillarEspiritual: "Estado Espiritual",
     pillarAprendizaje: "Aprendizaje",
+    temploTitle: "⛩️ Templo",
+    temploTabEjercicios: "💪 Ejercicios y Rutinas",
+    temploTabBiosync: "❤️ Bio-Sync",
+    temploTabNutricion: "🥗 Nutrición",
+    temploTabEspiritu: "🧭 Espíritu",
     aprendizajeTitle: "🧠 Aprendizaje",
     aprendizajeHint: "Este pilar está en construcción. Pronto vas a poder registrar tu progreso de aprendizaje aquí.",
     courseAiName: "Sistemas con Inteligencia Artificial",
@@ -1407,9 +1413,15 @@ const I18N = {
     chatPlaceholder: "Message Miikaeru...",
     chatSend: "Send",
     pillarFinanzas: "Finance",
+    pillarTemplo: "Temple",
     pillarFisico: "Physical State",
     pillarEspiritual: "Spiritual State",
     pillarAprendizaje: "Learning",
+    temploTitle: "⛩️ Temple",
+    temploTabEjercicios: "💪 Exercise & Routines",
+    temploTabBiosync: "❤️ Bio-Sync",
+    temploTabNutricion: "🥗 Nutrition",
+    temploTabEspiritu: "🧭 Spirit",
     aprendizajeTitle: "🧠 Learning",
     aprendizajeHint: "This pillar is under construction. Soon you'll be able to track your learning progress here.",
     courseAiName: "AI Systems",
@@ -2046,9 +2058,15 @@ const I18N = {
     chatPlaceholder: "ミイカエルにメッセージ...",
     chatSend: "送信",
     pillarFinanzas: "財務",
+    pillarTemplo: "神殿",
     pillarFisico: "身体状態",
     pillarEspiritual: "精神状態",
     pillarAprendizaje: "学習",
+    temploTitle: "⛩️ 神殿",
+    temploTabEjercicios: "💪 エクササイズ＆ルーティン",
+    temploTabBiosync: "❤️ バイオシンク",
+    temploTabNutricion: "🥗 栄養",
+    temploTabEspiritu: "🧭 精神",
     aprendizajeTitle: "🧠 学習",
     aprendizajeHint: "この柱は現在準備中です。もうすぐここで学習の進捗を記録できるようになります。",
     courseAiName: "AIシステム",
@@ -5131,6 +5149,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const aprendizajePanel = document.getElementById("aprendizaje-panel");
 
+  // Templo: fusión de Ejercicios/Rutinas, Bio-Sync, Nutrición y Estado
+  // Espiritual — reemplaza los antiguos pilares Estado Físico/Estado
+  // Espiritual y el antiguo modal standalone de Bio-Sync (ver
+  // togglePillarPanel()/openTemploModal() más abajo).
+  const temploModal = document.getElementById("templo-modal");
+  const temploModalClose = document.getElementById("templo-modal-close");
+  const temploTabs = document.getElementById("templo-tabs");
+  const temploTabPanels = {
+    ejercicios: document.getElementById("templo-tab-ejercicios"),
+    biosync: document.getElementById("templo-tab-biosync"),
+    nutricion: document.getElementById("templo-tab-nutricion"),
+    espiritu: document.getElementById("templo-tab-espiritu"),
+  };
+
   const playBtn = document.getElementById("play-btn");
   const minigameViewport = document.getElementById("minigame-viewport");
   const minigameCanvas = document.getElementById("minigame-canvas");
@@ -5154,8 +5186,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const bossfightModalClose = document.getElementById("bossfight-modal-close");
   const calendarModal = document.getElementById("calendar-modal");
   const calendarModalClose = document.getElementById("calendar-modal-close");
-  const biosyncModal = document.getElementById("biosync-modal");
-  const biosyncModalClose = document.getElementById("biosync-modal-close");
   const habitsModal = document.getElementById("habits-modal");
   const habitsModalClose = document.getElementById("habits-modal-close");
   // Placeholder "próximamente" genérico — hoy solo lo usa Karaoke (Hábitos
@@ -5166,10 +5196,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const appPlaceholderTitle = document.getElementById("app-placeholder-title");
   const appPlaceholderText = document.getElementById("app-placeholder-text");
 
-  // Módulo Hábitos & Rachas + Rutina de Ejercicios
-  const habitsTabs = document.getElementById("habits-tabs");
+  // Módulo Hábitos & Rachas (ya no tiene pestaña de Rutina de Ejercicios,
+  // ver Templo más abajo)
   const habitsTabDaily = document.getElementById("habits-tab-daily");
-  const habitsTabWorkout = document.getElementById("habits-tab-workout");
   const habitsStreakValue = document.getElementById("habits-streak-value");
   const habitsGrid = document.getElementById("habits-grid");
   const workoutPlanEl = document.getElementById("workout-plan");
@@ -6807,16 +6836,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const pillarPrompts = {
     finanzas: "Quiero avanzar en mi pilar de Finanzas.",
-    fisico: "Quiero avanzar en mi pilar de Estado Físico.",
-    espiritual: "Quiero avanzar en mi pilar de Estado Espiritual.",
+    templo: "Quiero avanzar en mi Templo (cuerpo, nutrición y espíritu).",
   };
 
   // ---- Navegación dinámica de pilares: un solo panel visible a la vez ----
 
   function hideAllPillarPanels() {
     finanzasPanel.hidden = true;
-    fisicoPanel.hidden = true;
-    espiritualPanel.hidden = true;
     aprendizajePanel.hidden = true;
   }
 
@@ -6830,7 +6856,21 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function togglePillarPanel(pillar) {
-    const panels = { finanzas: finanzasPanel, fisico: fisicoPanel, espiritual: espiritualPanel, aprendizaje: aprendizajePanel };
+    // Templo no usa el panel chico de #pillar-modal — es su propio modal
+    // grande a pantalla completa (mismo criterio que
+    // #workout-session-modal), así que se resuelve aparte antes de tocar
+    // el sistema de paneles fijos de abajo.
+    if (pillar === "templo") {
+      if (activePillar === "templo") {
+        closeTemploModal();
+      } else {
+        closePillarModal();
+        openTemploModal();
+      }
+      return;
+    }
+
+    const panels = { finanzas: finanzasPanel, aprendizaje: aprendizajePanel };
     const target = panels[pillar];
     if (!target) return;
 
@@ -6849,7 +6889,6 @@ document.addEventListener("DOMContentLoaded", () => {
     pillarModal.hidden = false;
     activePillar = pillar;
 
-    if (pillar === "fisico") refreshStepsFromProvider();
     if (pillar === "finanzas") renderFinanzasGlobalSummary();
   }
 
@@ -6859,6 +6898,74 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && !pillarModal.hidden) closePillarModal();
+  });
+
+  // ---- Templo: modal grande independiente (no usa #pillar-modal) ----
+  // Fusiona Ejercicios/Rutinas, Bio-Sync, Nutrición y Estado Espiritual en
+  // 4 pestañas internas (mismo patrón que .habits-tabs, renombrado). Cada
+  // pestaña dispara sus propios efectos de "apertura" (equivalente al
+  // onOpen de APP_MODULES) porque Templo no pasa por ese dispatcher.
+  let activeTemploTab = "ejercicios";
+
+  function runTemploTabOpenEffects(tab) {
+    if (tab === "ejercicios") {
+      refreshStepsFromProvider();
+      renderRoutineRecommendation();
+      renderSevenMinSection();
+      renderWorkoutPlan();
+      renderWorkoutHistory();
+    } else if (tab === "biosync") {
+      updateBpmDisplay(Number(biosyncManualBpm.value));
+      renderBiometricsHistory();
+    } else if (tab === "nutricion") {
+      renderNutritionTab();
+    }
+    // "espiritu" no necesita render dinámico al abrir — su estado
+    // (SPIRITUAL_STATES) ya se refleja en el HUD, y el timer de
+    // meditación no depende de datos que puedan haber cambiado afuera.
+  }
+
+  function showTemploTab(tab) {
+    if (!temploTabPanels[tab]) return;
+    activeTemploTab = tab;
+    Object.entries(temploTabPanels).forEach(([key, panel]) => {
+      panel.hidden = key !== tab;
+    });
+    temploTabs.querySelectorAll(".templo-tab").forEach((btn) => {
+      btn.classList.toggle("templo-tab--active", btn.dataset.temploTab === tab);
+    });
+    runTemploTabOpenEffects(tab);
+  }
+
+  // Stub temporal — el módulo real de Nutrición (metas + registro diario)
+  // se construye en el siguiente checkpoint de esta misma feature.
+  function renderNutritionTab() {}
+
+  function openTemploModal() {
+    activePillar = "templo";
+    temploModal.hidden = false;
+    showTemploTab(activeTemploTab);
+  }
+
+  function closeTemploModal() {
+    if (meditationInterval) {
+      clearInterval(meditationInterval);
+      meditationInterval = null;
+    }
+    activePillar = null;
+    temploModal.hidden = true;
+  }
+
+  temploModalClose.addEventListener("click", closeTemploModal);
+  temploModal.addEventListener("click", (event) => {
+    if (event.target === temploModal) closeTemploModal();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !temploModal.hidden) closeTemploModal();
+  });
+  temploTabs.addEventListener("click", (event) => {
+    const btn = event.target.closest(".templo-tab");
+    if (btn) showTemploTab(btn.dataset.temploTab);
   });
 
   // ---- Chat y Wishlist: mismo patrón de modal anidado (rediseño HUD) ----
@@ -8611,11 +8718,11 @@ document.addEventListener("DOMContentLoaded", () => {
     addGold(5);
     grantXP(60);
 
-    MiikaeruHub.askAI(pillarPrompts.fisico, { pillar: "fisico" }).then((reply) => {
+    MiikaeruHub.askAI(pillarPrompts.templo, { pillar: "fisico" }).then((reply) => {
       setTimeout(() => addMessage({ author: "MIIKAERU", text: reply, variant: "bot" }), 500);
     });
-
-    closePillarModal();
+    // Sin cierre de modal acá — el usuario se queda en la pestaña
+    // Ejercicios de Templo (antes esto cerraba el pilar entero).
   });
 
   // ---- Estado Espiritual: meditación en silencio + técnicas de claridad ----
@@ -9200,13 +9307,8 @@ document.addEventListener("DOMContentLoaded", () => {
     habits: {
       modal: () => habitsModal,
       onOpen: () => {
-        showHabitsTab("daily");
         renderHabitsStreak();
         renderHabitsGrid();
-        renderWorkoutPlan();
-        renderWorkoutHistory();
-        renderSevenMinSection();
-        renderRoutineRecommendation();
       },
     },
     // Karaoke sigue siendo "próximamente" — usa el placeholder genérico
@@ -9229,16 +9331,9 @@ document.addEventListener("DOMContentLoaded", () => {
         renderCalendarEventsList();
       },
     },
-    biosync: {
-      modal: () => biosyncModal,
-      onOpen: () => {
-        updateBpmDisplay(Number(biosyncManualBpm.value));
-        renderBiometricsHistory();
-      },
-    },
   };
 
-  const ALL_APP_MODALS = [bossfightModal, japaneseModal, calendarModal, biosyncModal, habitsModal, appPlaceholderModal, miikaPassModal];
+  const ALL_APP_MODALS = [bossfightModal, japaneseModal, calendarModal, habitsModal, appPlaceholderModal, miikaPassModal];
 
   let activeApp = loadActiveApp();
 
@@ -9325,7 +9420,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // todas las ventanas, ya que closeAllAppModals() es idempotente (cerrar
   // "todas" cuando solo una está abierta es seguro y más simple que una
   // función de cierre casi idéntica por cada una).
-  [bossfightModal, calendarModal, biosyncModal, habitsModal, appPlaceholderModal, japaneseModal, miikaPassModal].forEach((modal) => {
+  [bossfightModal, calendarModal, habitsModal, appPlaceholderModal, japaneseModal, miikaPassModal].forEach((modal) => {
     modal.addEventListener("click", (event) => {
       if (event.target === modal) closeAllAppModals();
     });
@@ -9333,7 +9428,6 @@ document.addEventListener("DOMContentLoaded", () => {
   [
     [bossfightModalClose, bossfightModal],
     [calendarModalClose, calendarModal],
-    [biosyncModalClose, biosyncModal],
     [habitsModalClose, habitsModal],
     [appPlaceholderModalClose, appPlaceholderModal],
     [japaneseModalClose, japaneseModal],
@@ -9346,20 +9440,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // ---------------- Hábitos & Rachas ----------------
-
-  function showHabitsTab(target) {
-    document.querySelectorAll(".habits-tab").forEach((btn) => {
-      btn.classList.toggle("habits-tab--active", btn.dataset.habitsTab === target);
-    });
-    habitsTabDaily.hidden = target !== "daily";
-    habitsTabWorkout.hidden = target !== "workout";
-  }
-
-  habitsTabs.addEventListener("click", (event) => {
-    const tabBtn = event.target.closest(".habits-tab");
-    if (!tabBtn) return;
-    showHabitsTab(tabBtn.dataset.habitsTab);
-  });
 
   function renderHabitsStreak() {
     habitsStreakValue.textContent = habitsMeta.streak;

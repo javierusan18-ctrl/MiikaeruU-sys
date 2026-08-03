@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260802-14" />
+  <link rel="stylesheet" href="style.css?v=20260804-15" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -225,11 +225,13 @@
         <button class="pillar-btn pillar-btn--finanzas" data-pillar="finanzas" type="button" data-i18n-title="pillarFinanzas" title="Finanzas">
           <span class="pillar-btn__icon">💰</span> <span data-i18n="pillarFinanzas">Finanzas</span>
         </button>
-        <button class="pillar-btn pillar-btn--fisico" data-pillar="fisico" type="button" data-i18n-title="pillarFisico" title="Estado Físico">
-          <span class="pillar-btn__icon">💪</span> <span data-i18n="pillarFisico">Estado Físico</span>
-        </button>
-        <button class="pillar-btn pillar-btn--espiritual" data-pillar="espiritual" type="button" data-i18n-title="pillarEspiritual" title="Estado Espiritual">
-          <span class="pillar-btn__icon">🧭</span> <span data-i18n="pillarEspiritual">Estado Espiritual</span>
+        <!-- Templo: fusión de Ejercicios/Rutinas, Bio-Sync, Nutrición y
+             Estado Espiritual en un solo espacio holístico — reemplaza
+             los antiguos pilares "Estado Físico"/"Estado Espiritual"
+             (ambos eran paneles casi vacíos, ver #templo-modal más abajo
+             para el contenido real que se mudó ahí). -->
+        <button class="pillar-btn pillar-btn--templo" data-pillar="templo" type="button" data-i18n-title="pillarTemplo" title="Templo">
+          <span class="pillar-btn__icon">⛩️</span> <span data-i18n="pillarTemplo">Templo</span>
         </button>
         <button class="pillar-btn pillar-btn--aprendizaje" data-pillar="aprendizaje" type="button" data-i18n-title="pillarAprendizaje" title="Aprendizaje">
           <span class="pillar-btn__icon">🧠</span> <span data-i18n="pillarAprendizaje">Aprendizaje</span>
@@ -257,13 +259,9 @@
           <span class="cyber-tile__icon">💰</span>
           <span class="cyber-tile__label" data-i18n="pillarFinanzas">Finanzas</span>
         </button>
-        <button type="button" class="cyber-tile cyber-tile--red" data-forward='.pillar-btn[data-pillar="fisico"]'>
-          <span class="cyber-tile__icon">💪</span>
-          <span class="cyber-tile__label" data-i18n="pillarFisico">Estado Físico</span>
-        </button>
-        <button type="button" class="cyber-tile cyber-tile--cyan" data-forward='.pillar-btn[data-pillar="espiritual"]'>
-          <span class="cyber-tile__icon">🧭</span>
-          <span class="cyber-tile__label" data-i18n="pillarEspiritual">Estado Espiritual</span>
+        <button type="button" class="cyber-tile cyber-tile--red" data-forward='.pillar-btn[data-pillar="templo"]'>
+          <span class="cyber-tile__icon">⛩️</span>
+          <span class="cyber-tile__label" data-i18n="pillarTemplo">Templo</span>
         </button>
         <button type="button" class="cyber-tile cyber-tile--purple" data-forward='.pillar-btn[data-pillar="aprendizaje"]'>
           <span class="cyber-tile__icon">🧠</span>
@@ -284,10 +282,6 @@
         <button type="button" class="cyber-tile cyber-tile--blue" data-forward='.app-card[data-app="calendar"]'>
           <span class="cyber-tile__icon">📅</span>
           <span class="cyber-tile__label" data-i18n="appCalendarName">Calendario &amp; Eventos</span>
-        </button>
-        <button type="button" class="cyber-tile cyber-tile--magenta" data-forward='.app-card[data-app="biosync"]'>
-          <span class="cyber-tile__icon">❤️</span>
-          <span class="cyber-tile__label" data-i18n="appBiosyncName">Bio-Sync</span>
         </button>
         <button type="button" class="cyber-tile cyber-tile--orange" data-forward='.app-card[data-app="karaoke"]'>
           <span class="cyber-tile__icon">🎤</span>
@@ -437,11 +431,6 @@
         <button type="button" class="app-card" data-app="calendar" data-i18n-title="appCalendarName" title="Calendario &amp; Eventos">
           <span class="app-card__icon">📅</span>
           <span class="app-card__name" data-i18n="appCalendarName">Calendario &amp; Eventos</span>
-          <span class="app-card__status app-card__status--new" data-i18n="appStatusNew">Nuevo</span>
-        </button>
-        <button type="button" class="app-card" data-app="biosync" data-i18n-title="appBiosyncName" title="Bio-Sync &amp; Estado Físico">
-          <span class="app-card__icon">❤️</span>
-          <span class="app-card__name" data-i18n="appBiosyncName">Bio-Sync &amp; Estado Físico</span>
           <span class="app-card__status app-card__status--new" data-i18n="appStatusNew">Nuevo</span>
         </button>
         <button type="button" class="app-card" data-app="karaoke" data-i18n-title="appKaraokeName" title="Karaoke">
@@ -789,61 +778,6 @@
         </div>
 
         <button type="button" class="btn-register" id="finanzas-save-btn" data-i18n="financeSave">Guardar</button>
-      </div>
-
-      <!-- Herramienta de Estado Físico: solo visible cuando ese pilar está activo -->
-      <div class="fisico-panel" id="fisico-panel" hidden>
-        <div class="fisico-panel__row">
-          <label for="fisico-reps" data-i18n="fisicoRepsLabel">Meta de repeticiones</label>
-          <input type="number" id="fisico-reps" min="1" value="20" />
-        </div>
-        <div class="fisico-panel__row">
-          <label for="fisico-steps" data-i18n="fisicoStepsLabel">Pasos registrados</label>
-          <input type="number" id="fisico-steps" min="0" placeholder="0" />
-          <span class="fisico-panel__source" id="fisico-steps-source">manual</span>
-        </div>
-        <button type="button" class="btn-register" id="fisico-submit" data-i18n="fisicoRegister">Registrar</button>
-      </div>
-
-      <!-- Herramienta de Estado Espiritual: solo visible cuando ese pilar está activo -->
-      <div class="espiritual-panel" id="espiritual-panel" hidden>
-        <div class="espiritual-panel__meditation">
-          <h3 data-i18n="espiritualMeditationTitle">Meditación en Silencio</h3>
-          <p class="espiritual-panel__hint" data-i18n="espiritualMeditationHint">
-            Desconexión total: sin música, sin distracciones, sin notificaciones.
-          </p>
-          <div class="espiritual-panel__timer-row" id="meditation-controls">
-            <label for="meditation-minutes" data-i18n="espiritualMinutesLabel">Minutos</label>
-            <input type="number" id="meditation-minutes" min="1" max="30" value="3" />
-            <button type="button" class="btn-register" id="meditation-start-btn" data-i18n="espiritualStart">Iniciar Meditación</button>
-          </div>
-          <div class="espiritual-panel__countdown" id="meditation-countdown" hidden>
-            <span id="meditation-countdown-value">03:00</span>
-            <button type="button" class="btn-link" id="meditation-cancel-btn" data-i18n="espiritualCancel">Cancelar</button>
-          </div>
-        </div>
-
-        <div class="espiritual-panel__techniques">
-          <h3 data-i18n="espiritualTechniquesTitle">Técnicas de Claridad Mental</h3>
-
-          <div class="technique-card">
-            <h4>Respiración 4-7-8</h4>
-            <p>Inhala 4 segundos, sostén 7, exhala 8. Repite 4 veces para calmar la mente.</p>
-            <button type="button" class="btn-register technique-complete-btn" data-technique="Respiración 4-7-8">Completar</button>
-          </div>
-
-          <div class="technique-card">
-            <h4>Descarga de Pensamientos</h4>
-            <p>Escribe 3 cargas que te pesan hoy y suéltalas conscientemente, entregándoselas a Dios.</p>
-            <button type="button" class="btn-register technique-complete-btn" data-technique="Descarga de Pensamientos">Completar</button>
-          </div>
-
-          <div class="technique-card">
-            <h4>Gratitud Rápida</h4>
-            <p>Enumera 3 cosas por las que agradeces hoy. La gratitud fortalece tu inteligencia emocional.</p>
-            <button type="button" class="btn-register technique-complete-btn" data-technique="Gratitud Rápida">Completar</button>
-          </div>
-        </div>
       </div>
 
       <!-- Herramienta de Aprendizaje: solo visible cuando ese pilar está activo.
@@ -1273,77 +1207,14 @@
     </div>
   </div>
 
-  <!-- MODAL: BIO-SYNC & ESTADO FÍSICO — mismo criterio que Calendario:
-       contenido siempre visible dentro del modal, sin standby intermedio. -->
-  <div class="modal-overlay" id="biosync-modal" hidden>
-    <div class="modal modal--app glass">
-      <button type="button" class="btn-modal-close" id="biosync-modal-close" aria-label="Cerrar">✕</button>
-      <h2 class="modal-app__title" data-i18n="appBiosyncName">Bio-Sync &amp; Estado Físico</h2>
-
-      <div class="biosync-content" id="biosync-content">
-        <div class="biosync-bpm-panel">
-          <div class="biosync-bpm-display">
-            <span class="biosync-bpm-value" id="biosync-bpm-value">--</span>
-            <span class="biosync-bpm-label">BPM</span>
-          </div>
-          <div class="biosync-pulse" id="biosync-pulse">
-            <svg class="biosync-pulse__svg" viewBox="0 0 200 50" preserveAspectRatio="none">
-              <polyline class="biosync-pulse__line" points="0,25 30,25 40,8 50,42 60,25 200,25" />
-            </svg>
-          </div>
-        </div>
-
-        <button type="button" class="btn-register" id="biosync-connect-btn" data-i18n="biosyncConnectBtn">📡 Conectar Smartwatch / Banda Bluetooth</button>
-        <p class="biosync-bt-status" id="biosync-bt-status"></p>
-
-        <div class="biosync-manual">
-          <label for="biosync-manual-bpm" data-i18n="biosyncManualLabel">Modo Manual / Simulación (BPM)</label>
-          <div class="biosync-manual__row">
-            <input type="range" id="biosync-manual-bpm" min="40" max="180" value="72" />
-            <span id="biosync-manual-bpm-value">72</span>
-          </div>
-        </div>
-
-        <div class="biosync-log-form">
-          <div class="finanzas-panel__row">
-            <label for="biosync-weight" data-i18n="biosyncWeightLabel">Peso (kg)</label>
-            <input type="number" id="biosync-weight" min="0" placeholder="0" />
-          </div>
-          <div class="finanzas-panel__row">
-            <label for="biosync-sleep" data-i18n="biosyncSleepLabel">Horas de Sueño</label>
-            <input type="number" id="biosync-sleep" min="0" max="24" placeholder="0" />
-          </div>
-          <div class="finanzas-panel__row">
-            <label for="biosync-energy" data-i18n="biosyncEnergyLabel">Nivel de Energía (1-10)</label>
-            <div class="biosync-manual__row">
-              <input type="range" id="biosync-energy" min="1" max="10" value="5" />
-              <span id="biosync-energy-value">5</span>
-            </div>
-          </div>
-          <button type="button" class="btn-register" id="biosync-save-log-btn" data-i18n="biosyncSaveBtn">+ Registrar Estado Físico</button>
-        </div>
-
-        <div class="biosync-log-history" id="biosync-log-history"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL: HÁBITOS & RACHAS + RUTINA DE EJERCICIOS — módulo real (ya no
-       placeholder). Dos pestañas, mismo patrón que .finanzas-tabs:
-       "Hábitos Diarios" (checklist + racha) y "Rutina de Ejercicios"
-       (planificador semanal + registro rápido de series/repeticiones/peso).
-       Ver HABITS_LIST/WORKOUT_WEEKDAYS/WORKOUT_PLAN_DEFAULT en app.js. -->
+  <!-- MODAL: HÁBITOS & RACHAS — antes tenía una 2da pestaña "Rutina de
+       Ejercicios" que se mudó entera a #templo-modal (ver Templo más
+       abajo); esta queda con un solo contenido, sin chrome de pestañas. -->
   <div class="modal-overlay" id="habits-modal" hidden>
     <div class="modal modal--app modal--habits glass">
       <button type="button" class="btn-modal-close" id="habits-modal-close" aria-label="Cerrar">✕</button>
       <h2 class="modal-app__title" data-i18n="appHabitsName">Hábitos &amp; Rachas</h2>
 
-      <div class="habits-tabs" id="habits-tabs">
-        <button type="button" class="habits-tab habits-tab--active" data-habits-tab="daily" data-i18n="habitsTabDaily">🔥 Hábitos Diarios</button>
-        <button type="button" class="habits-tab" data-habits-tab="workout" data-i18n="habitsTabWorkout">💪 Rutina de Ejercicios</button>
-      </div>
-
-      <!-- Pestaña: Hábitos Diarios -->
       <div class="habits-tab-panel" id="habits-tab-daily">
         <div class="habits-streak" id="habits-streak">
           <span class="habits-streak__icon">🔥</span>
@@ -1357,10 +1228,47 @@
 
         <p class="habits-hint" data-i18n="habitsHint">Completa los 5 hábitos hoy para sumar a tu racha.</p>
       </div>
+    </div>
+  </div>
 
-      <!-- Pestaña: Rutina de Ejercicios -->
-      <div class="habits-tab-panel" id="habits-tab-workout" hidden>
-        <!-- Coherencia Bio-Sync ↔ Estado Físico: pedido explícito — lee el
+  <!-- MODAL: TEMPLO — fusión de Ejercicios/Rutinas, Bio-Sync, Nutrición y
+       Estado Espiritual en un solo espacio holístico (pedido explícito),
+       reemplaza los antiguos pilares "Estado Físico"/"Estado Espiritual"
+       y el antiguo modal standalone de Bio-Sync. Mismo patrón de pestañas
+       que .habits-tabs, renombrado .templo-tabs. Se abre directo desde
+       togglePillarPanel("templo") en app.js, sin pasar por #pillar-modal
+       — panel grande a pantalla completa (mismo criterio que
+       #workout-session-modal, ver .modal--templo en style.css). -->
+  <div class="modal-overlay" id="templo-modal" hidden>
+    <div class="modal modal--app modal--templo glass">
+      <button type="button" class="btn-modal-close" id="templo-modal-close" aria-label="Cerrar">✕</button>
+      <h2 class="modal-app__title" data-i18n="temploTitle">⛩️ Templo</h2>
+
+      <div class="templo-tabs" id="templo-tabs">
+        <button type="button" class="templo-tab templo-tab--active" data-templo-tab="ejercicios" data-i18n="temploTabEjercicios">💪 Ejercicios y Rutinas</button>
+        <button type="button" class="templo-tab" data-templo-tab="biosync" data-i18n="temploTabBiosync">❤️ Bio-Sync</button>
+        <button type="button" class="templo-tab" data-templo-tab="nutricion" data-i18n="temploTabNutricion">🥗 Nutrición</button>
+        <button type="button" class="templo-tab" data-templo-tab="espiritu" data-i18n="temploTabEspiritu">🧭 Espíritu</button>
+      </div>
+
+      <!-- Pestaña: Ejercicios y Rutinas — fusión de la antigua herramienta
+           rápida de Estado Físico (reps/pasos) con toda la ex-pestaña
+           "Rutina de Ejercicios" de Hábitos. -->
+      <div class="templo-tab-panel" id="templo-tab-ejercicios">
+        <div class="fisico-panel" id="fisico-panel">
+          <div class="fisico-panel__row">
+            <label for="fisico-reps" data-i18n="fisicoRepsLabel">Meta de repeticiones</label>
+            <input type="number" id="fisico-reps" min="1" value="20" />
+          </div>
+          <div class="fisico-panel__row">
+            <label for="fisico-steps" data-i18n="fisicoStepsLabel">Pasos registrados</label>
+            <input type="number" id="fisico-steps" min="0" placeholder="0" />
+            <span class="fisico-panel__source" id="fisico-steps-source">manual</span>
+          </div>
+          <button type="button" class="btn-register" id="fisico-submit" data-i18n="fisicoRegister">Registrar</button>
+        </div>
+
+        <!-- Coherencia Bio-Sync ↔ Ejercicios: pedido explícito — lee el
              último registro de Bio-Sync (energía/sueño/bpm, ver
              computeRecommendedIntensity() en app.js) y sugiere qué
              categoría de Rutina Estructurada conviene hoy, sin bloquear
@@ -1370,9 +1278,8 @@
           <p class="routine-recommendation__text" id="routine-recommendation-text"></p>
         </div>
 
-        <!-- Rutinas Estructuradas: pedido explícito de ampliar variedad
-             más allá del Reto 7 Minutos — Calentamiento/Fuerza/
-             Resistencia/Estiramientos/Recuperación Activa, cada una abre
+        <!-- Rutinas Estructuradas: Calentamiento/Fuerza/Resistencia/
+             Estiramientos/Recuperación Activa, cada una abre
              #workout-session-modal (pantalla completa) — ver
              WORKOUT_ROUTINE_CATEGORIES en app.js. -->
         <h3 class="payroll-section-title" data-i18n="routineSectionTitle">🎯 Rutinas Estructuradas</h3>
@@ -1430,6 +1337,104 @@
         </form>
 
         <div class="workout-log-history" id="workout-log-history"></div>
+      </div>
+
+      <!-- Pestaña: Bio-Sync — contenido íntegro del ex-#biosync-modal. -->
+      <div class="templo-tab-panel" id="templo-tab-biosync" hidden>
+        <div class="biosync-content" id="biosync-content">
+          <div class="biosync-bpm-panel">
+            <div class="biosync-bpm-display">
+              <span class="biosync-bpm-value" id="biosync-bpm-value">--</span>
+              <span class="biosync-bpm-label">BPM</span>
+            </div>
+            <div class="biosync-pulse" id="biosync-pulse">
+              <svg class="biosync-pulse__svg" viewBox="0 0 200 50" preserveAspectRatio="none">
+                <polyline class="biosync-pulse__line" points="0,25 30,25 40,8 50,42 60,25 200,25" />
+              </svg>
+            </div>
+          </div>
+
+          <button type="button" class="btn-register" id="biosync-connect-btn" data-i18n="biosyncConnectBtn">📡 Conectar Smartwatch / Banda Bluetooth</button>
+          <p class="biosync-bt-status" id="biosync-bt-status"></p>
+
+          <div class="biosync-manual">
+            <label for="biosync-manual-bpm" data-i18n="biosyncManualLabel">Modo Manual / Simulación (BPM)</label>
+            <div class="biosync-manual__row">
+              <input type="range" id="biosync-manual-bpm" min="40" max="180" value="72" />
+              <span id="biosync-manual-bpm-value">72</span>
+            </div>
+          </div>
+
+          <div class="biosync-log-form">
+            <div class="finanzas-panel__row">
+              <label for="biosync-weight" data-i18n="biosyncWeightLabel">Peso (kg)</label>
+              <input type="number" id="biosync-weight" min="0" placeholder="0" />
+            </div>
+            <div class="finanzas-panel__row">
+              <label for="biosync-sleep" data-i18n="biosyncSleepLabel">Horas de Sueño</label>
+              <input type="number" id="biosync-sleep" min="0" max="24" placeholder="0" />
+            </div>
+            <div class="finanzas-panel__row">
+              <label for="biosync-energy" data-i18n="biosyncEnergyLabel">Nivel de Energía (1-10)</label>
+              <div class="biosync-manual__row">
+                <input type="range" id="biosync-energy" min="1" max="10" value="5" />
+                <span id="biosync-energy-value">5</span>
+              </div>
+            </div>
+            <button type="button" class="btn-register" id="biosync-save-log-btn" data-i18n="biosyncSaveBtn">+ Registrar Estado Físico</button>
+          </div>
+
+          <div class="biosync-log-history" id="biosync-log-history"></div>
+        </div>
+      </div>
+
+      <!-- Pestaña: Nutrición — NUEVA, ver Paso 2. Placeholder de estructura
+           por ahora, contenido real se agrega en el siguiente checkpoint. -->
+      <div class="templo-tab-panel" id="templo-tab-nutricion" hidden>
+        <div class="nutrition-content" id="nutrition-content"></div>
+      </div>
+
+      <!-- Pestaña: Espíritu — contenido íntegro del ex-#espiritual-panel. -->
+      <div class="templo-tab-panel" id="templo-tab-espiritu" hidden>
+        <div class="espiritual-panel" id="espiritual-panel">
+          <div class="espiritual-panel__meditation">
+            <h3 data-i18n="espiritualMeditationTitle">Meditación en Silencio</h3>
+            <p class="espiritual-panel__hint" data-i18n="espiritualMeditationHint">
+              Desconexión total: sin música, sin distracciones, sin notificaciones.
+            </p>
+            <div class="espiritual-panel__timer-row" id="meditation-controls">
+              <label for="meditation-minutes" data-i18n="espiritualMinutesLabel">Minutos</label>
+              <input type="number" id="meditation-minutes" min="1" max="30" value="3" />
+              <button type="button" class="btn-register" id="meditation-start-btn" data-i18n="espiritualStart">Iniciar Meditación</button>
+            </div>
+            <div class="espiritual-panel__countdown" id="meditation-countdown" hidden>
+              <span id="meditation-countdown-value">03:00</span>
+              <button type="button" class="btn-link" id="meditation-cancel-btn" data-i18n="espiritualCancel">Cancelar</button>
+            </div>
+          </div>
+
+          <div class="espiritual-panel__techniques">
+            <h3 data-i18n="espiritualTechniquesTitle">Técnicas de Claridad Mental</h3>
+
+            <div class="technique-card">
+              <h4>Respiración 4-7-8</h4>
+              <p>Inhala 4 segundos, sostén 7, exhala 8. Repite 4 veces para calmar la mente.</p>
+              <button type="button" class="btn-register technique-complete-btn" data-technique="Respiración 4-7-8">Completar</button>
+            </div>
+
+            <div class="technique-card">
+              <h4>Descarga de Pensamientos</h4>
+              <p>Escribe 3 cargas que te pesan hoy y suéltalas conscientemente, entregándoselas a Dios.</p>
+              <button type="button" class="btn-register technique-complete-btn" data-technique="Descarga de Pensamientos">Completar</button>
+            </div>
+
+            <div class="technique-card">
+              <h4>Gratitud Rápida</h4>
+              <p>Enumera 3 cosas por las que agradeces hoy. La gratitud fortalece tu inteligencia emocional.</p>
+              <button type="button" class="btn-register technique-complete-btn" data-technique="Gratitud Rápida">Completar</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -2396,7 +2401,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260802-14"></script>
+  <script src="app.js?v=20260804-15"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de

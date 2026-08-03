@@ -1335,18 +1335,14 @@ textarea,
   box-shadow: var(--shadow-neon-green);
 }
 
-.pillar-btn--fisico:hover,
-.pillar-btn--fisico:focus-visible {
-  border-color: var(--neon-magenta);
-  color: var(--neon-magenta);
-  box-shadow: 0 0 12px rgba(255, 46, 154, 0.35);
-}
-
-.pillar-btn--espiritual:hover,
-.pillar-btn--espiritual:focus-visible {
-  border-color: var(--neon-cyan);
-  color: var(--neon-cyan);
-  box-shadow: var(--shadow-neon-cyan);
+/* Templo: fusión de Ejercicios/Bio-Sync/Nutrición/Espíritu — reemplaza
+   .pillar-btn--fisico/--espiritual, en --neon-purple (los otros 3 tonos
+   ya están tomados por Finanzas/Aprendizaje/el resto del HUD). */
+.pillar-btn--templo:hover,
+.pillar-btn--templo:focus-visible {
+  border-color: var(--neon-purple);
+  color: var(--neon-purple);
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.4);
 }
 
 .pillar-btn--aprendizaje:hover,
@@ -3565,6 +3561,58 @@ textarea,
    criterio de ancho que .modal--japanese/.modal--dashboard, con su
    propio scroll interno en la lista de ejercicios para que el header/
    barra de progreso/botón Finalizar queden siempre visibles. */
+/* Templo — fusión de Ejercicios/Rutinas, Bio-Sync, Nutrición y Estado
+   Espiritual (pedido explícito de un espacio holístico único). Mismo
+   criterio de "panel grande envolvente" que .modal--workout-session,
+   con su propia franja de pestañas internas (mismo patrón que
+   .habits-tabs/.habits-tab, solo renombrado). */
+.modal--templo {
+  max-width: 760px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 34px 26px 26px;
+  text-align: left;
+  position: relative;
+}
+
+.templo-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+  flex-shrink: 0;
+}
+
+.templo-tab {
+  flex: 1;
+  padding: 10px 8px;
+  font-size: 0.66rem;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  text-align: center;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(124, 147, 173, 0.3);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.templo-tab--active {
+  border-color: var(--neon-purple);
+  color: var(--neon-purple);
+  background: rgba(168, 85, 247, 0.1);
+  box-shadow: 0 0 12px rgba(168, 85, 247, 0.3);
+}
+
+.templo-tab-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow-y: auto;
+}
+
 .modal--workout-session {
   max-width: 760px;
   max-height: 90vh;
@@ -8980,6 +9028,19 @@ button:active,
     padding: 0;
   }
   .modal--workout-session {
+    width: 100vw;
+    height: 100vh;
+    max-width: 100vw;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+
+  /* Mismo criterio, para Templo (#templo-modal) — fusión de Ejercicios/
+     Bio-Sync/Nutrición/Espíritu, mismo pedido de pantalla completa. */
+  #templo-modal {
+    padding: 0;
+  }
+  .modal--templo {
     width: 100vw;
     height: 100vh;
     max-width: 100vw;
