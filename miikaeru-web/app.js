@@ -1071,6 +1071,85 @@ const I18N = {
     workoutRepsLabel: "Repeticiones",
     workoutWeightLabel: "Peso (kg)",
     workoutLogBtn: "+ Registrar Ejercicio",
+    routineSectionTitle: "🎯 Rutinas Estructuradas",
+    routineRecNoData: "Registra tus signos vitales en Bio-Sync para recibir una recomendación de intensidad personalizada.",
+    routineRecPrefix: "Con energía {energy}/10 y {sleep}h de descanso, tu intensidad recomendada hoy es: {level}.",
+    intensityLow: "Baja (recuperación)",
+    intensityModerate: "Moderada",
+    intensityHigh: "Alta",
+    routineExercisesLabel: "ejercicios",
+    routineSessionsLabel: "sesiones",
+    routineSuggestedBadge: "Recomendado",
+    routineFinishBtn: "🏁 Finalizar Sesión",
+    routinePauseBtn: "Pausar",
+    routineStartBtn: "Iniciar",
+    routineResetBtn: "Reiniciar cronómetro",
+    routineDoneBtn: "Marcar Completado",
+    routineDoneBtnDone: "Completado",
+    routineRepsShort: "reps",
+    routineSetsShort: "series",
+    routineIntensityBadgeLabel: "Intensidad",
+    routineSessionCompleteMsg: "¡Sesión completada! Terminaste",
+    routineWarmupTitle: "Calentamiento",
+    routineWarmupDesc: "Activa articulaciones y sube el pulso antes del esfuerzo principal.",
+    routineStrengthTitle: "Fuerza",
+    routineStrengthDesc: "Circuito de fuerza funcional con tu propio peso corporal.",
+    routineEnduranceTitle: "Resistencia",
+    routineEnduranceDesc: "Cardio de alta intensidad para elevar tu capacidad aeróbica.",
+    routineStretchingTitle: "Estiramientos",
+    routineStretchingDesc: "Elonga los grupos musculares trabajados para mejorar la movilidad.",
+    routineRecoveryTitle: "Recuperación Activa",
+    routineRecoveryDesc: "Movimiento suave y respiración consciente para días de bajo rendimiento.",
+    exMarchInPlaceName: "Marcha en el Sitio",
+    exMarchInPlaceGuide: "Levanta las rodillas alternadamente a la altura de la cadera, manteniendo un ritmo constante y los brazos en movimiento.",
+    exArmCirclesName: "Círculos de Brazos",
+    exArmCirclesGuide: "Extiende los brazos a los costados y traza círculos amplios, invirtiendo la dirección a la mitad del tiempo.",
+    exHipCirclesName: "Círculos de Cadera",
+    exHipCirclesGuide: "Manos en la cintura, rota la cadera describiendo círculos amplios, alternando el sentido.",
+    exWarmupSquatsName: "Sentadillas de Activación",
+    exWarmupSquatsGuide: "Baja la cadera hacia atrás como si te sentaras en una silla, con la espalda recta y sin que las rodillas sobrepasen la punta de los pies.",
+    exDynamicLungesName: "Zancadas Dinámicas",
+    exDynamicLungesGuide: "Da un paso largo hacia adelante flexionando ambas rodillas a 90°, y regresa alternando la pierna.",
+    exPushUpsName: "Flexiones de Pecho",
+    exPushUpsGuide: "Cuerpo en línea recta, baja el pecho cerca del suelo doblando los codos a 45° y empuja de vuelta arriba.",
+    exSquatsName: "Sentadillas",
+    exSquatsGuide: "Pies al ancho de hombros, baja la cadera manteniendo el pecho erguido y el peso en los talones.",
+    exLungesName: "Zancadas",
+    exLungesGuide: "Alterna piernas dando un paso al frente y bajando la rodilla trasera casi hasta el suelo.",
+    exPlankName: "Plancha",
+    exPlankGuide: "Apóyate en antebrazos y punta de pies, manteniendo el cuerpo en línea recta sin dejar caer la cadera.",
+    exTricepDipsName: "Fondos de Tríceps",
+    exTricepDipsGuide: "Con las manos en el borde de una silla y piernas extendidas, baja el cuerpo doblando los codos y empuja de vuelta arriba.",
+    exJumpingJacksName: "Saltos de Tijera",
+    exJumpingJacksGuide: "Salta abriendo piernas y brazos simultáneamente, y regresa a la posición inicial en el siguiente salto.",
+    exHighKneesName: "Rodillas Altas",
+    exHighKneesGuide: "Corre en el sitio llevando las rodillas lo más alto posible, a ritmo rápido.",
+    exMountainClimbersName: "Escaladores",
+    exMountainClimbersGuide: "En posición de plancha alta, lleva las rodillas al pecho alternando rápido, como si escalaras.",
+    exBurpeesName: "Burpees",
+    exBurpeesGuide: "Baja a cuclillas, apoya las manos, lleva los pies hacia atrás en plancha, regresa y salta con los brazos arriba.",
+    exLateralJumpsName: "Saltos Laterales",
+    exLateralJumpsGuide: "Salta de lado a lado sobre una línea imaginaria, aterrizando suave con las rodillas ligeramente flexionadas.",
+    exHamstringStretchName: "Estiramiento de Isquiotibiales",
+    exHamstringStretchGuide: "Sentado con una pierna extendida, inclina el torso hacia adelante desde la cadera sin redondear la espalda.",
+    exQuadStretchName: "Estiramiento de Cuádriceps",
+    exQuadStretchGuide: "De pie, sujeta el tobillo detrás de ti y acerca el talón al glúteo, manteniendo las rodillas juntas.",
+    exShoulderStretchName: "Estiramiento de Hombro",
+    exShoulderStretchGuide: "Cruza un brazo frente al pecho y presiona suavemente con el otro brazo hacia el cuerpo.",
+    exSpinalTwistName: "Torsión de Columna",
+    exSpinalTwistGuide: "Sentado, gira el torso hacia un lado apoyando una mano detrás de ti, manteniendo la espalda erguida.",
+    exCalfStretchName: "Estiramiento de Pantorrilla",
+    exCalfStretchGuide: "Con las manos en una pared, retrasa una pierna manteniendo el talón en el suelo y el cuerpo inclinado hacia adelante.",
+    exGentleWalkName: "Caminata Suave",
+    exGentleWalkGuide: "Camina en el sitio o alrededor del espacio a ritmo relajado, respirando profundo.",
+    exDeepBreathingName: "Respiración Profunda",
+    exDeepBreathingGuide: "Inhala por la nariz durante 4 segundos, sostén 4 segundos y exhala por la boca durante 6 segundos.",
+    exAnkleMobilityName: "Movilidad de Tobillo",
+    exAnkleMobilityGuide: "Sentado o de pie, rota cada tobillo describiendo círculos amplios en ambas direcciones.",
+    exCatCowName: "Gato-Vaca",
+    exCatCowGuide: "En cuatro apoyos, alterna entre arquear la espalda hacia arriba (gato) y hundirla hacia abajo (vaca) con la respiración.",
+    exNeckStretchName: "Estiramiento de Cuello",
+    exNeckStretchGuide: "Inclina la cabeza suavemente hacia un hombro, sosteniendo unos segundos antes de cambiar de lado.",
     sevenMinTitle: "🏆 Reto 7 Minutos — Funcional sin Equipo",
     sevenMinNote: "12 ejercicios, 30s cada uno con 10s de descanso — sin ningún equipo, solo tu cuerpo (y una silla firme).",
     sevenMinCompleteBtn: "✅ Completé la rutina de hoy",
@@ -1630,6 +1709,85 @@ const I18N = {
     workoutRepsLabel: "Reps",
     workoutWeightLabel: "Weight (kg)",
     workoutLogBtn: "+ Log Exercise",
+    routineSectionTitle: "🎯 Structured Routines",
+    routineRecNoData: "Log your vitals in Bio-Sync to get a personalized intensity recommendation.",
+    routineRecPrefix: "With {energy}/10 energy and {sleep}h of rest, your recommended intensity today is: {level}.",
+    intensityLow: "Low (recovery)",
+    intensityModerate: "Moderate",
+    intensityHigh: "High",
+    routineExercisesLabel: "exercises",
+    routineSessionsLabel: "sessions",
+    routineSuggestedBadge: "Suggested",
+    routineFinishBtn: "🏁 Finish Session",
+    routinePauseBtn: "Pause",
+    routineStartBtn: "Start",
+    routineResetBtn: "Reset timer",
+    routineDoneBtn: "Mark Complete",
+    routineDoneBtnDone: "Completed",
+    routineRepsShort: "reps",
+    routineSetsShort: "sets",
+    routineIntensityBadgeLabel: "Intensity",
+    routineSessionCompleteMsg: "Session complete! You finished",
+    routineWarmupTitle: "Warm-Up",
+    routineWarmupDesc: "Activate your joints and raise your pulse before the main effort.",
+    routineStrengthTitle: "Strength",
+    routineStrengthDesc: "Functional bodyweight strength circuit.",
+    routineEnduranceTitle: "Endurance",
+    routineEnduranceDesc: "High-intensity cardio to boost your aerobic capacity.",
+    routineStretchingTitle: "Stretching",
+    routineStretchingDesc: "Stretch the muscle groups you worked to improve mobility.",
+    routineRecoveryTitle: "Active Recovery",
+    routineRecoveryDesc: "Gentle movement and mindful breathing for low-energy days.",
+    exMarchInPlaceName: "March in Place",
+    exMarchInPlaceGuide: "Lift your knees alternately to hip height, keeping a steady rhythm and your arms moving.",
+    exArmCirclesName: "Arm Circles",
+    exArmCirclesGuide: "Extend your arms out to the sides and trace wide circles, reversing direction halfway through.",
+    exHipCirclesName: "Hip Circles",
+    exHipCirclesGuide: "Hands on your hips, rotate them in wide circles, alternating direction.",
+    exWarmupSquatsName: "Activation Squats",
+    exWarmupSquatsGuide: "Lower your hips back as if sitting in a chair, keeping your back straight and knees behind your toes.",
+    exDynamicLungesName: "Dynamic Lunges",
+    exDynamicLungesGuide: "Take a long step forward bending both knees to 90°, then return and alternate legs.",
+    exPushUpsName: "Push-Ups",
+    exPushUpsGuide: "Keep your body in a straight line, lower your chest close to the floor bending your elbows at 45°, and push back up.",
+    exSquatsName: "Squats",
+    exSquatsGuide: "Feet shoulder-width apart, lower your hips keeping your chest up and weight on your heels.",
+    exLungesName: "Lunges",
+    exLungesGuide: "Alternate legs stepping forward and lowering the back knee almost to the floor.",
+    exPlankName: "Plank",
+    exPlankGuide: "Rest on your forearms and toes, keeping your body in a straight line without letting your hips sag.",
+    exTricepDipsName: "Tricep Dips",
+    exTricepDipsGuide: "Hands on the edge of a chair with legs extended, lower your body by bending your elbows and push back up.",
+    exJumpingJacksName: "Jumping Jacks",
+    exJumpingJacksGuide: "Jump while opening your legs and arms at the same time, then return to the start on the next jump.",
+    exHighKneesName: "High Knees",
+    exHighKneesGuide: "Run in place bringing your knees as high as possible, at a fast pace.",
+    exMountainClimbersName: "Mountain Climbers",
+    exMountainClimbersGuide: "In a high plank, drive your knees to your chest alternately at a fast pace, as if climbing.",
+    exBurpeesName: "Burpees",
+    exBurpeesGuide: "Squat down, place your hands on the floor, kick your feet back into a plank, return, and jump with arms overhead.",
+    exLateralJumpsName: "Lateral Jumps",
+    exLateralJumpsGuide: "Jump side to side over an imaginary line, landing softly with slightly bent knees.",
+    exHamstringStretchName: "Hamstring Stretch",
+    exHamstringStretchGuide: "Sitting with one leg extended, lean your torso forward from the hip without rounding your back.",
+    exQuadStretchName: "Quad Stretch",
+    exQuadStretchGuide: "Standing, hold your ankle behind you and bring your heel toward your glute, keeping your knees together.",
+    exShoulderStretchName: "Shoulder Stretch",
+    exShoulderStretchGuide: "Cross one arm across your chest and gently press it toward your body with the other arm.",
+    exSpinalTwistName: "Spinal Twist",
+    exSpinalTwistGuide: "Sitting, rotate your torso to one side placing a hand behind you, keeping your back upright.",
+    exCalfStretchName: "Calf Stretch",
+    exCalfStretchGuide: "With hands on a wall, step one leg back keeping the heel on the floor and lean your body forward.",
+    exGentleWalkName: "Gentle Walk",
+    exGentleWalkGuide: "Walk in place or around your space at a relaxed pace, breathing deeply.",
+    exDeepBreathingName: "Deep Breathing",
+    exDeepBreathingGuide: "Inhale through your nose for 4 seconds, hold for 4 seconds, and exhale through your mouth for 6 seconds.",
+    exAnkleMobilityName: "Ankle Mobility",
+    exAnkleMobilityGuide: "Sitting or standing, rotate each ankle in wide circles in both directions.",
+    exCatCowName: "Cat-Cow",
+    exCatCowGuide: "On all fours, alternate between arching your back up (cat) and dipping it down (cow) with your breath.",
+    exNeckStretchName: "Neck Stretch",
+    exNeckStretchGuide: "Gently tilt your head toward one shoulder, holding for a few seconds before switching sides.",
     sevenMinTitle: "🏆 7-Minute Challenge — No-Equipment Functional Workout",
     sevenMinNote: "12 exercises, 30s each with a 10s rest — no equipment at all, just your body (and a sturdy chair).",
     sevenMinCompleteBtn: "✅ I completed today's workout",
@@ -2188,6 +2346,85 @@ const I18N = {
     workoutRepsLabel: "回数",
     workoutWeightLabel: "重量（kg）",
     workoutLogBtn: "+ 種目を記録",
+    routineSectionTitle: "🎯 構成ルーティン",
+    routineRecNoData: "Bio-Syncでバイタルを記録すると、あなたに合った強度のおすすめが表示されます。",
+    routineRecPrefix: "エネルギー{energy}/10、睡眠{sleep}時間から、今日のおすすめ強度は「{level}」です。",
+    intensityLow: "低（回復）",
+    intensityModerate: "中",
+    intensityHigh: "高",
+    routineExercisesLabel: "種目",
+    routineSessionsLabel: "回",
+    routineSuggestedBadge: "おすすめ",
+    routineFinishBtn: "🏁 セッション終了",
+    routinePauseBtn: "一時停止",
+    routineStartBtn: "開始",
+    routineResetBtn: "タイマーをリセット",
+    routineDoneBtn: "完了にする",
+    routineDoneBtnDone: "完了済み",
+    routineRepsShort: "回",
+    routineSetsShort: "セット",
+    routineIntensityBadgeLabel: "強度",
+    routineSessionCompleteMsg: "セッション完了！終えたのは",
+    routineWarmupTitle: "ウォームアップ",
+    routineWarmupDesc: "本格的な運動の前に関節を動かし、心拍数を上げます。",
+    routineStrengthTitle: "筋力",
+    routineStrengthDesc: "自重で行うファンクショナル筋力サーキット。",
+    routineEnduranceTitle: "持久力",
+    routineEnduranceDesc: "有酸素能力を高める高強度カーディオ。",
+    routineStretchingTitle: "ストレッチ",
+    routineStretchingDesc: "使った筋肉を伸ばして可動域を改善します。",
+    routineRecoveryTitle: "アクティブリカバリー",
+    routineRecoveryDesc: "調子が優れない日のための、やさしい動きと意識的な呼吸。",
+    exMarchInPlaceName: "その場足踏み",
+    exMarchInPlaceGuide: "左右交互に膝を腰の高さまで上げ、一定のリズムで腕も動かします。",
+    exArmCirclesName: "腕回し",
+    exArmCirclesGuide: "腕を横に伸ばし大きく円を描き、途中で回す方向を逆にします。",
+    exHipCirclesName: "腰回し",
+    exHipCirclesGuide: "両手を腰に当て、大きく円を描くように腰を回し、方向を交互に変えます。",
+    exWarmupSquatsName: "ウォームアップスクワット",
+    exWarmupSquatsGuide: "椅子に座るように腰を後ろに引き、背筋を伸ばして膝がつま先より前に出ないようにします。",
+    exDynamicLungesName: "ダイナミックランジ",
+    exDynamicLungesGuide: "大きく一歩前に踏み出し両膝を90度に曲げ、戻して反対の脚で繰り返します。",
+    exPushUpsName: "腕立て伏せ",
+    exPushUpsGuide: "体を一直線に保ち、肘を45度に曲げて胸を床近くまで下ろし、押し上げます。",
+    exSquatsName: "スクワット",
+    exSquatsGuide: "肩幅に足を開き、胸を張ったまま体重をかかとにのせて腰を下ろします。",
+    exLungesName: "ランジ",
+    exLungesGuide: "交互に一歩踏み出し、後ろの膝を床近くまで下ろします。",
+    exPlankName: "プランク",
+    exPlankGuide: "前腕とつま先で体を支え、腰を落とさず体を一直線に保ちます。",
+    exTricepDipsName: "トライセップディップス",
+    exTricepDipsGuide: "椅子の端に手を置き脚を伸ばした状態で、肘を曲げて体を下ろし押し上げます。",
+    exJumpingJacksName: "ジャンピングジャック",
+    exJumpingJacksGuide: "脚と腕を同時に開きながらジャンプし、次のジャンプで元の姿勢に戻ります。",
+    exHighKneesName: "ハイニー",
+    exHighKneesGuide: "その場で膝をできるだけ高く上げながら、速いペースで走ります。",
+    exMountainClimbersName: "マウンテンクライマー",
+    exMountainClimbersGuide: "高いプランクの姿勢から、登るように素早く左右交互に膝を胸へ引き寄せます。",
+    exBurpeesName: "バーピー",
+    exBurpeesGuide: "しゃがんで手を床につき、脚を後ろに伸ばしてプランクになり、戻って腕を上げてジャンプします。",
+    exLateralJumpsName: "サイドジャンプ",
+    exLateralJumpsGuide: "想像上の線を左右に飛び越え、膝を軽く曲げてやわらかく着地します。",
+    exHamstringStretchName: "ハムストリングストレッチ",
+    exHamstringStretchGuide: "片脚を伸ばして座り、背中を丸めずに股関節から上体を前に倒します。",
+    exQuadStretchName: "大腿四頭筋ストレッチ",
+    exQuadStretchGuide: "立った状態で片足首を後ろでつかみ、両膝をそろえたままかかとをお尻に近づけます。",
+    exShoulderStretchName: "肩のストレッチ",
+    exShoulderStretchGuide: "片腕を胸の前で交差させ、もう一方の腕でやさしく体側に押します。",
+    exSpinalTwistName: "体幹ひねり",
+    exSpinalTwistGuide: "座った状態で背筋を伸ばしたまま、片手を後ろについて上体を横にひねります。",
+    exCalfStretchName: "ふくらはぎストレッチ",
+    exCalfStretchGuide: "壁に両手をつき、片脚を後ろに引いてかかとを床につけたまま体を前に倒します。",
+    exGentleWalkName: "ゆったりウォーキング",
+    exGentleWalkGuide: "深呼吸しながら、その場または周囲をリラックスしたペースで歩きます。",
+    exDeepBreathingName: "深呼吸",
+    exDeepBreathingGuide: "鼻から4秒吸い、4秒止め、口から6秒かけて吐き出します。",
+    exAnkleMobilityName: "足首の可動域運動",
+    exAnkleMobilityGuide: "座った状態または立った状態で、両方向に大きく足首を回します。",
+    exCatCowName: "キャットカウ",
+    exCatCowGuide: "四つ這いの姿勢で、呼吸に合わせて背中を丸める（キャット）と反らす（カウ）を交互に行います。",
+    exNeckStretchName: "首のストレッチ",
+    exNeckStretchGuide: "頭をゆっくり片方の肩に傾け、数秒キープしてから反対側も行います。",
     sevenMinTitle: "🏆 7分間チャレンジ — 器具なしファンクショナルトレーニング",
     sevenMinNote: "12種目、各30秒 + 休憩10秒 — 器具は一切不要、必要なのは体（と丈夫な椅子）だけ。",
     sevenMinCompleteBtn: "✅ 今日のトレーニングを完了した",
@@ -4227,6 +4464,156 @@ function persistBiometricsLog() {
 
 let biometricsLog = loadBiometricsLog();
 
+// Último registro de Bio-Sync (peso/sueño/energía/bpm) — fuente única
+// para la recomendación de intensidad que lee el panel de Rutinas
+// Estructuradas más abajo. Pedido explícito: "el sistema debe adaptar
+// la intensidad de los ejercicios según el estado actual registrado en
+// Bio-Syncs" — sin duplicar el dato, solo LEE biometricsLog (que ya es
+// la fuente de verdad del módulo Bio-Sync) en vez de copiarlo a otro
+// lado que podría desincronizarse.
+function getLatestBiometrics() {
+  return biometricsLog.length ? biometricsLog[biometricsLog.length - 1] : null;
+}
+
+// Heurística simple e intencionalmente transparente (nada de "IA" real
+// acá, sería deshonesto sin un modelo de verdad): energía baja o poco
+// sueño → "low" (día de recuperación); energía alta + buen descanso →
+// "high"; el resto → "moderate". Un BPM en reposo elevado (>100, señal
+// de estrés/fatiga) degrada un nivel la recomendación aunque
+// energía/sueño digan lo contrario. Devuelve null si todavía no hay
+// ningún registro de Bio-Sync — el panel de Rutinas cae a un mensaje
+// neutro en ese caso en vez de inventar un estado.
+function computeRecommendedIntensity() {
+  const latest = getLatestBiometrics();
+  if (!latest) return null;
+
+  const energy = latest.energyLevel || 5;
+  const sleep = latest.sleepHours || 0;
+  const bpm = latest.bpm || 0;
+
+  let level = "moderate";
+  if (energy <= 3 || sleep < 5) level = "low";
+  else if (energy >= 8 && sleep >= 7) level = "high";
+
+  if (bpm > 100 && level === "high") level = "moderate";
+  else if (bpm > 100 && level === "moderate") level = "low";
+
+  return { level, energy, sleep, bpm };
+}
+
+// Mapa intensidad recomendada -> categoría de rutina sugerida (ver
+// WORKOUT_ROUTINE_CATEGORIES más abajo) — "low" empuja hacia
+// recuperación/estiramientos, "high" habilita resistencia/fuerza.
+const INTENSITY_TO_ROUTINE = {
+  low: "recovery",
+  moderate: "strength",
+  high: "endurance",
+};
+
+// ---------------------------------------------------
+// Rutinas Estructuradas (Estado Físico): pedido explícito de ampliar
+// más allá del Reto 7 Minutos (un solo circuito fijo) con variedad real
+// — calentamiento, fuerza, resistencia, estiramientos y recuperación
+// activa — cada una como su propio mini-circuito con tiempo/reps real
+// por ejercicio (a diferencia de SEVEN_MIN_EXERCISES, que no trae
+// duración estructurada, solo texto). type "time" = cronómetro real
+// (ver startExerciseTimer() más abajo); type "reps" = el usuario marca
+// completado a su propio ritmo, sin cronómetro (no tiene sentido
+// cronometrar repeticiones).
+const WORKOUT_ROUTINE_CATEGORIES = [
+  {
+    id: "warmup",
+    icon: "🔥",
+    accent: "gold",
+    titleKey: "routineWarmupTitle",
+    descKey: "routineWarmupDesc",
+    exercises: [
+      { id: "march-in-place", icon: "🚶", type: "time", seconds: 30, nameKey: "exMarchInPlaceName", guideKey: "exMarchInPlaceGuide" },
+      { id: "arm-circles", icon: "🔄", type: "time", seconds: 30, nameKey: "exArmCirclesName", guideKey: "exArmCirclesGuide" },
+      { id: "hip-circles", icon: "🌀", type: "time", seconds: 30, nameKey: "exHipCirclesName", guideKey: "exHipCirclesGuide" },
+      { id: "warmup-squats", icon: "🏋️", type: "time", seconds: 30, nameKey: "exWarmupSquatsName", guideKey: "exWarmupSquatsGuide" },
+      { id: "dynamic-lunges", icon: "🤸", type: "time", seconds: 30, nameKey: "exDynamicLungesName", guideKey: "exDynamicLungesGuide" },
+    ],
+  },
+  {
+    id: "strength",
+    icon: "💪",
+    accent: "magenta",
+    titleKey: "routineStrengthTitle",
+    descKey: "routineStrengthDesc",
+    exercises: [
+      { id: "push-ups-str", icon: "💪", type: "reps", reps: 12, sets: 3, nameKey: "exPushUpsName", guideKey: "exPushUpsGuide" },
+      { id: "squats-str", icon: "🏋️", type: "reps", reps: 15, sets: 3, nameKey: "exSquatsName", guideKey: "exSquatsGuide" },
+      { id: "lunges-str", icon: "🚶", type: "reps", reps: 12, sets: 3, nameKey: "exLungesName", guideKey: "exLungesGuide" },
+      { id: "plank-str", icon: "🧘", type: "time", seconds: 45, nameKey: "exPlankName", guideKey: "exPlankGuide" },
+      { id: "tricep-dips-str", icon: "🪑", type: "reps", reps: 12, sets: 3, nameKey: "exTricepDipsName", guideKey: "exTricepDipsGuide" },
+    ],
+  },
+  {
+    id: "endurance",
+    icon: "🏃",
+    accent: "cyan",
+    titleKey: "routineEnduranceTitle",
+    descKey: "routineEnduranceDesc",
+    exercises: [
+      { id: "jumping-jacks-end", icon: "🤸", type: "time", seconds: 40, nameKey: "exJumpingJacksName", guideKey: "exJumpingJacksGuide" },
+      { id: "high-knees-end", icon: "🏃", type: "time", seconds: 40, nameKey: "exHighKneesName", guideKey: "exHighKneesGuide" },
+      { id: "mountain-climbers", icon: "⛰️", type: "time", seconds: 40, nameKey: "exMountainClimbersName", guideKey: "exMountainClimbersGuide" },
+      { id: "burpees", icon: "🔥", type: "time", seconds: 30, nameKey: "exBurpeesName", guideKey: "exBurpeesGuide" },
+      { id: "lateral-jumps", icon: "↔️", type: "time", seconds: 40, nameKey: "exLateralJumpsName", guideKey: "exLateralJumpsGuide" },
+    ],
+  },
+  {
+    id: "stretching",
+    icon: "🧘",
+    accent: "green",
+    titleKey: "routineStretchingTitle",
+    descKey: "routineStretchingDesc",
+    exercises: [
+      { id: "hamstring-stretch", icon: "🦵", type: "time", seconds: 30, nameKey: "exHamstringStretchName", guideKey: "exHamstringStretchGuide" },
+      { id: "quad-stretch", icon: "🦿", type: "time", seconds: 30, nameKey: "exQuadStretchName", guideKey: "exQuadStretchGuide" },
+      { id: "shoulder-stretch", icon: "💪", type: "time", seconds: 30, nameKey: "exShoulderStretchName", guideKey: "exShoulderStretchGuide" },
+      { id: "spinal-twist", icon: "🌀", type: "time", seconds: 30, nameKey: "exSpinalTwistName", guideKey: "exSpinalTwistGuide" },
+      { id: "calf-stretch", icon: "🦶", type: "time", seconds: 30, nameKey: "exCalfStretchName", guideKey: "exCalfStretchGuide" },
+    ],
+  },
+  {
+    id: "recovery",
+    icon: "🌙",
+    accent: "purple",
+    titleKey: "routineRecoveryTitle",
+    descKey: "routineRecoveryDesc",
+    exercises: [
+      { id: "gentle-walk", icon: "🚶", type: "time", seconds: 60, nameKey: "exGentleWalkName", guideKey: "exGentleWalkGuide" },
+      { id: "deep-breathing", icon: "🌬️", type: "time", seconds: 60, nameKey: "exDeepBreathingName", guideKey: "exDeepBreathingGuide" },
+      { id: "ankle-mobility", icon: "🦶", type: "time", seconds: 30, nameKey: "exAnkleMobilityName", guideKey: "exAnkleMobilityGuide" },
+      { id: "cat-cow", icon: "🐱", type: "time", seconds: 45, nameKey: "exCatCowName", guideKey: "exCatCowGuide" },
+      { id: "neck-stretch", icon: "🙆", type: "time", seconds: 30, nameKey: "exNeckStretchName", guideKey: "exNeckStretchGuide" },
+    ],
+  },
+];
+
+// Historial de sesiones de Rutinas Estructuradas completas — mismo
+// patrón de persistencia independiente que sevenMinLog (un registro por
+// sesión terminada, no por ejercicio individual).
+const ROUTINE_LOG_KEY = scopedKey("miikaeru_routine_log", activeProfileId);
+
+function loadRoutineLog() {
+  try {
+    const raw = localStorage.getItem(ROUTINE_LOG_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (err) {
+    return [];
+  }
+}
+
+function persistRoutineLog() {
+  localStorage.setItem(ROUTINE_LOG_KEY, JSON.stringify(routineLog));
+}
+
+let routineLog = loadRoutineLog();
+
 // ---------------------------------------------------
 // Módulo Hábitos & Rachas: 5 hábitos diarios recomendados, un mapa de
 // completado por fecha, y un contador de racha (días consecutivos con
@@ -4794,6 +5181,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const sevenMinProgressEl = document.getElementById("seven-min-progress");
   const sevenMinExerciseGrid = document.getElementById("seven-min-exercise-grid");
   const sevenMinCompleteBtn = document.getElementById("seven-min-complete-btn");
+
+  // Rutinas Estructuradas: banner de recomendación (leída de Bio-Sync) +
+  // cuadrícula de categorías + modal de sesión a pantalla completa.
+  const routineRecommendationBanner = document.getElementById("routine-recommendation-banner");
+  const routineRecommendationText = document.getElementById("routine-recommendation-text");
+  const routineCategoryGrid = document.getElementById("routine-category-grid");
+  const workoutSessionModal = document.getElementById("workout-session-modal");
+  const workoutSessionModalClose = document.getElementById("workout-session-modal-close");
+  const workoutSessionTitle = document.getElementById("workout-session-title");
+  const workoutSessionIntensityBadge = document.getElementById("workout-session-intensity-badge");
+  const workoutSessionProgressFill = document.getElementById("workout-session-progress-fill");
+  const workoutSessionProgressText = document.getElementById("workout-session-progress-text");
+  const workoutSessionExerciseList = document.getElementById("workout-session-exercise-list");
+  const workoutSessionFinishBtn = document.getElementById("workout-session-finish-btn");
 
   const forceUpdateBtn = document.getElementById("force-update-btn");
   const avatarScaleInput = document.getElementById("avatar-scale-input");
@@ -8801,6 +9202,7 @@ document.addEventListener("DOMContentLoaded", () => {
         renderWorkoutPlan();
         renderWorkoutHistory();
         renderSevenMinSection();
+        renderRoutineRecommendation();
       },
     },
     // Karaoke sigue siendo "próximamente" — usa el placeholder genérico
@@ -9221,6 +9623,289 @@ document.addEventListener("DOMContentLoaded", () => {
     renderSevenMinCompleteBtn();
   });
 
+  // ---------------- Rutinas Estructuradas (Calentamiento/Fuerza/
+  // Resistencia/Estiramientos/Recuperación Activa) ----------------
+  // Pedido explícito: ampliar más allá del Reto 7 Minutos con variedad
+  // real de rutinas, en un panel grande a pantalla completa, cada
+  // ejercicio con tiempo/reps + instrucciones + un botón de control real
+  // (cronómetro de verdad para los de tipo "time", no solo texto
+  // informativo) que suma XP al completarse. Coherencia con Bio-Sync:
+  // computeRecommendedIntensity() (ver junto a biometricsLog más arriba)
+  // decide qué categoría se resalta como sugerida.
+
+  function routineIntensityLabelKey(level) {
+    return { low: "intensityLow", moderate: "intensityModerate", high: "intensityHigh" }[level] || "intensityModerate";
+  }
+
+  function renderRoutineRecommendation() {
+    const rec = computeRecommendedIntensity();
+    if (!rec) {
+      routineRecommendationBanner.className = "routine-recommendation routine-recommendation--neutral";
+      routineRecommendationText.textContent = t("routineRecNoData");
+    } else {
+      routineRecommendationBanner.className = `routine-recommendation routine-recommendation--${rec.level}`;
+      routineRecommendationText.textContent = t("routineRecPrefix")
+        .replace("{energy}", String(rec.energy))
+        .replace("{sleep}", String(rec.sleep))
+        .replace("{level}", t(routineIntensityLabelKey(rec.level)));
+    }
+    renderRoutineCategoryGrid();
+  }
+
+  function routineCompletedCount(categoryId) {
+    return routineLog.filter((entry) => entry.category === categoryId).length;
+  }
+
+  function renderRoutineCategoryGrid() {
+    const rec = computeRecommendedIntensity();
+    const suggestedId = rec ? INTENSITY_TO_ROUTINE[rec.level] : null;
+
+    routineCategoryGrid.innerHTML = "";
+    WORKOUT_ROUTINE_CATEGORIES.forEach((category) => {
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className = `routine-category-card routine-category-card--${category.accent}`;
+      card.classList.toggle("routine-category-card--suggested", category.id === suggestedId);
+
+      const icon = document.createElement("span");
+      icon.className = "routine-category-card__icon";
+      icon.textContent = category.icon;
+
+      const title = document.createElement("span");
+      title.className = "routine-category-card__title";
+      title.textContent = t(category.titleKey);
+
+      const desc = document.createElement("span");
+      desc.className = "routine-category-card__desc";
+      desc.textContent = t(category.descKey);
+
+      const meta = document.createElement("span");
+      meta.className = "routine-category-card__meta";
+      meta.textContent = `${category.exercises.length} ${t("routineExercisesLabel")} · ${routineCompletedCount(category.id)} ${t("routineSessionsLabel")}`;
+
+      card.append(icon, title, desc, meta);
+
+      if (category.id === suggestedId) {
+        const badge = document.createElement("span");
+        badge.className = "routine-category-card__badge";
+        badge.textContent = `⭐ ${t("routineSuggestedBadge")}`;
+        card.appendChild(badge);
+      }
+
+      card.addEventListener("click", () => openWorkoutSession(category.id));
+      routineCategoryGrid.appendChild(card);
+    });
+  }
+
+  // Estado de la sesión activa — se resetea por completo cada vez que se
+  // abre una nueva categoría (ver openWorkoutSession()), nunca persiste
+  // entre sesiones a medias.
+  let activeRoutineCategory = null;
+  let routineCompletedExerciseIds = new Set();
+  const routineExerciseTimers = {}; // exerciseId -> { remaining, intervalId, running }
+
+  function clearAllRoutineTimers() {
+    Object.values(routineExerciseTimers).forEach((timer) => {
+      if (timer.intervalId) clearInterval(timer.intervalId);
+    });
+    for (const key in routineExerciseTimers) delete routineExerciseTimers[key];
+  }
+
+  function formatSeconds(totalSeconds) {
+    const m = Math.floor(totalSeconds / 60);
+    const s = totalSeconds % 60;
+    return `${m}:${String(s).padStart(2, "0")}`;
+  }
+
+  function updateWorkoutSessionProgress() {
+    const total = activeRoutineCategory.exercises.length;
+    const done = routineCompletedExerciseIds.size;
+    const pct = total ? Math.round((done / total) * 100) : 0;
+    workoutSessionProgressFill.style.width = `${pct}%`;
+    workoutSessionProgressText.textContent = `${done} / ${total} ${t("routineExercisesLabel")}`;
+    workoutSessionFinishBtn.disabled = done < total;
+  }
+
+  function renderExerciseTimerControls(exercise, controlsEl) {
+    controlsEl.innerHTML = "";
+    const timer = routineExerciseTimers[exercise.id] || { remaining: exercise.seconds, running: false };
+    routineExerciseTimers[exercise.id] = timer;
+
+    const display = document.createElement("span");
+    display.className = "routine-exercise-card__timer-display";
+    display.textContent = formatSeconds(timer.remaining);
+
+    const toggleBtn = document.createElement("button");
+    toggleBtn.type = "button";
+    toggleBtn.className = "routine-exercise-card__timer-btn";
+    toggleBtn.textContent = timer.running ? `⏸ ${t("routinePauseBtn")}` : `▶ ${t("routineStartBtn")}`;
+    // Actualiza el label del botón in-place en vez de volver a llamar
+    // renderExerciseTimerControls() mientras el intervalo corre: ese
+    // re-render reemplaza el nodo `display` por uno nuevo, dejando el
+    // setInterval escribiendo sobre un <span> ya desconectado del DOM
+    // (el cronómetro "se veía" congelado en el valor inicial aunque
+    // remaining sí bajaba puertas adentro) — bug real encontrado en la
+    // verificación de esta misma feature.
+    toggleBtn.addEventListener("click", () => {
+      if (timer.running) {
+        clearInterval(timer.intervalId);
+        timer.running = false;
+        toggleBtn.textContent = `▶ ${t("routineStartBtn")}`;
+        return;
+      }
+      timer.running = true;
+      toggleBtn.textContent = `⏸ ${t("routinePauseBtn")}`;
+      timer.intervalId = setInterval(() => {
+        timer.remaining -= 1;
+        display.textContent = formatSeconds(Math.max(timer.remaining, 0));
+        if (timer.remaining <= 0) {
+          clearInterval(timer.intervalId);
+          timer.running = false;
+          toggleBtn.textContent = `▶ ${t("routineStartBtn")}`;
+          if (!routineCompletedExerciseIds.has(exercise.id)) {
+            toggleRoutineExerciseComplete(exercise.id, true);
+          }
+        }
+      }, 1000);
+    });
+
+    const resetBtn = document.createElement("button");
+    resetBtn.type = "button";
+    resetBtn.className = "routine-exercise-card__timer-reset";
+    resetBtn.textContent = "↺";
+    resetBtn.setAttribute("aria-label", t("routineResetBtn"));
+    resetBtn.addEventListener("click", () => {
+      if (timer.intervalId) clearInterval(timer.intervalId);
+      routineExerciseTimers[exercise.id] = { remaining: exercise.seconds, running: false };
+      renderExerciseTimerControls(exercise, controlsEl);
+    });
+
+    controlsEl.append(display, toggleBtn, resetBtn);
+  }
+
+  function toggleRoutineExerciseComplete(exerciseId, forceComplete) {
+    const alreadyDone = routineCompletedExerciseIds.has(exerciseId);
+    if (forceComplete && alreadyDone) return;
+
+    const card = workoutSessionExerciseList.querySelector(`[data-exercise-id="${exerciseId}"]`);
+    if (!alreadyDone) {
+      routineCompletedExerciseIds.add(exerciseId);
+      if (card) card.classList.add("routine-exercise-card--done");
+      addGold(1);
+      grantXP(3);
+    } else if (!forceComplete) {
+      routineCompletedExerciseIds.delete(exerciseId);
+      if (card) card.classList.remove("routine-exercise-card--done");
+    }
+    if (card) {
+      const doneBtn = card.querySelector(".routine-exercise-card__done-btn");
+      if (doneBtn) {
+        const nowDone = routineCompletedExerciseIds.has(exerciseId);
+        doneBtn.textContent = nowDone ? `✅ ${t("routineDoneBtnDone")}` : `✓ ${t("routineDoneBtn")}`;
+        doneBtn.classList.toggle("routine-exercise-card__done-btn--active", nowDone);
+      }
+    }
+    updateWorkoutSessionProgress();
+  }
+
+  function renderWorkoutSessionExercises() {
+    workoutSessionExerciseList.innerHTML = "";
+    activeRoutineCategory.exercises.forEach((exercise) => {
+      const card = document.createElement("div");
+      card.className = `routine-exercise-card routine-exercise-card--${activeRoutineCategory.accent}`;
+      card.dataset.exerciseId = exercise.id;
+
+      const header = document.createElement("div");
+      header.className = "routine-exercise-card__header";
+      const icon = document.createElement("span");
+      icon.className = "routine-exercise-card__icon";
+      icon.textContent = exercise.icon;
+      const name = document.createElement("span");
+      name.className = "routine-exercise-card__name";
+      name.textContent = t(exercise.nameKey);
+      header.append(icon, name);
+
+      const badge = document.createElement("span");
+      badge.className = "routine-exercise-card__badge";
+      badge.textContent = exercise.type === "time"
+        ? `${exercise.seconds}s`
+        : `${exercise.reps} ${t("routineRepsShort")} × ${exercise.sets} ${t("routineSetsShort")}`;
+
+      const guide = document.createElement("p");
+      guide.className = "routine-exercise-card__guide";
+      guide.textContent = t(exercise.guideKey);
+
+      const controlsRow = document.createElement("div");
+      controlsRow.className = "routine-exercise-card__controls";
+
+      if (exercise.type === "time") {
+        const timerControls = document.createElement("div");
+        timerControls.className = "routine-exercise-card__timer";
+        renderExerciseTimerControls(exercise, timerControls);
+        controlsRow.appendChild(timerControls);
+      }
+
+      const doneBtn = document.createElement("button");
+      doneBtn.type = "button";
+      doneBtn.className = "routine-exercise-card__done-btn";
+      doneBtn.textContent = `✓ ${t("routineDoneBtn")}`;
+      doneBtn.addEventListener("click", () => toggleRoutineExerciseComplete(exercise.id, false));
+      controlsRow.appendChild(doneBtn);
+
+      card.append(header, badge, guide, controlsRow);
+      workoutSessionExerciseList.appendChild(card);
+    });
+    updateWorkoutSessionProgress();
+  }
+
+  function openWorkoutSession(categoryId) {
+    activeRoutineCategory = WORKOUT_ROUTINE_CATEGORIES.find((c) => c.id === categoryId);
+    if (!activeRoutineCategory) return;
+    clearAllRoutineTimers();
+    routineCompletedExerciseIds = new Set();
+
+    workoutSessionTitle.textContent = `${activeRoutineCategory.icon} ${t(activeRoutineCategory.titleKey)}`;
+    const rec = computeRecommendedIntensity();
+    workoutSessionIntensityBadge.hidden = !rec;
+    if (rec) {
+      workoutSessionIntensityBadge.textContent = `${t("routineIntensityBadgeLabel")}: ${t(routineIntensityLabelKey(rec.level))}`;
+      workoutSessionIntensityBadge.className = `workout-session__intensity-badge workout-session__intensity-badge--${rec.level}`;
+    }
+
+    renderWorkoutSessionExercises();
+    workoutSessionModal.hidden = false;
+  }
+
+  function closeWorkoutSession() {
+    clearAllRoutineTimers();
+    workoutSessionModal.hidden = true;
+  }
+
+  workoutSessionModalClose.addEventListener("click", closeWorkoutSession);
+  workoutSessionModal.addEventListener("click", (event) => {
+    if (event.target === workoutSessionModal) closeWorkoutSession();
+  });
+
+  workoutSessionFinishBtn.addEventListener("click", () => {
+    if (!activeRoutineCategory) return;
+    routineLog.push({
+      id: `routine-${Date.now()}`,
+      date: todayKey(),
+      category: activeRoutineCategory.id,
+      exerciseCount: activeRoutineCategory.exercises.length,
+    });
+    persistRoutineLog();
+    addGold(8);
+    grantXP(25);
+    addMessage({
+      author: "MIIKAERU",
+      text: `🏆 ${t("routineSessionCompleteMsg")} ${t(activeRoutineCategory.titleKey)}!`,
+      variant: "avatar",
+    });
+    closeWorkoutSession();
+    renderRoutineRecommendation();
+  });
+
   // ---------------- Forzar Actualización / Limpiar Caché ----------------
   // Botón de emergencia (modal de Perfiles) para celulares que se quedan
   // pegados en una versión vieja del Service Worker/caché — desregistra
@@ -9598,6 +10283,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const weight = Number(biosyncWeightInput.value) || 0;
     const sleepHours = Number(biosyncSleepInput.value) || 0;
     const energyLevel = Number(biosyncEnergyInput.value) || 5;
+    // BPM: toma lo que esté mostrando el visor en ese momento (Bluetooth
+    // real o slider manual, ambos pasan por updateBpmDisplay()) — antes
+    // el BPM era puramente decorativo/efímero, nunca se guardaba. Pedido
+    // explícito: "frecuencia cardíaca... deben influir" en Estado
+    // Físico, así que ahora SÍ queda en el registro para que
+    // computeRecommendedIntensity() lo pueda leer.
+    const bpmText = biosyncBpmValueEl.textContent.trim();
+    const bpm = /^\d+$/.test(bpmText) ? Number(bpmText) : 0;
 
     biometricsLog.push({
       id: `bio-${Date.now()}`,
@@ -9605,6 +10298,7 @@ document.addEventListener("DOMContentLoaded", () => {
       weight,
       sleepHours,
       energyLevel,
+      bpm,
     });
     persistBiometricsLog();
     renderBiometricsHistory();
@@ -9621,6 +10315,11 @@ document.addEventListener("DOMContentLoaded", () => {
         .replace("{energy}", String(energyLevel)),
       variant: "user",
     });
+    // Refresca la recomendación de intensidad del panel de Rutinas
+    // Estructuradas si ya está renderizado en el DOM — así el usuario ve
+    // el efecto inmediato de este registro sin tener que reabrir el
+    // modal de Hábitos.
+    if (typeof renderRoutineRecommendation === "function") renderRoutineRecommendation();
   });
 
   // ---------------- Módulo Japonés: cuadrícula Gojuon + trazo + quiz ----------------

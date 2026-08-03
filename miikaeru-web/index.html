@@ -16,7 +16,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260802-10" />
+  <link rel="stylesheet" href="style.css?v=20260802-12" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -1351,6 +1351,26 @@
 
       <!-- Pestaña: Rutina de Ejercicios -->
       <div class="habits-tab-panel" id="habits-tab-workout" hidden>
+        <!-- Coherencia Bio-Sync ↔ Estado Físico: pedido explícito — lee el
+             último registro de Bio-Sync (energía/sueño/bpm, ver
+             computeRecommendedIntensity() en app.js) y sugiere qué
+             categoría de Rutina Estructurada conviene hoy, sin bloquear
+             el resto (el usuario siempre puede elegir cualquier otra). -->
+        <div class="routine-recommendation routine-recommendation--neutral" id="routine-recommendation-banner">
+          <span class="routine-recommendation__icon">🩺</span>
+          <p class="routine-recommendation__text" id="routine-recommendation-text"></p>
+        </div>
+
+        <!-- Rutinas Estructuradas: pedido explícito de ampliar variedad
+             más allá del Reto 7 Minutos — Calentamiento/Fuerza/
+             Resistencia/Estiramientos/Recuperación Activa, cada una abre
+             #workout-session-modal (pantalla completa) — ver
+             WORKOUT_ROUTINE_CATEGORIES en app.js. -->
+        <h3 class="payroll-section-title" data-i18n="routineSectionTitle">🎯 Rutinas Estructuradas</h3>
+        <div class="routine-category-grid" id="routine-category-grid">
+          <!-- 5 tarjetas de categoría, renderizadas por app.js -->
+        </div>
+
         <!-- Reto 7 Minutos: circuito funcional sin equipo (12 ejercicios,
              30s cada uno, 10s de descanso), organizado en 4 semanas que se
              desbloquean progresivamente por sesiones completadas — ver
@@ -1402,6 +1422,37 @@
 
         <div class="workout-log-history" id="workout-log-history"></div>
       </div>
+    </div>
+  </div>
+
+  <!-- MODAL: SESIÓN DE RUTINA ESTRUCTURADA — pedido explícito de un
+       "panel grande, detallado y envolvente a pantalla completa". Se
+       abre desde una tarjeta de #routine-category-grid (ver
+       openWorkoutSession() en app.js), por encima de #habits-modal
+       (mismo mecanismo de capas que #jp-victory-modal: se abre después
+       en el DOM, con su propio z-index más alto). Fullscreen real en
+       celular (ver .modal--workout-session en la media query Mobile
+       Lite de style.css), panel ancho centrado en desktop. -->
+  <div class="modal-overlay" id="workout-session-modal" hidden>
+    <div class="modal modal--workout-session glass">
+      <button type="button" class="btn-modal-close" id="workout-session-modal-close" aria-label="Cerrar">✕</button>
+      <div class="workout-session__header">
+        <h2 class="workout-session__title" id="workout-session-title"></h2>
+        <span class="workout-session__intensity-badge" id="workout-session-intensity-badge" hidden></span>
+      </div>
+
+      <div class="workout-session__progress">
+        <div class="workout-session__progress-track">
+          <div class="workout-session__progress-fill" id="workout-session-progress-fill"></div>
+        </div>
+        <span class="workout-session__progress-text" id="workout-session-progress-text"></span>
+      </div>
+
+      <div class="routine-exercise-list" id="workout-session-exercise-list">
+        <!-- tarjetas de ejercicio, renderizadas por app.js -->
+      </div>
+
+      <button type="button" class="btn-register workout-session__finish-btn" id="workout-session-finish-btn" data-i18n="routineFinishBtn" disabled>🏆 Finalizar Rutina</button>
     </div>
   </div>
 
@@ -2336,7 +2387,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260802-10"></script>
+  <script src="app.js?v=20260802-12"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de

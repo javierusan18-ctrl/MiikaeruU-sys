@@ -19,6 +19,10 @@
   --shadow-neon-green: 0 0 12px rgba(0, 255, 156, 0.35), 0 0 2px rgba(0, 255, 156, 0.6);
   --neon-cyan-glow: #00F2FF;
   --neon-gold: #FFB700;
+  /* Quinto acento neón — agregado para la categoría "Recuperación Activa"
+     de Rutinas Estructuradas (ver WORKOUT_ROUTINE_CATEGORIES en app.js),
+     único color de marca que todavía no tenía variable propia. */
+  --neon-purple: #A855F7;
   --font-main: "Segoe UI", "Rajdhani", "Orbitron", system-ui, sans-serif;
 
   /* Color del resplandor de .layer-lion (escena 3D Parallax del avatar).
@@ -3369,6 +3373,386 @@ textarea,
   color: var(--text-secondary);
   text-align: center;
   margin: 0;
+}
+
+/* ===================== RUTINAS ESTRUCTURADAS (Bio-Sync → Estado Físico) =====================
+   Banner + grilla de categorías que traducen el último registro de
+   Bio-Sync (ver computeRecommendedIntensity() en app.js) en una
+   recomendación de intensidad concreta, y abren la sesión de ejercicios
+   a pantalla completa (.modal--workout-session, más abajo). Flujo de
+   datos unidireccional: lee biometricsLog, nunca escribe en él — Bio-Sync
+   sigue siendo la única fuente de verdad de esas métricas. */
+.routine-recommendation {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(124, 147, 173, 0.3);
+  background: rgba(255, 255, 255, 0.03);
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+.routine-recommendation__icon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.routine-recommendation__text {
+  margin: 0;
+}
+
+.routine-recommendation--low {
+  border-color: rgba(0, 240, 255, 0.4);
+  background: rgba(0, 240, 255, 0.06);
+  color: var(--text-primary);
+}
+
+.routine-recommendation--moderate {
+  border-color: rgba(255, 183, 0, 0.4);
+  background: rgba(255, 183, 0, 0.06);
+  color: var(--text-primary);
+}
+
+.routine-recommendation--high {
+  border-color: rgba(255, 46, 154, 0.4);
+  background: rgba(255, 46, 154, 0.06);
+  color: var(--text-primary);
+}
+
+.routine-category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.routine-category-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(124, 147, 173, 0.3);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.routine-category-card:hover {
+  transform: translateY(-2px);
+}
+
+.routine-category-card__icon {
+  font-size: 1.5rem;
+}
+
+.routine-category-card__title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.routine-category-card__desc {
+  font-size: 0.66rem;
+  color: var(--text-secondary);
+  line-height: 1.35;
+}
+
+.routine-category-card__meta {
+  font-size: 0.6rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.2px;
+}
+
+.routine-category-card__badge {
+  position: absolute;
+  top: -8px;
+  right: 10px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  background: var(--neon-gold);
+  color: #0B0F19;
+  box-shadow: 0 0 10px rgba(255, 183, 0, 0.6);
+}
+
+.routine-category-card--gold    { border-color: rgba(255, 183, 0, 0.35); }
+.routine-category-card--magenta { border-color: rgba(255, 46, 154, 0.35); }
+.routine-category-card--cyan    { border-color: rgba(0, 240, 255, 0.35); }
+.routine-category-card--green   { border-color: rgba(0, 255, 156, 0.35); }
+.routine-category-card--purple  { border-color: rgba(168, 85, 247, 0.35); }
+
+.routine-category-card--gold:hover,
+.routine-category-card--gold.routine-category-card--suggested {
+  border-color: var(--neon-gold);
+  box-shadow: 0 0 14px rgba(255, 183, 0, 0.4);
+}
+
+.routine-category-card--magenta:hover,
+.routine-category-card--magenta.routine-category-card--suggested {
+  border-color: var(--neon-magenta);
+  box-shadow: 0 0 14px rgba(255, 46, 154, 0.4);
+}
+
+.routine-category-card--cyan:hover,
+.routine-category-card--cyan.routine-category-card--suggested {
+  border-color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.routine-category-card--green:hover,
+.routine-category-card--green.routine-category-card--suggested {
+  border-color: var(--neon-green);
+  box-shadow: var(--shadow-neon-green);
+}
+
+.routine-category-card--purple:hover,
+.routine-category-card--purple.routine-category-card--suggested {
+  border-color: var(--neon-purple);
+  box-shadow: 0 0 14px rgba(168, 85, 247, 0.4);
+}
+
+.routine-category-card--suggested {
+  border-width: 2px;
+}
+
+/* Modal de sesión de rutina — panel grande e inmersivo pedido explícito
+   ("panel grande, detallado y envolvente a pantalla completa"), mismo
+   criterio de ancho que .modal--japanese/.modal--dashboard, con su
+   propio scroll interno en la lista de ejercicios para que el header/
+   barra de progreso/botón Finalizar queden siempre visibles. */
+.modal--workout-session {
+  max-width: 760px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 34px 26px 26px;
+  text-align: left;
+  position: relative;
+}
+
+.workout-session__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.workout-session__title {
+  font-size: 1.05rem;
+  letter-spacing: 0.5px;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.workout-session__intensity-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  border: 1px solid currentColor;
+}
+
+.workout-session__intensity-badge--low      { color: var(--neon-cyan); background: rgba(0, 240, 255, 0.08); }
+.workout-session__intensity-badge--moderate { color: var(--neon-gold); background: rgba(255, 183, 0, 0.08); }
+.workout-session__intensity-badge--high     { color: var(--neon-magenta); background: rgba(255, 46, 154, 0.08); }
+
+.workout-session__progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.workout-session__progress-track {
+  flex: 1;
+  height: 8px;
+  border-radius: 6px;
+  background: rgba(124, 147, 173, 0.2);
+  overflow: hidden;
+}
+
+.workout-session__progress-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-green));
+  box-shadow: var(--shadow-neon-cyan);
+  transition: width 0.3s ease;
+}
+
+.workout-session__progress-text {
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.routine-exercise-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  padding-right: 4px;
+  padding-bottom: 4px;
+}
+
+.workout-session__finish-btn {
+  margin-top: 16px;
+  width: 100%;
+}
+
+.workout-session__finish-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: grayscale(0.6);
+}
+
+/* Tarjetas de ejercicio dentro de la sesión — a propósito usan
+   var(--bg-elevated) en vez de un rgba() oscuro hardcodeado (el bug de
+   legibilidad que sí tiene .seven-min-exercise-card más abajo, corregido
+   aparte en el bloque Mobile Lite): así la tarjeta responde sola al
+   swap de tema de Mobile Lite sin necesitar ningún !important extra. */
+.routine-exercise-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(124, 147, 173, 0.3);
+  border-left-width: 3px;
+  background: var(--bg-elevated);
+}
+
+.routine-exercise-card--gold    { border-left-color: var(--neon-gold); }
+.routine-exercise-card--magenta { border-left-color: var(--neon-magenta); }
+.routine-exercise-card--cyan    { border-left-color: var(--neon-cyan); }
+.routine-exercise-card--green   { border-left-color: var(--neon-green); }
+.routine-exercise-card--purple  { border-left-color: var(--neon-purple); }
+
+.routine-exercise-card--done {
+  box-shadow: var(--shadow-neon-green);
+}
+
+.routine-exercise-card__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.routine-exercise-card__icon {
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
+
+.routine-exercise-card__name {
+  flex: 1;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.routine-exercise-card__badge {
+  align-self: flex-start;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--neon-magenta);
+  border: 1px solid rgba(255, 46, 154, 0.35);
+  background: rgba(255, 46, 154, 0.08);
+  white-space: nowrap;
+}
+
+.routine-exercise-card__guide {
+  font-size: 0.74rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.routine-exercise-card__controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.routine-exercise-card__timer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.routine-exercise-card__timer-display {
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--neon-cyan);
+  text-shadow: var(--shadow-neon-cyan);
+  min-width: 52px;
+}
+
+.routine-exercise-card__timer-btn,
+.routine-exercise-card__timer-reset {
+  padding: 6px 12px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  background: rgba(0, 240, 255, 0.08);
+  color: var(--neon-cyan);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.routine-exercise-card__timer-btn:hover,
+.routine-exercise-card__timer-reset:hover {
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.routine-exercise-card__timer-reset {
+  border-color: rgba(124, 147, 173, 0.35);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-secondary);
+}
+
+.routine-exercise-card__done-btn {
+  margin-left: auto;
+  padding: 8px 14px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(0, 255, 156, 0.35);
+  background: rgba(0, 255, 156, 0.06);
+  color: var(--neon-green);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.routine-exercise-card__done-btn:hover {
+  box-shadow: var(--shadow-neon-green);
+}
+
+.routine-exercise-card__done-btn--active {
+  background: rgba(0, 255, 156, 0.18);
+  box-shadow: var(--shadow-neon-green);
 }
 
 /* Reto 7 Minutos — ver #seven-min-section en index.html. Mismo acento
@@ -8236,6 +8620,7 @@ button:active,
     --neon-green: #1F7A4D;
     --neon-magenta: #A32B67;
     --neon-gold: #A66A00;
+    --neon-purple: #7C3AED;
     --neon-cyan-glow: #0A6E8C;
     --text-primary: #12161F;
     --text-secondary: #545E6B;
@@ -8553,6 +8938,21 @@ button:active,
     border-radius: 0;
   }
 
+  /* Mismo criterio que arriba, para la sesión de Rutinas Estructuradas
+     (#workout-session-modal): "panel... envolvente a pantalla completa"
+     pedido explícito, y en celular el espacio es justo el que más lo
+     necesita para no recortar la lista de ejercicios. */
+  #workout-session-modal {
+    padding: 0;
+  }
+  .modal--workout-session {
+    width: 100vw;
+    height: 100vh;
+    max-width: 100vw;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+
   /* ---- Corrección de contraste: tarjetas de Vocabulario/Yōon ----
      Mismo bug que ya se corrigió para .jp-phase-box/.jp-kana-btn más
      arriba: estas dos tarjetas traían un fondo azul marino HARDCODEADO
@@ -8562,7 +8962,13 @@ button:active,
      el "bug de legibilidad" reportado. Mismo patrón de arreglo: forzar
      un fondo claro acá también. */
   .jp-vocab-card,
-  .jp-yoon-card {
+  .jp-yoon-card,
+  /* Mismo bug, encontrado al construir Rutinas Estructuradas: esta
+     tarjeta del Reto 7 Minutos (preexistente) también hardcodea un fondo
+     azul marino en vez de usar var(--bg-elevated) como las tarjetas
+     nuevas de arriba — se corrige acá con el mismo mecanismo en vez de
+     tocar su regla original. */
+  .seven-min-exercise-card {
     background: #FFFFFF !important;
     border: 1px solid rgba(15, 23, 42, 0.15) !important;
     box-shadow: none !important;
