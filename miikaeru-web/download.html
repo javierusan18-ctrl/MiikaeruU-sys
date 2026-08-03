@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Sistema Miikaeru — Instala la App</title>
+  <meta name="description" content="Sistema Miikaeru: plataforma gamificada de Finanzas, Nihongo AI Coach, Estado Físico y Bio-Syncs. Instálala en tu dispositivo, funciona 100% offline." />
+
+  <!-- Página pública e independiente: no depende de app.js/style.css (el
+       CSS grande del dashboard, pensado para el estado logueado) — solo
+       lo esencial para mostrarse rápido y funcionar offline por sí sola.
+       Comparte manifest.json/sw.js/iconos con el resto del sitio porque
+       vive en el mismo origen y carpeta. -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0b0f19" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Miikaeru" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="48x48" href="assets/icons/favicon-48.png" />
+
+  <style>
+    :root {
+      --bg-top: #0b0f19;
+      --bg-bottom: #1a1f2c;
+      --card-bg: rgba(18, 22, 34, 0.55);
+      --card-border: rgba(139, 92, 246, 0.28);
+      --text-primary: #eef2ff;
+      --text-secondary: #97a1c2;
+      --blue: #3b82f6;
+      --violet: #8b5cf6;
+      --green: #00ff9c;
+      --font-main: "Segoe UI", "Rajdhani", "Orbitron", system-ui, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    /* Mismo bug/arreglo que style.css del dashboard: [hidden] tiene la
+       MISMA especificidad que cualquier `display:` de clase de acá abajo
+       (ej. .btn-install{display:flex}), y los estilos de autor le ganan
+       al user-agent — sin el !important, un elemento oculto por JS via
+       `.hidden = true` queda visible igual. */
+    [hidden] {
+      display: none !important;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+
+    body {
+      font-family: var(--font-main);
+      color: var(--text-primary);
+      background: linear-gradient(160deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 48px 20px 80px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Resplandor ambiental sutil detrás de la tarjeta — puramente
+       decorativo, degrada bien si el navegador no soporta radial-gradient
+       (fallback: sigue siendo el gradiente sólido del body). */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.18), transparent 45%),
+        radial-gradient(circle at 15% 85%, rgba(59, 130, 246, 0.12), transparent 40%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 560px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 28px;
+      padding: 44px 36px 40px;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.08), 0 30px 80px rgba(0, 0, 0, 0.45);
+      text-align: center;
+    }
+
+    .logo-block {
+      width: 92px;
+      height: 92px;
+      margin: 0 auto 22px;
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--blue), var(--violet));
+      box-shadow: 0 0 36px rgba(139, 92, 246, 0.55), 0 0 70px rgba(59, 130, 246, 0.25);
+    }
+
+    .logo-block__letter {
+      font-size: 46px;
+      font-weight: 900;
+      color: #ffffff;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+      line-height: 1;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 1.9rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      background: linear-gradient(135deg, #ffffff, #c7d2fe);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .subtitle {
+      margin: 0 auto 34px;
+      max-width: 420px;
+      font-size: 0.95rem;
+      line-height: 1.55;
+      color: var(--text-secondary);
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 32px;
+      text-align: left;
+    }
+
+    .feature-card {
+      padding: 16px 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.03);
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .feature-card:hover {
+      border-color: rgba(139, 92, 246, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .feature-card__icon {
+      font-size: 1.4rem;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .feature-card__title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .feature-card__desc {
+      font-size: 0.72rem;
+      line-height: 1.4;
+      color: var(--text-secondary);
+    }
+
+    .btn-install {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 15px 20px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      color: #04121a;
+      background: linear-gradient(135deg, var(--green), var(--blue));
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      box-shadow: 0 0 0 rgba(0, 255, 156, 0);
+      animation: installGlow 2.6s ease-in-out infinite;
+      transition: transform 0.15s ease, filter 0.2s ease;
+    }
+
+    .btn-install:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.05);
+    }
+
+    .btn-install:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      animation: none;
+    }
+
+    @keyframes installGlow {
+      0%, 100% { box-shadow: 0 0 10px rgba(0, 255, 156, 0.25); }
+      50% { box-shadow: 0 0 24px rgba(59, 130, 246, 0.45); }
+    }
+
+    /* Aviso de respaldo para iOS/Safari: nunca dispara
+       beforeinstallprompt, así que el botón de arriba se queda oculto
+       para siempre ahí — mostrar instrucciones reales en vez de un botón
+       que no puede funcionar. */
+    .ios-hint {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px dashed rgba(139, 92, 246, 0.4);
+      background: rgba(139, 92, 246, 0.08);
+      font-size: 0.82rem;
+      line-height: 1.5;
+      color: var(--text-primary);
+      text-align: left;
+    }
+
+    .ios-hint__icon {
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    .already-installed {
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px solid rgba(0, 255, 156, 0.35);
+      background: rgba(0, 255, 156, 0.08);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--green);
+    }
+
+    .enter-link {
+      display: inline-block;
+      margin-top: 22px;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .enter-link:hover {
+      color: var(--text-primary);
+      border-color: var(--text-secondary);
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 36px 22px 32px;
+        border-radius: 22px;
+      }
+      .features {
+        grid-template-columns: 1fr;
+      }
+      h1 {
+        font-size: 1.55rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo-block">
+      <span class="logo-block__letter">M</span>
+    </div>
+
+    <h1>Sistema Miikaeru</h1>
+    <p class="subtitle">
+      Tu plataforma todo-en-uno de <strong>Finanzas &amp; Impuestos</strong>,
+      <strong>Nihongo AI Coach</strong>, <strong>Estado Físico</strong> y
+      <strong>Bio-Syncs</strong> — gamificada, offline y siempre contigo.
+    </p>
+
+    <div class="features">
+      <div class="feature-card">
+        <span class="feature-card__icon">💰</span>
+        <div class="feature-card__title">Finanzas &amp; Impuestos</div>
+        <div class="feature-card__desc">Ingresos, gastos y declaraciones con reportes automáticos.</div>
+      </div>
+      <div class="feature-card">
+        <span class="feature-card__icon">🎌</span>
+        <div class="feature-card__title">Nihongo AI Coach</div>
+        <div class="feature-card__desc">N5 completo, trazos reales y exámenes guiados.</div>
+      </div>
+      <div class="feature-card">
+        <span class="feature-card__icon">💪</span>
+        <div class="feature-card__title">Estado Físico</div>
+        <div class="feature-card__desc">Rutinas sincronizadas con tus signos vitales vía Bio-Sync.</div>
+      </div>
+      <div class="feature-card">
+        <span class="feature-card__icon">📡</span>
+        <div class="feature-card__title">100% Offline</div>
+        <div class="feature-card__desc">Funciona sin conexión — tus datos siempre disponibles.</div>
+      </div>
+    </div>
+
+    <!-- Botón real: arranca oculto (ver script abajo) y solo se muestra
+         cuando el navegador confirma soporte de instalación disparando
+         beforeinstallprompt — mismo criterio honesto que el botón
+         equivalente dentro del dashboard (#install-app-btn en index.html). -->
+    <button type="button" class="btn-install" id="install-btn" hidden>
+      📲 Instalar Aplicación
+    </button>
+
+    <div class="ios-hint" id="ios-hint" hidden>
+      <span class="ios-hint__icon">🍎</span>
+      <span>En iPhone/iPad: toca <strong>Compartir</strong> (el ícono ⬆️ en la barra de Safari) y luego <strong>«Agregar a inicio»</strong>.</span>
+    </div>
+
+    <div class="already-installed" id="already-installed" hidden>
+      ✅ Ya tienes la app instalada en este dispositivo.
+    </div>
+
+    <a class="enter-link" href="index.html">Entrar al Sistema →</a>
+  </div>
+
+  <script>
+    (function () {
+      const installBtn = document.getElementById("install-btn");
+      const iosHint = document.getElementById("ios-hint");
+      const alreadyInstalled = document.getElementById("already-installed");
+
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+      const isStandalone =
+        window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+
+      let deferredPrompt = null;
+
+      if (isStandalone) {
+        alreadyInstalled.hidden = false;
+      } else if (isIOS) {
+        iosHint.hidden = false;
+      } else {
+        window.addEventListener("beforeinstallprompt", (event) => {
+          event.preventDefault();
+          deferredPrompt = event;
+          installBtn.hidden = false;
+        });
+      }
+
+      installBtn.addEventListener("click", async () => {
+        if (!deferredPrompt) return;
+        installBtn.disabled = true;
+        deferredPrompt.prompt();
+        try {
+          await deferredPrompt.userChoice;
+        } finally {
+          deferredPrompt = null;
+          installBtn.disabled = false;
+          installBtn.hidden = true;
+        }
+      });
+
+      window.addEventListener("appinstalled", () => {
+        deferredPrompt = null;
+        installBtn.hidden = true;
+        iosHint.hidden = true;
+        alreadyInstalled.hidden = false;
+      });
+
+      // Mismo registro que index.html — necesario para que el navegador
+      // considere instalable la PWA (criterio: Service Worker activo +
+      // manifest válido) incluso si esta es la primera página que visita
+      // el usuario, antes de entrar nunca al dashboard.
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("sw.js").catch((err) => {
+            console.warn("Service Worker: no se pudo registrar:", err);
+          });
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

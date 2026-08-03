@@ -22,11 +22,18 @@
 // index.html (ver ese archivo) — subirlo a mano en cada deploy real
 // hace que `activate` borre el caché viejo y todo se vuelva a guardar
 // fresco, evitando que un celular se quede pegado en una versión vieja.
-const CACHE_NAME = "miikaeru-cache-v20260802-13";
+const CACHE_NAME = "miikaeru-cache-v20260802-14";
 
 const STATIC_ASSETS = [
   "./",
   "index.html",
+  // Landing pública de instalación (ver download.html) — autocontenida,
+  // sin app.js/style.css, pensada como posible primera página que ve un
+  // visitante nuevo antes de entrar al dashboard. Se precachea aparte
+  // (no depende del cacheo automático de `index.html` en el listener
+  // "fetch" más abajo) para que también funcione offline en una
+  // instalación fresca que todavía no la visitó nunca.
+  "download.html",
   "style.css",
   "app.js",
   // storyEngine.js: módulo aparte del Modal de Lore (ver comentario más
