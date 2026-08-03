@@ -4276,6 +4276,82 @@ textarea,
   animation: courseBadgeGlow 2.4s ease-in-out infinite;
 }
 
+/* Selector de Idioma (módulo Idiomas, antes Japonés AI Coach) — mismo
+   lenguaje visual que .course-card (radio/borde/fondo/badge, reutiliza
+   incluso la animación courseBadgeGlow), pero NO puede reusar esa clase
+   tal cual: acá el grid mezcla UNA tarjeta activa (日本語) con 3
+   bloqueadas, mientras .course-card apaga TODAS sus tarjetas siempre
+   (así son hoy las de Aprendizaje, ninguna activa todavía) — por eso el
+   grayscale acá se engancha al selector nativo :disabled en vez de ser
+   incondicional. */
+.modal--language-select {
+  max-width: 480px;
+  text-align: center;
+}
+
+.language-select-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.language-select-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 18px 14px;
+  text-align: center;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(124, 147, 173, 0.3);
+  background: rgba(255, 255, 255, 0.03);
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.language-select-card:hover:not(:disabled) {
+  transform: translateY(-2px);
+  border-color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.language-select-card__icon {
+  font-size: 1.8rem;
+  transition: filter 0.2s ease;
+}
+
+.language-select-card__name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  color: var(--text-primary);
+  margin: 0;
+  transition: filter 0.2s ease;
+}
+
+.language-select-card:disabled {
+  cursor: not-allowed;
+}
+
+.language-select-card:disabled .language-select-card__icon,
+.language-select-card:disabled .language-select-card__name {
+  filter: grayscale(0.7) brightness(0.75);
+}
+
+.language-select-card__badge {
+  margin-top: 6px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  color: var(--neon-gold);
+  border: 1px solid rgba(255, 183, 0, 0.55);
+  background: rgba(255, 183, 0, 0.1);
+  animation: courseBadgeGlow 2.4s ease-in-out infinite;
+}
+
 @keyframes courseBadgeGlow {
   0%, 100% { box-shadow: 0 0 4px rgba(255, 183, 0, 0.25); }
   50% { box-shadow: 0 0 14px rgba(255, 183, 0, 0.6); }

@@ -1062,7 +1062,8 @@ const I18N = {
     appsHubTitle: "Apps & Módulos",
     appsAddBtn: "+ Agregar App",
     appBossFightName: "Boss Fight",
-    appJapaneseName: "Japonés AI Coach",
+    appJapaneseName: "Idiomas",
+    languageSelectTitle: "🌐 Elige un Idioma",
     appHabitsName: "Hábitos & Rachas",
     appStatusNew: "Nuevo",
     appStatusComingSoon: "Próximamente",
@@ -1725,7 +1726,8 @@ const I18N = {
     appsHubTitle: "Apps & Modules",
     appsAddBtn: "+ Add App",
     appBossFightName: "Boss Fight",
-    appJapaneseName: "Japanese AI Coach",
+    appJapaneseName: "Languages",
+    languageSelectTitle: "🌐 Choose a Language",
     appHabitsName: "Habits & Streaks",
     appStatusNew: "New",
     appStatusComingSoon: "Coming soon",
@@ -2388,7 +2390,8 @@ const I18N = {
     appsHubTitle: "アプリ & モジュール",
     appsAddBtn: "+ アプリを追加",
     appBossFightName: "ボスファイト",
-    appJapaneseName: "日本語AIコーチ",
+    appJapaneseName: "言語",
+    languageSelectTitle: "🌐 言語を選択",
     appHabitsName: "習慣＆連続記録",
     appStatusNew: "新着",
     appStatusComingSoon: "近日公開",
@@ -5387,6 +5390,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const biosyncEnergyValue = document.getElementById("biosync-energy-value");
   const biosyncSaveLogBtn = document.getElementById("biosync-save-log-btn");
   const biosyncLogHistory = document.getElementById("biosync-log-history");
+
+  const languageSelectModal = document.getElementById("language-select-modal");
+  const languageSelectModalClose = document.getElementById("language-select-modal-close");
+  const languageSelectJaBtn = document.getElementById("language-select-ja");
 
   const jpConfigModal = document.getElementById("jp-config-modal");
   const jpConfigModalClose = document.getElementById("jp-config-modal-close");
@@ -9623,12 +9630,14 @@ document.addEventListener("DOMContentLoaded", () => {
   appGrid.addEventListener("click", (event) => {
     const card = event.target.closest(".app-card");
     if (!card) return;
-    // Japonés ya no abre su modal directo: primero pasa por
-    // #jp-config-modal (idioma de interfaz + modo Práctica/Examen,
-    // pedido explícito) — elegir un modo ahí es lo que realmente llama a
-    // selectApp("japanese").
+    // "Idiomas" (antes Japonés) ya no abre su modal directo: primero
+    // pasa por #language-select-modal (elegir idioma — hoy solo 日本語
+    // está activo) y de ahí a #jp-config-modal (idioma de interfaz +
+    // modo Práctica/Examen) — elegir un modo ahí es lo que realmente
+    // llama a selectApp("japanese"). Flujo interno sin cambios, solo
+    // gana un paso previo.
     if (card.dataset.app === "japanese") {
-      openJpConfigModal();
+      openLanguageSelectModal();
       return;
     }
     selectApp(card.dataset.app);
@@ -12076,6 +12085,29 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateJpModeBadge() {
     jpModeBadge.textContent = t(jpMode === "examen" ? "jpModeExamen" : "jpModePractica");
   }
+
+  // Puerta de entrada de "Idiomas" (antes Japonés AI Coach) — 日本語 es la
+  // única opción real hoy; elegirla cierra este selector y encadena
+  // directo al flujo existente sin tocarlo (openJpConfigModal()).
+  function openLanguageSelectModal() {
+    languageSelectModal.hidden = false;
+  }
+
+  function closeLanguageSelectModal() {
+    languageSelectModal.hidden = true;
+  }
+
+  languageSelectJaBtn.addEventListener("click", () => {
+    closeLanguageSelectModal();
+    openJpConfigModal();
+  });
+  languageSelectModalClose.addEventListener("click", closeLanguageSelectModal);
+  languageSelectModal.addEventListener("click", (event) => {
+    if (event.target === languageSelectModal) closeLanguageSelectModal();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !languageSelectModal.hidden) closeLanguageSelectModal();
+  });
 
   function openJpConfigModal() {
     syncJpConfigActiveStates();

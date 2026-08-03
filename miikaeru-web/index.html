@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260804-16" />
+  <link rel="stylesheet" href="style.css?v=20260804-17" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -272,7 +272,7 @@
           <span class="cyber-tile__label" data-i18n="appBossFightName">Boss Fight</span>
         </button>
         <button type="button" class="cyber-tile cyber-tile--magenta" data-forward='.app-card[data-app="japanese"]'>
-          <span class="cyber-tile__icon">🎌</span>
+          <span class="cyber-tile__icon">🌐</span>
           <span class="cyber-tile__label" data-i18n="appJapaneseName">Japonés AI Coach</span>
         </button>
         <button type="button" class="cyber-tile cyber-tile--green" data-forward='.app-card[data-app="habits"]'>
@@ -419,9 +419,16 @@
           <span class="app-card__name" data-i18n="appBossFightName">Boss Fight</span>
           <span class="panel__tag" id="minigame-status" data-i18n="bossStatusStandby">standby</span>
         </button>
-        <button type="button" class="app-card" data-app="japanese" data-i18n-title="appJapaneseName" title="Japonés AI Coach">
-          <span class="app-card__icon">🎌</span>
-          <span class="app-card__name" data-i18n="appJapaneseName">Japonés AI Coach</span>
+        <!-- Renombrado a "Idiomas" (antes "Japonés AI Coach") — pedido
+             explícito de convertirlo en un selector de idiomas con
+             espacio para más adelante. data-app="japanese" NO cambia (la
+             lógica de app.js sigue clave por ese string); solo cambia la
+             etiqueta visible. Abre #language-select-modal primero (ver
+             más abajo), que a su vez encadena al flujo intacto de
+             siempre (#jp-config-modal → #japanese-modal) al elegir 日本語. -->
+        <button type="button" class="app-card" data-app="japanese" data-i18n-title="appJapaneseName" title="Idiomas">
+          <span class="app-card__icon">🌐</span>
+          <span class="app-card__name" data-i18n="appJapaneseName">Idiomas</span>
           <span class="app-card__status app-card__status--new" data-i18n="appStatusNew">Nuevo</span>
         </button>
         <button type="button" class="app-card" data-app="habits" data-i18n-title="appHabitsName" title="Tracker de Hábitos">
@@ -1483,15 +1490,53 @@
     </div>
   </div>
 
-  <!-- MODAL: CONFIGURACIÓN DE IDIOMAS — pantalla inicial del módulo
-       Japonés. Se abre al hacer clic en la tarjeta "Japonés AI Coach" EN
-       VEZ de ir directo a la cuadrícula (ver appGrid click handler en
-       app.js). El idioma de interfaz reutiliza el MISMO sistema global
-       ES/EN/JA que el selector del header (aplyLanguage()) — no es un
-       idioma aparte solo para este módulo, cambia toda la app, para no
-       duplicar infraestructura de i18n. El modo decide si el estudio es
-       de pura práctica (sin evaluación) o de examen (con las 2 pruebas
-       interactivas) — ver jpMode en app.js. -->
+  <!-- MODAL: SELECCIÓN DE IDIOMA — nueva puerta de entrada del módulo
+       "Idiomas" (antes "Japonés AI Coach"), pedido explícito de dejar
+       espacio para más idiomas a futuro. 日本語 es la única opción activa
+       hoy — elegirla encadena directo al flujo existente SIN TOCARLO
+       (#jp-config-modal → #japanese-modal, ver más abajo). Inglés/Chino/
+       Portugués quedan visibles pero inertes (`disabled`, mismo criterio
+       "visible pero inerte" que las tarjetas de Aprendizaje/los niveles
+       JLPT N4-N1 bloqueados) en vez de ocultarse. -->
+  <div class="modal-overlay" id="language-select-modal" hidden>
+    <div class="modal glass modal--language-select">
+      <button type="button" class="btn-modal-close" id="language-select-modal-close" aria-label="Cerrar">✕</button>
+      <h2 class="modal-app__title" data-i18n="languageSelectTitle">🌐 Elige un Idioma</h2>
+
+      <div class="language-select-grid" id="language-select-grid">
+        <button type="button" class="language-select-card" id="language-select-ja">
+          <span class="language-select-card__icon">🇯🇵</span>
+          <span class="language-select-card__name">日本語 Nihongo</span>
+        </button>
+        <button type="button" class="language-select-card" disabled>
+          <span class="language-select-card__icon">🇺🇸</span>
+          <span class="language-select-card__name">English</span>
+          <span class="language-select-card__badge" data-i18n="courseComingSoonBadge">🚀 Próximamente — Gran Lanzamiento</span>
+        </button>
+        <button type="button" class="language-select-card" disabled>
+          <span class="language-select-card__icon">🇨🇳</span>
+          <span class="language-select-card__name">中文 Chino</span>
+          <span class="language-select-card__badge" data-i18n="courseComingSoonBadge">🚀 Próximamente — Gran Lanzamiento</span>
+        </button>
+        <button type="button" class="language-select-card" disabled>
+          <span class="language-select-card__icon">🇵🇹</span>
+          <span class="language-select-card__name">Português</span>
+          <span class="language-select-card__badge" data-i18n="courseComingSoonBadge">🚀 Próximamente — Gran Lanzamiento</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: CONFIGURACIÓN DE IDIOMAS — pantalla del módulo Nihongo en
+       sí (idioma de interfaz + modo). Ahora se abre al elegir 日本語 en
+       #language-select-modal de arriba, EN VEZ de ir directo desde la
+       tarjeta "Idiomas" del app-grid — cero cambios en su propio
+       contenido/lógica. El idioma de interfaz reutiliza el MISMO sistema
+       global ES/EN/JA que el selector del header (aplyLanguage()) — no
+       es un idioma aparte solo para este módulo, cambia toda la app,
+       para no duplicar infraestructura de i18n. El modo decide si el
+       estudio es de pura práctica (sin evaluación) o de examen (con las
+       2 pruebas interactivas) — ver jpMode en app.js. -->
   <div class="modal-overlay" id="jp-config-modal" hidden>
     <div class="modal modal--jp-config glass">
       <button type="button" class="btn-modal-close" id="jp-config-modal-close" aria-label="Cerrar">✕</button>
@@ -2401,7 +2446,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260804-16"></script>
+  <script src="app.js?v=20260804-17"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de
