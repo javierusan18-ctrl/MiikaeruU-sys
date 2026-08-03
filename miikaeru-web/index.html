@@ -16,7 +16,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260802-08" />
+  <link rel="stylesheet" href="style.css?v=20260802-09" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -1457,6 +1457,39 @@
     </div>
   </div>
 
+  <!-- MODAL: Pantalla de Victoria del AI Coach — pedido explícito: al
+       completar una sesión/examen/mini-quiz del módulo Japonés, en vez de
+       solo un mensaje de texto en el chat, se muestra esta pantalla
+       interactiva y animada felicitando al usuario y destacando la XP
+       ganada (ver showJpVictoryModal() en app.js). Vive por ENCIMA de
+       #japanese-modal (mismo z-index de .modal-overlay, pero se abre
+       DESPUÉS en el DOM así que queda arriba en el stacking normal),
+       reutiliza el retrato de León en pose de victoria ya existente
+       (AVATAR_EMOTES.victory) para no depender de arte nuevo. -->
+  <div class="modal-overlay jp-victory-overlay" id="jp-victory-modal" hidden>
+    <div class="modal modal--jp-victory glass">
+      <div class="jp-victory__portrait">
+        <img src="assets/skins/mikaeru_batalla_armadura.png" alt="" class="jp-victory__portrait-img" id="jp-victory-portrait-img" />
+        <div class="jp-victory__portrait-ring"></div>
+      </div>
+      <p class="jp-victory__eyebrow" data-i18n="jpVictoryEyebrow">AI COACH</p>
+      <h2 class="jp-victory__title" id="jp-victory-title">¡Excelente trabajo!</h2>
+      <p class="jp-victory__subtitle" id="jp-victory-subtitle" hidden></p>
+      <div class="jp-victory__rewards">
+        <div class="jp-victory__reward jp-victory__reward--xp">
+          <span class="jp-victory__reward-icon">⚡</span>
+          <span class="jp-victory__reward-value" id="jp-victory-xp-value">0</span>
+          <span class="jp-victory__reward-unit">XP</span>
+        </div>
+        <div class="jp-victory__reward jp-victory__reward--gold" id="jp-victory-gold-row" hidden>
+          <span class="jp-victory__reward-icon">🪙</span>
+          <span class="jp-victory__reward-value" id="jp-victory-gold-value">0</span>
+        </div>
+      </div>
+      <button type="button" class="btn-register jp-victory__continue-btn" id="jp-victory-continue-btn" data-i18n="jpVictoryContinue">¡Continuar!</button>
+    </div>
+  </div>
+
   <!-- MODAL: MÓDULO JAPONÉS (Gojuon: filas -> fases/trazo -> vocabulario o
        examen). Vive en su propio modal ancho para aprovechar el área
        central del layout, en vez del panel angosto del App Hub donde
@@ -1591,14 +1624,12 @@
           <!-- botones de trazo desordenados, renderizados por app.js -->
         </div>
 
-        <!-- Diccionario de ejemplos por carácter — pedido explícito: se
-             muestra acá (Prueba 1) y no en la Prueba 2 (opción múltiple)
-             a propósito, porque las tarjetas incluyen el Romaji y eso
-             adelantaría la respuesta del quiz de romanización. -->
-        <div class="jp-vocab-section" id="jp-examstroke-vocab-section" hidden>
-          <h4 class="jp-vocab-section__title" data-i18n="jpVocabTitle">📚 Palabras Clave</h4>
-          <div class="jp-vocab-grid" id="jp-examstroke-vocab-grid"></div>
-        </div>
+        <!-- Pedido explícito (anti-spoiler): el modo Examen ya NO muestra
+             el Diccionario de Ejemplos que sí aparece en Práctica — esas
+             tarjetas incluyen Romaji/Significado, y como la Prueba 2
+             (opción múltiple, ver #jp-view-quiz) evalúa exactamente eso,
+             mostrarlas acá delataba la respuesta. El examen ahora solo
+             muestra el carácter a evaluar y los trazos/opciones limpias. -->
       </div>
 
       <!-- Sub-vista 3 (MODO EXAMEN, Prueba 2): quiz de opción múltiple -->
@@ -2305,7 +2336,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260802-08"></script>
+  <script src="app.js?v=20260802-09"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de

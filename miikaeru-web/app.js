@@ -1190,6 +1190,12 @@ const I18N = {
     jpLevelExamNoProgress: "Tu nivel real está justo donde ya estabas — sigue practicando esta fila y vuelve a intentarlo.",
     jpMiniQuizDone: "🎉 ¡Quiz completo!",
     jpMiniQuizScore: "Puntaje:",
+    jpVictoryEyebrow: "AI COACH",
+    jpVictoryContinue: "¡Continuar!",
+    jpVictoryTitlePractice: "¡Sesión completada!",
+    jpVictoryTitleExam: "¡Examen superado!",
+    jpVictoryTitleLevelExam: "¡Subiste de nivel!",
+    jpVictoryTitleMiniQuiz: "¡Muy bien hecho!",
     n5CatGreetings: "Saludos",
     n5CatNumbers: "Números",
     n5CatTime: "Tiempo",
@@ -1743,6 +1749,12 @@ const I18N = {
     jpLevelExamNoProgress: "Your real level is exactly where you already were — keep practicing this row and try again.",
     jpMiniQuizDone: "🎉 Quiz complete!",
     jpMiniQuizScore: "Score:",
+    jpVictoryEyebrow: "AI COACH",
+    jpVictoryContinue: "Continue!",
+    jpVictoryTitlePractice: "Session complete!",
+    jpVictoryTitleExam: "Exam passed!",
+    jpVictoryTitleLevelExam: "You leveled up!",
+    jpVictoryTitleMiniQuiz: "Well done!",
     n5CatGreetings: "Greetings",
     n5CatNumbers: "Numbers",
     n5CatTime: "Time",
@@ -2296,6 +2308,12 @@ const I18N = {
     jpLevelExamNoProgress: "実際のレベルはすでにいた場所のままです — この行を練習してまた挑戦しよう。",
     jpMiniQuizDone: "🎉 クイズ完了！",
     jpMiniQuizScore: "スコア：",
+    jpVictoryEyebrow: "AIコーチ",
+    jpVictoryContinue: "続ける！",
+    jpVictoryTitlePractice: "セッション完了！",
+    jpVictoryTitleExam: "試験合格！",
+    jpVictoryTitleLevelExam: "レベルアップ！",
+    jpVictoryTitleMiniQuiz: "よくできました！",
     n5CatGreetings: "挨拶",
     n5CatNumbers: "数字",
     n5CatTime: "時間",
@@ -3459,7 +3477,7 @@ const N5_GRAMMAR_POINTS = [
     id: "wa",
     label: "は",
     titleKey: "n5GramWaTitle",
-    pattern: "[Tema] は [Comentario]",
+    pattern: { es: "[Tema] は [Comentario]", en: "[Topic] は [Comment]" },
     explanation: {
       es: "Marca el TEMA de la oración — de qué se está hablando. Se escribe con el carácter へ pero se PRONUNCIA \"wa\".",
       en: "Marks the TOPIC of the sentence — what you're talking about. Written with the character へ but PRONOUNCED \"wa\".",
@@ -3473,7 +3491,7 @@ const N5_GRAMMAR_POINTS = [
     id: "mo",
     label: "も",
     titleKey: "n5GramMoTitle",
-    pattern: "[Sustantivo] も",
+    pattern: { es: "[Sustantivo] も", en: "[Noun] も" },
     explanation: {
       es: "\"También\" — reemplaza a は/が/を cuando agregás algo a lo ya dicho.",
       en: "\"Also/too\" — replaces は/が/を when adding something to what was already said.",
@@ -3486,7 +3504,7 @@ const N5_GRAMMAR_POINTS = [
     id: "o",
     label: "を",
     titleKey: "n5GramOTitle",
-    pattern: "[Objeto] を [Verbo]",
+    pattern: { es: "[Objeto] を [Verbo]", en: "[Object] を [Verb]" },
     explanation: {
       es: "Marca el OBJETO DIRECTO del verbo — sobre qué recae la acción.",
       en: "Marks the DIRECT OBJECT of the verb — what the action falls on.",
@@ -3500,7 +3518,7 @@ const N5_GRAMMAR_POINTS = [
     id: "ni",
     label: "に",
     titleKey: "n5GramNiTitle",
-    pattern: "[Tiempo/Lugar] に",
+    pattern: { es: "[Tiempo/Lugar] に", en: "[Time/Place] に" },
     explanation: {
       es: "Marca un punto en el TIEMPO, o el DESTINO/lugar de existencia — \"a las 7\", \"a la escuela\", \"hay algo EN...\".",
       en: "Marks a point in TIME, or the DESTINATION/place something exists — \"at 7\", \"to school\", \"there is something AT...\".",
@@ -3514,7 +3532,7 @@ const N5_GRAMMAR_POINTS = [
     id: "de",
     label: "で",
     titleKey: "n5GramDeTitle",
-    pattern: "[Lugar/Medio] で [Acción]",
+    pattern: { es: "[Lugar/Medio] で [Acción]", en: "[Place/Means] で [Action]" },
     explanation: {
       es: "Marca DÓNDE pasa una acción, o el MEDIO/herramienta con la que se hace algo.",
       en: "Marks WHERE an action happens, or the MEANS/tool used to do something.",
@@ -3528,7 +3546,7 @@ const N5_GRAMMAR_POINTS = [
     id: "ga",
     label: "が",
     titleKey: "n5GramGaTitle",
-    pattern: "[Sujeto] が [Verbo/Estado]",
+    pattern: { es: "[Sujeto] が [Verbo/Estado]", en: "[Subject] が [Verb/State]" },
     explanation: {
       es: "Marca el SUJETO con énfasis (\"quién específicamente\"), y es obligatorio con あります/います (haber) y para expresar gustos/habilidades.",
       en: "Marks the SUBJECT with emphasis (\"specifically who\"), and is required with あります/います (there is) and to express likes/abilities.",
@@ -3542,7 +3560,7 @@ const N5_GRAMMAR_POINTS = [
     id: "no",
     label: "の",
     titleKey: "n5GramNoTitle",
-    pattern: "[A] の [B] = \"B de A\"",
+    pattern: { es: "[A] の [B] = \"B de A\"", en: "[A] の [B] = \"B of A\"" },
     explanation: {
       es: "Conecta 2 sustantivos, casi siempre como posesión — el orden es al revés que en español.",
       en: "Connects 2 nouns, almost always as possession — the order is reversed from English.",
@@ -3556,7 +3574,7 @@ const N5_GRAMMAR_POINTS = [
     id: "desumasu",
     label: "です / ます",
     titleKey: "n5GramDesuMasuTitle",
-    pattern: "[Sustantivo/な-adj] です · [Raíz del verbo] ます",
+    pattern: { es: "[Sustantivo/な-adj] です · [Raíz del verbo] ます", en: "[Noun/な-adj] です · [Verb stem] ます" },
     explanation: {
       es: "La forma EDUCADA/formal estándar — です para sustantivos y adjetivos な, ます para verbos. Es la base con la que se aprende a hablar en N5.",
       en: "The standard POLITE/formal form — です for nouns and な-adjectives, ます for verbs. This is the foundation N5 speech is built on.",
@@ -3570,7 +3588,7 @@ const N5_GRAMMAR_POINTS = [
     id: "negative",
     label: "〜ません / ではありません",
     titleKey: "n5GramNegativeTitle",
-    pattern: "[Raíz] ません · [Sustantivo] ではありません",
+    pattern: { es: "[Raíz] ません · [Sustantivo] ではありません", en: "[Stem] ません · [Noun] ではありません" },
     explanation: {
       es: "Forma NEGATIVA educada — ません para verbos, ではありません (o じゃありません, más hablado) para sustantivos.",
       en: "Polite NEGATIVE form — ません for verbs, ではありません (or じゃありません, more spoken) for nouns.",
@@ -3584,7 +3602,7 @@ const N5_GRAMMAR_POINTS = [
     id: "past",
     label: "〜ました / でした",
     titleKey: "n5GramPastTitle",
-    pattern: "[Raíz] ました · [Sustantivo] でした",
+    pattern: { es: "[Raíz] ました · [Sustantivo] でした", en: "[Stem] ました · [Noun] でした" },
     explanation: {
       es: "Forma de PASADO educada — ました para verbos, でした para sustantivos/な-adjetivos.",
       en: "Polite PAST form — ました for verbs, でした for nouns/な-adjectives.",
@@ -3598,7 +3616,7 @@ const N5_GRAMMAR_POINTS = [
     id: "adjectives",
     label: "い-adj / な-adj",
     titleKey: "n5GramAdjTitle",
-    pattern: "[い-adj] + sustantivo · [な-adj] + な + sustantivo",
+    pattern: { es: "[い-adj] + sustantivo · [な-adj] + な + sustantivo", en: "[い-adj] + noun · [な-adj] + な + noun" },
     explanation: {
       es: "Los adjetivos い van directo antes del sustantivo; los adjetivos な necesitan な en el medio.",
       en: "い-adjectives go directly before the noun; な-adjectives need な in between.",
@@ -3612,7 +3630,7 @@ const N5_GRAMMAR_POINTS = [
     id: "tai",
     label: "〜たいです",
     titleKey: "n5GramTaiTitle",
-    pattern: "[Raíz del verbo] たいです",
+    pattern: { es: "[Raíz del verbo] たいです", en: "[Verb stem] たいです" },
     explanation: {
       es: "Expresa lo que UNO QUIERE hacer.",
       en: "Expresses what YOU want to do.",
@@ -3625,7 +3643,7 @@ const N5_GRAMMAR_POINTS = [
     id: "kudasai",
     label: "〜てください",
     titleKey: "n5GramKudasaiTitle",
-    pattern: "[Verbo en forma て] ください",
+    pattern: { es: "[Verbo en forma て] ください", en: "[Verb in て-form] ください" },
     explanation: {
       es: "Un pedido educado — \"por favor hacé...\".",
       en: "A polite request — \"please do...\".",
@@ -3638,7 +3656,7 @@ const N5_GRAMMAR_POINTS = [
     id: "dekiru",
     label: "〜ことができます",
     titleKey: "n5GramDekiruTitle",
-    pattern: "[Verbo en forma diccionario] ことができます",
+    pattern: { es: "[Verbo en forma diccionario] ことができます", en: "[Verb in dictionary form] ことができます" },
     explanation: {
       es: "Expresa CAPACIDAD — poder hacer algo.",
       en: "Expresses ABILITY — being able to do something.",
@@ -3651,7 +3669,7 @@ const N5_GRAMMAR_POINTS = [
     id: "ka",
     label: "か",
     titleKey: "n5GramKaTitle",
-    pattern: "[Oración] か。",
+    pattern: { es: "[Oración] か。", en: "[Sentence] か。" },
     explanation: {
       es: "Convierte cualquier oración en PREGUNTA — se agrega al final, sin cambiar el orden de las palabras.",
       en: "Turns any sentence into a QUESTION — added at the end, without changing word order.",
@@ -3664,7 +3682,7 @@ const N5_GRAMMAR_POINTS = [
     id: "kara",
     label: "から",
     titleKey: "n5GramKaraTitle",
-    pattern: "[Razón] から、[Resultado]",
+    pattern: { es: "[Razón] から、[Resultado]", en: "[Reason] から、[Result]" },
     explanation: {
       es: "Da la RAZÓN de algo — \"porque...\". Va después de la causa, antes del resultado.",
       en: "Gives the REASON for something — \"because...\". Goes after the cause, before the result.",
@@ -3678,7 +3696,7 @@ const N5_GRAMMAR_POINTS = [
     id: "shika",
     label: "しか",
     titleKey: "n5GramShikaTitle",
-    pattern: "[Sustantivo] しか + [forma negativa]",
+    pattern: { es: "[Sustantivo] しか + [forma negativa]", en: "[Noun] しか + [negative form]" },
     explanation: {
       es: "\"Solo/nada más que\" — SIEMPRE se usa con el verbo en NEGATIVO, aunque el significado sea positivo (\"solo tengo...\").",
       en: "\"Only/nothing but\" — ALWAYS paired with a NEGATIVE verb, even though the meaning is positive (\"I only have...\").",
@@ -3691,7 +3709,7 @@ const N5_GRAMMAR_POINTS = [
     id: "masenka",
     label: "〜ませんか",
     titleKey: "n5GramMasenkaTitle",
-    pattern: "[Raíz del verbo] ませんか",
+    pattern: { es: "[Raíz del verbo] ませんか", en: "[Verb stem] ませんか" },
     explanation: {
       es: "Una INVITACIÓN educada — \"¿no querés...?\", \"¿vamos a...?\".",
       en: "A polite INVITATION — \"won't you...?\", \"shall we...?\".",
@@ -3704,7 +3722,7 @@ const N5_GRAMMAR_POINTS = [
     id: "mashou",
     label: "〜ましょう",
     titleKey: "n5GramMashouTitle",
-    pattern: "[Raíz del verbo] ましょう",
+    pattern: { es: "[Raíz del verbo] ましょう", en: "[Verb stem] ましょう" },
     explanation: {
       es: "\"Hagamos...\" — una PROPUESTA para hacer algo juntos, más directa que ませんか.",
       en: "\"Let's...\" — a SUGGESTION to do something together, more direct than ませんか.",
@@ -3717,7 +3735,7 @@ const N5_GRAMMAR_POINTS = [
     id: "temoii",
     label: "〜てもいいです / 〜てはいけません",
     titleKey: "n5GramTemoiiTitle",
-    pattern: "[Verbo en forma て] もいいです · [Verbo en forma て] はいけません",
+    pattern: { es: "[Verbo en forma て] もいいです · [Verbo en forma て] はいけません", en: "[Verb in て-form] もいいです · [Verb in て-form] はいけません" },
     explanation: {
       es: "PERMISO (\"se puede...\") y PROHIBICIÓN (\"no se puede...\") — un par de patrones opuestos que se aprenden juntos.",
       en: "PERMISSION (\"you may...\") and PROHIBITION (\"you must not...\") — an opposite pair usually learned together.",
@@ -3731,7 +3749,7 @@ const N5_GRAMMAR_POINTS = [
     id: "toki",
     label: "とき",
     titleKey: "n5GramTokiTitle",
-    pattern: "[Oración] とき、[Oración principal]",
+    pattern: { es: "[Oración] とき、[Oración principal]", en: "[Sentence] とき、[Main sentence]" },
     explanation: {
       es: "\"Cuando...\" — conecta dos oraciones en el tiempo, funciona como un sustantivo (literalmente \"el momento en que...\").",
       en: "\"When...\" — connects two clauses in time, grammatically works like a noun (literally \"the moment when...\").",
@@ -3744,7 +3762,7 @@ const N5_GRAMMAR_POINTS = [
     id: "moumada",
     label: "もう / まだ",
     titleKey: "n5GramMouMadaTitle",
-    pattern: "もう + [pasado] · まだ + [negativo]",
+    pattern: { es: "もう + [pasado] · まだ + [negativo]", en: "もう + [past] · まだ + [negative]" },
     explanation: {
       es: "もう (\"ya\") con verbo en pasado, y まだ (\"todavía/aún no\") con verbo en negativo — un par muy usado en preguntas de confirmación.",
       en: "もう (\"already\") with a past-tense verb, and まだ (\"still/not yet\") with a negative verb — a very common pair in confirmation questions.",
@@ -4811,6 +4829,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const jpConfigModal = document.getElementById("jp-config-modal");
   const jpConfigModalClose = document.getElementById("jp-config-modal-close");
+
+  // Pantalla de Victoria del AI Coach (ver showJpVictoryModal() más abajo,
+  // junto a finishJpSession()) — refs agrupadas acá junto al resto del
+  // módulo Japonés aunque el modal viva fuera de #japanese-modal en el
+  // HTML (necesita su propio z-index para quedar por encima).
+  const jpVictoryModal = document.getElementById("jp-victory-modal");
+  const jpVictoryTitle = document.getElementById("jp-victory-title");
+  const jpVictorySubtitle = document.getElementById("jp-victory-subtitle");
+  const jpVictoryXpValue = document.getElementById("jp-victory-xp-value");
+  const jpVictoryGoldRow = document.getElementById("jp-victory-gold-row");
+  const jpVictoryGoldValue = document.getElementById("jp-victory-gold-value");
+  const jpVictoryContinueBtn = document.getElementById("jp-victory-continue-btn");
   const jpConfigLanguageRow = document.getElementById("jp-config-language-row");
   const jpConfigModeRow = document.getElementById("jp-config-mode-row");
   const jpConfigReopenBtn = document.getElementById("jp-config-reopen-btn");
@@ -4880,8 +4910,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const jpExamstrokeBackBtn = document.getElementById("jp-examstroke-back-btn");
   const jpExamstrokeSkipBtn = document.getElementById("jp-examstroke-skip-btn");
   const jpExamSegments = document.getElementById("jp-exam-segments");
-  const jpExamVocabSection = document.getElementById("jp-examstroke-vocab-section");
-  const jpExamVocabGrid = document.getElementById("jp-examstroke-vocab-grid");
 
   const jpKanjiInfo = document.getElementById("jp-kanji-info");
   const jpKanjiOnyomiEl = document.getElementById("jp-kanji-onyomi");
@@ -9601,6 +9629,59 @@ document.addEventListener("DOMContentLoaded", () => {
   // respuestas correctas) se guarda en state.pillars.aprendizaje.mastery,
   // clave "script:caracter" para que hiragana/katakana no se pisen entre sí.
 
+  // ---------------- Pantalla de Victoria del AI Coach ----------------
+  // Pedido explícito: al completar una sección/examen del módulo Japonés
+  // (sesión de práctica/examen, Examen de Nivel aprobado, o Mini-Quiz de
+  // Vocabulario/Gramática), en vez de solo un mensaje de texto en el
+  // chat, se muestra esta pantalla interactiva con el retrato del León
+  // en pose de victoria + un conteo animado de la XP (y oro, si aplica)
+  // recién ganados — "que se sienta una verdadera interacción de juego".
+  // Los 3 puntos de entrada (finishJpSession/finishJpLevelExam/
+  // renderMiniQuizItem) siguen otorgando el gold/XP real vía
+  // addGold()/grantXP() como siempre; esta función solo VISUALIZA esos
+  // mismos números ya otorgados, nunca inventa un valor aparte.
+  function animateCountUp(el, target, duration = 900) {
+    if (!target) {
+      el.textContent = "0";
+      return;
+    }
+    const start = performance.now();
+    function tick(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3); // ease-out cúbico
+      el.textContent = String(Math.round(eased * target));
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function showJpVictoryModal({ title, subtitle, xp, gold }) {
+    jpVictoryTitle.textContent = title;
+    jpVictorySubtitle.hidden = !subtitle;
+    jpVictorySubtitle.textContent = subtitle || "";
+    jpVictoryGoldRow.hidden = !gold;
+    jpVictoryXpValue.textContent = "0";
+    jpVictoryGoldValue.textContent = "0";
+    jpVictoryModal.hidden = false;
+    // requestAnimationFrame extra para que el navegador pinte el "0"
+    // inicial ANTES de arrancar el conteo — si se anima en el mismo
+    // frame que se revela el modal, a veces se salta directo al valor
+    // final sin transición visible.
+    requestAnimationFrame(() => {
+      animateCountUp(jpVictoryXpValue, xp);
+      if (gold) animateCountUp(jpVictoryGoldValue, gold);
+    });
+  }
+
+  function closeJpVictoryModal() {
+    jpVictoryModal.hidden = true;
+  }
+
+  jpVictoryContinueBtn.addEventListener("click", closeJpVictoryModal);
+  jpVictoryModal.addEventListener("click", (event) => {
+    if (event.target === jpVictoryModal) closeJpVictoryModal();
+  });
+
   let jpScript = "hiragana";
   let jpQueue = [];
   let jpQueueIndex = 0;
@@ -9975,13 +10056,27 @@ document.addEventListener("DOMContentLoaded", () => {
       romaji.textContent = word.romaji;
       card.appendChild(romaji);
 
-      const meaning = document.createElement("span");
-      meaning.className = "jp-vocab-card__meaning";
-      meaning.textContent = word.meaning[currentLanguage] || word.meaning.es;
-      card.appendChild(meaning);
+      // word.meaning solo tiene es/en (nunca ja, ver N5_VOCAB_CATEGORIES) —
+      // mismo criterio que renderVocabSection() (JP_VOCAB) más abajo: con
+      // la interfaz en 日本語 se oculta la traducción extranjera en vez de
+      // mostrar un fallback en español, modo "nativo/infantil" (pedido
+      // explícito: cero texto en español rezagado cuando el idioma es
+      // otro).
+      if (currentLanguage !== "ja") {
+        const meaning = document.createElement("span");
+        meaning.className = "jp-vocab-card__meaning";
+        meaning.textContent = word.meaning[currentLanguage] || word.meaning.es;
+        card.appendChild(meaning);
+      }
 
       jpVocabWordsList.appendChild(card);
     });
+    // El Mini-Quiz de vocabulario pregunta "¿qué significa...?" con el
+    // significado traducido como respuesta (ver buildVocabQuizItems) — sin
+    // una traducción real al japonés, ese quiz no tiene forma de
+    // funcionar sin mostrar español, así que se oculta por completo en
+    // modo 日本語 en vez de arriesgar una fuga de idioma.
+    jpVocabQuizStartBtn.hidden = currentLanguage === "ja";
     showJpView("vocab-words");
   }
 
@@ -10011,20 +10106,35 @@ document.addEventListener("DOMContentLoaded", () => {
       const label = document.createElement("span");
       label.className = "jp-grammar-card__label";
       label.textContent = point.label;
-      const pattern = document.createElement("span");
-      pattern.className = "jp-grammar-card__pattern";
-      pattern.textContent = point.pattern;
-      header.append(label, pattern);
+      header.appendChild(label);
+      // point.pattern solo tiene es/en (nunca ja) — los corchetes son
+      // roles gramaticales en español/inglés ("[Tema]"/"[Topic]"), así
+      // que en 日本語 se ocultan por el mismo motivo que explanation/
+      // translation más abajo (nada de scaffolding en otro idioma); la
+      // partícula real ya se ve en label de todos modos.
+      if (currentLanguage !== "ja") {
+        const pattern = document.createElement("span");
+        pattern.className = "jp-grammar-card__pattern";
+        pattern.textContent = resolveJpMeaning(point.pattern);
+        header.appendChild(pattern);
+      }
       card.appendChild(header);
 
       const body = document.createElement("div");
       body.className = "jp-grammar-card__body";
       body.hidden = true;
 
-      const explanation = document.createElement("p");
-      explanation.className = "jp-grammar-card__explanation";
-      explanation.textContent = point.explanation[currentLanguage] || point.explanation.es;
-      body.appendChild(explanation);
+      // point.explanation solo tiene es/en (nunca ja) — con la interfaz en
+      // 日本語 no tiene sentido explicar la gramática japonesa apoyándose
+      // en una traducción extranjera, así que se oculta por completo en
+      // vez de caer a español (mismo criterio ya aplicado al Vocabulario
+      // N5 más arriba).
+      if (currentLanguage !== "ja") {
+        const explanation = document.createElement("p");
+        explanation.className = "jp-grammar-card__explanation";
+        explanation.textContent = point.explanation[currentLanguage] || point.explanation.es;
+        body.appendChild(explanation);
+      }
 
       point.examples.forEach((ex) => {
         const exEl = document.createElement("div");
@@ -10041,7 +10151,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const audioBtn = document.createElement("button");
         audioBtn.type = "button";
         audioBtn.className = "jp-grammar-card__example-audio";
-        audioBtn.setAttribute("aria-label", "Escuchar pronunciación");
+        audioBtn.setAttribute("aria-label", t("jpListen"));
         audioBtn.textContent = "🔊";
         audioBtn.addEventListener("click", (event) => {
           event.stopPropagation();
@@ -10061,10 +10171,15 @@ document.addEventListener("DOMContentLoaded", () => {
         const romaji = document.createElement("p");
         romaji.className = "jp-grammar-card__example-romaji";
         romaji.textContent = ex.romaji;
-        const translation = document.createElement("p");
-        translation.className = "jp-grammar-card__example-translation";
-        translation.textContent = ex.translation[currentLanguage] || ex.translation.es;
-        exEl.append(romaji, translation);
+        exEl.appendChild(romaji);
+        // ex.translation solo tiene es/en (nunca ja) — mismo criterio de
+        // ocultar en vez de caer a español (ver explanation más arriba).
+        if (currentLanguage !== "ja") {
+          const translation = document.createElement("p");
+          translation.className = "jp-grammar-card__example-translation";
+          translation.textContent = ex.translation[currentLanguage] || ex.translation.es;
+          exEl.appendChild(translation);
+        }
         body.appendChild(exEl);
       });
 
@@ -10262,6 +10377,12 @@ document.addEventListener("DOMContentLoaded", () => {
       jpMiniQuizScore.textContent = `${t("jpMiniQuizScore")} ${miniQuizScore}/${miniQuizItems.length}`;
       addGold(5);
       grantXP(30);
+      showJpVictoryModal({
+        title: t("jpVictoryTitleMiniQuiz"),
+        subtitle: `${t("jpMiniQuizScore")} ${miniQuizScore}/${miniQuizItems.length}`,
+        xp: 30,
+        gold: 5,
+      });
       // Progreso persistente en IndexedDB (ver bloque más arriba) — solo
       // pisa el registro guardado si este puntaje iguala o supera al mejor
       // previo. Re-renderiza vocab/gramática para que el badge "✓" quede
@@ -10477,6 +10598,12 @@ document.addEventListener("DOMContentLoaded", () => {
         author: "SISTEMA",
         text: `${t("jpLevelExamPassedUpTo")} ${unit.label}.${xpNeeded > 0 ? ` +${xpNeeded} XP` : ""}`,
         variant: "system",
+      });
+      showJpVictoryModal({
+        title: t("jpVictoryTitleLevelExam"),
+        subtitle: `${t("jpLevelExamPassedUpTo")} "${unit.label}"`,
+        xp: xpNeeded,
+        gold: 10,
       });
     } else {
       addGold(2);
@@ -10740,7 +10867,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const item = jpQueue[jpQueueIndex];
     jpExamstrokeChar.textContent = item.char;
     renderExamSegments(item.char);
-    renderVocabSection(item.char, jpExamVocabSection, jpExamVocabGrid);
     showJpView("examstroke");
   }
 
@@ -10821,6 +10947,12 @@ document.addEventListener("DOMContentLoaded", () => {
       ? `${t("jpSessionComplete")} ${jpSessionCorrect}/${total}. +15 XP, +2 🪙`
       : `${t("jpPracticeSessionComplete")} +15 XP, +2 🪙`;
     addMessage({ author: "SISTEMA", text, variant: "system" });
+    showJpVictoryModal({
+      title: t(jpMode === "examen" ? "jpVictoryTitleExam" : "jpVictoryTitlePractice"),
+      subtitle: jpMode === "examen" ? `${t("jpMiniQuizScore")} ${jpSessionCorrect}/${total}` : null,
+      xp: 15,
+      gold: 2,
+    });
     showJpView("grid");
   }
 
