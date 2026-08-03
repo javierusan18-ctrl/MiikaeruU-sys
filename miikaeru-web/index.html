@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260804-18" />
+  <link rel="stylesheet" href="style.css?v=20260804-19" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -173,6 +173,14 @@
            instalación), nunca como promesa vacía en navegadores/SO que
            no lo soportan (ej. Firefox de escritorio, iOS Safari). -->
       <button class="btn-install-app" id="install-app-btn" type="button" data-i18n="installAppBtn" hidden>⬇️ Instalar App</button>
+      <!-- Respaldo para iOS/Safari: ese navegador NUNCA dispara
+           beforeinstallprompt, así que sin esto un usuario de
+           iPhone/iPad no tendría NINGÚN indicio de cómo instalar la app
+           desde dentro del dashboard — pedido explícito de que
+           "cualquier usuario" pueda hacerlo. No abre modal ni bloquea
+           nada: solo posta las instrucciones al feed de chat, mismo
+           patrón no-intrusivo que el resto de la app usa para avisos. -->
+      <button class="btn-install-app btn-install-app--ios" id="install-ios-hint-btn" type="button" data-i18n-title="installIosHintTitle" title="Cómo instalar en iPhone/iPad" aria-label="Cómo instalar en iPhone/iPad" hidden>🍎⬇️</button>
       <button class="btn-profile-switch" id="profile-switch-btn" type="button" data-i18n-title="profileSwitchBtnTitle" title="Cambiar de perfil">
         👤 <span id="active-profile-name">Admin</span>
       </button>
@@ -2478,7 +2486,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260804-18"></script>
+  <script src="app.js?v=20260804-19"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de

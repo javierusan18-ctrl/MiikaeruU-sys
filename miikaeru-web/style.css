@@ -529,6 +529,16 @@ body::before {
   50% { box-shadow: 0 0 14px rgba(0, 240, 255, 0.6); }
 }
 
+/* Respaldo iOS/Safari (ver installIosHintBtn en app.js) — mismo pulso e
+   idea visual que .btn-install-app, pero solo-icono (sin texto: iOS no
+   soporta instalación vía JS, así que este botón es un atajo a
+   instrucciones manuales, no un instalador real) por eso el padding
+   circular en vez del pill alargado. */
+.btn-install-app--ios {
+  padding: 6px 10px;
+  font-size: 0.85rem;
+}
+
 .xp-bar {
   position: relative;
   width: 180px;
