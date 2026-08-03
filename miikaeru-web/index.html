@@ -16,7 +16,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260802-07" />
+  <link rel="stylesheet" href="style.css?v=20260802-08" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -486,6 +486,21 @@
         <div class="finanzas-tabs" id="finanzas-tabs">
           <button type="button" class="finanzas-tab finanzas-tab--active" data-finanzas-tab="personal" data-i18n="financeTabPersonal">Personales</button>
           <button type="button" class="finanzas-tab" data-finanzas-tab="servicios" data-i18n="financeTabServicios">Servicios / Negocio</button>
+        </div>
+
+        <!-- Acceso Rápido: Imprimir Dashboard / Imprimir Formulario Físico /
+             Descargar PDF — visible arriba de AMBAS pestañas (no solo
+             Servicios/Negocio) para no obligar a abrir el Dashboard modal
+             completo o cambiar de pestaña solo para imprimir/exportar.
+             Reutiliza EXACTAMENTE la misma lógica que dashboardPrintBtn/
+             negocioPrintBtn/dashboardPdfBtn de más abajo (ver
+             buildDashboardReportHTML()/buildPrintableFormHTML()/
+             openPrintWindow() en app.js) — cero código nuevo de impresión,
+             solo un atajo de un clic desde arriba. -->
+        <div class="finanzas-quick-actions" id="finanzas-quick-actions">
+          <button type="button" class="btn-scan btn-scan--print" id="finanzas-quick-print-dashboard-btn" data-i18n="financeQuickPrintDashboard">🖨️ Imprimir Dashboard</button>
+          <button type="button" class="btn-scan btn-scan--print" id="finanzas-quick-print-form-btn" data-i18n="negocioPrintBtn">🖨️ Imprimir Formulario Físico</button>
+          <button type="button" class="btn-scan btn-scan--pdf" id="finanzas-quick-pdf-btn" data-i18n="btnDownloadPdf">📥 Descargar PDF</button>
         </div>
 
         <!-- Pestaña 1: Gastos Personales (contenido original, sin cambios de lógica) -->
@@ -2290,7 +2305,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260802-07"></script>
+  <script src="app.js?v=20260802-08"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de

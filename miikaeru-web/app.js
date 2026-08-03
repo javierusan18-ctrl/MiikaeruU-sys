@@ -987,6 +987,7 @@ const I18N = {
     dashboardTitle: "📊 Dashboard Financiero General",
     dashboardReportGenericTitle: "Reporte Financiero",
     dashboardFilterLabel: "Negocio",
+    financeQuickPrintDashboard: "🖨️ Imprimir Dashboard",
     dashboardPrintBtn: "🖨️ Imprimir Reporte",
     dashboardPayslipBtn: "🖨️ Imprimir Boleta de Pago del Colaborador",
     dashboardCollaboratorSelectedLabel: "Colaborador seleccionado:",
@@ -1539,6 +1540,7 @@ const I18N = {
     dashboardTitle: "📊 General Financial Dashboard",
     dashboardReportGenericTitle: "Financial Report",
     dashboardFilterLabel: "Business",
+    financeQuickPrintDashboard: "🖨️ Print Dashboard",
     dashboardPrintBtn: "🖨️ Print Report",
     dashboardPayslipBtn: "🖨️ Print Collaborator's Payslip",
     dashboardCollaboratorSelectedLabel: "Selected collaborator:",
@@ -2091,6 +2093,7 @@ const I18N = {
     dashboardTitle: "📊 総合財務ダッシュボード",
     dashboardReportGenericTitle: "財務レポート",
     dashboardFilterLabel: "ビジネス",
+    financeQuickPrintDashboard: "🖨️ ダッシュボードを印刷",
     dashboardPrintBtn: "🖨️ レポートを印刷",
     dashboardPayslipBtn: "🖨️ 協力者の給与明細を印刷",
     dashboardCollaboratorSelectedLabel: "選択中の協力者：",
@@ -4523,6 +4526,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const finanzasTabs = document.getElementById("finanzas-tabs");
   const finanzasTabPersonal = document.getElementById("finanzas-tab-personal");
   const finanzasTabServicios = document.getElementById("finanzas-tab-servicios");
+
+  // Acceso Rápido de Finanzas: mismos 3 botones de impresión/PDF que ya
+  // existen más abajo (dentro de Servicios/Negocio y del Dashboard), pero
+  // repetidos acá arriba de las pestañas para no obligar a cambiar de
+  // pestaña o abrir el Dashboard modal solo para imprimir/exportar — ver
+  // los .addEventListener() junto a buildDashboardReportHTML() más abajo.
+  const finanzasQuickPrintDashboardBtn = document.getElementById("finanzas-quick-print-dashboard-btn");
+  const finanzasQuickPrintFormBtn = document.getElementById("finanzas-quick-print-form-btn");
+  const finanzasQuickPdfBtn = document.getElementById("finanzas-quick-pdf-btn");
 
   // Pestaña "Servicios / Negocio": registro de transacciones (Tipo 1
   // Servicio / Tipo 2 Venta) hacia el ledger de negocios.
@@ -7746,6 +7758,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   dashboardPrintBtn.addEventListener("click", () => openPrintWindow(buildDashboardReportHTML()));
   dashboardPdfBtn.addEventListener("click", () => openPrintWindow(buildDashboardReportHTML(), "pdf"));
+
+  // Acceso Rápido (arriba de las pestañas de Finanzas) — misma lógica
+  // exacta que los botones de abajo, sin duplicar código de impresión.
+  finanzasQuickPrintDashboardBtn.addEventListener("click", () => openPrintWindow(buildDashboardReportHTML()));
+  finanzasQuickPrintFormBtn.addEventListener("click", () => openPrintWindow(buildPrintableFormHTML()));
+  finanzasQuickPdfBtn.addEventListener("click", () => openPrintWindow(buildDashboardReportHTML(), "pdf"));
 
   // Boleta de Pago / Comprobante de Liquidación de Servicios: usa
   // exactamente los mismos filtros que la tabla del Dashboard en ese

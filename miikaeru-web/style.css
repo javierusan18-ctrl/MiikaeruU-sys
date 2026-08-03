@@ -1569,6 +1569,18 @@ textarea,
   margin-bottom: 4px;
 }
 
+/* Acceso Rápido de Finanzas (Imprimir Dashboard / Imprimir Formulario
+   Físico / Descargar PDF) — mismo layout que .negocio-scan-toolbar de
+   arriba, pero vive fuera de ambas pestañas para quedar visible sin
+   importar cuál esté activa. Reutiliza los mismos .btn-scan* de abajo,
+   sin CSS de botón nuevo. */
+.finanzas-quick-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
 .btn-scan {
   flex: 1;
   min-width: 140px;
