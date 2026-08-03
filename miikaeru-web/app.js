@@ -3777,36 +3777,37 @@ const N5_GRAMMAR_POINTS = [
 const JP_MASTERY_THRESHOLD = 3; // respuestas correctas para brillo dorado + 3 estrellas
 
 // ---------------- Progresión por Nivel del Módulo Japonés ----------------
-// Pedido explícito (revisado en un bloque posterior): SOLO la escritura
-// (kana/kanji, practicada vía Trazos + el Examen de Nivel más abajo) sigue
-// gobernada por nivel, empezando en lo más básico absoluto (vocales, fila
-// "a" = Nivel 1) y escalando hasta los kanji N5 más avanzados del dataset.
-// Vocabulario, Gramática N5 y Práctica de Partículas pasaron a ser consulta
-// libre sin candado (ver renderN5VocabCategories()/renderN5GrammarList()/
-// getParticlePoints() — ya no llaman a isJpLevelUnlocked()), así que sus
-// funciones de "nivel requerido" (jpVocabCategoryUnlockLevel/
-// jpGrammarUnlockLevel) se eliminaron por completo en vez de dejarlas sin
-// uso. En vez de guardar un campo "nivel requerido" a mano en cada una de
-// las ~120 entradas de GOJUON_ROWS/YOON_ROWS/KANJI_N5 (alto riesgo de
-// tipear mal un valor en medio de contenido curricular ya verificado), el
-// nivel requerido se COMPUTA a partir de la posición de cada entrada en su
-// array — el orden de esos arrays YA sigue una progresión pedagógica
-// razonable (vocales → filas Gojuon → dakuten/handakuten → yōon → kanji),
-// así que ese orden es la fuente de verdad única.
+// Pedido explícito (revisado de nuevo en un bloque posterior): Hiragana y
+// Katakana COMPLETOS (todas las filas Gojuon + dakuten/handakuten + yōon)
+// y la Práctica General deben estar 100% desbloqueados desde el inicio —
+// son "lo básico", el usuario tiene que poder practicarlos libremente sin
+// candados. La progresión por nivel real queda reservada SOLO para el
+// módulo avanzado (Kanji N5, practicado vía Trazos + el Examen de Nivel
+// más abajo), que sí se desbloquea de a poco a medida que se sube de
+// nivel. jpKanaRowUnlockLevel()/jpYoonRowUnlockLevel() devuelven 1 a
+// propósito (no `true`/eliminar el candado del todo): state.level nunca
+// baja de 1, así que isJpLevelUnlocked(1) es siempre verdadero, pero se
+// mantiene el mismo mecanismo de nivel-requerido que ya usa applyJpLock()/
+// getKanaList() en vez de bifurcar la lógica en dos caminos distintos
+// (uno con candado, otro sin) — un solo mecanismo, más fácil de auditar.
+//
+// Vocabulario, Gramática N5 y Práctica de Partículas siguen siendo
+// consulta libre sin candado (ver renderN5VocabCategories()/
+// renderN5GrammarList()/getParticlePoints() — no llaman a
+// isJpLevelUnlocked()), así que sus funciones de "nivel requerido"
+// (jpVocabCategoryUnlockLevel/jpGrammarUnlockLevel) se eliminaron por
+// completo en vez de dejarlas sin uso.
 //
 // Nota de alcance honesta: el dataset actual solo cubre kanji N5 (no hay
-// N4-N1 todavía, ver #jp-level-toggle "Próximamente" en index.html) — "los
-// niveles más altos... culminando en kanjis avanzados" se cumple dentro de
-// lo que existe hoy (los últimos KANJI_N5 quedan al tope de la curva), no
-// implica kanji más allá de N5 porque ese contenido no está escrito aún.
+// N4-N1 todavía, ver #jp-level-toggle "Próximamente" en index.html).
 function jpKanaRowUnlockLevel(rowIndex) {
-  return rowIndex + 1; // fila "a" (あいうえお) = Nivel 1, ..., "pa" = Nivel 16
+  return 1; // Hiragana/Katakana completos: 100% desbloqueados desde el inicio (pedido explícito)
 }
 function jpYoonRowUnlockLevel(rowIndex) {
-  return 17 + rowIndex; // arranca justo después de la última fila Gojuon
+  return 1; // Yōon es parte del mismo alfabeto kana básico, mismo criterio que arriba
 }
 function jpKanjiUnlockLevel(kanjiIndex) {
-  return 30 + Math.floor(kanjiIndex / 2); // ~107 kanji, 2 por nivel → Niveles 30-83
+  return 30 + Math.floor(kanjiIndex / 2); // único módulo avanzado con progresión real por nivel — ~107 kanji, 2 por nivel → Niveles 30-83
 }
 
 // Cuánta XP hace falta ganar (desde el estado actual) para que state.level

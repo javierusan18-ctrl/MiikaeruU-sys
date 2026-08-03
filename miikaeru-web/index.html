@@ -16,7 +16,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260802-09" />
+  <link rel="stylesheet" href="style.css?v=20260802-10" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -718,7 +718,7 @@
                ingresos y gastos para autónomos (個人事業主), con
                prorrateo de uso mixto y comprobantes — ver
                #tax-declaration-modal más abajo. -->
-          <button type="button" class="btn-payroll-audit" id="tax-declaration-open-btn" data-i18n="taxDeclarationOpenBtn">📋 Declaración de Impuestos (収入・支出内訳書)</button>
+          <button type="button" class="btn-tax-declaration-open" id="tax-declaration-open-btn" data-i18n="taxDeclarationOpenBtn">📋 Declaración de Impuestos (収入・支出内訳書)</button>
 
           <!-- Gastos Operativos del Negocio (alquiler, sueldos de
                trabajadoras, etc.) — pedido explícito: antes NO existía
@@ -2336,7 +2336,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260802-09"></script>
+  <script src="app.js?v=20260802-10"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de
