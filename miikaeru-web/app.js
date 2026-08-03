@@ -1271,6 +1271,15 @@ const I18N = {
     jpHanziWriterOpenBtn: "✍️ Trazos Reales",
     jpVocabOpenBtn: "📚 Vocabulario N5",
     jpGrammarOpenBtn: "📖 Gramática N5",
+    jpConversationsOpenBtn: "💬 Conversaciones",
+    jpConversationsTitle: "💬 Conversaciones Situacionales",
+    jpConvLinesLabel: "líneas",
+    jpConvBackToScenes: "← Volver a las escenas",
+    jpConvFactoryTitle: "En la Fábrica",
+    jpConvDateTitle: "Invitar a Alguien a Salir",
+    jpConvTimeTitle: "Decir la Hora",
+    jpConvWeekdaysTitle: "Los Días de la Semana",
+    jpConvDemonstrativesTitle: "De Compras (これ・それ・あれ)",
     jpYoonOpenBtn: "🈴 Yōon",
     jpYoonNote: "Tabla de lectura — los trazos de き/し/ち/etc. y ゃ/ゅ/ょ se practican por separado arriba, en Hiragana/Katakana.",
     jpYoonQuizStart: "🎯 Quiz de Yōon",
@@ -1935,6 +1944,15 @@ const I18N = {
     jpHanziWriterOpenBtn: "✍️ Real Strokes",
     jpVocabOpenBtn: "📚 N5 Vocabulary",
     jpGrammarOpenBtn: "📖 N5 Grammar",
+    jpConversationsOpenBtn: "💬 Conversations",
+    jpConversationsTitle: "💬 Situational Conversations",
+    jpConvLinesLabel: "lines",
+    jpConvBackToScenes: "← Back to scenes",
+    jpConvFactoryTitle: "At the Factory",
+    jpConvDateTitle: "Asking Someone Out",
+    jpConvTimeTitle: "Telling Time",
+    jpConvWeekdaysTitle: "Days of the Week",
+    jpConvDemonstrativesTitle: "Shopping (これ・それ・あれ)",
     jpYoonOpenBtn: "🈴 Yōon",
     jpYoonNote: "Reading reference — the strokes for き/し/ち/etc. and ゃ/ゅ/ょ are practiced separately above, in Hiragana/Katakana.",
     jpYoonQuizStart: "🎯 Yōon Quiz",
@@ -2599,6 +2617,15 @@ const I18N = {
     jpHanziWriterOpenBtn: "✍️ 本物の書き順",
     jpVocabOpenBtn: "📚 N5語彙",
     jpGrammarOpenBtn: "📖 N5文法",
+    jpConversationsOpenBtn: "💬 会話",
+    jpConversationsTitle: "💬 状況別会話",
+    jpConvLinesLabel: "行",
+    jpConvBackToScenes: "← シーン一覧に戻る",
+    jpConvFactoryTitle: "工場で",
+    jpConvDateTitle: "デートに誘う",
+    jpConvTimeTitle: "時間を言う",
+    jpConvWeekdaysTitle: "曜日",
+    jpConvDemonstrativesTitle: "買い物（これ・それ・あれ）",
     jpYoonOpenBtn: "🈴 拗音",
     jpYoonNote: "読み方の一覧 — き・し・ち等とゃ・ゅ・ょの書き順は上のひらがな/カタカナで別途練習できます。",
     jpYoonQuizStart: "🎯 拗音クイズ",
@@ -4089,6 +4116,111 @@ const N5_GRAMMAR_POINTS = [
   },
 ];
 
+// ---------------------------------------------------
+// Conversaciones Situacionales N5 (módulo Idiomas → Nihongo): diálogos
+// reales de la vida diaria — pedido explícito de ampliar más allá de
+// vocabulario/gramática aislados hacia situaciones prácticas (fábrica,
+// invitar a alguien a salir, la hora, los días de la semana,
+// demostrativos これ/それ/あれ・この/その/あの). Misma calidad/formato que
+// N5_GRAMMAR_POINTS: cada segmento con kanji lleva su lectura en
+// hiragana; segmentos sin kanji (partículas, kana puro, puntuación) no
+// llevan `reading` — el motor de lectura (readerEngine.js,
+// MiikaeruReader.crearLector()) ya sabe no ponerles furigana encima.
+// `traduccion` es {es,en} en la data (nunca ja, mismo criterio que
+// N5_GRAMMAR_POINTS.explanation/examples.translation) y se resuelve a
+// un string plano recién al renderizar, en resolveConversationLineas()
+// — el contrato de crearLector() espera `traduccion` como string, no
+// como objeto.
+const N5_CONVERSATION_SCENES = [
+  {
+    id: "factory",
+    icon: "🏭",
+    titleKey: "jpConvFactoryTitle",
+    lineas: [
+      { segments: [{ text: "Ａ：" }, { text: "おはようございます。" }, { text: "今日", reading: "きょう" }, { text: "も" }, { text: "よろしく" }, { text: "お願いします", reading: "おねがいします" }, { text: "。" }], traduccion: { es: "Buenos días. Cuento contigo hoy también.", en: "Good morning. Thanks for your help today too." } },
+      { segments: [{ text: "Ｂ：" }, { text: "おはようございます。" }, { text: "今日", reading: "きょう" }, { text: "は" }, { text: "何時", reading: "なんじ" }, { text: "から" }, { text: "始めます", reading: "はじめます" }, { text: "か。" }], traduccion: { es: "Buenos días. ¿A qué hora empezamos hoy?", en: "Good morning. What time do we start today?" } },
+      { segments: [{ text: "Ａ：" }, { text: "朝", reading: "あさ" }, { text: "八時", reading: "はちじ" }, { text: "から" }, { text: "始めます", reading: "はじめます" }, { text: "。" }, { text: "休憩", reading: "きゅうけい" }, { text: "は" }, { text: "十二時", reading: "じゅうにじ" }, { text: "からです。" }], traduccion: { es: "Empezamos a las 8 de la mañana. El descanso es desde las 12.", en: "We start at 8 in the morning. The break is from 12." } },
+      { segments: [{ text: "Ｂ：" }, { text: "分かりました", reading: "わかりました" }, { text: "。" }, { text: "今日", reading: "きょう" }, { text: "の" }, { text: "仕事", reading: "しごと" }, { text: "は" }, { text: "何", reading: "なん" }, { text: "ですか。" }], traduccion: { es: "Entendido. ¿Cuál es el trabajo de hoy?", en: "Understood. What's today's work?" } },
+      { segments: [{ text: "Ａ：" }, { text: "今日", reading: "きょう" }, { text: "は" }, { text: "機械", reading: "きかい" }, { text: "の" }, { text: "点検", reading: "てんけん" }, { text: "を" }, { text: "お願いします", reading: "おねがいします" }, { text: "。" }, { text: "気", reading: "き" }, { text: "をつけてください。" }], traduccion: { es: "Hoy te pido que revises la máquina. Ten cuidado.", en: "Today please check the machine. Be careful." } },
+      { segments: [{ text: "Ｂ：" }, { text: "はい、" }, { text: "分かりました", reading: "わかりました" }, { text: "。" }, { text: "安全第一", reading: "あんぜんだいいち" }, { text: "ですね。" }], traduccion: { es: "Sí, entendido. La seguridad es lo primero, ¿verdad?", en: "Yes, understood. Safety first, right?" } },
+      { segments: [{ text: "Ａ：" }, { text: "そうです。" }, { text: "何か", reading: "なにか" }, { text: "問題", reading: "もんだい" }, { text: "があったら、" }, { text: "すぐに" }, { text: "私", reading: "わたし" }, { text: "に" }, { text: "教えてください", reading: "おしえてください" }, { text: "。" }], traduccion: { es: "Así es. Si hay algún problema, avísame enseguida.", en: "That's right. If there's any problem, let me know right away." } },
+      { segments: [{ text: "Ｂ：" }, { text: "分かりました", reading: "わかりました" }, { text: "。" }, { text: "手袋", reading: "てぶくろ" }, { text: "と" }, { text: "ヘルメットを" }, { text: "着けます", reading: "つけます" }, { text: "。" }], traduccion: { es: "Entendido. Me pondré los guantes y el casco.", en: "Understood. I'll put on gloves and a helmet." } },
+      { segments: [{ text: "Ａ：" }, { text: "いいですね。" }, { text: "お昼", reading: "おひる" }, { text: "は" }, { text: "どこで" }, { text: "食べます", reading: "たべます" }, { text: "か。" }], traduccion: { es: "Muy bien. ¿Dónde vas a almorzar?", en: "Good. Where will you eat lunch?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "食堂", reading: "しょくどう" }, { text: "で" }, { text: "食べます", reading: "たべます" }, { text: "。" }, { text: "一緒", reading: "いっしょ" }, { text: "に" }, { text: "行きません", reading: "いきません" }, { text: "か。" }], traduccion: { es: "Voy a comer en el comedor. ¿Vamos juntos?", en: "I'll eat in the cafeteria. Want to go together?" } },
+      { segments: [{ text: "Ａ：" }, { text: "いいですね、" }, { text: "行きましょう", reading: "いきましょう" }, { text: "。" }, { text: "今日", reading: "きょう" }, { text: "も" }, { text: "お疲れ様", reading: "おつかれさま" }, { text: "でした。" }], traduccion: { es: "Buena idea, vamos. Buen trabajo hoy también.", en: "Sounds good, let's go. Great work today too." } },
+      { segments: [{ text: "Ｂ：" }, { text: "お疲れ様", reading: "おつかれさま" }, { text: "でした。" }, { text: "また" }, { text: "明日", reading: "あした" }, { text: "。" }], traduccion: { es: "Buen trabajo. Hasta mañana.", en: "Good work. See you tomorrow." } },
+    ],
+  },
+  {
+    id: "date",
+    icon: "💌",
+    titleKey: "jpConvDateTitle",
+    lineas: [
+      { segments: [{ text: "Ａ：" }, { text: "あの、ちょっといいですか。" }], traduccion: { es: "Disculpa, ¿tienes un momento?", en: "Um, do you have a moment?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "はい、" }, { text: "何", reading: "なん" }, { text: "ですか。" }], traduccion: { es: "Sí, ¿qué pasa?", en: "Yes, what is it?" } },
+      { segments: [{ text: "Ａ：" }, { text: "今週", reading: "こんしゅう" }, { text: "の" }, { text: "土曜日", reading: "どようび" }, { text: "、" }, { text: "暇", reading: "ひま" }, { text: "ですか。" }], traduccion: { es: "¿Estás libre este sábado?", en: "Are you free this Saturday?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "ええ、たぶん" }, { text: "暇", reading: "ひま" }, { text: "です。" }, { text: "どうしてですか。" }], traduccion: { es: "Sí, probablemente esté libre. ¿Por qué?", en: "Yes, probably free. Why?" } },
+      { segments: [{ text: "Ａ：" }, { text: "もしよかったら、" }, { text: "一緒", reading: "いっしょ" }, { text: "に" }, { text: "映画", reading: "えいが" }, { text: "を" }, { text: "見", reading: "み" }, { text: "に" }, { text: "行きません", reading: "いきません" }, { text: "か。" }], traduccion: { es: "Si te parece bien, ¿vamos a ver una película juntos?", en: "If it's okay, would you like to go watch a movie together?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "映画", reading: "えいが" }, { text: "ですか。" }, { text: "いいですね。" }, { text: "何時", reading: "なんじ" }, { text: "に" }, { text: "会いましょう", reading: "あいましょう" }, { text: "か。" }], traduccion: { es: "¿Una película? Suena bien. ¿A qué hora nos vemos?", en: "A movie? Sounds nice. What time shall we meet?" } },
+      { segments: [{ text: "Ａ：" }, { text: "午後", reading: "ごご" }, { text: "三時", reading: "さんじ" }, { text: "に" }, { text: "駅", reading: "えき" }, { text: "の" }, { text: "前", reading: "まえ" }, { text: "で" }, { text: "会いましょう", reading: "あいましょう" }, { text: "。" }], traduccion: { es: "Nos vemos a las 3 de la tarde frente a la estación.", en: "Let's meet at 3 in the afternoon in front of the station." } },
+      { segments: [{ text: "Ｂ：" }, { text: "分かりました", reading: "わかりました" }, { text: "。" }, { text: "楽しみ", reading: "たのしみ" }, { text: "にしています。" }], traduccion: { es: "Entendido. Tengo muchas ganas.", en: "Got it. Looking forward to it." } },
+      { segments: [{ text: "Ａ：" }, { text: "私", reading: "わたし" }, { text: "も" }, { text: "楽しみ", reading: "たのしみ" }, { text: "です。" }, { text: "じゃあ、" }, { text: "土曜日", reading: "どようび" }, { text: "に。" }], traduccion: { es: "Yo también tengo ganas. Entonces, nos vemos el sábado.", en: "I'm looking forward to it too. See you Saturday then." } },
+      { segments: [{ text: "Ｂ：" }, { text: "はい、また" }, { text: "土曜日", reading: "どようび" }, { text: "に。" }], traduccion: { es: "Sí, hasta el sábado.", en: "Yes, see you Saturday." } },
+    ],
+  },
+  {
+    id: "time",
+    icon: "🕒",
+    titleKey: "jpConvTimeTitle",
+    lineas: [
+      { segments: [{ text: "Ａ：" }, { text: "すみません、" }, { text: "今", reading: "いま" }, { text: "何時", reading: "なんじ" }, { text: "ですか。" }], traduccion: { es: "Disculpa, ¿qué hora es?", en: "Excuse me, what time is it?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "今", reading: "いま" }, { text: "、" }, { text: "十時半", reading: "じゅうじはん" }, { text: "です。" }], traduccion: { es: "Ahora son las diez y media.", en: "It's ten thirty now." } },
+      { segments: [{ text: "Ａ：" }, { text: "会議", reading: "かいぎ" }, { text: "は" }, { text: "何時", reading: "なんじ" }, { text: "からですか。" }], traduccion: { es: "¿A qué hora empieza la reunión?", en: "What time does the meeting start?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "十一時", reading: "じゅういちじ" }, { text: "から" }, { text: "十二時", reading: "じゅうにじ" }, { text: "までです。" }], traduccion: { es: "Es de once a doce.", en: "It's from eleven to twelve." } },
+      { segments: [{ text: "Ａ：" }, { text: "じゃあ、あと" }, { text: "三十分", reading: "さんじゅっぷん" }, { text: "ありますね。" }], traduccion: { es: "Entonces todavía quedan treinta minutos.", en: "Then there's still thirty minutes left." } },
+      { segments: [{ text: "Ｂ：" }, { text: "そうですね。" }, { text: "お昼", reading: "おひる" }, { text: "ご" }, { text: "飯", reading: "はん" }, { text: "は" }, { text: "いつ" }, { text: "食べます", reading: "たべます" }, { text: "か。" }], traduccion: { es: "Así es. ¿Cuándo almorzamos?", en: "That's right. When do we eat lunch?" } },
+      { segments: [{ text: "Ａ：" }, { text: "一時", reading: "いちじ" }, { text: "に" }, { text: "食べましょう", reading: "たべましょう" }, { text: "。" }], traduccion: { es: "Comamos a la una.", en: "Let's eat at one." } },
+      { segments: [{ text: "Ｂ：" }, { text: "分かりました", reading: "わかりました" }, { text: "。" }, { text: "会議", reading: "かいぎ" }, { text: "の" }, { text: "後", reading: "あと" }, { text: "で" }, { text: "電話", reading: "でんわ" }, { text: "をしてもいいですか。" }], traduccion: { es: "Entendido. ¿Puedo hacer una llamada después de la reunión?", en: "Got it. Can I make a call after the meeting?" } },
+      { segments: [{ text: "Ａ：" }, { text: "いいですよ。" }, { text: "時間", reading: "じかん" }, { text: "はたくさんあります。" }], traduccion: { es: "Claro que sí. Hay mucho tiempo.", en: "Sure. There's plenty of time." } },
+      { segments: [{ text: "Ｂ：" }, { text: "ありがとうございます。" }], traduccion: { es: "Muchas gracias.", en: "Thank you very much." } },
+    ],
+  },
+  {
+    id: "weekdays",
+    icon: "📅",
+    titleKey: "jpConvWeekdaysTitle",
+    lineas: [
+      { segments: [{ text: "Ａ：" }, { text: "明日", reading: "あした" }, { text: "は" }, { text: "何曜日", reading: "なにようび" }, { text: "ですか。" }], traduccion: { es: "¿Qué día es mañana?", en: "What day is tomorrow?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "明日", reading: "あした" }, { text: "は" }, { text: "水曜日", reading: "すいようび" }, { text: "です。" }], traduccion: { es: "Mañana es miércoles.", en: "Tomorrow is Wednesday." } },
+      { segments: [{ text: "Ａ：" }, { text: "日本語", reading: "にほんご" }, { text: "の" }, { text: "授業", reading: "じゅぎょう" }, { text: "は" }, { text: "何曜日", reading: "なにようび" }, { text: "にありますか。" }], traduccion: { es: "¿Qué día tienen la clase de japonés?", en: "What day is the Japanese class?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "月曜日", reading: "げつようび" }, { text: "と" }, { text: "木曜日", reading: "もくようび" }, { text: "にあります。" }], traduccion: { es: "Es los lunes y jueves.", en: "It's on Mondays and Thursdays." } },
+      { segments: [{ text: "Ａ：" }, { text: "週末", reading: "しゅうまつ" }, { text: "は" }, { text: "何", reading: "なに" }, { text: "をしますか。" }], traduccion: { es: "¿Qué haces el fin de semana?", en: "What do you do on the weekend?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "土曜日", reading: "どようび" }, { text: "は" }, { text: "働いて", reading: "はたらいて" }, { text: "、" }, { text: "日曜日", reading: "にちようび" }, { text: "は" }, { text: "休みます", reading: "やすみます" }, { text: "。" }], traduccion: { es: "El sábado trabajo, y el domingo descanso.", en: "I work Saturday, and rest Sunday." } },
+      { segments: [{ text: "Ａ：" }, { text: "いいですね。" }, { text: "私", reading: "わたし" }, { text: "は" }, { text: "金曜日", reading: "きんようび" }, { text: "の" }, { text: "夜", reading: "よる" }, { text: "が" }, { text: "一番", reading: "いちばん" }, { text: "好き", reading: "すき" }, { text: "です。" }], traduccion: { es: "Qué bien. A mí me gusta más el viernes por la noche.", en: "Nice. I like Friday night the most." } },
+      { segments: [{ text: "Ｂ：" }, { text: "どうしてですか。" }], traduccion: { es: "¿Por qué?", en: "Why?" } },
+    ],
+  },
+  {
+    id: "demonstratives",
+    icon: "🛍️",
+    titleKey: "jpConvDemonstrativesTitle",
+    lineas: [
+      { segments: [{ text: "Ａ：" }, { text: "すみません、これはいくらですか。" }], traduccion: { es: "Disculpe, ¿cuánto cuesta esto?", en: "Excuse me, how much is this?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "それは" }, { text: "千円", reading: "せんえん" }, { text: "です。" }], traduccion: { es: "Eso cuesta mil yenes.", en: "That's one thousand yen." } },
+      { segments: [{ text: "Ａ：" }, { text: "じゃあ、あの" }, { text: "赤い", reading: "あかい" }, { text: "シャツはいくらですか。" }], traduccion: { es: "Entonces, ¿cuánto cuesta esa camisa roja de allá?", en: "Then how much is that red shirt over there?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "あれは" }, { text: "三千円", reading: "さんぜんえん" }, { text: "です。とても" }, { text: "人気", reading: "にんき" }, { text: "があります。" }], traduccion: { es: "Aquella cuesta tres mil yenes. Es muy popular.", en: "That one is three thousand yen. It's very popular." } },
+      { segments: [{ text: "Ａ：" }, { text: "この" }, { text: "靴", reading: "くつ" }, { text: "も" }, { text: "見て", reading: "みて" }, { text: "もいいですか。" }], traduccion: { es: "¿Puedo ver también estos zapatos?", en: "Can I also look at these shoes?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "もちろんです。その" }, { text: "靴", reading: "くつ" }, { text: "はサイズが" }, { text: "二十六", reading: "にじゅうろく" }, { text: "センチです。" }], traduccion: { es: "Por supuesto. Esos zapatos son de talla veintiséis.", en: "Of course. Those shoes are size twenty-six." } },
+      { segments: [{ text: "Ａ：" }, { text: "ちょうどいいです。この" }, { text: "靴", reading: "くつ" }, { text: "をください。" }], traduccion: { es: "Es justo mi talla. Deme estos zapatos por favor.", en: "That's just right. I'll take these shoes please." } },
+      { segments: [{ text: "Ｂ：" }, { text: "かしこまりました。そちらのレジへどうぞ。" }], traduccion: { es: "Entendido. Por favor vaya a esa caja.", en: "Understood. Please go to that register." } },
+      { segments: [{ text: "Ａ：" }, { text: "あの" }, { text: "鞄", reading: "かばん" }, { text: "も" }, { text: "素敵", reading: "すてき" }, { text: "ですね。あれはいくらですか。" }], traduccion: { es: "Ese bolso de allá también es lindo. ¿Cuánto cuesta aquel?", en: "That bag over there is nice too. How much is that one?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "申し訳ございません", reading: "もうしわけございません" }, { text: "、あれはもう" }, { text: "売り切れ", reading: "うりきれ" }, { text: "です。" }], traduccion: { es: "Lo siento mucho, aquel ya está agotado.", en: "I'm very sorry, that one is already sold out." } },
+      { segments: [{ text: "Ａ：" }, { text: "分かりました", reading: "わかりました" }, { text: "。" }, { text: "今日", reading: "きょう" }, { text: "はこれだけにします。" }], traduccion: { es: "Entendido. Hoy me quedo solo con esto.", en: "Understood. I'll just take this today." } },
+      { segments: [{ text: "Ｂ：" }, { text: "ありがとうございました。" }], traduccion: { es: "Muchas gracias.", en: "Thank you very much." } },
+    ],
+  },
+];
+
 const JP_MASTERY_THRESHOLD = 3; // respuestas correctas para brillo dorado + 3 estrellas
 
 // ---------------- Progresión por Nivel del Módulo Japonés ----------------
@@ -5430,6 +5562,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const jpViewVocabWords = document.getElementById("jp-view-vocab-words");
   const jpViewGrammar = document.getElementById("jp-view-grammar");
   const jpViewYoon = document.getElementById("jp-view-yoon");
+  const jpViewConversations = document.getElementById("jp-view-conversations");
   const jpViewMiniQuiz = document.getElementById("jp-view-mini-quiz");
   const jpViewLevelExam = document.getElementById("jp-view-level-exam");
 
@@ -5450,6 +5583,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const jpYoonBackBtn = document.getElementById("jp-yoon-back-btn");
   const jpYoonGrid = document.getElementById("jp-yoon-grid");
   const jpYoonQuizStartBtn = document.getElementById("jp-yoon-quiz-start-btn");
+
+  const jpConversationsOpenBtn = document.getElementById("jp-conversations-open-btn");
+  const jpConversationsBackBtn = document.getElementById("jp-conversations-back-btn");
+  const jpConversationSceneGrid = document.getElementById("jp-conversation-scene-grid");
+  const jpConversationReader = document.getElementById("jp-conversation-reader");
+  const jpConversationReaderBackBtn = document.getElementById("jp-conversation-reader-back-btn");
+  const jpConversationReaderTitle = document.getElementById("jp-conversation-reader-title");
+  const jpConversationAutoBtn = document.getElementById("jp-conversation-auto-btn");
+  const jpConversationLines = document.getElementById("jp-conversation-lines");
 
   const jpMiniQuizBackBtn = document.getElementById("jp-mini-quiz-back-btn");
   const jpMiniQuizPrompt = document.getElementById("jp-mini-quiz-prompt");
@@ -10935,12 +11077,14 @@ document.addEventListener("DOMContentLoaded", () => {
     jpViewVocabWords.hidden = view !== "vocab-words";
     jpViewGrammar.hidden = view !== "grammar";
     jpViewYoon.hidden = view !== "yoon";
+    jpViewConversations.hidden = view !== "conversations";
     jpViewMiniQuiz.hidden = view !== "mini-quiz";
     jpViewLevelExam.hidden = view !== "level-exam";
     if (view === "grid") renderGojuonGrid();
     if (view === "vocab") renderN5VocabCategories();
     if (view === "grammar") renderN5GrammarList();
     if (view === "yoon") renderYoonGrid();
+    if (view === "conversations") openConversationSceneGrid();
   }
 
   // ---------------- IndexedDB: progreso N5 + contenido curricular ----------------
@@ -11329,6 +11473,82 @@ document.addEventListener("DOMContentLoaded", () => {
   jpYoonOpenBtn.addEventListener("click", () => showJpView("yoon"));
   jpYoonBackBtn.addEventListener("click", () => showJpView("grid"));
   jpYoonQuizStartBtn.addEventListener("click", () => startMiniQuiz(buildYoonQuizItems(), "yoon", "yoon"));
+
+  // ---------------- Conversaciones Situacionales (N5_CONVERSATION_SCENES) ----------------
+  // `activeConversationReader` guarda el handle {detener} que devuelve
+  // MiikaeruReader.crearLector() — se usa para cortar una lectura
+  // automática en curso al navegar DENTRO del módulo (volver a las
+  // escenas, elegir otra escena). Cerrar el modal entero ya corta
+  // cualquier voz en curso vía closeAllAppModals() → speechSynthesis.cancel(),
+  // así que acá solo hace falta cubrir la navegación interna.
+  let activeConversationReader = null;
+
+  function renderConversationSceneGrid() {
+    jpConversationSceneGrid.innerHTML = "";
+    N5_CONVERSATION_SCENES.forEach((scene) => {
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className = "jp-vocab-cat-card";
+
+      const icon = document.createElement("span");
+      icon.className = "jp-vocab-cat-card__icon";
+      icon.textContent = scene.icon;
+
+      const title = document.createElement("span");
+      title.className = "jp-vocab-cat-card__title";
+      title.textContent = t(scene.titleKey);
+
+      const meta = document.createElement("span");
+      meta.className = "jp-vocab-cat-card__count";
+      meta.textContent = `${scene.lineas.length} ${t("jpConvLinesLabel")}`;
+
+      card.append(icon, title, meta);
+      card.addEventListener("click", () => openConversationScene(scene.id));
+      jpConversationSceneGrid.appendChild(card);
+    });
+  }
+
+  // Vuelve a la grilla de escenas (mostrar grilla, ocultar lector) —
+  // usada tanto al entrar por primera vez a la vista como al volver.
+  function openConversationSceneGrid() {
+    if (activeConversationReader) {
+      activeConversationReader.detener();
+      activeConversationReader = null;
+    }
+    jpConversationReader.hidden = true;
+    jpConversationSceneGrid.hidden = false;
+    renderConversationSceneGrid();
+  }
+
+  // Resuelve cada línea de la escena al idioma de interfaz actual —
+  // crearLector() espera `traduccion` como string plano, no como
+  // {es,en}. Con la interfaz en 日本語 se deja vacío en vez de caer a
+  // español, mismo criterio que N5_GRAMMAR_POINTS (nunca mostrar una
+  // traducción extranjera de apoyo cuando ya se está estudiando en
+  // japonés).
+  function resolveConversationLineas(scene) {
+    return scene.lineas.map((linea) => ({
+      segments: linea.segments,
+      traduccion: currentLanguage === "ja" ? "" : linea.traduccion[currentLanguage] || linea.traduccion.es,
+    }));
+  }
+
+  function openConversationScene(sceneId) {
+    const scene = N5_CONVERSATION_SCENES.find((s) => s.id === sceneId);
+    if (!scene) return;
+    jpConversationReaderTitle.textContent = `${scene.icon} ${t(scene.titleKey)}`;
+    jpConversationSceneGrid.hidden = true;
+    jpConversationReader.hidden = false;
+    activeConversationReader = window.MiikaeruReader.crearLector(
+      jpConversationLines,
+      resolveConversationLineas(scene),
+      jpConversationAutoBtn
+    );
+  }
+
+  jpConversationsOpenBtn.addEventListener("click", () => showJpView("conversations"));
+  jpConversationsBackBtn.addEventListener("click", () => showJpView("grid"));
+  jpConversationReaderBackBtn.addEventListener("click", openConversationSceneGrid);
 
   // ---------------- Mini-Quiz genérico (Vocabulario / Gramática) ----------------
   // Separado del quiz de kana/kanji de arriba (#jp-view-quiz, ligado a

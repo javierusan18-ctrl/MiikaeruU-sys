@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260804-17" />
+  <link rel="stylesheet" href="style.css?v=20260804-18" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -1661,6 +1661,11 @@
           <button type="button" class="btn-register jp-general-btn jp-hanzi-writer-open-btn" id="jp-hanzi-writer-open-btn" data-i18n="jpHanziWriterOpenBtn">✍️ Trazos Reales</button>
           <button type="button" class="btn-register jp-general-btn" id="jp-vocab-open-btn" data-i18n="jpVocabOpenBtn">📚 Vocabulario N5</button>
           <button type="button" class="btn-register jp-general-btn" id="jp-grammar-open-btn" data-i18n="jpGrammarOpenBtn">📖 Gramática N5</button>
+          <!-- Conversaciones Situacionales — pedido explícito: fábrica,
+               invitar a alguien a salir, la hora, días de la semana,
+               demostrativos これ/それ/あれ. Ver N5_CONVERSATION_SCENES en
+               app.js y jp-view-conversations más abajo. -->
+          <button type="button" class="btn-register jp-general-btn" id="jp-conversations-open-btn" data-i18n="jpConversationsOpenBtn">💬 Conversaciones</button>
           <!-- Módulo dedicado de partículas — pedido explícito: reutiliza
                buildParticleQuizItems() (app.js), entra directo desde acá
                en vez de estar escondido dentro de Gramática N5. -->
@@ -1800,6 +1805,33 @@
           <!-- combos renderizados por app.js -->
         </div>
         <button type="button" class="btn-register jp-general-btn" id="jp-yoon-quiz-start-btn" data-i18n="jpYoonQuizStart">🎯 Quiz de Yōon</button>
+      </div>
+
+      <!-- Sub-vista: Conversaciones Situacionales (N5_CONVERSATION_SCENES
+           en app.js) — grilla de escenas y, al elegir una, el mismo
+           lector de furigana+audio+lectura-automática que ya usa el
+           Modal de Lore (MiikaeruReader.crearLector(), readerEngine.js),
+           reutilizado tal cual (misma .reader-panel/.reader-lines). -->
+      <div class="jp-view" id="jp-view-conversations" hidden>
+        <button type="button" class="btn-jp-back" id="jp-conversations-back-btn" data-i18n="jpBackToGrid">← Volver</button>
+        <h3 class="payroll-section-title" data-i18n="jpConversationsTitle">💬 Conversaciones Situacionales</h3>
+
+        <div class="jp-vocab-cat-grid" id="jp-conversation-scene-grid">
+          <!-- 5 tarjetas de escena (mismo patrón visual que
+               .jp-vocab-cat-card — icono/título/contador — reutilizado
+               tal cual), renderizadas por app.js -->
+        </div>
+
+        <div class="jp-conversation-reader" id="jp-conversation-reader" hidden>
+          <button type="button" class="btn-jp-back" id="jp-conversation-reader-back-btn" data-i18n="jpConvBackToScenes">← Volver a las escenas</button>
+          <h4 class="jp-vocab-words__title" id="jp-conversation-reader-title"></h4>
+          <div class="reader-panel">
+            <div class="reader-panel__controls">
+              <button type="button" class="reader-panel__auto-btn" id="jp-conversation-auto-btn">▶ Lectura automática</button>
+            </div>
+            <div class="reader-lines" id="jp-conversation-lines"></div>
+          </div>
+        </div>
       </div>
 
       <!-- Sub-vista: quiz genérico de opción múltiple, reutilizado por
@@ -2446,7 +2478,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260804-17"></script>
+  <script src="app.js?v=20260804-18"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de
