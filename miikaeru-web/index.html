@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260804-21" />
+  <link rel="stylesheet" href="style.css?v=20260804-22" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -1649,6 +1649,18 @@
            módulo — pedido explícito. -->
       <button type="button" class="btn-jp-config" id="jp-config-reopen-btn" data-i18n-title="jpConfigReopenTitle" title="Cambiar idioma / modo">⚙️ <span id="jp-mode-badge" data-i18n="jpModePractica">Práctica</span></button>
 
+      <!-- Botón flotante de "Volver atrás" — pedido explícito: el módulo
+           de Idiomas es la vista con más niveles de navegación anidada de
+           toda la app (grilla → categoría → lista de palabras → quiz,
+           etc.), y hasta ahora cada sub-vista tenía su PROPIO botón de
+           volver arriba del todo, lejos del pulgar en celular. Este botón
+           único vive fijo en la esquina superior izquierda del modal
+           (grande, fácil de tocar al primer intento) y su click.js decide
+           a qué vista volver según cuál esté visible en ese momento (ver
+           updateJpFloatingBackBtn()/su listener en app.js) — se oculta
+           solo en la grilla principal, que ya no tiene a dónde volver. -->
+      <button type="button" class="btn-jp-floating-back" id="jp-floating-back-btn" data-i18n-title="jpFloatingBackTitle" title="Volver atrás" aria-label="Volver atrás" hidden>←</button>
+
       <!-- Sub-vista 1: cuadrícula Gojuon, elegir fila o práctica general -->
       <div class="jp-view" id="jp-view-grid">
         <!-- "Volver" claro y accesible al menú principal — antes esta
@@ -2530,7 +2542,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260804-21"></script>
+  <script src="app.js?v=20260804-22"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de

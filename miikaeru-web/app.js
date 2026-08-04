@@ -1301,6 +1301,7 @@ const I18N = {
     jpMiniQuizVocabPrompt: "¿Qué significa esta palabra?",
     jpMiniQuizGrammarPrompt: "¿Qué partícula falta?",
     jpBackToMenu: "← Volver al Menú",
+    jpFloatingBackTitle: "Volver atrás",
     jpParticlesOpenBtn: "🧩 Práctica de Partículas",
     jpParticleQuizPrompt: "Completa la partícula que falta:",
     jpLockedAt: "Se desbloquea en el Nivel",
@@ -1339,6 +1340,7 @@ const I18N = {
     n4CatSociety: "Sociedad y Vida Diaria",
     n4CatTech: "Tecnología y Comunicación",
     n4CatConnectors: "Conectores y Expresiones",
+    n4CatTeform: "Verbos: Forma Te / Ta",
     n5GramWaTitle: "は — Partícula de Tema",
     n5GramMoTitle: "も — También",
     n5GramOTitle: "を — Objeto Directo",
@@ -2007,6 +2009,7 @@ const I18N = {
     jpMiniQuizVocabPrompt: "What does this word mean?",
     jpMiniQuizGrammarPrompt: "Which particle is missing?",
     jpBackToMenu: "← Back to Menu",
+    jpFloatingBackTitle: "Go back",
     jpParticlesOpenBtn: "🧩 Particle Practice",
     jpParticleQuizPrompt: "Fill in the missing particle:",
     jpLockedAt: "Unlocks at Level",
@@ -2045,6 +2048,7 @@ const I18N = {
     n4CatSociety: "Society and Daily Life",
     n4CatTech: "Technology and Communication",
     n4CatConnectors: "Connectors and Expressions",
+    n4CatTeform: "Verbs: Te / Ta Form",
     n5GramWaTitle: "は — Topic Particle",
     n5GramMoTitle: "も — Also/Too",
     n5GramOTitle: "を — Direct Object",
@@ -2713,6 +2717,7 @@ const I18N = {
     jpMiniQuizVocabPrompt: "この単語の意味は？",
     jpMiniQuizGrammarPrompt: "どの助詞が抜けている？",
     jpBackToMenu: "← メニューに戻る",
+    jpFloatingBackTitle: "戻る",
     jpParticlesOpenBtn: "🧩 助詞の練習",
     jpParticleQuizPrompt: "抜けている助詞を入力してください：",
     jpLockedAt: "レベルで解放:",
@@ -2751,6 +2756,7 @@ const I18N = {
     n4CatSociety: "社会と生活",
     n4CatTech: "テクノロジーとコミュニケーション",
     n4CatConnectors: "接続詞と表現",
+    n4CatTeform: "動詞：て形・た形",
     n5GramWaTitle: "は — 主題の助詞",
     n5GramMoTitle: "も — 〜も",
     n5GramOTitle: "を — 目的語",
@@ -3717,6 +3723,16 @@ const N5_VOCAB_CATEGORIES = [
       { kana: "いただきます", kanji: null, romaji: "itadakimasu", meaning: { es: "(antes de comer)", en: "(before eating)" } },
       { kana: "ごちそうさまでした", kanji: null, romaji: "gochisousama deshita", meaning: { es: "(después de comer)", en: "(after eating)" } },
       { kana: "いってきます", kanji: null, romaji: "ittekimasu", meaning: { es: "ya vuelvo / me voy", en: "I'm off (I'll be back)" } },
+      { kana: "いってらっしゃい", kanji: null, romaji: "itterasshai", meaning: { es: "que te vaya bien (al despedir)", en: "have a good day (seeing someone off)" } },
+      { kana: "ただいま", kanji: null, romaji: "tadaima", meaning: { es: "ya llegué", en: "I'm home" } },
+      { kana: "おかえりなさい", kanji: null, romaji: "okaerinasai", meaning: { es: "bienvenido de vuelta", en: "welcome back" } },
+      { kana: "しつれいします", kanji: "失礼します", romaji: "shitsurei shimasu", meaning: { es: "con permiso / disculpe (al entrar/salir)", en: "excuse me (entering/leaving)" } },
+      { kana: "おめでとうございます", kanji: null, romaji: "omedetou gozaimasu", meaning: { es: "felicidades", en: "congratulations" } },
+      { kana: "どういたしまして", kanji: null, romaji: "dou itashimashite", meaning: { es: "de nada", en: "you're welcome" } },
+      { kana: "おだいじに", kanji: null, romaji: "odaiji ni", meaning: { es: "que te mejores", en: "take care / get well soon" } },
+      { kana: "がんばってください", kanji: "頑張ってください", romaji: "ganbatte kudasai", meaning: { es: "esfuérzate / suerte", en: "good luck / do your best" } },
+      { kana: "ようこそ", kanji: null, romaji: "youkoso", meaning: { es: "bienvenido", en: "welcome" } },
+      { kana: "またね", kanji: null, romaji: "mata ne", meaning: { es: "nos vemos", en: "see you" } },
     ],
   },
   {
@@ -3738,6 +3754,19 @@ const N5_VOCAB_CATEGORIES = [
       { kana: "にじゅう", kanji: "二十", romaji: "nijuu", meaning: { es: "veinte", en: "twenty" } },
       { kana: "ひゃく", kanji: "百", romaji: "hyaku", meaning: { es: "cien", en: "one hundred" } },
       { kana: "せん", kanji: "千", romaji: "sen", meaning: { es: "mil", en: "one thousand" } },
+      { kana: "まん", kanji: "万", romaji: "man", meaning: { es: "diez mil", en: "ten thousand" } },
+      { kana: "ひとつ", kanji: "一つ", romaji: "hitotsu", meaning: { es: "uno (contador nativo)", en: "one (native counter)" } },
+      { kana: "ふたつ", kanji: "二つ", romaji: "futatsu", meaning: { es: "dos (contador nativo)", en: "two (native counter)" } },
+      { kana: "みっつ", kanji: "三つ", romaji: "mittsu", meaning: { es: "tres (contador nativo)", en: "three (native counter)" } },
+      { kana: "よっつ", kanji: "四つ", romaji: "yottsu", meaning: { es: "cuatro (contador nativo)", en: "four (native counter)" } },
+      { kana: "いつつ", kanji: "五つ", romaji: "itsutsu", meaning: { es: "cinco (contador nativo)", en: "five (native counter)" } },
+      { kana: "むっつ", kanji: "六つ", romaji: "muttsu", meaning: { es: "seis (contador nativo)", en: "six (native counter)" } },
+      { kana: "ななつ", kanji: "七つ", romaji: "nanatsu", meaning: { es: "siete (contador nativo)", en: "seven (native counter)" } },
+      { kana: "やっつ", kanji: "八つ", romaji: "yattsu", meaning: { es: "ocho (contador nativo)", en: "eight (native counter)" } },
+      { kana: "ここのつ", kanji: "九つ", romaji: "kokonotsu", meaning: { es: "nueve (contador nativo)", en: "nine (native counter)" } },
+      { kana: "とお", kanji: "十", romaji: "too", meaning: { es: "diez (contador nativo)", en: "ten (native counter)" } },
+      { kana: "なんばん", kanji: "何番", romaji: "nanban", meaning: { es: "¿qué número?", en: "what number?" } },
+      { kana: "ばんごう", kanji: "番号", romaji: "bangou", meaning: { es: "número (de identificación)", en: "number (ID)" } },
     ],
   },
   {
@@ -3757,6 +3786,16 @@ const N5_VOCAB_CATEGORIES = [
       { kana: "なんじ", kanji: "何時", romaji: "nanji", meaning: { es: "¿qué hora?", en: "what time?" } },
       { kana: "せんしゅう", kanji: "先週", romaji: "senshuu", meaning: { es: "la semana pasada", en: "last week" } },
       { kana: "らいしゅう", kanji: "来週", romaji: "raishuu", meaning: { es: "la próxima semana", en: "next week" } },
+      { kana: "おととい", kanji: "一昨日", romaji: "ototoi", meaning: { es: "anteayer", en: "the day before yesterday" } },
+      { kana: "あさって", kanji: "明後日", romaji: "asatte", meaning: { es: "pasado mañana", en: "the day after tomorrow" } },
+      { kana: "ことし", kanji: "今年", romaji: "kotoshi", meaning: { es: "este año", en: "this year" } },
+      { kana: "らいねん", kanji: "来年", romaji: "rainen", meaning: { es: "el próximo año", en: "next year" } },
+      { kana: "きょねん", kanji: "去年", romaji: "kyonen", meaning: { es: "el año pasado", en: "last year" } },
+      { kana: "まいあさ", kanji: "毎朝", romaji: "maiasa", meaning: { es: "todas las mañanas", en: "every morning" } },
+      { kana: "まいばん", kanji: "毎晩", romaji: "maiban", meaning: { es: "todas las noches", en: "every night" } },
+      { kana: "たんじょうび", kanji: "誕生日", romaji: "tanjoubi", meaning: { es: "cumpleaños", en: "birthday" } },
+      { kana: "ふん / ぷん", kanji: "分", romaji: "fun / pun", meaning: { es: "minuto", en: "minute" } },
+      { kana: "びょう", kanji: "秒", romaji: "byou", meaning: { es: "segundo", en: "second" } },
     ],
   },
   {
@@ -3776,6 +3815,16 @@ const N5_VOCAB_CATEGORIES = [
       { kana: "こども", kanji: "子供", romaji: "kodomo", meaning: { es: "niño / niña", en: "child" } },
       { kana: "つま", kanji: "妻", romaji: "tsuma", meaning: { es: "esposa", en: "wife" } },
       { kana: "おっと", kanji: "夫", romaji: "otto", meaning: { es: "esposo", en: "husband" } },
+      { kana: "そふ", kanji: "祖父", romaji: "sofu", meaning: { es: "mi abuelo", en: "my grandfather" } },
+      { kana: "そぼ", kanji: "祖母", romaji: "sobo", meaning: { es: "mi abuela", en: "my grandmother" } },
+      { kana: "おじいさん", kanji: null, romaji: "ojiisan", meaning: { es: "abuelo (de otro / formal)", en: "grandfather (someone else's)" } },
+      { kana: "おばあさん", kanji: null, romaji: "obaasan", meaning: { es: "abuela (de otro / formal)", en: "grandmother (someone else's)" } },
+      { kana: "おじさん", kanji: null, romaji: "ojisan", meaning: { es: "tío", en: "uncle" } },
+      { kana: "おばさん", kanji: null, romaji: "obasan", meaning: { es: "tía", en: "aunt" } },
+      { kana: "いとこ", kanji: null, romaji: "itoko", meaning: { es: "primo / prima", en: "cousin" } },
+      { kana: "まご", kanji: "孫", romaji: "mago", meaning: { es: "nieto / nieta", en: "grandchild" } },
+      { kana: "りょうしん", kanji: "両親", romaji: "ryoushin", meaning: { es: "padres", en: "parents" } },
+      { kana: "きょうだい", kanji: "兄弟", romaji: "kyoudai", meaning: { es: "hermanos", en: "siblings" } },
     ],
   },
   {
@@ -3801,6 +3850,16 @@ const N5_VOCAB_CATEGORIES = [
       { kana: "わかります", kanji: "分かります", romaji: "wakarimasu", meaning: { es: "entender", en: "to understand" } },
       { kana: "ねます", kanji: "寝ます", romaji: "nemasu", meaning: { es: "dormir", en: "to sleep" } },
       { kana: "おきます", kanji: "起きます", romaji: "okimasu", meaning: { es: "levantarse", en: "to wake up / get up" } },
+      { kana: "あそびます", kanji: "遊びます", romaji: "asobimasu", meaning: { es: "jugar", en: "to play" } },
+      { kana: "あらいます", kanji: "洗います", romaji: "araimasu", meaning: { es: "lavar", en: "to wash" } },
+      { kana: "うたいます", kanji: "歌います", romaji: "utaimasu", meaning: { es: "cantar", en: "to sing" } },
+      { kana: "でかけます", kanji: "出かけます", romaji: "dekakemasu", meaning: { es: "salir (de casa)", en: "to go out" } },
+      { kana: "はいります", kanji: "入ります", romaji: "hairimasu", meaning: { es: "entrar", en: "to enter" } },
+      { kana: "でます", kanji: "出ます", romaji: "demasu", meaning: { es: "salir (de un lugar)", en: "to exit / leave" } },
+      { kana: "とまります", kanji: "止まります", romaji: "tomarimasu", meaning: { es: "detenerse / parar", en: "to stop" } },
+      { kana: "うんてんします", kanji: "運転します", romaji: "unten shimasu", meaning: { es: "conducir", en: "to drive" } },
+      { kana: "りょこうします", kanji: "旅行します", romaji: "ryokou shimasu", meaning: { es: "viajar", en: "to travel" } },
+      { kana: "よびます", kanji: "呼びます", romaji: "yobimasu", meaning: { es: "llamar (a alguien)", en: "to call (someone)" } },
     ],
   },
   {
@@ -3818,6 +3877,11 @@ const N5_VOCAB_CATEGORIES = [
       { kana: "ピンク", kanji: null, romaji: "pinku", meaning: { es: "rosa", en: "pink" } },
       { kana: "オレンジ", kanji: null, romaji: "orenji", meaning: { es: "naranja", en: "orange" } },
       { kana: "むらさき", kanji: "紫", romaji: "murasaki", meaning: { es: "morado", en: "purple" } },
+      { kana: "きんいろ", kanji: "金色", romaji: "kin'iro", meaning: { es: "dorado", en: "gold (color)" } },
+      { kana: "ぎんいろ", kanji: "銀色", romaji: "gin'iro", meaning: { es: "plateado", en: "silver (color)" } },
+      { kana: "みずいろ", kanji: "水色", romaji: "mizuiro", meaning: { es: "celeste", en: "light blue" } },
+      { kana: "はいいろ", kanji: "灰色", romaji: "haiiro", meaning: { es: "gris", en: "gray" } },
+      { kana: "いろ", kanji: "色", romaji: "iro", meaning: { es: "color", en: "color" } },
     ],
   },
   {
@@ -3835,6 +3899,16 @@ const N5_VOCAB_CATEGORIES = [
       { kana: "くだもの", kanji: "果物", romaji: "kudamono", meaning: { es: "fruta", en: "fruit" } },
       { kana: "たまご", kanji: "卵", romaji: "tamago", meaning: { es: "huevo", en: "egg" } },
       { kana: "ぎゅうにゅう", kanji: "牛乳", romaji: "gyuunyuu", meaning: { es: "leche", en: "milk" } },
+      { kana: "とりにく", kanji: "鶏肉", romaji: "toriniku", meaning: { es: "pollo (carne)", en: "chicken (meat)" } },
+      { kana: "ぶたにく", kanji: "豚肉", romaji: "butaniku", meaning: { es: "cerdo (carne)", en: "pork" } },
+      { kana: "ぎゅうにく", kanji: "牛肉", romaji: "gyuuniku", meaning: { es: "res (carne)", en: "beef" } },
+      { kana: "みそしる", kanji: "味噌汁", romaji: "misoshiru", meaning: { es: "sopa de miso", en: "miso soup" } },
+      { kana: "らーめん", kanji: null, romaji: "raamen", meaning: { es: "ramen", en: "ramen" } },
+      { kana: "すし", kanji: "寿司", romaji: "sushi", meaning: { es: "sushi", en: "sushi" } },
+      { kana: "さとう", kanji: "砂糖", romaji: "satou", meaning: { es: "azúcar", en: "sugar" } },
+      { kana: "しお", kanji: "塩", romaji: "shio", meaning: { es: "sal", en: "salt" } },
+      { kana: "しょうゆ", kanji: "醤油", romaji: "shouyu", meaning: { es: "salsa de soja", en: "soy sauce" } },
+      { kana: "おなかがすきました", kanji: null, romaji: "onaka ga sukimashita", meaning: { es: "tengo hambre", en: "I'm hungry" } },
     ],
   },
   {
@@ -3853,6 +3927,16 @@ const N5_VOCAB_CATEGORIES = [
       { kana: "こうえん", kanji: "公園", romaji: "kouen", meaning: { es: "parque", en: "park" } },
       { kana: "トイレ", kanji: null, romaji: "toire", meaning: { es: "baño", en: "restroom" } },
       { kana: "へや", kanji: "部屋", romaji: "heya", meaning: { es: "habitación", en: "room" } },
+      { kana: "ゆうびんきょく", kanji: "郵便局", romaji: "yuubinkyoku", meaning: { es: "oficina de correos", en: "post office" } },
+      { kana: "きっさてん", kanji: "喫茶店", romaji: "kissaten", meaning: { es: "cafetería", en: "coffee shop" } },
+      { kana: "レストラン", kanji: null, romaji: "resutoran", meaning: { es: "restaurante", en: "restaurant" } },
+      { kana: "スーパー", kanji: null, romaji: "suupaa", meaning: { es: "supermercado", en: "supermarket" } },
+      { kana: "まち", kanji: "町", romaji: "machi", meaning: { es: "pueblo / ciudad", en: "town" } },
+      { kana: "くに", kanji: "国", romaji: "kuni", meaning: { es: "país", en: "country" } },
+      { kana: "みち", kanji: "道", romaji: "michi", meaning: { es: "camino / calle", en: "road / street" } },
+      { kana: "だいがく", kanji: "大学", romaji: "daigaku", meaning: { es: "universidad", en: "university" } },
+      { kana: "きょうしつ", kanji: "教室", romaji: "kyoushitsu", meaning: { es: "aula", en: "classroom" } },
+      { kana: "エレベーター", kanji: null, romaji: "erebeetaa", meaning: { es: "ascensor", en: "elevator" } },
     ],
   },
   {
@@ -3878,6 +3962,16 @@ const N5_VOCAB_CATEGORIES = [
       { kana: "げんき", kanji: "元気", romaji: "genki", meaning: { es: "sano / animado (na-adj)", en: "healthy / energetic (na-adj)" } },
       { kana: "しずか", kanji: "静か", romaji: "shizuka", meaning: { es: "tranquilo (na-adj)", en: "quiet (na-adj)" } },
       { kana: "すき", kanji: "好き", romaji: "suki", meaning: { es: "gustar (na-adj)", en: "to like (na-adj)" } },
+      { kana: "ながい", kanji: "長い", romaji: "nagai", meaning: { es: "largo", en: "long" } },
+      { kana: "みじかい", kanji: "短い", romaji: "mijikai", meaning: { es: "corto", en: "short" } },
+      { kana: "おもい", kanji: "重い", romaji: "omoi", meaning: { es: "pesado", en: "heavy" } },
+      { kana: "かるい", kanji: "軽い", romaji: "karui", meaning: { es: "liviano", en: "light (weight)" } },
+      { kana: "つよい", kanji: "強い", romaji: "tsuyoi", meaning: { es: "fuerte", en: "strong" } },
+      { kana: "よわい", kanji: "弱い", romaji: "yowai", meaning: { es: "débil", en: "weak" } },
+      { kana: "はやい", kanji: "早い / 速い", romaji: "hayai", meaning: { es: "temprano / rápido", en: "early / fast" } },
+      { kana: "おそい", kanji: "遅い", romaji: "osoi", meaning: { es: "tarde / lento", en: "late / slow" } },
+      { kana: "おいしい", kanji: null, romaji: "oishii", meaning: { es: "delicioso", en: "delicious" } },
+      { kana: "まずい", kanji: null, romaji: "mazui", meaning: { es: "sabe mal", en: "tastes bad" } },
     ],
   },
   {
@@ -3899,6 +3993,16 @@ const N5_VOCAB_CATEGORIES = [
       { kana: "かみ", kanji: "紙", romaji: "kami", meaning: { es: "papel", en: "paper" } },
       { kana: "えんぴつ", kanji: "鉛筆", romaji: "enpitsu", meaning: { es: "lápiz", en: "pencil" } },
       { kana: "かぎ", kanji: "鍵", romaji: "kagi", meaning: { es: "llave", en: "key" } },
+      { kana: "さいふ", kanji: "財布", romaji: "saifu", meaning: { es: "billetera", en: "wallet" } },
+      { kana: "しんぶん", kanji: "新聞", romaji: "shinbun", meaning: { es: "periódico", en: "newspaper" } },
+      { kana: "テーブル", kanji: null, romaji: "teeburu", meaning: { es: "mesa", en: "table" } },
+      { kana: "ベッド", kanji: null, romaji: "beddo", meaning: { es: "cama", en: "bed" } },
+      { kana: "コップ", kanji: null, romaji: "koppu", meaning: { es: "vaso", en: "cup / glass" } },
+      { kana: "さら", kanji: "皿", romaji: "sara", meaning: { es: "plato", en: "plate" } },
+      { kana: "はし", kanji: "箸", romaji: "hashi", meaning: { es: "palillos", en: "chopsticks" } },
+      { kana: "テレビ", kanji: null, romaji: "terebi", meaning: { es: "televisión", en: "television" } },
+      { kana: "カメラ", kanji: null, romaji: "kamera", meaning: { es: "cámara", en: "camera" } },
+      { kana: "じてんしゃ", kanji: "自転車", romaji: "jitensha", meaning: { es: "bicicleta", en: "bicycle" } },
     ],
   },
 ];
@@ -4246,7 +4350,17 @@ const N5_CONVERSATION_SCENES = [
       { segments: [{ text: "Ｂ：" }, { text: "分かりました", reading: "わかりました" }, { text: "。" }, { text: "手袋", reading: "てぶくろ" }, { text: "と" }, { text: "ヘルメットを" }, { text: "着けます", reading: "つけます" }, { text: "。" }], traduccion: { es: "Entendido. Me pondré los guantes y el casco.", en: "Understood. I'll put on gloves and a helmet." } },
       { segments: [{ text: "Ａ：" }, { text: "いいですね。" }, { text: "お昼", reading: "おひる" }, { text: "は" }, { text: "どこで" }, { text: "食べます", reading: "たべます" }, { text: "か。" }], traduccion: { es: "Muy bien. ¿Dónde vas a almorzar?", en: "Good. Where will you eat lunch?" } },
       { segments: [{ text: "Ｂ：" }, { text: "食堂", reading: "しょくどう" }, { text: "で" }, { text: "食べます", reading: "たべます" }, { text: "。" }, { text: "一緒", reading: "いっしょ" }, { text: "に" }, { text: "行きません", reading: "いきません" }, { text: "か。" }], traduccion: { es: "Voy a comer en el comedor. ¿Vamos juntos?", en: "I'll eat in the cafeteria. Want to go together?" } },
-      { segments: [{ text: "Ａ：" }, { text: "いいですね、" }, { text: "行きましょう", reading: "いきましょう" }, { text: "。" }, { text: "今日", reading: "きょう" }, { text: "も" }, { text: "お疲れ様", reading: "おつかれさま" }, { text: "でした。" }], traduccion: { es: "Buena idea, vamos. Buen trabajo hoy también.", en: "Sounds good, let's go. Great work today too." } },
+      { segments: [{ text: "Ａ：" }, { text: "いいですね。" }, { text: "食堂", reading: "しょくどう" }, { text: "で" }, { text: "会いましょう", reading: "あいましょう" }, { text: "。" }], traduccion: { es: "Buena idea. Nos vemos en el comedor.", en: "Sounds good. Let's meet at the cafeteria." } },
+      { segments: [{ text: "Ｂ：" }, { text: "午後", reading: "ごご" }, { text: "も" }, { text: "点検", reading: "てんけん" }, { text: "を" }, { text: "続けます", reading: "つづけます" }, { text: "か。" }], traduccion: { es: "¿Continuamos la revisión por la tarde también?", en: "Do we continue the inspection in the afternoon too?" } },
+      { segments: [{ text: "Ａ：" }, { text: "はい、" }, { text: "午後", reading: "ごご" }, { text: "一時", reading: "いちじ" }, { text: "から" }, { text: "三時", reading: "さんじ" }, { text: "まで" }, { text: "続けます", reading: "つづけます" }, { text: "。" }], traduccion: { es: "Sí, continuamos de la una a las tres de la tarde.", en: "Yes, we continue from 1 to 3 in the afternoon." } },
+      { segments: [{ text: "Ｂ：" }, { text: "分かりました", reading: "わかりました" }, { text: "。" }, { text: "あ、" }, { text: "この" }, { text: "機械", reading: "きかい" }, { text: "の" }, { text: "音", reading: "おと" }, { text: "が" }, { text: "変", reading: "へん" }, { text: "です。" }], traduccion: { es: "Entendido. Ah, el sonido de esta máquina es raro.", en: "Understood. Oh, this machine's sound is strange." } },
+      { segments: [{ text: "Ａ：" }, { text: "本当", reading: "ほんとう" }, { text: "ですか。" }, { text: "すぐに" }, { text: "止めて", reading: "とめて" }, { text: "ください。" }, { text: "危険", reading: "きけん" }, { text: "かもしれません", reading: "かもしれません" }, { text: "。" }], traduccion: { es: "¿En serio? Detenla enseguida. Podría ser peligroso.", en: "Really? Please stop it right away. It might be dangerous." } },
+      { segments: [{ text: "Ｂ：" }, { text: "はい、" }, { text: "止めました", reading: "とめました" }, { text: "。" }, { text: "修理", reading: "しゅうり" }, { text: "の" }, { text: "人", reading: "ひと" }, { text: "を" }, { text: "呼びましょう", reading: "よびましょう" }, { text: "か。" }], traduccion: { es: "Sí, la detuve. ¿Llamamos al técnico de reparación?", en: "Yes, I stopped it. Shall we call the repair technician?" } },
+      { segments: [{ text: "Ａ：" }, { text: "お願いします", reading: "おねがいします" }, { text: "。" }, { text: "報告書", reading: "ほうこくしょ" }, { text: "も" }, { text: "書いて", reading: "かいて" }, { text: "ください。" }], traduccion: { es: "Por favor. Escribe también el informe.", en: "Please do. Also write up the report." } },
+      { segments: [{ text: "Ｂ：" }, { text: "分かりました", reading: "わかりました" }, { text: "。" }, { text: "写真", reading: "しゃしん" }, { text: "を" }, { text: "撮って", reading: "とって" }, { text: "、" }, { text: "報告書", reading: "ほうこくしょ" }, { text: "に" }, { text: "付けます", reading: "つけます" }, { text: "。" }], traduccion: { es: "Entendido. Tomaré fotos y las adjuntaré al informe.", en: "Understood. I'll take photos and attach them to the report." } },
+      { segments: [{ text: "Ａ：" }, { text: "ありがとうございます。" }, { text: "助かりました", reading: "たすかりました" }, { text: "。" }], traduccion: { es: "Muchas gracias. Me ayudaste mucho.", en: "Thank you very much. You really helped me." } },
+      { segments: [{ text: "Ｂ：" }, { text: "いいえ、" }, { text: "当然", reading: "とうぜん" }, { text: "です。" }, { text: "他", reading: "ほか" }, { text: "に" }, { text: "何か", reading: "なにか" }, { text: "手伝う", reading: "てつだう" }, { text: "こと", reading: "こと" }, { text: "は" }, { text: "ありますか。" }], traduccion: { es: "No, es lo normal. ¿Hay algo más en que pueda ayudar?", en: "No, it's only natural. Is there anything else I can help with?" } },
+      { segments: [{ text: "Ａ：" }, { text: "大丈夫", reading: "だいじょうぶ" }, { text: "です。" }, { text: "今日", reading: "きょう" }, { text: "も" }, { text: "お疲れ様", reading: "おつかれさま" }, { text: "でした。" }], traduccion: { es: "Está bien. Buen trabajo hoy también.", en: "It's fine. Great work today too." } },
       { segments: [{ text: "Ｂ：" }, { text: "お疲れ様", reading: "おつかれさま" }, { text: "でした。" }, { text: "また" }, { text: "明日", reading: "あした" }, { text: "。" }], traduccion: { es: "Buen trabajo. Hasta mañana.", en: "Good work. See you tomorrow." } },
     ],
   },
@@ -4348,6 +4462,16 @@ const N4_VOCAB_CATEGORIES = [
       { kana: "おくります", kanji: "送ります", romaji: "okurimasu", meaning: { es: "enviar", en: "to send" }, example: { jp: "メールを送ります。", reading: "めーるをおくります。", translation: { es: "Envío un correo.", en: "I send an email." } } },
       { kana: "かります", kanji: "借ります", romaji: "karimasu", meaning: { es: "pedir prestado", en: "to borrow" }, example: { jp: "本を借ります。", reading: "ほんをかります。", translation: { es: "Pido prestado un libro.", en: "I borrow a book." } } },
       { kana: "かえします", kanji: "返します", romaji: "kaeshimasu", meaning: { es: "devolver", en: "to return (something)" }, example: { jp: "傘を返します。", reading: "かさをかえします。", translation: { es: "Devuelvo el paraguas.", en: "I return the umbrella." } } },
+      { kana: "つづけます", kanji: "続けます", romaji: "tsuzukemasu", meaning: { es: "continuar", en: "to continue" }, example: { jp: "日本語の勉強を続けます。", reading: "にほんごのべんきょうをつづけます。", translation: { es: "Continúo estudiando japonés.", en: "I continue studying Japanese." } } },
+      { kana: "はじめます", kanji: "始めます", romaji: "hajimemasu", meaning: { es: "empezar (algo)", en: "to begin (something)" }, example: { jp: "新しい仕事を始めます。", reading: "あたらしいしごとをはじめます。", translation: { es: "Empiezo un trabajo nuevo.", en: "I'm starting a new job." } } },
+      { kana: "おわります", kanji: "終わります", romaji: "owarimasu", meaning: { es: "terminar", en: "to end" }, example: { jp: "会議は五時に終わります。", reading: "かいぎはごじにおわります。", translation: { es: "La reunión termina a las cinco.", en: "The meeting ends at five." } } },
+      { kana: "かわります", kanji: "変わります", romaji: "kawarimasu", meaning: { es: "cambiar (por sí mismo)", en: "to change (itself)" }, example: { jp: "天気が変わりました。", reading: "てんきがかわりました。", translation: { es: "El clima cambió.", en: "The weather changed." } } },
+      { kana: "かえます", kanji: "変えます", romaji: "kaemasu", meaning: { es: "cambiar (algo)", en: "to change (something)" }, example: { jp: "予定を変えます。", reading: "よていをかえます。", translation: { es: "Cambio los planes.", en: "I'm changing the plans." } } },
+      { kana: "とどきます", kanji: "届きます", romaji: "todokimasu", meaning: { es: "llegar (algo enviado)", en: "to arrive / be delivered" }, example: { jp: "荷物が届きました。", reading: "にもつがとどきました。", translation: { es: "El paquete llegó.", en: "The package arrived." } } },
+      { kana: "わたします", kanji: "渡します", romaji: "watashimasu", meaning: { es: "entregar", en: "to hand over" }, example: { jp: "書類を渡します。", reading: "しょるいをわたします。", translation: { es: "Entrego los documentos.", en: "I hand over the documents." } } },
+      { kana: "さがします", kanji: "探します", romaji: "sagashimasu", meaning: { es: "buscar", en: "to search" }, example: { jp: "仕事を探しています。", reading: "しごとをさがしています。", translation: { es: "Estoy buscando trabajo.", en: "I'm looking for a job." } } },
+      { kana: "みつけます", kanji: "見つけます", romaji: "mitsukemasu", meaning: { es: "encontrar", en: "to find" }, example: { jp: "いい部屋を見つけました。", reading: "いいへやをみつけました。", translation: { es: "Encontré un buen departamento.", en: "I found a good apartment." } } },
+      { kana: "えらびます", kanji: "選びます", romaji: "erabimasu", meaning: { es: "elegir", en: "to choose" }, example: { jp: "色を選びます。", reading: "いろをえらびます。", translation: { es: "Elijo el color.", en: "I choose the color." } } },
     ],
   },
   {
@@ -4367,6 +4491,16 @@ const N4_VOCAB_CATEGORIES = [
       { kana: "こまります", kanji: "困ります", romaji: "komarimasu", meaning: { es: "tener problemas / estar en apuros", en: "to be troubled" }, example: { jp: "お金がなくて困っています。", reading: "おかねがなくてこまっています。", translation: { es: "Tengo problemas porque no tengo dinero.", en: "I'm troubled because I have no money." } } },
       { kana: "つかれます", kanji: "疲れます", romaji: "tsukaremasu", meaning: { es: "cansarse", en: "to get tired" }, example: { jp: "仕事で疲れました。", reading: "しごとでつかれました。", translation: { es: "Me cansé por el trabajo.", en: "I got tired from work." } } },
       { kana: "きをつけます", kanji: "気をつけます", romaji: "ki o tsukemasu", meaning: { es: "tener cuidado", en: "to be careful" }, example: { jp: "車に気をつけてください。", reading: "くるまにきをつけてください。", translation: { es: "Ten cuidado con los autos.", en: "Please be careful of cars." } } },
+      { kana: "くらべます", kanji: "比べます", romaji: "kurabemasu", meaning: { es: "comparar", en: "to compare" }, example: { jp: "二つの店を比べます。", reading: "ふたつのみせをくらべます。", translation: { es: "Comparo las dos tiendas.", en: "I compare the two stores." } } },
+      { kana: "しらべます", kanji: "調べます", romaji: "shirabemasu", meaning: { es: "investigar / revisar", en: "to investigate / check" }, example: { jp: "電車の時間を調べます。", reading: "でんしゃのじかんをしらべます。", translation: { es: "Reviso el horario del tren.", en: "I check the train schedule." } } },
+      { kana: "せつめいします", kanji: "説明します", romaji: "setsumei shimasu", meaning: { es: "explicar", en: "to explain" }, example: { jp: "先生が文法を説明します。", reading: "せんせいがぶんぽうをせつめいします。", translation: { es: "El profesor explica la gramática.", en: "The teacher explains the grammar." } } },
+      { kana: "おくれます", kanji: "遅れます", romaji: "okuremasu", meaning: { es: "llegar tarde", en: "to be late" }, example: { jp: "電車が遅れました。", reading: "でんしゃがおくれました。", translation: { es: "El tren llegó tarde.", en: "The train was late." } } },
+      { kana: "いそぎます", kanji: "急ぎます", romaji: "isogimasu", meaning: { es: "apurarse", en: "to hurry" }, example: { jp: "急いでください、時間がありません。", reading: "いそいでください、じかんがありません。", translation: { es: "Apúrate, no hay tiempo.", en: "Hurry up, there's no time." } } },
+      { kana: "なおります", kanji: "治ります", romaji: "naorimasu", meaning: { es: "curarse", en: "to recover / heal" }, example: { jp: "風邪が治りました。", reading: "かぜがなおりました。", translation: { es: "Se curó el resfriado.", en: "The cold healed." } } },
+      { kana: "しにます", kanji: "死にます", romaji: "shinimasu", meaning: { es: "morir", en: "to die" }, example: { jp: "祖父は去年死にました。", reading: "そふはきょねんしにました。", translation: { es: "Mi abuelo murió el año pasado.", en: "My grandfather died last year." } } },
+      { kana: "うまれます", kanji: "生まれます", romaji: "umaremasu", meaning: { es: "nacer", en: "to be born" }, example: { jp: "娘は東京で生まれました。", reading: "むすめはとうきょうでうまれました。", translation: { es: "Mi hija nació en Tokio.", en: "My daughter was born in Tokyo." } } },
+      { kana: "そだてます", kanji: "育てます", romaji: "sodatemasu", meaning: { es: "criar", en: "to raise" }, example: { jp: "子供を育てます。", reading: "こどもをそだてます。", translation: { es: "Crío a mis hijos.", en: "I raise my children." } } },
+      { kana: "たてます", kanji: "建てます", romaji: "tatemasu", meaning: { es: "construir", en: "to build" }, example: { jp: "新しい家を建てます。", reading: "あたらしいいえをたてます。", translation: { es: "Construyo una casa nueva.", en: "I'm building a new house." } } },
     ],
   },
   {
@@ -4386,6 +4520,16 @@ const N4_VOCAB_CATEGORIES = [
       { kana: "とくべつ", kanji: "特別", romaji: "tokubetsu", meaning: { es: "especial (na-adj)", en: "special (na-adj)" }, example: { jp: "今日は特別な日です。", reading: "きょうはとくべつなひです。", translation: { es: "Hoy es un día especial.", en: "Today is a special day." } } },
       { kana: "はずかしい", kanji: "恥ずかしい", romaji: "hazukashii", meaning: { es: "vergonzoso (i-adj)", en: "embarrassing (i-adj)" }, example: { jp: "とても恥ずかしいです。", reading: "とてもはずかしいです。", translation: { es: "Es muy vergonzoso.", en: "It's very embarrassing." } } },
       { kana: "ねむい", kanji: "眠い", romaji: "nemui", meaning: { es: "tener sueño (i-adj)", en: "sleepy (i-adj)" }, example: { jp: "今、眠いです。", reading: "いま、ねむいです。", translation: { es: "Ahora tengo sueño.", en: "I'm sleepy now." } } },
+      { kana: "きびしい", kanji: "厳しい", romaji: "kibishii", meaning: { es: "estricto / severo (i-adj)", en: "strict (i-adj)" }, example: { jp: "部長は厳しいです。", reading: "ぶちょうはきびしいです。", translation: { es: "El jefe es estricto.", en: "The manager is strict." } } },
+      { kana: "やわらかい", kanji: "柔らかい", romaji: "yawarakai", meaning: { es: "suave / blando (i-adj)", en: "soft (i-adj)" }, example: { jp: "このパンは柔らかいです。", reading: "このぱんはやわらかいです。", translation: { es: "Este pan es blando.", en: "This bread is soft." } } },
+      { kana: "かたい", kanji: "硬い", romaji: "katai", meaning: { es: "duro (i-adj)", en: "hard / firm (i-adj)" }, example: { jp: "この椅子は硬いです。", reading: "このいすはかたいです。", translation: { es: "Esta silla es dura.", en: "This chair is hard." } } },
+      { kana: "ふかい", kanji: "深い", romaji: "fukai", meaning: { es: "profundo (i-adj)", en: "deep (i-adj)" }, example: { jp: "この川は深いです。", reading: "このかわはふかいです。", translation: { es: "Este río es profundo.", en: "This river is deep." } } },
+      { kana: "あさい", kanji: "浅い", romaji: "asai", meaning: { es: "poco profundo (i-adj)", en: "shallow (i-adj)" }, example: { jp: "このプールは浅いです。", reading: "このぷーるはあさいです。", translation: { es: "Esta piscina es poco profunda.", en: "This pool is shallow." } } },
+      { kana: "うつくしい", kanji: "美しい", romaji: "utsukushii", meaning: { es: "hermoso (i-adj)", en: "beautiful (i-adj)" }, example: { jp: "夜景が美しいです。", reading: "やけいがうつくしいです。", translation: { es: "La vista nocturna es hermosa.", en: "The night view is beautiful." } } },
+      { kana: "すばらしい", kanji: "素晴らしい", romaji: "subarashii", meaning: { es: "maravilloso (i-adj)", en: "wonderful (i-adj)" }, example: { jp: "素晴らしいアイデアですね。", reading: "すばらしいあいであですね。", translation: { es: "Es una idea maravillosa.", en: "That's a wonderful idea." } } },
+      { kana: "ざんねん", kanji: "残念", romaji: "zannen", meaning: { es: "lamentable / una pena (na-adj)", en: "unfortunate / a shame (na-adj)" }, example: { jp: "本当に残念です。", reading: "ほんとうにざんねんです。", translation: { es: "Es realmente una pena.", en: "It's really a shame." } } },
+      { kana: "しんせつ", kanji: "親切", romaji: "shinsetsu", meaning: { es: "amable (na-adj)", en: "kind (na-adj)" }, example: { jp: "彼女はとても親切です。", reading: "かのじょはとてもしんせつです。", translation: { es: "Ella es muy amable.", en: "She is very kind." } } },
+      { kana: "じゅうよう", kanji: "重要", romaji: "juuyou", meaning: { es: "importante (na-adj)", en: "important (na-adj)" }, example: { jp: "これは重要な会議です。", reading: "これはじゅうようなかいぎです。", translation: { es: "Esta es una reunión importante.", en: "This is an important meeting." } } },
     ],
   },
   {
@@ -4403,6 +4547,15 @@ const N4_VOCAB_CATEGORIES = [
       { kana: "けいけん", kanji: "経験", romaji: "keiken", meaning: { es: "experiencia", en: "experience" }, example: { jp: "いい経験になりました。", reading: "いいけいけんになりました。", translation: { es: "Se convirtió en una buena experiencia.", en: "It became a good experience." } } },
       { kana: "かいしゃいん", kanji: "会社員", romaji: "kaishain", meaning: { es: "empleado de empresa", en: "company employee" }, example: { jp: "兄は会社員です。", reading: "あにはかいしゃいんです。", translation: { es: "Mi hermano es empleado de empresa.", en: "My brother is a company employee." } } },
       { kana: "ぶちょう", kanji: "部長", romaji: "buchou", meaning: { es: "jefe de departamento", en: "department manager" }, example: { jp: "部長に相談します。", reading: "ぶちょうにそうだんします。", translation: { es: "Consulto con el jefe.", en: "I'll consult with the manager." } } },
+      { kana: "めんせつ", kanji: "面接", romaji: "mensetsu", meaning: { es: "entrevista (de trabajo)", en: "interview (job)" }, example: { jp: "明日、面接があります。", reading: "あした、めんせつがあります。", translation: { es: "Mañana tengo una entrevista.", en: "I have an interview tomorrow." } } },
+      { kana: "しゅうしょくします", kanji: "就職します", romaji: "shuushoku shimasu", meaning: { es: "conseguir empleo", en: "to get a job" }, example: { jp: "来年、就職します。", reading: "らいねん、しゅうしょくします。", translation: { es: "El próximo año consigo empleo.", en: "Next year I'll get a job." } } },
+      { kana: "どうりょう", kanji: "同僚", romaji: "douryou", meaning: { es: "colega / compañero de trabajo", en: "coworker" }, example: { jp: "同僚とランチを食べます。", reading: "どうりょうとらんちをたべます。", translation: { es: "Almuerzo con un colega.", en: "I eat lunch with a coworker." } } },
+      { kana: "じょうし", kanji: "上司", romaji: "joushi", meaning: { es: "jefe / superior", en: "boss / superior" }, example: { jp: "上司に報告します。", reading: "じょうしにほうこくします。", translation: { es: "Le informo a mi jefe.", en: "I report to my boss." } } },
+      { kana: "ぶか", kanji: "部下", romaji: "buka", meaning: { es: "subordinado", en: "subordinate" }, example: { jp: "部下に仕事を頼みます。", reading: "ぶかにしごとをたのみます。", translation: { es: "Le pido trabajo a mi subordinado.", en: "I ask my subordinate to do work." } } },
+      { kana: "けいやく", kanji: "契約", romaji: "keiyaku", meaning: { es: "contrato", en: "contract" }, example: { jp: "契約にサインします。", reading: "けいやくにさいんします。", translation: { es: "Firmo el contrato.", en: "I sign the contract." } } },
+      { kana: "きゅうか", kanji: "休暇", romaji: "kyuuka", meaning: { es: "vacaciones / permiso", en: "leave / vacation" }, example: { jp: "来週、休暇を取ります。", reading: "らいしゅう、きゅうかをとります。", translation: { es: "La próxima semana tomo vacaciones.", en: "Next week I'll take leave." } } },
+      { kana: "しゃちょう", kanji: "社長", romaji: "shachou", meaning: { es: "presidente de la empresa", en: "company president" }, example: { jp: "社長が話します。", reading: "しゃちょうがはなします。", translation: { es: "El presidente habla.", en: "The president speaks." } } },
+      { kana: "めいし", kanji: "名刺", romaji: "meishi", meaning: { es: "tarjeta de presentación", en: "business card" }, example: { jp: "名刺を交換します。", reading: "めいしをこうかんします。", translation: { es: "Intercambiamos tarjetas.", en: "We exchange business cards." } } },
     ],
   },
   {
@@ -4420,6 +4573,15 @@ const N4_VOCAB_CATEGORIES = [
       { kana: "けが", kanji: "怪我", romaji: "kega", meaning: { es: "herida / lesión", en: "injury" }, example: { jp: "怪我をしました。", reading: "けがをしました。", translation: { es: "Me lastimé.", en: "I got injured." } } },
       { kana: "こえ", kanji: "声", romaji: "koe", meaning: { es: "voz", en: "voice" }, example: { jp: "大きい声で話します。", reading: "おおきいこえではなします。", translation: { es: "Hablo con voz fuerte.", en: "I speak in a loud voice." } } },
       { kana: "ちから", kanji: "力", romaji: "chikara", meaning: { es: "fuerza", en: "strength, power" }, example: { jp: "力がありません。", reading: "ちからがありません。", translation: { es: "No tengo fuerza.", en: "I have no strength." } } },
+      { kana: "たいじゅう", kanji: "体重", romaji: "taijuu", meaning: { es: "peso corporal", en: "body weight" }, example: { jp: "体重が増えました。", reading: "たいじゅうがふえました。", translation: { es: "Subí de peso.", en: "I gained weight." } } },
+      { kana: "しんちょう", kanji: "身長", romaji: "shinchou", meaning: { es: "estatura", en: "height" }, example: { jp: "身長を測ります。", reading: "しんちょうをはかります。", translation: { es: "Mido mi estatura.", en: "I measure my height." } } },
+      { kana: "けんこう", kanji: "健康", romaji: "kenkou", meaning: { es: "salud (na-adj)", en: "health (na-adj)" }, example: { jp: "健康のために運動します。", reading: "けんこうのためにうんどうします。", translation: { es: "Hago ejercicio por mi salud.", en: "I exercise for my health." } } },
+      { kana: "にゅういんします", kanji: "入院します", romaji: "nyuuin shimasu", meaning: { es: "ser hospitalizado", en: "to be hospitalized" }, example: { jp: "祖母が入院しました。", reading: "そぼがにゅういんしました。", translation: { es: "Mi abuela fue hospitalizada.", en: "My grandmother was hospitalized." } } },
+      { kana: "たいいんします", kanji: "退院します", romaji: "taiin shimasu", meaning: { es: "recibir el alta médica", en: "to be discharged (hospital)" }, example: { jp: "来週、退院します。", reading: "らいしゅう、たいいんします。", translation: { es: "La próxima semana recibo el alta.", en: "I'll be discharged next week." } } },
+      { kana: "ちゅうしゃ", kanji: "注射", romaji: "chuusha", meaning: { es: "inyección", en: "injection" }, example: { jp: "注射をします。", reading: "ちゅうしゃをします。", translation: { es: "Me ponen una inyección.", en: "I get an injection." } } },
+      { kana: "けんさ", kanji: "検査", romaji: "kensa", meaning: { es: "examen médico", en: "medical examination" }, example: { jp: "血液の検査をします。", reading: "けつえきのけんさをします。", translation: { es: "Me hacen un examen de sangre.", en: "I get a blood test." } } },
+      { kana: "くすりや", kanji: "薬屋", romaji: "kusuriya", meaning: { es: "farmacia", en: "pharmacy" }, example: { jp: "薬屋で薬を買います。", reading: "くすりやでくすりをかいます。", translation: { es: "Compro medicina en la farmacia.", en: "I buy medicine at the pharmacy." } } },
+      { kana: "めまいがします", kanji: null, romaji: "memai ga shimasu", meaning: { es: "marearse", en: "to feel dizzy" }, example: { jp: "少しめまいがします。", reading: "すこしめまいがします。", translation: { es: "Estoy un poco mareado.", en: "I feel a bit dizzy." } } },
     ],
   },
   {
@@ -4437,6 +4599,15 @@ const N4_VOCAB_CATEGORIES = [
       { kana: "もり", kanji: "森", romaji: "mori", meaning: { es: "bosque", en: "forest" }, example: { jp: "森を歩きます。", reading: "もりをあるきます。", translation: { es: "Camino por el bosque.", en: "I walk through the forest." } } },
       { kana: "うみ", kanji: "海", romaji: "umi", meaning: { es: "mar", en: "sea" }, example: { jp: "海で泳ぎます。", reading: "うみでおよぎます。", translation: { es: "Nado en el mar.", en: "I swim in the sea." } } },
       { kana: "やま", kanji: "山", romaji: "yama", meaning: { es: "montaña", en: "mountain" }, example: { jp: "山に登ります。", reading: "やまにのぼります。", translation: { es: "Subo a la montaña.", en: "I climb the mountain." } } },
+      { kana: "しぜん", kanji: "自然", romaji: "shizen", meaning: { es: "naturaleza", en: "nature" }, example: { jp: "自然が好きです。", reading: "しぜんがすきです。", translation: { es: "Me gusta la naturaleza.", en: "I like nature." } } },
+      { kana: "かわ", kanji: "川", romaji: "kawa", meaning: { es: "río", en: "river" }, example: { jp: "川で釣りをします。", reading: "かわでつりをします。", translation: { es: "Pesco en el río.", en: "I fish in the river." } } },
+      { kana: "いけ", kanji: "池", romaji: "ike", meaning: { es: "estanque / lago pequeño", en: "pond" }, example: { jp: "公園に池があります。", reading: "こうえんにいけがあります。", translation: { es: "Hay un estanque en el parque.", en: "There's a pond in the park." } } },
+      { kana: "しま", kanji: "島", romaji: "shima", meaning: { es: "isla", en: "island" }, example: { jp: "小さい島に行きました。", reading: "ちいさいしまにいきました。", translation: { es: "Fui a una isla pequeña.", en: "I went to a small island." } } },
+      { kana: "つき", kanji: "月", romaji: "tsuki", meaning: { es: "luna", en: "moon" }, example: { jp: "今夜は月がきれいです。", reading: "こんやはつきがきれいです。", translation: { es: "Esta noche la luna está hermosa.", en: "The moon is beautiful tonight." } } },
+      { kana: "ほし", kanji: "星", romaji: "hoshi", meaning: { es: "estrella", en: "star" }, example: { jp: "星を見ます。", reading: "ほしをみます。", translation: { es: "Miro las estrellas.", en: "I watch the stars." } } },
+      { kana: "じしん", kanji: "地震", romaji: "jishin", meaning: { es: "terremoto", en: "earthquake" }, example: { jp: "昨日、地震がありました。", reading: "きのう、じしんがありました。", translation: { es: "Ayer hubo un terremoto.", en: "There was an earthquake yesterday." } } },
+      { kana: "かみなり", kanji: "雷", romaji: "kaminari", meaning: { es: "trueno / rayo", en: "thunder / lightning" }, example: { jp: "雷が鳴っています。", reading: "かみなりがなっています。", translation: { es: "Están tronando.", en: "There's thunder." } } },
+      { kana: "きり", kanji: "霧", romaji: "kiri", meaning: { es: "niebla", en: "fog" }, example: { jp: "今朝は霧が濃いです。", reading: "けさはきりがこいです。", translation: { es: "Esta mañana hay mucha niebla.", en: "There's thick fog this morning." } } },
     ],
   },
   {
@@ -4454,6 +4625,15 @@ const N4_VOCAB_CATEGORIES = [
       { kana: "でんしゃ", kanji: "電車", romaji: "densha", meaning: { es: "tren", en: "train" }, example: { jp: "電車で行きます。", reading: "でんしゃでいきます。", translation: { es: "Voy en tren.", en: "I go by train." } } },
       { kana: "くうこう", kanji: "空港", romaji: "kuukou", meaning: { es: "aeropuerto", en: "airport" }, example: { jp: "空港まで送ります。", reading: "くうこうまでおくります。", translation: { es: "Te llevo hasta el aeropuerto.", en: "I'll take you to the airport." } } },
       { kana: "まつり", kanji: "祭り", romaji: "matsuri", meaning: { es: "festival", en: "festival" }, example: { jp: "夏に祭りがあります。", reading: "なつにまつりがあります。", translation: { es: "En verano hay un festival.", en: "There's a festival in summer." } } },
+      { kana: "せいじ", kanji: "政治", romaji: "seiji", meaning: { es: "política", en: "politics" }, example: { jp: "政治に興味があります。", reading: "せいじにきょうみがあります。", translation: { es: "Tengo interés en la política.", en: "I'm interested in politics." } } },
+      { kana: "けいざい", kanji: "経済", romaji: "keizai", meaning: { es: "economía", en: "economy" }, example: { jp: "経済のニュースを見ます。", reading: "けいざいのにゅーすをみます。", translation: { es: "Veo noticias de economía.", en: "I watch economy news." } } },
+      { kana: "ぶんか", kanji: "文化", romaji: "bunka", meaning: { es: "cultura", en: "culture" }, example: { jp: "日本の文化を学びます。", reading: "にほんのぶんかをまなびます。", translation: { es: "Aprendo la cultura japonesa.", en: "I learn Japanese culture." } } },
+      { kana: "しゃかい", kanji: "社会", romaji: "shakai", meaning: { es: "sociedad", en: "society" }, example: { jp: "社会の問題について話します。", reading: "しゃかいのもんだいについてはなします。", translation: { es: "Hablamos sobre problemas sociales.", en: "We talk about social issues." } } },
+      { kana: "じんこう", kanji: "人口", romaji: "jinkou", meaning: { es: "población", en: "population" }, example: { jp: "この町の人口は少ないです。", reading: "このまちのじんこうはすくないです。", translation: { es: "La población de este pueblo es pequeña.", en: "This town's population is small." } } },
+      { kana: "きぎょう", kanji: "企業", romaji: "kigyou", meaning: { es: "empresa / corporación", en: "corporation" }, example: { jp: "大きい企業で働きます。", reading: "おおきいきぎょうではたらきます。", translation: { es: "Trabajo en una empresa grande.", en: "I work at a large corporation." } } },
+      { kana: "ぜいきん", kanji: "税金", romaji: "zeikin", meaning: { es: "impuesto", en: "tax" }, example: { jp: "税金を払います。", reading: "ぜいきんをはらいます。", translation: { es: "Pago impuestos.", en: "I pay taxes." } } },
+      { kana: "せんきょ", kanji: "選挙", romaji: "senkyo", meaning: { es: "elección (votación)", en: "election" }, example: { jp: "来月、選挙があります。", reading: "らいげつ、せんきょがあります。", translation: { es: "El próximo mes hay elecciones.", en: "There's an election next month." } } },
+      { kana: "きそく", kanji: "規則", romaji: "kisoku", meaning: { es: "regla / norma", en: "rule" }, example: { jp: "会社の規則を守ります。", reading: "かいしゃのきそくをまもります。", translation: { es: "Sigo las reglas de la empresa.", en: "I follow the company's rules." } } },
     ],
   },
   {
@@ -4471,6 +4651,14 @@ const N4_VOCAB_CATEGORIES = [
       { kana: "よやくします", kanji: "予約します", romaji: "yoyaku shimasu", meaning: { es: "reservar", en: "to reserve, book" }, example: { jp: "レストランを予約します。", reading: "れすとらんをよやくします。", translation: { es: "Reservo el restaurante.", en: "I book the restaurant." } } },
       { kana: "かくにんします", kanji: "確認します", romaji: "kakunin shimasu", meaning: { es: "confirmar", en: "to confirm" }, example: { jp: "時間を確認します。", reading: "じかんをかくにんします。", translation: { es: "Confirmo la hora.", en: "I confirm the time." } } },
       { kana: "そうだんします", kanji: "相談します", romaji: "soudan shimasu", meaning: { es: "consultar", en: "to consult" }, example: { jp: "先生に相談します。", reading: "せんせいにそうだんします。", translation: { es: "Consulto con el profesor.", en: "I consult with the teacher." } } },
+      { kana: "パソコン", kanji: null, romaji: "pasokon", meaning: { es: "computadora", en: "computer" }, example: { jp: "パソコンで仕事をします。", reading: "ぱそこんでしごとをします。", translation: { es: "Trabajo en la computadora.", en: "I work on the computer." } } },
+      { kana: "インターネット", kanji: null, romaji: "intaanetto", meaning: { es: "internet", en: "internet" }, example: { jp: "インターネットで調べます。", reading: "いんたーねっとでしらべます。", translation: { es: "Investigo por internet.", en: "I look it up on the internet." } } },
+      { kana: "アプリ", kanji: null, romaji: "apuri", meaning: { es: "aplicación (app)", en: "app" }, example: { jp: "新しいアプリを使います。", reading: "あたらしいあぷりをつかいます。", translation: { es: "Uso una app nueva.", en: "I use a new app." } } },
+      { kana: "ダウンロードします", kanji: null, romaji: "daunroodo shimasu", meaning: { es: "descargar", en: "to download" }, example: { jp: "ファイルをダウンロードします。", reading: "ふぁいるをだうんろーどします。", translation: { es: "Descargo el archivo.", en: "I download the file." } } },
+      { kana: "アップロードします", kanji: null, romaji: "appuroodo shimasu", meaning: { es: "subir / cargar", en: "to upload" }, example: { jp: "写真をアップロードします。", reading: "しゃしんをあっぷろーどします。", translation: { es: "Subo las fotos.", en: "I upload the photos." } } },
+      { kana: "きろくします", kanji: "記録します", romaji: "kiroku shimasu", meaning: { es: "registrar", en: "to record" }, example: { jp: "データを記録します。", reading: "でーたをきろくします。", translation: { es: "Registro los datos.", en: "I record the data." } } },
+      { kana: "ほぞんします", kanji: "保存します", romaji: "hozon shimasu", meaning: { es: "guardar / almacenar", en: "to save (data)" }, example: { jp: "ファイルを保存します。", reading: "ふぁいるをほぞんします。", translation: { es: "Guardo el archivo.", en: "I save the file." } } },
+      { kana: "せっていします", kanji: "設定します", romaji: "settei shimasu", meaning: { es: "configurar", en: "to configure / set up" }, example: { jp: "パスワードを設定します。", reading: "ぱすわーどをせっていします。", translation: { es: "Configuro la contraseña.", en: "I set up the password." } } },
     ],
   },
   {
@@ -4488,6 +4676,34 @@ const N4_VOCAB_CATEGORIES = [
       { kana: "やっぱり", kanji: null, romaji: "yappari", meaning: { es: "después de todo", en: "after all, as expected" }, example: { jp: "やっぱりこれが好きです。", reading: "やっぱりこれがすきです。", translation: { es: "Después de todo, me gusta esto.", en: "After all, I like this." } } },
       { kana: "だから", kanji: null, romaji: "dakara", meaning: { es: "por eso", en: "that's why" }, example: { jp: "雨です。だから、傘を持ちます。", reading: "あめです。だから、かさをもちます。", translation: { es: "Llueve. Por eso llevo paraguas.", en: "It's raining. That's why I bring an umbrella." } } },
       { kana: "つまり", kanji: null, romaji: "tsumari", meaning: { es: "es decir", en: "in other words" }, example: { jp: "つまり、行けないということですね。", reading: "つまり、いけないということですね。", translation: { es: "Es decir, no puedes ir, ¿verdad?", en: "In other words, you can't go, right?" } } },
+      { kana: "それから", kanji: null, romaji: "sorekara", meaning: { es: "y después / luego", en: "and then / after that" }, example: { jp: "宿題をして、それから寝ます。", reading: "しゅくだいをして、それからねます。", translation: { es: "Hago la tarea y después duermo.", en: "I do homework and then sleep." } } },
+      { kana: "そして", kanji: null, romaji: "soshite", meaning: { es: "y / y entonces", en: "and / and then" }, example: { jp: "勉強して、そして働きます。", reading: "べんきょうして、そしてはたらきます。", translation: { es: "Estudio y luego trabajo.", en: "I study and then work." } } },
+      { kana: "ところで", kanji: null, romaji: "tokorode", meaning: { es: "por cierto / cambiando de tema", en: "by the way" }, example: { jp: "ところで、明日は何時ですか。", reading: "ところで、あしたはなんじですか。", translation: { es: "Por cierto, ¿a qué hora es mañana?", en: "By the way, what time is it tomorrow?" } } },
+      { kana: "けれども", kanji: null, romaji: "keredomo", meaning: { es: "pero (formal)", en: "but (formal)" }, example: { jp: "行きたいです。けれども、時間がありません。", reading: "いきたいです。けれども、じかんがありません。", translation: { es: "Quiero ir. Pero no tengo tiempo.", en: "I want to go. But I don't have time." } } },
+      { kana: "なぜなら", kanji: null, romaji: "nazenara", meaning: { es: "porque (razón formal)", en: "because (formal reason)" }, example: { jp: "休みます。なぜなら、病気だからです。", reading: "やすみます。なぜなら、びょうきだからです。", translation: { es: "Descanso. Porque estoy enfermo.", en: "I'll rest. Because I'm sick." } } },
+      { kana: "たとえば", kanji: null, romaji: "tatoeba", meaning: { es: "por ejemplo", en: "for example" }, example: { jp: "果物が好きです。たとえば、りんごです。", reading: "くだものがすきです。たとえば、りんごです。", translation: { es: "Me gusta la fruta. Por ejemplo, la manzana.", en: "I like fruit. For example, apples." } } },
+      { kana: "もちろん", kanji: null, romaji: "mochiron", meaning: { es: "por supuesto", en: "of course" }, example: { jp: "もちろん、手伝います。", reading: "もちろん、てつだいます。", translation: { es: "Por supuesto, te ayudo.", en: "Of course, I'll help you." } } },
+      { kana: "とにかく", kanji: null, romaji: "tonikaku", meaning: { es: "de todos modos / en fin", en: "anyway / in any case" }, example: { jp: "とにかく、行きましょう。", reading: "とにかく、いきましょう。", translation: { es: "De todos modos, vayamos.", en: "Anyway, let's go." } } },
+      { kana: "さすが", kanji: null, romaji: "sasuga", meaning: { es: "como era de esperar", en: "as expected (impressive)" }, example: { jp: "さすが先生ですね。", reading: "さすがせんせいですね。", translation: { es: "Como era de esperar del profesor.", en: "As expected of the teacher." } } },
+    ],
+  },
+  {
+    id: "teform",
+    icon: "🔄",
+    titleKey: "n4CatTeform",
+    words: [
+      { kana: "たべて", kanji: "食べて", romaji: "tabete (て) / tabeta (た)", meaning: { es: "comer — forma て/た", en: "to eat — て/た form" }, example: { jp: "朝ご飯を食べて、学校に行きます。", reading: "あさごはんをたべて、がっこうにいきます。", translation: { es: "Como el desayuno y voy a la escuela.", en: "I eat breakfast and go to school." } } },
+      { kana: "のんで", kanji: "飲んで", romaji: "nonde (て) / nonda (た)", meaning: { es: "beber — forma て/た", en: "to drink — て/た form" }, example: { jp: "薬を飲んで、寝ます。", reading: "くすりをのんで、ねます。", translation: { es: "Tomo la medicina y duermo.", en: "I take the medicine and sleep." } } },
+      { kana: "いって", kanji: "行って", romaji: "itte (て) / itta (た)", meaning: { es: "ir — forma て/た", en: "to go — て/た form" }, example: { jp: "学校に行って、勉強します。", reading: "がっこうにいって、べんきょうします。", translation: { es: "Voy a la escuela y estudio.", en: "I go to school and study." } } },
+      { kana: "きいて", kanji: "聞いて", romaji: "kiite (て) / kiita (た)", meaning: { es: "escuchar — forma て/た", en: "to listen — て/た form" }, example: { jp: "音楽を聞いて、リラックスします。", reading: "おんがくをきいて、りらっくすします。", translation: { es: "Escucho música y me relajo.", en: "I listen to music and relax." } } },
+      { kana: "かいて", kanji: "書いて", romaji: "kaite (て) / kaita (た)", meaning: { es: "escribir — forma て/た", en: "to write — て/た form" }, example: { jp: "手紙を書いて、送りました。", reading: "てがみをかいて、おくりました。", translation: { es: "Escribí una carta y la envié.", en: "I wrote a letter and sent it." } } },
+      { kana: "よんで", kanji: "読んで", romaji: "yonde (て) / yonda (た)", meaning: { es: "leer — forma て/た", en: "to read — て/た form" }, example: { jp: "本を読んで、感想を書きます。", reading: "ほんをよんで、かんそうをかきます。", translation: { es: "Leo el libro y escribo mi opinión.", en: "I read the book and write my thoughts." } } },
+      { kana: "まって", kanji: "待って", romaji: "matte (て) / matta (た)", meaning: { es: "esperar — forma て/た", en: "to wait — て/た form" }, example: { jp: "ここで待っていてください。", reading: "ここでまっていてください。", translation: { es: "Por favor espera aquí.", en: "Please wait here." } } },
+      { kana: "はなして", kanji: "話して", romaji: "hanashite (て) / hanashita (た)", meaning: { es: "hablar — forma て/た", en: "to speak — て/た form" }, example: { jp: "先生と話して、安心しました。", reading: "せんせいとはなして、あんしんしました。", translation: { es: "Hablé con el profesor y me tranquilicé.", en: "I spoke with the teacher and felt relieved." } } },
+      { kana: "かって", kanji: "買って", romaji: "katte (て) / katta (た)", meaning: { es: "comprar — forma て/た", en: "to buy — て/た form" }, example: { jp: "新しい靴を買って、履きました。", reading: "あたらしいくつをかって、はきました。", translation: { es: "Compré zapatos nuevos y me los puse.", en: "I bought new shoes and wore them." } } },
+      { kana: "きて", kanji: "来て", romaji: "kite (て) / kita (た)", meaning: { es: "venir — forma て/た", en: "to come — て/た form" }, example: { jp: "友達が来て、一緒に遊びました。", reading: "ともだちがきて、いっしょにあそびました。", translation: { es: "Vino un amigo y jugamos juntos.", en: "A friend came and we played together." } } },
+      { kana: "して", kanji: null, romaji: "shite (て) / shita (た)", meaning: { es: "hacer — forma て/た", en: "to do — て/た form" }, example: { jp: "宿題をして、寝ました。", reading: "しゅくだいをして、ねました。", translation: { es: "Hice la tarea y dormí.", en: "I did the homework and slept." } } },
+      { kana: "あって", kanji: "会って", romaji: "atte (て) / atta (た)", meaning: { es: "encontrarse — forma て/た", en: "to meet — て/た form" }, example: { jp: "昔の友達に会って、うれしかったです。", reading: "むかしのともだちにあって、うれしかったです。", translation: { es: "Me encontré con un viejo amigo y me alegré.", en: "I met an old friend and was happy." } } },
     ],
   },
 ];
@@ -4765,6 +4981,17 @@ const N4_CONVERSATION_SCENES = [
       { segments: [{ text: "医者", reading: "いしゃ" }, { text: "：" }, { text: "分かりました", reading: "わかりました" }, { text: "。" }, { text: "風邪", reading: "かぜ" }, { text: "だと" }, { text: "思います", reading: "おもいます" }, { text: "。" }, { text: "薬", reading: "くすり" }, { text: "を" }, { text: "出します", reading: "だします" }, { text: "。" }], traduccion: { es: "Médico: Entendido. Creo que es un resfriado. Le voy a recetar medicina.", en: "Doctor: I see. I think it's a cold. I'll prescribe some medicine." } },
       { segments: [{ text: "患者", reading: "かんじゃ" }, { text: "：" }, { text: "この" }, { text: "薬", reading: "くすり" }, { text: "は" }, { text: "一日", reading: "いちにち" }, { text: "何回", reading: "なんかい" }, { text: "飲まなければなりません", reading: "のまなければなりません" }, { text: "か。" }], traduccion: { es: "Paciente: ¿Cuántas veces al día tengo que tomar esta medicina?", en: "Patient: How many times a day do I have to take this medicine?" } },
       { segments: [{ text: "医者", reading: "いしゃ" }, { text: "：" }, { text: "一日", reading: "いちにち" }, { text: "三回", reading: "さんかい" }, { text: "、" }, { text: "食後", reading: "しょくご" }, { text: "に" }, { text: "飲んでください", reading: "のんでください" }, { text: "。" }, { text: "ゆっくり" }, { text: "休めば", reading: "やすめば" }, { text: "、" }, { text: "すぐ" }, { text: "元気になる", reading: "げんきになる" }, { text: "はずです", reading: "はずです" }, { text: "。" }], traduccion: { es: "Médico: Tómela tres veces al día después de las comidas. Si descansa bien, debería mejorarse pronto.", en: "Doctor: Take it three times a day after meals. If you rest well, you should get better soon." } },
+      { segments: [{ text: "医者", reading: "いしゃ" }, { text: "：" }, { text: "薬", reading: "くすり" }, { text: "の" }, { text: "アレルギー", reading: "あれるぎー" }, { text: "は" }, { text: "ありますか。" }], traduccion: { es: "Médico: ¿Tiene alergia a alguna medicina?", en: "Doctor: Do you have any medicine allergies?" } },
+      { segments: [{ text: "患者", reading: "かんじゃ" }, { text: "：" }, { text: "いいえ、" }, { text: "アレルギー", reading: "あれるぎー" }, { text: "は" }, { text: "ありません。" }], traduccion: { es: "Paciente: No, no tengo ninguna alergia.", en: "Patient: No, I don't have any allergies." } },
+      { segments: [{ text: "医者", reading: "いしゃ" }, { text: "：" }, { text: "分かりました", reading: "わかりました" }, { text: "。" }, { text: "会社", reading: "かいしゃ" }, { text: "を" }, { text: "休んだ", reading: "やすんだ" }, { text: "ほうが" }, { text: "いいです。" }], traduccion: { es: "Médico: Entendido. Sería mejor que faltara al trabajo.", en: "Doctor: I see. You'd better take time off work." } },
+      { segments: [{ text: "患者", reading: "かんじゃ" }, { text: "：" }, { text: "何日", reading: "なんにち" }, { text: "ぐらい" }, { text: "休んだ", reading: "やすんだ" }, { text: "ほうが" }, { text: "いいですか。" }], traduccion: { es: "Paciente: ¿Como cuántos días debería descansar?", en: "Patient: About how many days should I rest?" } },
+      { segments: [{ text: "医者", reading: "いしゃ" }, { text: "：" }, { text: "三日間", reading: "みっかかん" }, { text: "休んで", reading: "やすんで" }, { text: "ください。" }, { text: "診断書", reading: "しんだんしょ" }, { text: "を" }, { text: "書きます", reading: "かきます" }, { text: "。" }], traduccion: { es: "Médico: Descanse tres días. Le escribiré un certificado médico.", en: "Doctor: Please rest for three days. I'll write you a medical certificate." } },
+      { segments: [{ text: "患者", reading: "かんじゃ" }, { text: "：" }, { text: "ありがとうございます。" }, { text: "また" }, { text: "来た", reading: "きた" }, { text: "ほうが" }, { text: "いいですか。" }], traduccion: { es: "Paciente: Gracias. ¿Debería volver otra vez?", en: "Patient: Thank you. Should I come back again?" } },
+      { segments: [{ text: "医者", reading: "いしゃ" }, { text: "：" }, { text: "もし" }, { text: "熱", reading: "ねつ" }, { text: "が" }, { text: "下がらなかったら", reading: "さがらなかったら" }, { text: "、" }, { text: "また" }, { text: "来てください", reading: "きてください" }, { text: "。" }], traduccion: { es: "Médico: Si la fiebre no baja, venga otra vez por favor.", en: "Doctor: If the fever doesn't go down, please come back." } },
+      { segments: [{ text: "患者", reading: "かんじゃ" }, { text: "：" }, { text: "分かりました", reading: "わかりました" }, { text: "。" }, { text: "お会計", reading: "おかいけい" }, { text: "は" }, { text: "いくらですか。" }], traduccion: { es: "Paciente: Entendido. ¿Cuánto es la cuenta?", en: "Patient: Understood. How much is the bill?" } },
+      { segments: [{ text: "受付", reading: "うけつけ" }, { text: "：" }, { text: "保険証", reading: "ほけんしょう" }, { text: "が" }, { text: "あれば", reading: "あれば" }, { text: "、" }, { text: "三千円", reading: "さんぜんえん" }, { text: "です。" }], traduccion: { es: "Recepción: Si tiene el carnet de seguro, son tres mil yenes.", en: "Receptionist: If you have insurance, it's three thousand yen." } },
+      { segments: [{ text: "患者", reading: "かんじゃ" }, { text: "：" }, { text: "はい、" }, { text: "あります。" }, { text: "薬局", reading: "やっきょく" }, { text: "は" }, { text: "どこに" }, { text: "ありますか。" }], traduccion: { es: "Paciente: Sí, lo tengo. ¿Dónde está la farmacia?", en: "Patient: Yes, I have it. Where is the pharmacy?" } },
+      { segments: [{ text: "受付", reading: "うけつけ" }, { text: "：" }, { text: "病院", reading: "びょういん" }, { text: "の" }, { text: "隣", reading: "となり" }, { text: "に" }, { text: "あります。" }, { text: "お大事に", reading: "おだいじに" }, { text: "。" }], traduccion: { es: "Recepción: Está al lado del hospital. Que se mejore.", en: "Receptionist: It's next to the hospital. Take care." } },
       { segments: [{ text: "患者", reading: "かんじゃ" }, { text: "：" }, { text: "分かりました", reading: "わかりました" }, { text: "。" }, { text: "ありがとうございました。" }], traduccion: { es: "Paciente: Entendido. Muchas gracias.", en: "Patient: Understood. Thank you very much." } },
     ],
   },
@@ -4926,17 +5153,41 @@ function speakKanaSentences(texto) {
   return oraciones.length ? oraciones : [texto];
 }
 
+// Misma selección explícita de voz ja-JP que readerEngine.js (ver
+// elegirVozJaponesa() ahí) — reimplementada acá porque este archivo no
+// comparte closure con ese módulo. Sin esto, algunos navegadores eligen
+// una voz genérica/robótica en vez de una voz nativa japonesa real.
+let cachedJaVoiceAppJs = null;
+let jaVoiceListenerAttachedAppJs = false;
+function elegirVozJaponesaAppJs() {
+  if (cachedJaVoiceAppJs || !("speechSynthesis" in window)) return cachedJaVoiceAppJs;
+  const voces = window.speechSynthesis.getVoices();
+  cachedJaVoiceAppJs = voces.find((v) => v.lang === "ja-JP") || voces.find((v) => v.lang && v.lang.startsWith("ja")) || null;
+  if (!cachedJaVoiceAppJs && !jaVoiceListenerAttachedAppJs && voces.length === 0) {
+    jaVoiceListenerAttachedAppJs = true;
+    window.speechSynthesis.addEventListener("voiceschanged", elegirVozJaponesaAppJs, { once: true });
+  }
+  return cachedJaVoiceAppJs;
+}
+
 async function speakKana(char) {
   if (!("speechSynthesis" in window) || !char) return;
   window.speechSynthesis.cancel(); // corta cualquier lectura anterior en curso
-  for (const oracion of speakKanaSentences(char)) {
+  const oraciones = speakKanaSentences(char);
+  for (let i = 0; i < oraciones.length; i++) {
     await new Promise((resolve) => {
-      const utterance = new SpeechSynthesisUtterance(oracion);
+      const utterance = new SpeechSynthesisUtterance(oraciones[i]);
       utterance.lang = "ja-JP";
+      utterance.rate = 0.8; // pedido explícito: voz pausada y natural (rango 0.75-0.85)
+      const voz = elegirVozJaponesaAppJs();
+      if (voz) utterance.voice = voz;
       utterance.onend = resolve;
       utterance.onerror = resolve;
       window.speechSynthesis.speak(utterance);
     });
+    // Pequeña pausa entre oraciones — mismo criterio que readerEngine.js
+    // (pausaEntreOraciones()), evita que el audio suene atropellado.
+    if (i < oraciones.length - 1) await new Promise((resolve) => setTimeout(resolve, 220));
   }
 }
 
@@ -6162,6 +6413,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const jpViewConversations = document.getElementById("jp-view-conversations");
   const jpViewMiniQuiz = document.getElementById("jp-view-mini-quiz");
   const jpViewLevelExam = document.getElementById("jp-view-level-exam");
+  const jpFloatingBackBtn = document.getElementById("jp-floating-back-btn");
 
   const jpLevelToggle = document.getElementById("jp-level-toggle");
 
@@ -11724,6 +11976,34 @@ document.addEventListener("DOMContentLoaded", () => {
     if (view === "grammar") renderN5GrammarList();
     if (view === "yoon") renderYoonGrid();
     if (view === "conversations") openConversationSceneGrid();
+    updateJpFloatingBackBtn();
+  }
+
+  // Botón flotante único de "Volver atrás" (#jp-floating-back-btn) —
+  // visible en cualquier sub-vista salvo la grilla principal (que ya no
+  // tiene a dónde volver). Se llama tras cada showJpView() de arriba, así
+  // que siempre refleja la vista realmente visible en ese momento.
+  function updateJpFloatingBackBtn() {
+    if (jpFloatingBackBtn) jpFloatingBackBtn.hidden = jpViewGrid.hidden === false;
+  }
+
+  if (jpFloatingBackBtn) {
+    jpFloatingBackBtn.addEventListener("click", () => {
+      // Caso especial: dentro de Conversaciones, primero hay que volver de
+      // la LECTURA de una escena a la grilla de escenas antes de volver al
+      // menú principal — openConversationSceneGrid() ya corta cualquier
+      // audio en curso (ver activeConversationReader.detener() ahí).
+      if (!jpViewConversations.hidden && jpConversationReader && !jpConversationReader.hidden) {
+        openConversationSceneGrid();
+        return;
+      }
+      if (!jpViewVocabWords.hidden) return showJpView("vocab");
+      // Mini-Quiz vuelve a la vista de origen que lo abrió (vocab-words o
+      // grammar), no siempre a la grilla — mismo destino que su propio
+      // botón de "Volver" (jpMiniQuizBackBtn), ver startMiniQuiz().
+      if (!jpViewMiniQuiz.hidden) return showJpView(miniQuizReturnView);
+      showJpView("grid");
+    });
   }
 
   // ---------------- IndexedDB: progreso N5 + contenido curricular ----------------

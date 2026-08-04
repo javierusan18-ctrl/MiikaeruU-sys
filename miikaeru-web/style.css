@@ -4624,6 +4624,39 @@ textarea,
   color: var(--neon-cyan);
 }
 
+/* Botón flotante único de "Volver atrás" (ver #jp-floating-back-btn en
+   index.html + su listener en app.js) — pedido explícito: un solo botón
+   grande y fijo en la esquina, en vez de tener que buscar el botón de
+   volver de cada sub-vista arriba del todo. Círculo de 44px (tamaño de
+   toque táctil recomendado), esquina superior izquierda para no chocar
+   con el [✕] de cerrar (arriba-derecha) ni con ⚙️ Cambiar idioma/modo
+   (debajo del título, centrado). app.js lo oculta solo en la grilla
+   principal, ver updateJpFloatingBackBtn(). */
+.btn-jp-floating-back {
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  z-index: 5;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  background: rgba(10, 14, 26, 0.75);
+  backdrop-filter: blur(6px);
+  color: var(--neon-cyan);
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+}
+
+.btn-jp-floating-back:hover {
+  background: rgba(0, 240, 255, 0.15);
+  box-shadow: var(--shadow-neon-cyan);
+  transform: translateY(-1px);
+}
+
 /* Botón de Omitir: flotante, esquina superior derecha de la vista de
    trazo (pedido explícito). */
 .btn-jp-skip {

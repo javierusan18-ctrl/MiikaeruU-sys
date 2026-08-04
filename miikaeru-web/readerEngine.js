@@ -22,6 +22,26 @@ const MiikaeruReader = (() => {
     return "speechSynthesis" in window;
   }
 
+  // Selecciona explícitamente una voz nativa ja-JP en vez de dejar que el
+  // navegador adivine solo por utterance.lang — pedido explícito, algunos
+  // navegadores eligen una voz genérica/robótica si no se fuerza. Las
+  // voces pueden no estar listas todavía en la primera llamada (se cargan
+  // async), así que si getVoices() devuelve vacío se reintenta una vez
+  // cuando dispare "voiceschanged", y mientras tanto se sigue sin voice
+  // explícita (el navegador igual intenta algo razonable con lang=ja-JP).
+  let cachedJaVoice = null;
+  let jaVoiceListenerAttached = false;
+  function elegirVozJaponesa() {
+    if (cachedJaVoice || !hayTTS()) return cachedJaVoice;
+    const voces = window.speechSynthesis.getVoices();
+    cachedJaVoice = voces.find((v) => v.lang === "ja-JP") || voces.find((v) => v.lang && v.lang.startsWith("ja")) || null;
+    if (!cachedJaVoice && !jaVoiceListenerAttached && voces.length === 0) {
+      jaVoiceListenerAttached = true;
+      window.speechSynthesis.addEventListener("voiceschanged", elegirVozJaponesa, { once: true });
+    }
+    return cachedJaVoice;
+  }
+
   // Chrome/Chromium tiene un bug conocido (desktop y Android): un solo
   // SpeechSynthesisUtterance largo se corta a mitad de camino, sobre todo
   // pasados ~15s o con la pestaña sin foco, porque el motor deja de
@@ -45,11 +65,22 @@ const MiikaeruReader = (() => {
       }
       const utterance = new SpeechSynthesisUtterance(oracion);
       utterance.lang = "ja-JP";
-      utterance.rate = 0.92; // levemente más lento que el default — más fácil de seguir para un estudiante
+      utterance.rate = 0.8; // pedido explícito: voz "pausada y natural", rango 0.75-0.85 en vez del 0.92 anterior
+      const voz = elegirVozJaponesa();
+      if (voz) utterance.voice = voz;
       utterance.onend = resolve;
       utterance.onerror = resolve; // no trabar el modo automático si la voz falla a mitad de camino
       window.speechSynthesis.speak(utterance);
     });
+  }
+
+  // Pequeña pausa entre oraciones encoladas (pedido explícito: "control
+  // de separación... para evitar que el audio se corte de forma abrupta o
+  // suene atropellado") — sin esto, una oración empieza apenas termina la
+  // anterior, sonando corrido; 220ms es suficiente para que se perciba
+  // como una pausa natural de respiración sin sentirse lento.
+  function pausaEntreOraciones() {
+    return new Promise((resolve) => setTimeout(resolve, 220));
   }
 
   // Reproduce una línea completa (posiblemente varias oraciones)
@@ -61,8 +92,10 @@ const MiikaeruReader = (() => {
   async function reproducirLinea(texto) {
     if (!texto) return;
     window.speechSynthesis && window.speechSynthesis.cancel();
-    for (const oracion of partirEnOraciones(texto)) {
-      await hablarOracion(oracion);
+    const oraciones = partirEnOraciones(texto);
+    for (let i = 0; i < oraciones.length; i++) {
+      await hablarOracion(oraciones[i]);
+      if (i < oraciones.length - 1) await pausaEntreOraciones();
     }
   }
 
