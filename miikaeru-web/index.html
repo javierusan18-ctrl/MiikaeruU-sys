@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260804-20" />
+  <link rel="stylesheet" href="style.css?v=20260804-21" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -1657,20 +1657,19 @@
              de la esquina. Pedido explícito, más relevante ahora que el
              módulo pasa a pantalla completa en celular. -->
         <button type="button" class="btn-jp-back" id="jp-grid-back-btn" data-i18n="jpBackToMenu">← Volver al Menú</button>
-        <!-- Selector de nivel JLPT: N5 es el único con contenido real hoy;
-             N4-N1 se muestran a propósito (no se ocultan) para que quede
-             claro que el currículum va a seguir creciendo — mismo criterio
-             visual "grayscale + opacity" que los tiers bloqueados de Miika
-             Pass (ver .mpass-tier--locked en style.css), con el mismo
-             badge de texto "Próximamente" que ya usan Hábitos/Karaoke en
-             el App Hub (appStatusComingSoon). Los botones N4-N1 llevan
-             disabled real, no solo estilo — un clic no debe hacer nada. -->
+        <!-- Selector de nivel JLPT: N5 y N4 ya tienen contenido real
+             (Vocabulario/Gramática/Conversaciones — ver N4_VOCAB_CATEGORIES/
+             N4_GRAMMAR_POINTS/N4_CONVERSATION_SCENES en app.js, cableado vía
+             #jp-level-toggle click handler). Trazos/Examen de Nivel siguen
+             ligados solo a KANJI_N5 (alcance documentado en app.js, sin
+             cambios). N3-N1 SÍ se muestran a propósito (no se ocultan) para
+             que quede claro que el currículum va a seguir creciendo — mismo
+             criterio visual "grayscale + opacity" que los tiers bloqueados
+             de Miika Pass, con badge "Próximamente" (appStatusComingSoon).
+             Esos 3 SÍ llevan disabled real — un clic no debe hacer nada. -->
         <div class="jp-level-toggle" id="jp-level-toggle">
           <button type="button" class="jp-level-btn jp-level-btn--active" data-level="n5">N5</button>
-          <button type="button" class="jp-level-btn jp-level-btn--locked" disabled>
-            N4
-            <span class="jp-level-btn__badge" data-i18n="appStatusComingSoon">Próximamente</span>
-          </button>
+          <button type="button" class="jp-level-btn" data-level="n4">N4</button>
           <button type="button" class="jp-level-btn jp-level-btn--locked" disabled>
             N3
             <span class="jp-level-btn__badge" data-i18n="appStatusComingSoon">Próximamente</span>
@@ -1803,6 +1802,22 @@
            categoría -> quiz de opción múltiple de esa categoría. -->
       <div class="jp-view" id="jp-view-vocab" hidden>
         <button type="button" class="btn-jp-back" id="jp-vocab-back-btn" data-i18n="jpBackToGrid">← Volver</button>
+        <!-- Buscador de diccionario (ver searchJpDictionary() en app.js):
+             busca SIEMPRE en el vocabulario local (N5+N4, ~200 palabras) —
+             eso es lo único que se puede prometer como "en tiempo real" de
+             verdad en una PWA estática sin backend propio. También intenta,
+             en segundo plano y mejor esfuerzo, traer resultados de la API
+             pública de Jisho; si el navegador la bloquea (CORS — típico en
+             despliegues sin proxy propio, confirmado en pruebas), esos
+             resultados extra simplemente no aparecen, sin romper ni
+             bloquear la búsqueda local. -->
+        <div class="jp-dict-search">
+          <input type="text" id="jp-dict-search-input" class="jp-dict-search__input" data-i18n-placeholder="jpDictSearchPlaceholder" placeholder="Buscar palabra (kana, kanji, romaji o significado)..." />
+          <button type="button" class="btn-register jp-general-btn jp-dict-search__btn" id="jp-dict-search-btn" data-i18n="jpDictSearchBtn">🔍 Buscar</button>
+        </div>
+        <div class="jp-dict-search__results" id="jp-dict-search-results" hidden>
+          <!-- resultados renderizados por app.js -->
+        </div>
         <div class="jp-vocab-cat-grid" id="jp-vocab-cat-grid">
           <!-- tarjetas de categoría renderizadas por app.js -->
         </div>
@@ -2515,7 +2530,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260804-20"></script>
+  <script src="app.js?v=20260804-21"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de

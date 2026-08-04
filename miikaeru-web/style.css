@@ -4963,6 +4963,60 @@ textarea,
   font-style: italic;
 }
 
+/* word.example (exclusivo de N4_VOCAB_CATEGORIES, ver openN5VocabWords()
+   en app.js) — mismo lenguaje visual que .jp-grammar-card__example
+   (acento dorado a la izquierda) para que se lea como "la misma familia
+   de componente" en toda la app, no una caja nueva inventada. */
+.jp-vocab-card__example {
+  margin-top: 4px;
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  border-left: 2px solid var(--neon-gold);
+  background: rgba(255, 183, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.jp-vocab-card__example-jp-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.jp-vocab-card__example-jp {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.jp-vocab-card__example-audio {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  background: rgba(0, 240, 255, 0.08);
+  color: var(--text-primary);
+  font-size: 0.6rem;
+  cursor: pointer;
+}
+
+.jp-vocab-card__example-audio:hover {
+  border-color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.jp-vocab-card__example-reading {
+  color: var(--neon-cyan);
+  font-size: 0.68rem;
+}
+
+.jp-vocab-card__example-translation {
+  color: var(--neon-gold);
+  font-size: 0.66rem;
+}
+
 .jp-vocab-card__meaning {
   font-size: 0.72rem;
   color: var(--text-primary);
@@ -5048,6 +5102,62 @@ textarea,
 
 .jp-quiz-feedback--incorrect {
   color: var(--neon-magenta);
+}
+
+/* ---- Buscador de diccionario (searchJpDictionary() en app.js) ---- */
+.jp-dict-search {
+  display: flex;
+  gap: 8px;
+  margin: 10px 0 14px;
+}
+
+.jp-dict-search__input {
+  flex: 1;
+  min-width: 0;
+  padding: 9px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  background: rgba(10, 14, 26, 0.6);
+  color: var(--text-primary);
+  font-size: 0.82rem;
+}
+
+.jp-dict-search__input:focus {
+  outline: none;
+  border-color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.jp-dict-search__btn {
+  flex-shrink: 0;
+  padding: 9px 14px;
+  margin: 0;
+}
+
+.jp-dict-search__results {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.jp-dict-search__empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  padding: 10px;
+}
+
+.jp-dict-search__level-tag {
+  align-self: flex-start;
+  font-size: 0.58rem;
+  letter-spacing: 0.5px;
+  color: var(--neon-purple);
+  border: 1px solid var(--neon-purple);
+  border-radius: 999px;
+  padding: 1px 6px;
+  margin-bottom: 2px;
 }
 
 /* ---- Sub-vistas: Vocabulario N5 (categorías) y Gramática N5 ---- */
@@ -5253,6 +5363,21 @@ textarea,
   border-left: 2px solid var(--neon-gold);
   background: rgba(255, 183, 0, 0.06);
   font-size: 0.78rem;
+}
+
+/* point.tip (exclusivo de N4_GRAMMAR_POINTS, ver renderN5GrammarList()
+   en app.js) — acento morado en vez del dorado de los ejemplos, para
+   diferenciar visualmente "truco para recordar" de "oración de
+   ejemplo" de un vistazo, sin depender solo del ícono 💡. */
+.jp-grammar-card__tip {
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  border-left: 2px solid var(--neon-purple);
+  background: rgba(168, 85, 247, 0.08);
+  font-size: 0.78rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+  font-style: italic;
 }
 
 .jp-grammar-card__example-jp-row {

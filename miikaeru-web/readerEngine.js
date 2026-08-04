@@ -22,25 +22,48 @@ const MiikaeruReader = (() => {
     return "speechSynthesis" in window;
   }
 
-  // Reproduce una línea completa por Web Speech API (mismo patrón que
-  // speakKana() en app.js, reimplementado acá porque este módulo no
-  // comparte closure con app.js). Sin voz nativa disponible, resuelve la
-  // promesa igual tras una duración estimada (~110ms/carácter) para que
-  // el modo automático siga avanzando sin trabarse.
-  function reproducirLinea(texto) {
+  // Chrome/Chromium tiene un bug conocido (desktop y Android): un solo
+  // SpeechSynthesisUtterance largo se corta a mitad de camino, sobre todo
+  // pasados ~15s o con la pestaña sin foco, porque el motor deja de
+  // recibir el "keep-alive" interno que necesita para utterances
+  // extensos. La solución real (no un parche cosmético) es nunca pasarle
+  // un texto largo de una sola vez: se parte en oraciones cortas por los
+  // delimitadores japoneses (。！？) y se reproducen en cola, una
+  // SpeechSynthesisUtterance por oración — cada una dura poco, así que
+  // nunca llega a activar el bug, sin importar cuán larga sea la línea
+  // completa original.
+  function partirEnOraciones(texto) {
+    const oraciones = texto.split(/(?<=[。！？])/).map((s) => s.trim()).filter(Boolean);
+    return oraciones.length ? oraciones : [texto];
+  }
+
+  function hablarOracion(oracion) {
     return new Promise((resolve) => {
-      if (!hayTTS() || !texto) {
-        setTimeout(resolve, Math.max(900, texto.length * 110));
+      if (!hayTTS() || !oracion) {
+        setTimeout(resolve, Math.max(600, oracion.length * 110));
         return;
       }
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(texto);
+      const utterance = new SpeechSynthesisUtterance(oracion);
       utterance.lang = "ja-JP";
       utterance.rate = 0.92; // levemente más lento que el default — más fácil de seguir para un estudiante
       utterance.onend = resolve;
       utterance.onerror = resolve; // no trabar el modo automático si la voz falla a mitad de camino
       window.speechSynthesis.speak(utterance);
     });
+  }
+
+  // Reproduce una línea completa (posiblemente varias oraciones)
+  // encolando una SpeechSynthesisUtterance corta por oración en vez de
+  // una sola larga — ver partirEnOraciones()/hablarOracion() arriba.
+  // Sin voz nativa disponible, resuelve la promesa igual tras una
+  // duración estimada (~110ms/carácter) para que el modo automático siga
+  // avanzando sin trabarse.
+  async function reproducirLinea(texto) {
+    if (!texto) return;
+    window.speechSynthesis && window.speechSynthesis.cancel();
+    for (const oracion of partirEnOraciones(texto)) {
+      await hablarOracion(oracion);
+    }
   }
 
   function textoPlanoDeLinea(linea) {
