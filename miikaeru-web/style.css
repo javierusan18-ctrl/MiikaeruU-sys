@@ -4220,6 +4220,42 @@ textarea,
   flex-wrap: wrap;
 }
 
+/* Selector único de modo (#jp-mode-select) — reemplaza la fila de 8
+   botones sueltos que había antes (pedido explícito: reducir
+   saturación visual en la vista principal del módulo). Ocupa el resto
+   del ancho junto al selector de script (Hiragana/Katakana/Kanji). */
+.jp-mode-select-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 180px;
+}
+
+.jp-mode-select-label {
+  font-size: 0.62rem;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.jp-mode-select {
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  background: rgba(10, 14, 26, 0.6);
+  color: var(--text-primary);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.jp-mode-select:focus {
+  outline: none;
+  border-color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+}
+
 /* Selector de nivel JLPT (N5 activo, N4-N1 bloqueados/próximamente) —
    ver #jp-level-toggle en index.html. */
 .jp-level-toggle {
@@ -6716,22 +6752,6 @@ textarea,
   background: var(--neon-magenta);
   color: #1a0410;
   box-shadow: 0 0 12px rgba(255, 46, 154, 0.5);
-}
-
-/* Examen de Nivel — dorado (mismo tono que dominio/XP en toda la app):
-   es el único botón de este toolbar que de verdad desbloquea progresión,
-   así que se destaca del resto en vez de quedar igual que "Vocabulario"/
-   "Gramática" (consulta libre, sin efecto en el nivel). */
-.jp-level-exam-open-btn {
-  border-color: rgba(255, 183, 0, 0.4);
-  background: rgba(255, 183, 0, 0.08);
-  color: var(--neon-gold);
-}
-
-.jp-level-exam-open-btn:hover {
-  background: var(--neon-gold);
-  color: #1a1200;
-  box-shadow: 0 0 12px rgba(255, 183, 0, 0.5);
 }
 
 .modal--hanzi-writer {

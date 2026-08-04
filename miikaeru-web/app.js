@@ -1273,8 +1273,10 @@ const I18N = {
     jpNextChar: "Siguiente →",
     jpExamStrokeInstruction: "Prueba 1: haz clic en los trazos en el orden correcto de escritura.",
     jpHanziWriterOpenBtn: "✍️ Trazos Reales",
-    jpVocabOpenBtn: "📚 Vocabulario N5",
-    jpGrammarOpenBtn: "📖 Gramática N5",
+    jpVocabOpenBtn: "📚 Vocabulario",
+    jpGrammarOpenBtn: "📖 Gramática",
+    jpModeSelectLabel: "¿Qué quieres practicar?",
+    jpModeSelectPlaceholder: "Elige una opción...",
     jpConversationsOpenBtn: "💬 Conversaciones",
     jpConversationsTitle: "💬 Conversaciones Situacionales",
     jpConvLinesLabel: "líneas",
@@ -1284,6 +1286,8 @@ const I18N = {
     jpConvTimeTitle: "Decir la Hora",
     jpConvWeekdaysTitle: "Los Días de la Semana",
     jpConvDemonstrativesTitle: "De Compras (これ・それ・あれ)",
+    jpConvDirectionsTitle: "Pidiendo Direcciones",
+    jpConvSupermarketTitle: "Compras en el Supermercado",
     jpConvDoctorTitle: "En el Médico",
     jpConvApartmentTitle: "Buscando Departamento",
     jpConvPhoneTitle: "Llamada de Trabajo",
@@ -1981,8 +1985,10 @@ const I18N = {
     jpNextChar: "Next →",
     jpExamStrokeInstruction: "Test 1: click the strokes in the correct writing order.",
     jpHanziWriterOpenBtn: "✍️ Real Strokes",
-    jpVocabOpenBtn: "📚 N5 Vocabulary",
-    jpGrammarOpenBtn: "📖 N5 Grammar",
+    jpVocabOpenBtn: "📚 Vocabulary",
+    jpGrammarOpenBtn: "📖 Grammar",
+    jpModeSelectLabel: "What do you want to practice?",
+    jpModeSelectPlaceholder: "Choose an option...",
     jpConversationsOpenBtn: "💬 Conversations",
     jpConversationsTitle: "💬 Situational Conversations",
     jpConvLinesLabel: "lines",
@@ -1992,6 +1998,8 @@ const I18N = {
     jpConvTimeTitle: "Telling Time",
     jpConvWeekdaysTitle: "Days of the Week",
     jpConvDemonstrativesTitle: "Shopping (これ・それ・あれ)",
+    jpConvDirectionsTitle: "Asking for Directions",
+    jpConvSupermarketTitle: "Supermarket Shopping",
     jpConvDoctorTitle: "At the Doctor",
     jpConvApartmentTitle: "Apartment Hunting",
     jpConvPhoneTitle: "Work Phone Call",
@@ -2689,8 +2697,10 @@ const I18N = {
     jpNextChar: "次へ →",
     jpExamStrokeInstruction: "テスト1：正しい書き順の通りに画をクリックしてください。",
     jpHanziWriterOpenBtn: "✍️ 本物の書き順",
-    jpVocabOpenBtn: "📚 N5語彙",
-    jpGrammarOpenBtn: "📖 N5文法",
+    jpVocabOpenBtn: "📚 語彙",
+    jpGrammarOpenBtn: "📖 文法",
+    jpModeSelectLabel: "何を練習しますか？",
+    jpModeSelectPlaceholder: "選択してください...",
     jpConversationsOpenBtn: "💬 会話",
     jpConversationsTitle: "💬 状況別会話",
     jpConvLinesLabel: "行",
@@ -2700,6 +2710,8 @@ const I18N = {
     jpConvTimeTitle: "時間を言う",
     jpConvWeekdaysTitle: "曜日",
     jpConvDemonstrativesTitle: "買い物（これ・それ・あれ）",
+    jpConvDirectionsTitle: "道を尋ねる",
+    jpConvSupermarketTitle: "スーパーでの買い物",
     jpConvDoctorTitle: "病院で",
     jpConvApartmentTitle: "部屋探し",
     jpConvPhoneTitle: "仕事の電話",
@@ -4430,6 +4442,46 @@ const N5_CONVERSATION_SCENES = [
       { segments: [{ text: "Ｂ：" }, { text: "申し訳ございません", reading: "もうしわけございません" }, { text: "、あれはもう" }, { text: "売り切れ", reading: "うりきれ" }, { text: "です。" }], traduccion: { es: "Lo siento mucho, aquel ya está agotado.", en: "I'm very sorry, that one is already sold out." } },
       { segments: [{ text: "Ａ：" }, { text: "分かりました", reading: "わかりました" }, { text: "。" }, { text: "今日", reading: "きょう" }, { text: "はこれだけにします。" }], traduccion: { es: "Entendido. Hoy me quedo solo con esto.", en: "Understood. I'll just take this today." } },
       { segments: [{ text: "Ｂ：" }, { text: "ありがとうございました。" }], traduccion: { es: "Muchas gracias.", en: "Thank you very much." } },
+    ],
+  },
+  {
+    id: "directions",
+    icon: "🗺️",
+    titleKey: "jpConvDirectionsTitle",
+    lineas: [
+      { segments: [{ text: "Ａ：" }, { text: "すみません、" }, { text: "駅", reading: "えき" }, { text: "はどこですか。" }], traduccion: { es: "Disculpe, ¿dónde está la estación?", en: "Excuse me, where is the station?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "駅", reading: "えき" }, { text: "ですか。" }, { text: "まっすぐ" }, { text: "行ってください", reading: "いってください" }, { text: "。" }], traduccion: { es: "¿La estación? Vaya derecho.", en: "The station? Go straight." } },
+      { segments: [{ text: "Ａ：" }, { text: "まっすぐ" }, { text: "ですね。" }, { text: "分かりました", reading: "わかりました" }, { text: "。" }], traduccion: { es: "Derecho, entendido.", en: "Straight ahead, got it." } },
+      { segments: [{ text: "Ｂ：" }, { text: "それから、" }, { text: "二つ目", reading: "ふたつめ" }, { text: "の" }, { text: "信号", reading: "しんごう" }, { text: "を" }, { text: "右", reading: "みぎ" }, { text: "に" }, { text: "曲がってください", reading: "まがってください" }, { text: "。" }], traduccion: { es: "Después, doble a la derecha en el segundo semáforo.", en: "After that, turn right at the second traffic light." } },
+      { segments: [{ text: "Ａ：" }, { text: "二つ目", reading: "ふたつめ" }, { text: "の" }, { text: "信号", reading: "しんごう" }, { text: "を" }, { text: "右", reading: "みぎ" }, { text: "ですね。" }, { text: "遠い", reading: "とおい" }, { text: "ですか。" }], traduccion: { es: "Segundo semáforo a la derecha, ¿verdad? ¿Está lejos?", en: "Right at the second light, right? Is it far?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "いいえ、あまり" }, { text: "遠くない", reading: "とおくない" }, { text: "です。" }, { text: "歩いて", reading: "あるいて" }, { text: "五分", reading: "ごふん" }, { text: "ぐらいです。" }], traduccion: { es: "No, no está muy lejos. Como cinco minutos caminando.", en: "No, it's not too far. About five minutes on foot." } },
+      { segments: [{ text: "Ａ：" }, { text: "分かりました", reading: "わかりました" }, { text: "。" }, { text: "ありがとうございます。" }], traduccion: { es: "Entendido. Gracias.", en: "Got it. Thank you." } },
+      { segments: [{ text: "Ｂ：" }, { text: "どういたしまして。" }, { text: "気をつけて", reading: "きをつけて" }, { text: "。" }], traduccion: { es: "De nada. Cuídese.", en: "You're welcome. Take care." } },
+      { segments: [{ text: "Ａ：" }, { text: "あの、すみません、" }, { text: "もう" }, { text: "一度", reading: "いちど" }, { text: "お願いします", reading: "おねがいします" }, { text: "。" }], traduccion: { es: "Disculpe, ¿una vez más por favor?", en: "Um, excuse me, one more time please?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "いいですよ。" }, { text: "この" }, { text: "道", reading: "みち" }, { text: "をまっすぐ" }, { text: "行って", reading: "いって" }, { text: "、" }, { text: "二つ目", reading: "ふたつめ" }, { text: "の" }, { text: "信号", reading: "しんごう" }, { text: "を" }, { text: "右", reading: "みぎ" }, { text: "です。" }], traduccion: { es: "Claro. Siga esta calle derecho, y en el segundo semáforo a la derecha.", en: "Sure. Go straight on this street, then right at the second light." } },
+      { segments: [{ text: "Ａ：" }, { text: "左側", reading: "ひだりがわ" }, { text: "にありますか、" }, { text: "右側", reading: "みぎがわ" }, { text: "にありますか。" }], traduccion: { es: "¿Está del lado izquierdo o del lado derecho?", en: "Is it on the left side or the right side?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "右側", reading: "みぎがわ" }, { text: "です。" }, { text: "大きい", reading: "おおきい" }, { text: "建物", reading: "たてもの" }, { text: "です。" }, { text: "すぐ" }, { text: "分かります", reading: "わかります" }, { text: "。" }], traduccion: { es: "Del lado derecho. Es un edificio grande. Lo reconocerá enseguida.", en: "The right side. It's a big building. You'll recognize it right away." } },
+    ],
+  },
+  {
+    id: "supermarket",
+    icon: "🛒",
+    titleKey: "jpConvSupermarketTitle",
+    lineas: [
+      { segments: [{ text: "Ａ：" }, { text: "すみません、" }, { text: "卵", reading: "たまご" }, { text: "はどこにありますか。" }], traduccion: { es: "Disculpe, ¿dónde están los huevos?", en: "Excuse me, where are the eggs?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "卵", reading: "たまご" }, { text: "ですか。" }, { text: "あちらです。" }, { text: "冷蔵庫", reading: "れいぞうこ" }, { text: "の" }, { text: "近く", reading: "ちかく" }, { text: "です。" }], traduccion: { es: "¿Huevos? Por allá. Cerca del refrigerador.", en: "Eggs? Over there. Near the fridge." } },
+      { segments: [{ text: "Ａ：" }, { text: "ありがとうございます。" }, { text: "あ、" }, { text: "牛乳", reading: "ぎゅうにゅう" }, { text: "も" }, { text: "欲しい", reading: "ほしい" }, { text: "です。" }], traduccion: { es: "Gracias. Ah, también quiero leche.", en: "Thank you. Oh, I also want milk." } },
+      { segments: [{ text: "Ｂ：" }, { text: "牛乳", reading: "ぎゅうにゅう" }, { text: "も" }, { text: "同じ", reading: "おなじ" }, { text: "ところにあります。" }], traduccion: { es: "La leche también está en el mismo lugar.", en: "Milk is in the same place too." } },
+      { segments: [{ text: "Ａ：" }, { text: "すみません、この" }, { text: "野菜", reading: "やさい" }, { text: "はいくらですか。" }], traduccion: { es: "Disculpe, ¿cuánto cuesta esta verdura?", en: "Excuse me, how much is this vegetable?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "それは" }, { text: "百五十円", reading: "ひゃくごじゅうえん" }, { text: "です。とても" }, { text: "新鮮", reading: "しんせん" }, { text: "ですよ。" }], traduccion: { es: "Eso cuesta ciento cincuenta yenes. Está muy fresco.", en: "That's one hundred fifty yen. It's very fresh." } },
+      { segments: [{ text: "Ａ：" }, { text: "じゃあ、" }, { text: "三つ", reading: "みっつ" }, { text: "ください。" }], traduccion: { es: "Entonces, deme tres por favor.", en: "Then, give me three please." } },
+      { segments: [{ text: "Ｂ：" }, { text: "かしこまりました。" }, { text: "他", reading: "ほか" }, { text: "に" }, { text: "何か", reading: "なにか" }, { text: "要りますか", reading: "いりますか" }, { text: "。" }], traduccion: { es: "Entendido. ¿Necesita algo más?", en: "Understood. Do you need anything else?" } },
+      { segments: [{ text: "Ａ：" }, { text: "パン", reading: "ぱん" }, { text: "も" }, { text: "買いたい", reading: "かいたい" }, { text: "です。" }, { text: "安い", reading: "やすい" }, { text: "パン", reading: "ぱん" }, { text: "はありますか。" }], traduccion: { es: "También quiero comprar pan. ¿Hay pan barato?", en: "I also want to buy bread. Is there cheap bread?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "はい、あそこにあります。" }, { text: "今日", reading: "きょう" }, { text: "はセールです。" }], traduccion: { es: "Sí, está allá. Hoy hay oferta.", en: "Yes, it's over there. Today there's a sale." } },
+      { segments: [{ text: "Ａ：" }, { text: "いいですね。" }, { text: "レジ", reading: "れじ" }, { text: "はどこですか。" }], traduccion: { es: "Qué bien. ¿Dónde está la caja?", en: "Nice. Where's the register?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "出口", reading: "でぐち" }, { text: "の" }, { text: "前", reading: "まえ" }, { text: "です。" }, { text: "袋", reading: "ふくろ" }, { text: "は" }, { text: "要りますか", reading: "いりますか" }, { text: "。" }], traduccion: { es: "Enfrente de la salida. ¿Necesita bolsa?", en: "In front of the exit. Do you need a bag?" } },
+      { segments: [{ text: "Ａ：" }, { text: "はい、" }, { text: "一枚", reading: "いちまい" }, { text: "お願いします", reading: "おねがいします" }, { text: "。" }, { text: "全部", reading: "ぜんぶ" }, { text: "でいくらですか。" }], traduccion: { es: "Sí, una por favor. ¿Cuánto es en total?", en: "Yes, one please. How much is it in total?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "全部", reading: "ぜんぶ" }, { text: "で" }, { text: "八百円", reading: "はっぴゃくえん" }, { text: "です。" }], traduccion: { es: "En total son ochocientos yenes.", en: "In total it's eight hundred yen." } },
     ],
   },
 ];
@@ -6398,9 +6450,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const japaneseModalClose = document.getElementById("japanese-modal-close");
   const jpGridBackBtn = document.getElementById("jp-grid-back-btn");
   const jpScriptToggle = document.getElementById("jp-script-toggle");
-  const jpGeneralPracticeBtn = document.getElementById("jp-general-practice-btn");
-  const jpParticlesOpenBtn = document.getElementById("jp-particles-open-btn");
-  const jpLevelExamOpenBtn = document.getElementById("jp-level-exam-open-btn");
+  // Selector único de modo (#jp-mode-select) — reemplaza los 8 botones
+  // sueltos que había antes (Práctica General/Examen de Nivel/Trazos/
+  // Vocabulario/Gramática/Conversaciones/Partículas/Yōon), ver su
+  // listener más abajo junto a jpRowsEl.addEventListener.
+  const jpModeSelect = document.getElementById("jp-mode-select");
   const jpRowsEl = document.getElementById("jp-rows");
   const jpViewGrid = document.getElementById("jp-view-grid");
   const jpViewPhases = document.getElementById("jp-view-phases");
@@ -6417,7 +6471,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const jpLevelToggle = document.getElementById("jp-level-toggle");
 
-  const jpVocabOpenBtn = document.getElementById("jp-vocab-open-btn");
   const jpVocabBackBtn = document.getElementById("jp-vocab-back-btn");
   const jpVocabCatGrid = document.getElementById("jp-vocab-cat-grid");
   const jpDictSearchInput = document.getElementById("jp-dict-search-input");
@@ -6428,17 +6481,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const jpVocabWordsList = document.getElementById("jp-vocab-words-list");
   const jpVocabQuizStartBtn = document.getElementById("jp-vocab-quiz-start-btn");
 
-  const jpGrammarOpenBtn = document.getElementById("jp-grammar-open-btn");
   const jpGrammarBackBtn = document.getElementById("jp-grammar-back-btn");
   const jpGrammarList = document.getElementById("jp-grammar-list");
   const jpGrammarQuizStartBtn = document.getElementById("jp-grammar-quiz-start-btn");
 
-  const jpYoonOpenBtn = document.getElementById("jp-yoon-open-btn");
   const jpYoonBackBtn = document.getElementById("jp-yoon-back-btn");
   const jpYoonGrid = document.getElementById("jp-yoon-grid");
   const jpYoonQuizStartBtn = document.getElementById("jp-yoon-quiz-start-btn");
 
-  const jpConversationsOpenBtn = document.getElementById("jp-conversations-open-btn");
   const jpConversationsBackBtn = document.getElementById("jp-conversations-back-btn");
   const jpConversationSceneGrid = document.getElementById("jp-conversation-scene-grid");
   const jpConversationReader = document.getElementById("jp-conversation-reader");
@@ -6488,7 +6538,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const jpQuizOptions = document.getElementById("jp-quiz-options");
   const jpQuizFeedback = document.getElementById("jp-quiz-feedback");
 
-  const hanziWriterOpenBtn = document.getElementById("jp-hanzi-writer-open-btn");
   const hanziWriterModal = document.getElementById("hanzi-writer-modal");
   const hanziWriterModalClose = document.getElementById("hanzi-writer-modal-close");
   const hanziViewGrid = document.getElementById("hanzi-view-grid");
@@ -12315,7 +12364,6 @@ document.addEventListener("DOMContentLoaded", () => {
     showJpView("vocab-words");
   }
 
-  jpVocabOpenBtn.addEventListener("click", () => showJpView("vocab"));
   jpVocabBackBtn.addEventListener("click", () => showJpView("grid"));
   jpVocabWordsBackBtn.addEventListener("click", () => showJpView("vocab"));
 
@@ -12570,7 +12618,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  jpGrammarOpenBtn.addEventListener("click", () => showJpView("grammar"));
   jpGrammarBackBtn.addEventListener("click", () => showJpView("grid"));
 
   // ---------------- Yōon (きゃ/しゃ/etc.) ----------------
@@ -12628,7 +12675,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  jpYoonOpenBtn.addEventListener("click", () => showJpView("yoon"));
   jpYoonBackBtn.addEventListener("click", () => showJpView("grid"));
   jpYoonQuizStartBtn.addEventListener("click", () => startMiniQuiz(buildYoonQuizItems(), "yoon", "yoon"));
 
@@ -12704,7 +12750,6 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
-  jpConversationsOpenBtn.addEventListener("click", () => showJpView("conversations"));
   jpConversationsBackBtn.addEventListener("click", () => showJpView("grid"));
   jpConversationReaderBackBtn.addEventListener("click", openConversationSceneGrid);
 
@@ -12889,12 +12934,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   jpMiniQuizBackBtn.addEventListener("click", () => showJpView(miniQuizReturnView));
 
-  // Módulo dedicado de Práctica de Partículas — entra directo desde la
-  // cuadrícula principal (ver botón junto a Vocabulario/Gramática/Yōon en
-  // index.html), sin pasar primero por Gramática N5.
-  jpParticlesOpenBtn.addEventListener("click", () => {
-    startMiniQuiz(buildParticleQuizItems(), "grid", "particles");
-  });
 
   // "Volver" claro desde la pantalla principal del módulo — antes solo
   // existía el [✕] chico de la esquina; pedido explícito de un botón de
@@ -13067,7 +13106,6 @@ document.addEventListener("DOMContentLoaded", () => {
     showJpView("grid");
   }
 
-  jpLevelExamOpenBtn.addEventListener("click", startJpLevelExam);
   jpLevelExamBackBtn.addEventListener("click", () => showJpView("grid"));
   jpLevelExamSpeakBtn.addEventListener("click", () => {
     if (jpLevelExamCurrentItem && isJpExamAudioAllowed(jpScript)) speakKana(jpLevelExamCurrentItem.char);
@@ -13421,8 +13459,43 @@ document.addEventListener("DOMContentLoaded", () => {
     renderGojuonGrid();
   });
 
-  jpGeneralPracticeBtn.addEventListener("click", () => {
-    startJpPractice(getKanaList(jpScript));
+  // Selector único de modo (#jp-mode-select) — reemplaza los 8 botones
+  // sueltos que había antes (pedido explícito: reducir saturación
+  // visual/"demasiados botones y cuadritos sueltos"). Cada `case` llama
+  // exactamente a la misma función que llamaba su botón viejo — ningún
+  // comportamiento cambió, solo cómo se dispara. Se resetea a "" después
+  // de cada elección para que quede como un menú de acciones (no un
+  // <select> con "valor actual" que hay que recordar cuál era).
+  jpModeSelect.addEventListener("change", () => {
+    const mode = jpModeSelect.value;
+    switch (mode) {
+      case "general-practice":
+        startJpPractice(getKanaList(jpScript));
+        break;
+      case "level-exam":
+        startJpLevelExam();
+        break;
+      case "hanzi-writer":
+        renderHanziWriterGrids();
+        hanziWriterModal.hidden = false;
+        break;
+      case "vocab":
+        showJpView("vocab");
+        break;
+      case "grammar":
+        showJpView("grammar");
+        break;
+      case "conversations":
+        showJpView("conversations");
+        break;
+      case "particles":
+        startMiniQuiz(buildParticleQuizItems(), "grid", "particles");
+        break;
+      case "yoon":
+        showJpView("yoon");
+        break;
+    }
+    jpModeSelect.value = "";
   });
 
   jpRowsEl.addEventListener("click", (event) => {
@@ -13758,10 +13831,6 @@ document.addEventListener("DOMContentLoaded", () => {
     hanziViewGrid.hidden = false;
   }
 
-  hanziWriterOpenBtn.addEventListener("click", () => {
-    renderHanziWriterGrids();
-    hanziWriterModal.hidden = false;
-  });
   hanziWriterModalClose.addEventListener("click", closeHanziWriterModal);
   hanziWriterModal.addEventListener("click", (event) => {
     if (event.target === hanziWriterModal) closeHanziWriterModal();

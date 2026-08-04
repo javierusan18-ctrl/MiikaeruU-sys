@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260804-22" />
+  <link rel="stylesheet" href="style.css?v=20260804-23" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -1701,24 +1701,30 @@
             <button type="button" class="jp-script-btn" data-script="katakana" data-i18n="jpScriptKatakana">Katakana</button>
             <button type="button" class="jp-script-btn" data-script="kanji" data-i18n="jpScriptKanji">Kanji N5</button>
           </div>
-          <button type="button" class="btn-register jp-general-btn" id="jp-general-practice-btn" data-i18n="jpGeneralPractice">🎯 Práctica General</button>
-          <!-- Examen de Nivel: distinto de "Práctica General" — este SÍ
-               desbloquea progresión (ver startJpLevelExam() en app.js),
-               la práctica general solo repasa lo ya desbloqueado. -->
-          <button type="button" class="btn-register jp-general-btn jp-level-exam-open-btn" id="jp-level-exam-open-btn" data-i18n="jpLevelExamOpenBtn">📝 Examen de Nivel</button>
-          <button type="button" class="btn-register jp-general-btn jp-hanzi-writer-open-btn" id="jp-hanzi-writer-open-btn" data-i18n="jpHanziWriterOpenBtn">✍️ Trazos Reales</button>
-          <button type="button" class="btn-register jp-general-btn" id="jp-vocab-open-btn" data-i18n="jpVocabOpenBtn">📚 Vocabulario N5</button>
-          <button type="button" class="btn-register jp-general-btn" id="jp-grammar-open-btn" data-i18n="jpGrammarOpenBtn">📖 Gramática N5</button>
-          <!-- Conversaciones Situacionales — pedido explícito: fábrica,
-               invitar a alguien a salir, la hora, días de la semana,
-               demostrativos これ/それ/あれ. Ver N5_CONVERSATION_SCENES en
-               app.js y jp-view-conversations más abajo. -->
-          <button type="button" class="btn-register jp-general-btn" id="jp-conversations-open-btn" data-i18n="jpConversationsOpenBtn">💬 Conversaciones</button>
-          <!-- Módulo dedicado de partículas — pedido explícito: reutiliza
-               buildParticleQuizItems() (app.js), entra directo desde acá
-               en vez de estar escondido dentro de Gramática N5. -->
-          <button type="button" class="btn-register jp-general-btn" id="jp-particles-open-btn" data-i18n="jpParticlesOpenBtn">🧩 Práctica de Partículas</button>
-          <button type="button" class="btn-register jp-general-btn" id="jp-yoon-open-btn" data-i18n="jpYoonOpenBtn">🈴 Yōon</button>
+          <!-- Selector único de modo — reemplaza la fila de 8 botones
+               sueltos que había acá antes (pedido explícito: "demasiados
+               botones y cuadritos sueltos que abruman la pantalla móvil").
+               Un solo <select> agrupa Práctica General/Examen de
+               Nivel/Trazos/Vocabulario/Gramática/Conversaciones/Partículas/
+               Yōon — mismas acciones exactas de siempre (ver el listener
+               de jp-mode-select en app.js, que llama a las mismas
+               funciones que cada botón viejo llamaba), solo que ahora
+               ordenadas en un filtro de selección en vez de ocho
+               cuadritos compitiendo por espacio. -->
+          <div class="jp-mode-select-wrap">
+            <label for="jp-mode-select" class="jp-mode-select-label" data-i18n="jpModeSelectLabel">¿Qué quieres practicar?</label>
+            <select id="jp-mode-select" class="jp-mode-select">
+              <option value="" selected disabled data-i18n="jpModeSelectPlaceholder">Elige una opción...</option>
+              <option value="general-practice" data-i18n="jpGeneralPractice">🎯 Práctica General</option>
+              <option value="level-exam" data-i18n="jpLevelExamOpenBtn">📝 Examen de Nivel</option>
+              <option value="hanzi-writer" data-i18n="jpHanziWriterOpenBtn">✍️ Trazos Reales</option>
+              <option value="vocab" data-i18n="jpVocabOpenBtn">📚 Vocabulario</option>
+              <option value="grammar" data-i18n="jpGrammarOpenBtn">📖 Gramática</option>
+              <option value="conversations" data-i18n="jpConversationsOpenBtn">💬 Conversaciones</option>
+              <option value="particles" data-i18n="jpParticlesOpenBtn">🧩 Práctica de Partículas</option>
+              <option value="yoon" data-i18n="jpYoonOpenBtn">🈴 Yōon</option>
+            </select>
+          </div>
         </div>
         <div class="jp-rows" id="jp-rows">
           <!-- filas del Gojuon renderizadas por app.js (renderGojuonGrid) -->
@@ -2542,7 +2548,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260804-22"></script>
+  <script src="app.js?v=20260804-23"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de
