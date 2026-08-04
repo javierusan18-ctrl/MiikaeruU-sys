@@ -726,10 +726,11 @@ const I18N = {
     masterAuthGoRegister: "¿No tienes cuenta? Crear una",
     masterAuthGoLogin: "¿Ya tienes cuenta? Iniciar sesión",
     profileSwitchBtnTitle: "Cambiar de perfil",
-    installAppBtn: "⬇️ Instalar App",
-    installIosHintTitle: "Cómo instalar en iPhone/iPad",
-    installIosHintMsg:
-      "Para instalar Miikaeru en tu iPhone/iPad: toca el botón Compartir (el cuadrado con la flecha hacia arriba) en la barra de Safari, luego elige 'Agregar a inicio'. La app quedará en tu pantalla de inicio con su propio icono, sin barra del navegador.",
+    installAppBtn: "Instalar App",
+    pwaIosModalTitle: "📲 Instalar en iPhone/iPad",
+    pwaIosStep1: "Toca el botón Compartir (el cuadrado con la flecha hacia arriba) en la barra de Safari.",
+    pwaIosStep2: 'Selecciona "Agregar a la pantalla de inicio".',
+    pwaIosStep3: 'Confirma tocando "Agregar" — listo, Miikaeru quedará instalado con su propio icono.',
     miikaPassBtn: "🎫 Miika Pass",
     miikaPassTitle: "🎫 MIIKA PASS",
     miikaPassLore: "Cada nivel que alcanzas desbloquea una recompensa del núcleo Miikaeru.",
@@ -1402,10 +1403,11 @@ const I18N = {
     masterAuthGoRegister: "Don't have an account? Create one",
     masterAuthGoLogin: "Already have an account? Log in",
     profileSwitchBtnTitle: "Switch profile",
-    installAppBtn: "⬇️ Install App",
-    installIosHintTitle: "How to install on iPhone/iPad",
-    installIosHintMsg:
-      "To install Miikaeru on your iPhone/iPad: tap the Share button (the square with an arrow pointing up) in Safari's toolbar, then choose 'Add to Home Screen'. The app will appear on your home screen with its own icon, no browser bar.",
+    installAppBtn: "Install App",
+    pwaIosModalTitle: "📲 Install on iPhone/iPad",
+    pwaIosStep1: "Tap the Share button (the square with an arrow pointing up) in Safari's toolbar.",
+    pwaIosStep2: 'Select "Add to Home Screen".',
+    pwaIosStep3: 'Confirm by tapping "Add" — done, Miikaeru will be installed with its own icon.',
     miikaPassBtn: "🎫 Miika Pass",
     miikaPassTitle: "🎫 MIIKA PASS",
     miikaPassLore: "Every level you reach unlocks a reward from the Miikaeru core.",
@@ -2078,10 +2080,11 @@ const I18N = {
     masterAuthGoRegister: "アカウントをお持ちでないですか？作成する",
     masterAuthGoLogin: "すでにアカウントをお持ちですか？ログイン",
     profileSwitchBtnTitle: "プロフィールを切り替える",
-    installAppBtn: "⬇️ アプリをインストール",
-    installIosHintTitle: "iPhone/iPadへのインストール方法",
-    installIosHintMsg:
-      "iPhone/iPadにMiikaeruをインストールするには、Safariのツールバーにある共有ボタン（上向き矢印の四角）をタップし、「ホーム画面に追加」を選んでください。独自のアイコン付きでホーム画面に追加され、ブラウザバーなしで開けます。",
+    installAppBtn: "アプリをインストール",
+    pwaIosModalTitle: "📲 iPhone/iPadにインストール",
+    pwaIosStep1: "Safariのツールバーにある共有ボタン（上向き矢印の四角）をタップします。",
+    pwaIosStep2: "「ホーム画面に追加」を選択します。",
+    pwaIosStep3: "「追加」をタップして確定 — これでMiikaeruが独自のアイコン付きでインストールされます。",
     miikaPassBtn: "🎫 ミイカパス",
     miikaPassTitle: "🎫 ミイカパス",
     miikaPassLore: "到達したレベルごとに、ミイカエルのコアから報酬が解放されます。",
@@ -5735,7 +5738,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const profileName = document.getElementById("profile-name");
   const logoutBtn = document.getElementById("logout-btn");
   const installAppBtn = document.getElementById("install-app-btn");
-  const installIosHintBtn = document.getElementById("install-ios-hint-btn");
+  const pwaInstallIosModal = document.getElementById("pwa-install-ios-modal");
+  const pwaInstallIosModalClose = document.getElementById("pwa-install-ios-modal-close");
 
   // Perfiles de Usuario (cuentas separadas, distinto de operatorName)
   const profileSwitchBtn = document.getElementById("profile-switch-btn");
@@ -10418,22 +10422,25 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ---------------- Instalación PWA (botón "Instalar App") ----------------
-  // El evento beforeinstallprompt SOLO lo dispara el navegador cuando ya
-  // verificó que el sitio cumple los requisitos de instalación (manifest
-  // válido, HTTPS/localhost, Service Worker registrado) — por eso el
-  // botón arranca oculto (ver index.html) y solo se muestra si ese
-  // evento realmente llega. Firefox de escritorio nunca lo dispara (no
-  // soporta instalación programática vía JS), así que ahí el botón se
-  // queda oculto para siempre en vez de prometer algo que no puede
-  // cumplir. iOS Safari TAMPOCO lo dispara nunca, pero a diferencia de
-  // Firefox sí tiene un camino real de instalación manual (Compartir →
-  // Agregar a inicio) — ver installIosHintBtn más abajo, pedido
-  // explícito de que "cualquier usuario" tenga cómo instalar, no solo
-  // los que corren Chrome/Edge/Android.
+  // ---------------- Instalación PWA (botón unificado "Instalar App") ----------------
+  // Un solo botón cubre los dos caminos reales de instalación:
+  // - Android/Chrome/Desktop compatible: el navegador dispara
+  //   beforeinstallprompt SOLO cuando ya verificó que el sitio cumple los
+  //   requisitos (manifest válido, HTTPS/localhost, Service Worker
+  //   registrado) — al hacer clic disparamos ese aviso nativo real vía
+  //   deferredInstallPrompt.prompt().
+  // - iOS/Safari: ese navegador JAMÁS dispara beforeinstallprompt (no
+  //   soporta instalación programática vía JS), pero SÍ tiene un camino
+  //   real de instalación manual (Compartir → Agregar a inicio) — al
+  //   hacer clic abrimos openPwaInstallIosModal() con esos pasos exactos
+  //   en vez de dejar al usuario sin ninguna guía.
+  // Firefox de escritorio no dispara el evento y no tiene un equivalente
+  // manual documentable, así que ahí el botón se queda oculto para
+  // siempre en vez de prometer algo que no puede cumplir.
   let deferredInstallPrompt = null;
   const runningStandalone =
     window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+  const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
   if (!runningStandalone) {
     window.addEventListener("beforeinstallprompt", (event) => {
@@ -10441,10 +10448,38 @@ document.addEventListener("DOMContentLoaded", () => {
       deferredInstallPrompt = event;
       if (installAppBtn) installAppBtn.hidden = false;
     });
+
+    // iOS nunca dispara beforeinstallprompt, así que ahí la visibilidad
+    // del botón no depende de ese evento: se muestra apenas confirmamos
+    // el User-Agent, porque el camino manual de abajo SÍ es real ahí
+    // mismo sin esperar nada del navegador.
+    if (isIOSDevice && installAppBtn) installAppBtn.hidden = false;
   }
+
+  function openPwaInstallIosModal() {
+    if (pwaInstallIosModal) pwaInstallIosModal.hidden = false;
+  }
+
+  function closePwaInstallIosModal() {
+    if (pwaInstallIosModal) pwaInstallIosModal.hidden = true;
+  }
+
+  if (pwaInstallIosModalClose) pwaInstallIosModalClose.addEventListener("click", closePwaInstallIosModal);
+  if (pwaInstallIosModal) {
+    pwaInstallIosModal.addEventListener("click", (event) => {
+      if (event.target === pwaInstallIosModal) closePwaInstallIosModal();
+    });
+  }
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && pwaInstallIosModal && !pwaInstallIosModal.hidden) closePwaInstallIosModal();
+  });
 
   if (installAppBtn) {
     installAppBtn.addEventListener("click", async () => {
+      if (isIOSDevice) {
+        openPwaInstallIosModal();
+        return;
+      }
       if (!deferredInstallPrompt) return;
       installAppBtn.disabled = true;
       deferredInstallPrompt.prompt();
@@ -10462,22 +10497,6 @@ document.addEventListener("DOMContentLoaded", () => {
     deferredInstallPrompt = null;
     if (installAppBtn) installAppBtn.hidden = true;
   });
-
-  // Respaldo iOS/Safari: nunca abre un modal ni interrumpe nada — solo
-  // posta las instrucciones al feed de chat (mismo patrón ya usado en
-  // toda la app para avisos no-bloqueantes vía addMessage()), así la
-  // navegación y el uso normal de la plataforma siguen sin cortes.
-  const isIOSDevice = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-  if (isIOSDevice && !runningStandalone && installIosHintBtn) {
-    installIosHintBtn.hidden = false;
-    installIosHintBtn.addEventListener("click", () => {
-      addMessage({
-        author: "SISTEMA",
-        text: t("installIosHintMsg"),
-        variant: "system",
-      });
-    });
-  }
 
   // ---------------- Controles de escala (León / Chat) ----------------
   // Solo escriben las custom properties --avatar-scale/--chat-scale que

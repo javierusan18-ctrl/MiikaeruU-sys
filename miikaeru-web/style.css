@@ -495,23 +495,26 @@ body::before {
   filter: drop-shadow(0 0 8px rgba(255, 183, 0, 0.85));
 }
 
-/* Botón de instalación PWA — mismo criterio visual de "acción especial"
-   que .btn-miika-pass (pulso + degradado), en verde neón para el
-   significado universal de "descargar/instalar". Solo se muestra cuando
-   app.js confirma soporte real vía el evento beforeinstallprompt (ver
-   installAppBtn.hidden ahí) — el CSS no decide su visibilidad, solo su
-   apariencia cuando ya está visible. */
+/* Botón unificado de instalación PWA — mismo criterio visual de "acción
+   especial" que .btn-miika-pass (pulso + degradado), en verde neón para
+   el significado universal de "descargar/instalar". Un solo botón cubre
+   los dos caminos reales de instalación (ver handleInstallAppClick() en
+   app.js): dispara el aviso nativo `beforeinstallprompt` en
+   Android/Chrome/Desktop compatible, o abre #pwa-install-ios-modal con
+   los pasos manuales en iOS/Safari (que nunca dispara ese evento).
+   Arranca oculto (installAppBtn.hidden en app.js) y solo se muestra
+   cuando app.js confirma que existe al menos una de esas dos vías —
+   el CSS no decide su visibilidad, solo su apariencia. Ahora es
+   icono-solo (logo "M" + flecha de descarga, ver .pwa-install-icon),
+   por eso el padding es más compacto/cuadrado que un pill de texto. */
 .btn-install-app {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.5px;
+  justify-content: center;
   color: #04121a;
   background: linear-gradient(135deg, var(--neon-green), var(--neon-cyan));
   border: none;
-  padding: 6px 14px;
+  padding: 7px 11px;
   border-radius: 999px;
   cursor: pointer;
   clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
@@ -529,14 +532,60 @@ body::before {
   50% { box-shadow: 0 0 14px rgba(0, 240, 255, 0.6); }
 }
 
-/* Respaldo iOS/Safari (ver installIosHintBtn en app.js) — mismo pulso e
-   idea visual que .btn-install-app, pero solo-icono (sin texto: iOS no
-   soporta instalación vía JS, así que este botón es un atajo a
-   instrucciones manuales, no un instalador real) por eso el padding
-   circular en vez del pill alargado. */
-.btn-install-app--ios {
-  padding: 6px 10px;
+/* Logo "M" estilizado (trazo anguloso, sin curvas — misma estética
+   cyberpunk del resto del HUD) + insignia circular con flecha de
+   descarga superpuesta en la esquina, en vez del emoji de manzana
+   anterior: el icono ahora comunica "app Miikaeru" en vez de "iOS". */
+.pwa-install-icon {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
+.pwa-install-icon__badge {
+  fill: #04121a;
+}
+
+.pwa-install-icon__arrow {
+  stroke: var(--neon-cyan);
+}
+
+/* MODAL: instrucciones de instalación manual en iOS/Safari — se abre
+   desde el botón unificado de arriba cuando app.js detecta un
+   User-Agent de iOS (ver isIOSDevice en app.js). Reutiliza .modal--app
+   como base (mismo glass/blur) pero angosto, ya que es solo 3 pasos de
+   texto, no un panel de contenido grande. */
+.modal--pwa-install-ios {
+  max-width: 420px;
+  text-align: center;
+  background:
+    linear-gradient(rgba(10, 14, 26, 0.9), rgba(10, 14, 26, 0.9)),
+    url("assets/bg_state_idle.png") center/cover no-repeat;
+}
+
+.pwa-ios-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  text-align: left;
+}
+
+.pwa-ios-steps li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
   font-size: 0.85rem;
+  line-height: 1.4;
+  color: #d8f4ff;
+}
+
+.pwa-ios-steps__icon {
+  flex: none;
+  font-size: 1.2rem;
+  filter: drop-shadow(0 0 6px rgba(0, 240, 255, 0.5));
 }
 
 .xp-bar {

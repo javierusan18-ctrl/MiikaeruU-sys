@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260804-19" />
+  <link rel="stylesheet" href="style.css?v=20260804-20" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -167,20 +167,21 @@
     </div>
 
     <div class="hud__profile" id="hud-profile">
-      <!-- Botón de instalación PWA — oculto por defecto (ver
-           installAppBtn en app.js): solo se muestra cuando el navegador
-           realmente disparó `beforeinstallprompt` (soporte real de
-           instalación), nunca como promesa vacía en navegadores/SO que
-           no lo soportan (ej. Firefox de escritorio, iOS Safari). -->
-      <button class="btn-install-app" id="install-app-btn" type="button" data-i18n="installAppBtn" hidden>⬇️ Instalar App</button>
-      <!-- Respaldo para iOS/Safari: ese navegador NUNCA dispara
-           beforeinstallprompt, así que sin esto un usuario de
-           iPhone/iPad no tendría NINGÚN indicio de cómo instalar la app
-           desde dentro del dashboard — pedido explícito de que
-           "cualquier usuario" pueda hacerlo. No abre modal ni bloquea
-           nada: solo posta las instrucciones al feed de chat, mismo
-           patrón no-intrusivo que el resto de la app usa para avisos. -->
-      <button class="btn-install-app btn-install-app--ios" id="install-ios-hint-btn" type="button" data-i18n-title="installIosHintTitle" title="Cómo instalar en iPhone/iPad" aria-label="Cómo instalar en iPhone/iPad" hidden>🍎⬇️</button>
+      <!-- Botón unificado de instalación PWA — icono "M" estilizado +
+           flecha de descarga (ver handleInstallAppClick() en app.js),
+           oculto por defecto y solo visible cuando existe una vía real
+           de instalación: en Android/Chrome/Desktop compatible dispara
+           el aviso nativo `beforeinstallprompt`; en iOS/Safari (que
+           nunca dispara ese evento) abre #pwa-install-ios-modal con los
+           pasos manuales exactos. Nunca promete algo que el navegador
+           no puede cumplir (ej. Firefox de escritorio se queda oculto). -->
+      <button class="btn-install-app" id="install-app-btn" type="button" data-i18n-title="installAppBtn" title="Instalar App" aria-label="Instalar App" hidden>
+        <svg class="pwa-install-icon" viewBox="0 0 40 38" aria-hidden="true" focusable="false">
+          <polyline points="4,30 4,6 11,6 20,19 29,6 36,6 36,30" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="square" stroke-linejoin="miter" />
+          <circle class="pwa-install-icon__badge" cx="31" cy="30" r="7.2" />
+          <path class="pwa-install-icon__arrow" d="M31 26v6M28 29l3 3 3-3" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
       <button class="btn-profile-switch" id="profile-switch-btn" type="button" data-i18n-title="profileSwitchBtnTitle" title="Cambiar de perfil">
         👤 <span id="active-profile-name">Admin</span>
       </button>
@@ -1149,6 +1150,34 @@
         <label data-i18n="categoryBreakdownTotalLabel">Total de la categoría</label>
         <span id="category-breakdown-total">S/ 0</span>
       </div>
+    </div>
+  </div>
+
+  <!-- MODAL: instrucciones de instalación manual en iOS/Safari — ese
+       navegador nunca dispara `beforeinstallprompt`, así que es el único
+       camino real de instalación para iPhone/iPad. Se abre desde el
+       botón unificado del HUD (ver handleInstallAppClick() en app.js)
+       cuando detecta un User-Agent de iOS; no bloquea nada más de la
+       app, es solo un modal informativo que el usuario cierra cuando
+       quiera. -->
+  <div class="modal-overlay" id="pwa-install-ios-modal" hidden>
+    <div class="modal modal--app modal--pwa-install-ios glass">
+      <button type="button" class="btn-modal-close" id="pwa-install-ios-modal-close" aria-label="Cerrar">✕</button>
+      <h2 class="modal-app__title" data-i18n="pwaIosModalTitle">📲 Instalar en iPhone/iPad</h2>
+      <ol class="pwa-ios-steps">
+        <li>
+          <span class="pwa-ios-steps__icon" aria-hidden="true">📤</span>
+          <span data-i18n="pwaIosStep1">Toca el botón Compartir (el cuadrado con la flecha hacia arriba) en la barra de Safari.</span>
+        </li>
+        <li>
+          <span class="pwa-ios-steps__icon" aria-hidden="true">➕</span>
+          <span data-i18n="pwaIosStep2">Selecciona "Agregar a la pantalla de inicio".</span>
+        </li>
+        <li>
+          <span class="pwa-ios-steps__icon" aria-hidden="true">✅</span>
+          <span data-i18n="pwaIosStep3">Confirma tocando "Agregar" — listo, Miikaeru quedará instalado con su propio icono.</span>
+        </li>
+      </ol>
     </div>
   </div>
 
@@ -2486,7 +2515,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260804-19"></script>
+  <script src="app.js?v=20260804-20"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de
