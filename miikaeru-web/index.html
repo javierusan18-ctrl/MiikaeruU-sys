@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260804-23" />
+  <link rel="stylesheet" href="style.css?v=20260805-24" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -1726,6 +1726,15 @@
             </select>
           </div>
         </div>
+        <!-- Tarjeta de "Continuar donde lo dejaste" / recomendación de
+             repaso — pedido explícito: guiar al usuario a su siguiente
+             paso sin que tenga que buscar por dónde empezar, y mostrar
+             una recomendación automática cuando reprueba el Examen de
+             Nivel. Un solo componente cubre los dos casos (ver
+             renderJpContinueCard()/JP_CONTINUE_KEY en app.js) — arranca
+             oculta y solo aparece si hay algo real guardado (ni
+             placeholder ni estado vacío falso). -->
+        <div class="jp-continue-card" id="jp-continue-card" hidden></div>
         <div class="jp-rows" id="jp-rows">
           <!-- filas del Gojuon renderizadas por app.js (renderGojuonGrid) -->
         </div>
@@ -2548,7 +2557,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260804-23"></script>
+  <script src="app.js?v=20260805-24"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de

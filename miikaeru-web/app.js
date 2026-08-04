@@ -1306,6 +1306,12 @@ const I18N = {
     jpMiniQuizGrammarPrompt: "¿Qué partícula falta?",
     jpBackToMenu: "← Volver al Menú",
     jpFloatingBackTitle: "Volver atrás",
+    jpContinueVocab: "Vocabulario",
+    jpContinueGrammar: "Repasa la gramática donde la dejaste",
+    jpContinueConversation: "Conversación",
+    jpContinueBtn: "Continuar →",
+    jpContinueReviewLabel: "Recomendación de repaso",
+    jpContinueReviewBtn: "Practicar ahora →",
     jpParticlesOpenBtn: "🧩 Práctica de Partículas",
     jpParticleQuizPrompt: "Completa la partícula que falta:",
     jpLockedAt: "Se desbloquea en el Nivel",
@@ -2018,6 +2024,12 @@ const I18N = {
     jpMiniQuizGrammarPrompt: "Which particle is missing?",
     jpBackToMenu: "← Back to Menu",
     jpFloatingBackTitle: "Go back",
+    jpContinueVocab: "Vocabulary",
+    jpContinueGrammar: "Pick up grammar where you left off",
+    jpContinueConversation: "Conversation",
+    jpContinueBtn: "Continue →",
+    jpContinueReviewLabel: "Review recommendation",
+    jpContinueReviewBtn: "Practice now →",
     jpParticlesOpenBtn: "🧩 Particle Practice",
     jpParticleQuizPrompt: "Fill in the missing particle:",
     jpLockedAt: "Unlocks at Level",
@@ -2730,6 +2742,12 @@ const I18N = {
     jpMiniQuizGrammarPrompt: "どの助詞が抜けている？",
     jpBackToMenu: "← メニューに戻る",
     jpFloatingBackTitle: "戻る",
+    jpContinueVocab: "単語",
+    jpContinueGrammar: "文法の続きから",
+    jpContinueConversation: "会話",
+    jpContinueBtn: "続ける →",
+    jpContinueReviewLabel: "復習のおすすめ",
+    jpContinueReviewBtn: "今すぐ練習 →",
     jpParticlesOpenBtn: "🧩 助詞の練習",
     jpParticleQuizPrompt: "抜けている助詞を入力してください：",
     jpLockedAt: "レベルで解放:",
@@ -5805,6 +5823,14 @@ const NUTRITION_GOAL_KEY = scopedKey("miikaeru_nutrition_goal", activeProfileId)
 const NUTRITION_LOG_KEY = scopedKey("miikaeru_nutrition_log", activeProfileId); // { "YYYY-MM-DD": { mealId: true, ... } }
 const NUTRITION_META_KEY = scopedKey("miikaeru_nutrition_meta", activeProfileId); // { lastRewardDate }
 
+// "Continuar donde lo dejaste" / recomendación de repaso del módulo de
+// Idiomas (ver renderJpContinueCard() más abajo, dentro del closure
+// principal) — pedido explícito: guardar la última lección/vocabulario/
+// práctica y, si el usuario reprueba el Examen de Nivel, mostrar qué
+// repasar. Un solo registro (no historial): cada guardado nuevo
+// reemplaza al anterior, siempre "el siguiente paso" es uno solo.
+const JP_CONTINUE_KEY = scopedKey("miikaeru_jp_continue", activeProfileId);
+
 function loadNutritionGoal() {
   try {
     const raw = localStorage.getItem(NUTRITION_GOAL_KEY);
@@ -6468,6 +6494,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const jpViewMiniQuiz = document.getElementById("jp-view-mini-quiz");
   const jpViewLevelExam = document.getElementById("jp-view-level-exam");
   const jpFloatingBackBtn = document.getElementById("jp-floating-back-btn");
+  const jpContinueCard = document.getElementById("jp-continue-card");
 
   const jpLevelToggle = document.getElementById("jp-level-toggle");
 
@@ -12020,9 +12047,15 @@ document.addEventListener("DOMContentLoaded", () => {
     jpViewConversations.hidden = view !== "conversations";
     jpViewMiniQuiz.hidden = view !== "mini-quiz";
     jpViewLevelExam.hidden = view !== "level-exam";
-    if (view === "grid") renderGojuonGrid();
+    if (view === "grid") {
+      renderGojuonGrid();
+      renderJpContinueCard();
+    }
     if (view === "vocab") renderN5VocabCategories();
-    if (view === "grammar") renderN5GrammarList();
+    if (view === "grammar") {
+      renderN5GrammarList();
+      saveJpContinue({ type: "grammar" });
+    }
     if (view === "yoon") renderYoonGrid();
     if (view === "conversations") openConversationSceneGrid();
     updateJpFloatingBackBtn();
@@ -12053,6 +12086,130 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!jpViewMiniQuiz.hidden) return showJpView(miniQuizReturnView);
       showJpView("grid");
     });
+  }
+
+  // ---------------- "Continuar donde lo dejaste" / recomendación de repaso ----------------
+  // Un solo componente (#jp-continue-card, en la grilla principal) cubre
+  // dos casos: (a) el último punto de vocabulario/gramática/conversación
+  // que el usuario abrió — guiado explícito pedido para no tener que
+  // "buscar por dónde empezar"; (b) tras reprobar el Examen de Nivel, qué
+  // fila/kanji repasar (ver finishJpLevelExam()). Registro único (no
+  // historial): guardar uno nuevo reemplaza al anterior. Persistido vía
+  // JP_CONTINUE_KEY (scopedKey, ver arriba del todo del archivo) — mismo
+  // criterio "mejor esfuerzo" que el resto de localStorage acá: si falla
+  // (privado/cuota llena) la app sigue funcionando, solo sin esta tarjeta.
+  function saveJpContinue(entry) {
+    try {
+      localStorage.setItem(JP_CONTINUE_KEY, JSON.stringify({ ...entry, savedAt: Date.now() }));
+    } catch (err) {
+      /* mejor esfuerzo — sin tarjeta de continuidad si falla */
+    }
+  }
+
+  function loadJpContinue() {
+    try {
+      const raw = localStorage.getItem(JP_CONTINUE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch (err) {
+      return null;
+    }
+  }
+
+  function clearJpContinue() {
+    try {
+      localStorage.removeItem(JP_CONTINUE_KEY);
+    } catch (err) {
+      /* no-op */
+    }
+  }
+
+  // Arma {label, actionText, onAction} según el tipo de registro. Los
+  // tipos "review-*" (ver finishJpLevelExam()) llevan tratamiento visual
+  // distinto vía la clase --review y NO reutilizan el label genérico de
+  // "continuar" — son una recomendación, no un punto donde el usuario
+  // dejó algo a medias.
+  function resolveJpContinueContent(entry) {
+    if (entry.type === "vocab") {
+      const cat = getJpVocabCategories().find((c) => c.id === entry.catId);
+      if (!cat) return null;
+      return {
+        review: false,
+        label: `${t("jpContinueVocab")}: ${cat.icon} ${t(cat.titleKey)}`,
+        actionText: t("jpContinueBtn"),
+        onAction: () => openN5VocabWords(cat),
+      };
+    }
+    if (entry.type === "grammar") {
+      return {
+        review: false,
+        label: t("jpContinueGrammar"),
+        actionText: t("jpContinueBtn"),
+        onAction: () => showJpView("grammar"),
+      };
+    }
+    if (entry.type === "conversation") {
+      const scene = getJpConversationScenes().find((s) => s.id === entry.sceneId);
+      if (!scene) return null;
+      return {
+        review: false,
+        label: `${t("jpContinueConversation")}: ${scene.icon} ${t(scene.titleKey)}`,
+        actionText: t("jpContinueBtn"),
+        onAction: () => {
+          showJpView("conversations");
+          openConversationScene(entry.sceneId);
+        },
+      };
+    }
+    if (entry.type === "review-kana-row") {
+      return {
+        review: true,
+        label: `${t("jpContinueReviewLabel")}: ${entry.rowLabel}`,
+        actionText: t("jpContinueReviewBtn"),
+        onAction: () => {
+          jpScript = entry.script;
+          startJpPractice(getKanaList(entry.script).filter((k) => k.rowId === entry.rowId));
+        },
+      };
+    }
+    if (entry.type === "review-kanji") {
+      // Contenido bloqueado por diseño (ver getKanaList()) — no hay enlace
+      // directo honesto a "practicar esto ahora", solo información.
+      return {
+        review: true,
+        label: `${t("jpContinueReviewLabel")}: ${entry.char} (${entry.meaning})`,
+        actionText: null,
+        onAction: null,
+      };
+    }
+    return null;
+  }
+
+  function renderJpContinueCard() {
+    if (!jpContinueCard) return;
+    const entry = loadJpContinue();
+    const content = entry && resolveJpContinueContent(entry);
+    if (!content) {
+      jpContinueCard.hidden = true;
+      jpContinueCard.innerHTML = "";
+      return;
+    }
+    jpContinueCard.hidden = false;
+    jpContinueCard.classList.toggle("jp-continue-card--review", content.review);
+    jpContinueCard.innerHTML = "";
+
+    const label = document.createElement("span");
+    label.className = "jp-continue-card__label";
+    label.textContent = content.label;
+    jpContinueCard.appendChild(label);
+
+    if (content.actionText) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "jp-continue-card__btn";
+      btn.textContent = content.actionText;
+      btn.addEventListener("click", content.onAction);
+      jpContinueCard.appendChild(btn);
+    }
   }
 
   // ---------------- IndexedDB: progreso N5 + contenido curricular ----------------
@@ -12274,6 +12431,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function openN5VocabWords(cat) {
     activeN5Category = cat;
+    saveJpContinue({ type: "vocab", catId: cat.id });
     jpVocabWordsTitle.textContent = `${cat.icon} ${t(cat.titleKey)}`;
     jpVocabWordsList.innerHTML = "";
     cat.words.forEach((word) => {
@@ -12740,6 +12898,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function openConversationScene(sceneId) {
     const scene = getJpConversationScenes().find((s) => s.id === sceneId);
     if (!scene) return;
+    saveJpContinue({ type: "conversation", sceneId: scene.id });
     jpConversationReaderTitle.textContent = `${scene.icon} ${t(scene.titleKey)}`;
     jpConversationSceneGrid.hidden = true;
     jpConversationReader.hidden = false;
@@ -13102,6 +13261,24 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       addGold(2);
       setAvatarSpeech(t("jpLevelExamNoProgress"));
+      // Recomendación de repaso (pedido explícito: "analizar qué bloques
+      // falló y mostrar automáticamente una recomendación personalizada")
+      // — el bloque que hizo perder el examen es jpLevelExamStartFrontier,
+      // el primero que el examen intentó y no logró superar. Fila de kana
+      // (kana SIEMPRE desbloqueada desde el inicio, ver getKanaList()):
+      // enlace directo a practicarla ahora mismo. Kanji (se desbloquea
+      // progresivamente): solo informativo, un deep-link ahí sería
+      // deshonesto porque ese contenido específico sigue bloqueado.
+      const failedUnit = jpLevelExamUnitAt(jpLevelExamStartFrontier);
+      if (failedUnit) {
+        if (jpScript === "kanji") {
+          const k = KANJI_N5[jpLevelExamStartFrontier];
+          if (k) saveJpContinue({ type: "review-kanji", char: k.char, meaning: resolveJpMeaning(k.meaning) });
+        } else {
+          const row = GOJUON_ROWS[jpLevelExamStartFrontier];
+          if (row) saveJpContinue({ type: "review-kana-row", script: jpScript, rowId: row.id, rowLabel: failedUnit.label });
+        }
+      }
     }
     showJpView("grid");
   }

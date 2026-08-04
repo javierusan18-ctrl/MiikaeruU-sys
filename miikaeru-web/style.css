@@ -4220,6 +4220,57 @@ textarea,
   flex-wrap: wrap;
 }
 
+/* "Continuar donde lo dejaste" / recomendación de repaso tras reprobar
+   el Examen de Nivel (ver renderJpContinueCard() en app.js) — pedido
+   explícito: guiar al usuario a su siguiente paso sin que tenga que
+   buscar por dónde empezar. Un solo componente, dos variantes de color
+   (cian = continuar algo que ya empezó, magenta = recomendación tras
+   fallar). Oculto por defecto vía [hidden] en el HTML — solo aparece
+   si hay un registro real guardado. */
+.jp-continue-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  background: rgba(0, 240, 255, 0.06);
+}
+
+.jp-continue-card--review {
+  border-color: rgba(255, 46, 154, 0.4);
+  background: rgba(255, 46, 154, 0.07);
+}
+
+.jp-continue-card__label {
+  font-size: 0.78rem;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.jp-continue-card__btn {
+  padding: 7px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--neon-cyan);
+  background: rgba(0, 240, 255, 0.12);
+  color: var(--text-primary);
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.jp-continue-card--review .jp-continue-card__btn {
+  border-color: var(--neon-magenta);
+  background: rgba(255, 46, 154, 0.15);
+}
+
+.jp-continue-card__btn:hover {
+  filter: brightness(1.15);
+}
+
 /* Selector único de modo (#jp-mode-select) — reemplaza la fila de 8
    botones sueltos que había antes (pedido explícito: reducir
    saturación visual en la vista principal del módulo). Ocupa el resto
@@ -4664,15 +4715,19 @@ textarea,
    index.html + su listener en app.js) — pedido explícito: un solo botón
    grande y fijo en la esquina, en vez de tener que buscar el botón de
    volver de cada sub-vista arriba del todo. Círculo de 44px (tamaño de
-   toque táctil recomendado), esquina superior izquierda para no chocar
-   con el [✕] de cerrar (arriba-derecha) ni con ⚙️ Cambiar idioma/modo
-   (debajo del título, centrado). app.js lo oculta solo en la grilla
+   toque táctil recomendado). CORRECCIÓN: esta esquina (arriba-izquierda)
+   antes también la ocupaba ⚙️ Cambiar idioma/modo, quedando los dos
+   botones literalmente superpuestos — ⚙️ se movió a arriba-derecha junto
+   al [✕] (ver .btn-jp-config más abajo), dejando arriba-izquierda
+   exclusiva para este botón. z-index alto a propósito para que SIEMPRE
+   quede por encima de cualquier otro elemento de la vista activa, sin
+   importar cuál sub-vista sea. app.js lo oculta solo en la grilla
    principal, ver updateJpFloatingBackBtn(). */
 .btn-jp-floating-back {
   position: absolute;
   top: 12px;
   left: 14px;
-  z-index: 5;
+  z-index: 20;
   width: 44px;
   height: 44px;
   border-radius: 50%;
@@ -7970,11 +8025,17 @@ textarea,
 
 /* Botón dentro del módulo Japonés para volver a esta pantalla y cambiar
    idioma/modo sin cerrar todo el módulo (pedido explícito: "regresar o
-   cambiar de idioma en cualquier momento"). */
+   cambiar de idioma en cualquier momento"). Esquina superior DERECHA,
+   pegado a la izquierda del [✕] de cerrar (right:52px = 14px del ✕ +
+   26px de su ancho + 12px de separación) — antes vivía en la esquina
+   superior IZQUIERDA, exactamente donde se superponía con el botón
+   flotante de "Volver atrás" (#jp-floating-back-btn, ver más abajo);
+   pedido explícito de corregir esa superposición dejando cada esquina
+   con un solo control. */
 .btn-jp-config {
   position: absolute;
   top: 14px;
-  left: 20px;
+  right: 52px;
   border: 1px solid rgba(255, 183, 0, 0.4);
   background: rgba(255, 183, 0, 0.06);
   color: var(--neon-gold);
