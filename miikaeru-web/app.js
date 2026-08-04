@@ -12355,6 +12355,18 @@ document.addEventListener("DOMContentLoaded", () => {
         renderN5VocabCategories();
         renderN5GrammarList();
         if (!jpViewConversations.hidden) renderConversationSceneGrid();
+        // Bug reportado: el cambio de nivel quedaba como estado interno
+        // silencioso — si el usuario estaba parado en la grilla de
+        // Hiragana/Katakana/Kanji (vista neutral, sin contenido propio de
+        // nivel: el kana es el mismo alfabeto sin importar el JLPT) un
+        // clic en N4/N5 no producía NINGÚN cambio visible en pantalla,
+        // aunque el vocabulario/gramática ya se hubiera actualizado por
+        // dentro. Ahora, si la vista visible es la grilla neutral, salta
+        // directo al Vocabulario del nivel recién elegido para que el
+        // cambio se vea de inmediato. Si ya estaba en Vocabulario/
+        // Gramática/Conversaciones, esas vistas se refrescan in-place
+        // arriba, sin necesidad de saltar a ningún lado.
+        if (!jpViewGrid.hidden) showJpView("vocab");
       });
     });
   }
