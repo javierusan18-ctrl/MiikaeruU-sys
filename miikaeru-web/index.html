@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260805-25" />
+  <link rel="stylesheet" href="style.css?v=20260805-26" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -382,33 +382,81 @@
            lógica). -->
       <div class="modal-overlay" id="chat-modal" hidden>
         <div class="modal modal--chat glass">
+          <!-- Botón de cerrar: mismo #chat-modal-close/closeChatModal() de
+               siempre (ver app.js) — CERO cambios de lógica, solo el
+               rediseño visual de alrededor. En desktop sigue
+               ocultándose vía CSS porque ahí el chat es un panel fijo
+               junto al León, no una modal (ver #chat-modal-close en la
+               media query de escritorio). -->
           <button type="button" class="btn-modal-close" id="chat-modal-close" aria-label="Cerrar">✕</button>
-          <div class="panel__header">
+
+          <div class="chat-header-moba">
             <h2 data-i18n="chatTitle">Feed // Chat</h2>
             <span class="panel__tag" data-i18n="chatChannel">canal-01</span>
           </div>
 
-          <div class="chat__feed" id="chat-feed"></div>
-
-          <div class="evidence-preview" id="evidence-preview" hidden>
-            <img id="evidence-preview-img" alt="Vista previa de evidencia" />
-            <button type="button" id="evidence-remove" aria-label="Quitar evidencia">✕</button>
+          <!-- Barra de pestañas estilo chat flotante MOBA (Todos/Escuadrón/
+               Amigos) — pedido explícito. Cableado en app.js
+               (#chat-tabs click delegation) alterna [hidden] en los 3
+               `.chat-tab-panel` de abajo; "Todos" es el único con datos
+               reales (el feed de Miikaeru/sistema que ya existía). -->
+          <div class="chat-tabs" id="chat-tabs" role="tablist">
+            <button type="button" class="chat-tab chat-tab--active" data-chat-tab="all" role="tab" aria-selected="true" data-i18n="chatTabAll">Todos</button>
+            <button type="button" class="chat-tab" data-chat-tab="squad" role="tab" aria-selected="false" data-i18n="chatTabSquad">Escuadrón</button>
+            <button type="button" class="chat-tab" data-chat-tab="friends" role="tab" aria-selected="false" data-i18n="chatTabFriends">Amigos</button>
           </div>
 
-          <form class="chat__input" id="chat-form">
-            <button type="button" class="btn-attach" id="attach-btn" title="Adjuntar evidencia" aria-label="Adjuntar evidencia">📷</button>
-            <input type="file" id="evidence-input" accept="image/*" hidden />
-            <input
-              type="text"
-              id="chat-input"
-              data-i18n-placeholder="chatPlaceholder"
-              placeholder="Escribe un mensaje a Miikaeru..."
-              autocomplete="off"
-            />
-            <button type="submit" class="btn-send" aria-label="Enviar mensaje">
-              <span data-i18n="chatSend">Enviar</span>
-            </button>
-          </form>
+          <!-- Pestaña "Todos": el feed real de Miikaeru/sistema — mismos
+               ids (#chat-feed, #chat-form, #evidence-*) que siempre tuvo
+               este modal, así que renderMessage()/addMessage()/
+               openChatModal()/el submit del form en app.js siguen
+               funcionando exactamente igual, sin tocar una línea de esa
+               lógica. -->
+          <div class="chat-tab-panel" id="chat-tab-all" data-chat-panel="all">
+            <div class="chat__feed" id="chat-feed"></div>
+
+            <div class="evidence-preview" id="evidence-preview" hidden>
+              <img id="evidence-preview-img" alt="Vista previa de evidencia" />
+              <button type="button" id="evidence-remove" aria-label="Quitar evidencia">✕</button>
+            </div>
+
+            <form class="chat__input" id="chat-form">
+              <button type="button" class="btn-attach" id="attach-btn" title="Adjuntar evidencia" aria-label="Adjuntar evidencia">📷</button>
+              <input type="file" id="evidence-input" accept="image/*" hidden />
+              <input
+                type="text"
+                id="chat-input"
+                data-i18n-placeholder="chatPlaceholder"
+                placeholder="Escribe un mensaje a Miikaeru..."
+                autocomplete="off"
+              />
+              <button type="submit" class="btn-send" aria-label="Enviar mensaje">
+                <span data-i18n="chatSend">Enviar</span>
+              </button>
+            </form>
+          </div>
+
+          <!-- Pestaña "Escuadrón": la app todavía no tiene ningún sistema
+               multijugador/de equipos real — mismo criterio "no prometer
+               lo que no existe" que el resto de la app (ver badges
+               "Próximamente" en Karaoke/N3-N1 de Idiomas) en vez de
+               simular compañeros de equipo falsos. -->
+          <div class="chat-tab-panel chat-tab-panel--empty" id="chat-tab-squad" data-chat-panel="squad" hidden>
+            <div class="chat-empty-state">
+              <span class="chat-empty-state__icon">🛡️</span>
+              <p class="chat-empty-state__title" data-i18n="chatSquadEmptyTitle">Todavía no tienes un Escuadrón</p>
+              <p class="chat-empty-state__desc" data-i18n="chatSquadEmptyDesc">Cuando el modo multijugador esté disponible, tu equipo va a aparecer acá.</p>
+            </div>
+          </div>
+
+          <!-- Pestaña "Amigos": estructura visual real y funcional
+               (renderChatFriendsList() en app.js), lista para pintar
+               contactos apenas exista un sistema de amigos/red social —
+               hoy arranca vacía a propósito, en vez de precargar
+               usuarios de mentira (ver comentario junto a esa función). -->
+          <div class="chat-tab-panel chat-tab-panel--empty" id="chat-tab-friends" data-chat-panel="friends" hidden>
+            <div class="chat-friends-list" id="chat-friends-list"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -2557,7 +2605,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260805-25"></script>
+  <script src="app.js?v=20260805-26"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de

@@ -2299,12 +2299,27 @@ textarea,
   border: 1px solid rgba(0, 240, 255, 0.25);
 }
 
+/* Burbujas estilo "chat flotante MOBA" (pedido explícito, ej. Mobile
+   Legends): esquinas más cerradas (menos "globo de diálogo", más
+   "tarjeta de HUD"), bordes sutiles. Fondo/borde vía var(--glass-bg)/
+   var(--glass-border) — NO hardcodear rgba() acá: ese es justo el
+   mecanismo que usa TODO el resto del archivo para que Mobile Lite
+   (≤767px, ver ese media query más abajo) retematice la app entera a
+   blanco/gris claro sin tocar cada selector — un rgba() fijo rompe ese
+   swap y las burbujas quedan casi invisibles sobre fondo claro (bug
+   real, encontrado al verificar en viewport mobile). Los 3 modificadores
+   de abajo (--system/--bot/--user) mapean 1:1 a los 3 `variant` posibles
+   de renderMessage()/addMessage() en app.js — nombres de clase SIN
+   cambios para no tocar ninguno de sus ~20 puntos de llamada en toda la
+   app (level-ups, resultados de examen, login de admin, etc.). */
 .message {
   max-width: 78%;
-  padding: 10px 14px;
-  border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 9px 13px;
+  border-radius: var(--radius-sm);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   position: relative;
   animation: fadeIn 0.3s ease;
 }
@@ -2316,48 +2331,59 @@ textarea,
 
 .message__author {
   display: block;
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   letter-spacing: 1.5px;
   text-transform: uppercase;
-  margin-bottom: 4px;
+  font-weight: 700;
+  margin-bottom: 3px;
   color: var(--text-secondary);
 }
 
 .message__text {
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   line-height: 1.4;
   color: var(--text-primary);
 }
 
 .message__time {
   display: block;
-  margin-top: 6px;
-  font-size: 0.6rem;
+  margin-top: 5px;
+  font-size: 0.58rem;
   color: var(--text-secondary);
   text-align: right;
 }
 
+/* Broadcasts del sistema (subidas de nivel, resultados de examen, login
+   de admin, etc.) — centrados y en magenta, igual que en el resto de la
+   app (misma paleta ya usada por el badge de recomendación de repaso de
+   Idiomas, la Auditoría de Nómina, etc.), para no introducir un cuarto
+   acento de color solo para este panel. */
 .message--system {
   align-self: center;
   max-width: 90%;
-  border-color: rgba(255, 46, 154, 0.3);
-  background: rgba(255, 46, 154, 0.05);
+  border-color: var(--neon-magenta);
 }
 .message--system .message__author { color: var(--neon-magenta); }
 
+/* Miikaeru (bot) — acento cian, el primario del tema. border-color
+   sólido (var(--neon-cyan) directo, sin alpha) en vez de un rgba()
+   fijo — mismo patrón ya usado por .habits-tab--active/.finanzas-tab
+   en todo el archivo, así el borde también se oscurece solo en Mobile
+   Lite en vez de quedar cian brillante sobre fondo blanco. */
 .message--bot {
   align-self: flex-start;
-  border-color: rgba(0, 240, 255, 0.3);
-  box-shadow: 0 0 14px rgba(0, 240, 255, 0.08);
+  border-color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
 }
 .message--bot .message__author { color: var(--neon-cyan); }
 
+/* Mensajes propios (TÚ) — acento dorado, pedido explícito
+   ("cian/azul neón y dorado"), reemplaza el verde que tenía antes. */
 .message--user {
   align-self: flex-end;
-  border-color: rgba(0, 255, 156, 0.3);
-  box-shadow: 0 0 14px rgba(0, 255, 156, 0.08);
+  border-color: var(--neon-gold);
 }
-.message--user .message__author { color: var(--neon-green); }
+.message--user .message__author { color: var(--neon-gold); }
 
 .chat__input {
   display: flex;
@@ -8610,6 +8636,170 @@ textarea,
   flex-direction: column;
   gap: 10px;
   margin: 12px 0;
+}
+
+/* ===== Rediseño "chat flotante MOBA" (Todos/Escuadrón/Amigos) =====
+   Cabecera compacta (reemplaza .panel__header dentro de este modal
+   específico — el resto de la app sigue usando .panel__header sin
+   tocar) + barra de pestañas + 3 paneles intercambiados vía [hidden]
+   desde #chat-tabs en app.js. */
+.chat-header-moba {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding-right: 30px; /* deja libre la esquina del ✕ (.btn-modal-close) */
+  margin-bottom: 10px;
+}
+
+.chat-header-moba h2 {
+  font-size: 0.95rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.chat-header-moba h2::before {
+  content: "// ";
+  color: var(--neon-cyan);
+}
+
+.chat-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.chat-tab {
+  flex: 1;
+  padding: 9px 8px;
+  font-size: 0.68rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  text-align: center;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(124, 147, 173, 0.3);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.chat-tab:hover {
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+}
+
+.chat-tab--active {
+  border-color: var(--neon-gold);
+  color: var(--neon-gold);
+  background: rgba(255, 183, 0, 0.08);
+  box-shadow: 0 0 12px rgba(255, 183, 0, 0.25);
+}
+
+.chat-tab-panel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+/* Estado vacío honesto (Escuadrón/Amigos) — la app todavía no tiene
+   multijugador ni red de contactos real, así que en vez de simular
+   compañeros/amigos falsos se muestra un mensaje claro de qué falta y
+   por qué está vacío. Mismo criterio "no prometer lo que no existe" que
+   los badges "Próximamente" del resto de la app. */
+.chat-tab-panel--empty {
+  align-items: center;
+  justify-content: center;
+  min-height: 220px;
+}
+
+.chat-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  padding: 20px;
+  max-width: 320px;
+}
+
+.chat-empty-state__icon {
+  font-size: 2rem;
+  opacity: 0.6;
+  filter: grayscale(0.3);
+}
+
+.chat-empty-state__title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.chat-empty-state__desc {
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+/* Lista de "Amigos" — contenedor + plantilla de fila lista para pintar
+   contactos reales (ver renderChatFriendsList() en app.js). Con la
+   lista vacía, #chat-friends-list se queda sin hijos y el
+   .chat-empty-state de su .chat-tab-panel padre es lo único visible;
+   esta plantilla queda lista para el día que exista un backend de
+   amigos real. */
+.chat-friends-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  overflow-y: auto;
+}
+
+/* Mismo criterio que .message más arriba: var(--glass-bg)/
+   var(--glass-border) en vez de rgba() fijo, para que Mobile Lite pueda
+   retematizar esto también el día que haya datos reales que mostrar. */
+.chat-friend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+}
+
+.chat-friend-item__avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  background: transparent;
+  border: 1px solid var(--neon-cyan);
+  flex-shrink: 0;
+}
+
+.chat-friend-item__name {
+  flex: 1;
+  font-size: 0.82rem;
+  color: var(--text-primary);
+}
+
+.chat-friend-item__status {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.chat-friend-item--online .chat-friend-item__status {
+  background: var(--neon-gold);
+  box-shadow: 0 0 6px rgba(255, 183, 0, 0.7);
 }
 
 .modal--wishlist .wishlist__grid {

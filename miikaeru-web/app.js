@@ -771,6 +771,13 @@ const I18N = {
     chatChannel: "canal-01",
     chatPlaceholder: "Escribe un mensaje a Miikaeru...",
     chatSend: "Enviar",
+    chatTabAll: "Todos",
+    chatTabSquad: "Escuadrón",
+    chatTabFriends: "Amigos",
+    chatSquadEmptyTitle: "Todavía no tienes un Escuadrón",
+    chatSquadEmptyDesc: "Cuando el modo multijugador esté disponible, tu equipo va a aparecer acá.",
+    chatFriendsEmptyTitle: "Todavía no agregaste amigos",
+    chatFriendsEmptyDesc: "Cuando exista un sistema de amigos, tus contactos van a aparecer en esta lista.",
     pillarFinanzas: "Finanzas",
     pillarTemplo: "Templo",
     pillarFisico: "Estado Físico",
@@ -1489,6 +1496,13 @@ const I18N = {
     chatChannel: "channel-01",
     chatPlaceholder: "Message Miikaeru...",
     chatSend: "Send",
+    chatTabAll: "All",
+    chatTabSquad: "Squad",
+    chatTabFriends: "Friends",
+    chatSquadEmptyTitle: "You don't have a Squad yet",
+    chatSquadEmptyDesc: "Once multiplayer mode is available, your team will show up here.",
+    chatFriendsEmptyTitle: "You haven't added any friends yet",
+    chatFriendsEmptyDesc: "Once a friends system exists, your contacts will show up in this list.",
     pillarFinanzas: "Finance",
     pillarTemplo: "Temple",
     pillarFisico: "Physical State",
@@ -2207,6 +2221,13 @@ const I18N = {
     chatChannel: "チャンネル-01",
     chatPlaceholder: "ミイカエルにメッセージ...",
     chatSend: "送信",
+    chatTabAll: "全て",
+    chatTabSquad: "スクワッド",
+    chatTabFriends: "フレンド",
+    chatSquadEmptyTitle: "まだスクワッドがありません",
+    chatSquadEmptyDesc: "マルチプレイヤーモードが利用可能になると、チームがここに表示されます。",
+    chatFriendsEmptyTitle: "まだフレンドを追加していません",
+    chatFriendsEmptyDesc: "フレンド機能が実装されると、連絡先がこのリストに表示されます。",
     pillarFinanzas: "財務",
     pillarTemplo: "神殿",
     pillarFisico: "身体状態",
@@ -6066,6 +6087,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const chatOpenBtn = document.getElementById("chat-open-btn");
   const chatModal = document.getElementById("chat-modal");
   const chatModalClose = document.getElementById("chat-modal-close");
+  // Pestañas del chat flotante estilo MOBA (Todos/Escuadrón/Amigos) — ver
+  // wiring completo junto a openChatModal()/closeChatModal() más abajo.
+  const chatTabsEl = document.getElementById("chat-tabs");
+  const chatFriendsList = document.getElementById("chat-friends-list");
   const wishlistOpenBtn = document.getElementById("wishlist-open-btn");
   const wishlistModal = document.getElementById("wishlist-modal");
   const wishlistModalClose = document.getElementById("wishlist-modal-close");
@@ -8306,6 +8331,95 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && !chatModal.hidden) closeChatModal();
   });
+
+  // ---- Pestañas del chat flotante estilo MOBA (Todos/Escuadrón/Amigos) ----
+  // Puramente de navegación: alterna [hidden] entre los 3 `.chat-tab-panel`
+  // de index.html. "Todos" reutiliza el feed real (#chat-feed/#chat-form)
+  // sin tocar su lógica; "Escuadrón"/"Amigos" son estados vacíos honestos
+  // (ver comentario de renderChatFriendsList() más abajo) — esta app
+  // todavía no tiene multijugador ni una red de contactos real, así que
+  // no hay ningún dato que cambiar al entrar a esas pestañas, solo
+  // mostrar/ocultar el panel correspondiente.
+  if (chatTabsEl) {
+    const chatTabButtons = Array.from(chatTabsEl.querySelectorAll(".chat-tab"));
+    chatTabButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const target = btn.dataset.chatTab;
+        chatTabButtons.forEach((b) => {
+          const active = b === btn;
+          b.classList.toggle("chat-tab--active", active);
+          b.setAttribute("aria-selected", String(active));
+        });
+        document.querySelectorAll(".chat-tab-panel").forEach((panel) => {
+          panel.hidden = panel.dataset.chatPanel !== target;
+        });
+        if (target === "all") chatFeed.scrollTop = chatFeed.scrollHeight;
+      });
+    });
+  }
+
+  // Lista de "Amigos" — la app no tiene todavía ningún sistema de
+  // amistades/red social real (no hay backend de usuarios conectados
+  // entre sí), así que en vez de precargar contactos falsos esto arranca
+  // con `friends` vacío y muestra el estado vacío de index.html
+  // (.chat-empty-state, dentro de #chat-tab-friends). La función queda
+  // lista para recibir datos reales el día que exista ese sistema —
+  // basta con llamar renderChatFriendsList(listaReal) desde donde sea
+  // que ese backend termine viviendo.
+  function renderChatFriendsList(friends = []) {
+    if (!chatFriendsList) return;
+    chatFriendsList.innerHTML = "";
+    // .chat-tab-panel--empty centra el estado vacío verticalmente; con
+    // datos reales la lista debe fluir normal (scroll, no centrada), así
+    // que el modificador se activa/desactiva según haya o no contenido.
+    const friendsPanel = document.getElementById("chat-tab-friends");
+    if (friendsPanel) friendsPanel.classList.toggle("chat-tab-panel--empty", friends.length === 0);
+
+    if (!friends.length) {
+      const empty = document.createElement("div");
+      empty.className = "chat-empty-state";
+
+      const icon = document.createElement("span");
+      icon.className = "chat-empty-state__icon";
+      icon.textContent = "👥";
+      empty.appendChild(icon);
+
+      const title = document.createElement("p");
+      title.className = "chat-empty-state__title";
+      title.textContent = t("chatFriendsEmptyTitle");
+      empty.appendChild(title);
+
+      const desc = document.createElement("p");
+      desc.className = "chat-empty-state__desc";
+      desc.textContent = t("chatFriendsEmptyDesc");
+      empty.appendChild(desc);
+
+      chatFriendsList.appendChild(empty);
+      return;
+    }
+
+    friends.forEach((friend) => {
+      const item = document.createElement("div");
+      item.className = `chat-friend-item${friend.online ? " chat-friend-item--online" : ""}`;
+
+      const avatar = document.createElement("span");
+      avatar.className = "chat-friend-item__avatar";
+      avatar.textContent = friend.icon || "🦁";
+      item.appendChild(avatar);
+
+      const name = document.createElement("span");
+      name.className = "chat-friend-item__name";
+      name.textContent = friend.name;
+      item.appendChild(name);
+
+      const status = document.createElement("span");
+      status.className = "chat-friend-item__status";
+      item.appendChild(status);
+
+      chatFriendsList.appendChild(item);
+    });
+  }
+  renderChatFriendsList();
 
   // Chat Guía: resalta con un parpadeo neón el ícono del dock al que la
   // respuesta hace referencia (ver CHAT_GUIDE_INTENTS/matchChatGuideIntent
