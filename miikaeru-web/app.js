@@ -6109,6 +6109,38 @@ function persistActiveApp(appKey) {
 // DOM + render
 // ---------------------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
+  // ---- Auto-inicialización de tablas de Amigos/Chat (Vercel Serverless
+  // Function, ver api/init-db.js) ----
+  // Dispara un fetch same-origin a /api/init-db, que corre 100%
+  // server-side con una conexión directa a Postgres (pg) para crear las
+  // tablas app_contacts/app_friendships/app_friend_messages si todavía
+  // no existen — CREATE TABLE no es posible desde el cliente supabase-js
+  // (PostgREST no expone DDL), por eso existe ese endpoint aparte.
+  // Se guarda un flag en localStorage atado al número de versión del
+  // deploy (mismo ?v= de index.html/CACHE_NAME de sw.js) para no volver
+  // a llamarlo en cada carga de página de cada usuario — alcanza con
+  // ejecutarlo una vez por versión desplegada, ya que es idempotente
+  // pero no gratis (abre una conexión Postgres real).
+  // En el server de desarrollo local (tools/dev-server.js, sin runtime
+  // de funciones) /api/init-db no existe: el fetch falla, se atrapa en
+  // el catch y la app sigue funcionando igual — mismo criterio "mejor
+  // esfuerzo" que el resto de las integraciones con Supabase acá.
+  const DB_INIT_FLAG_KEY = "miikaeru_db_init_v20260805-28";
+  if (!localStorage.getItem(DB_INIT_FLAG_KEY)) {
+    fetch("/api/init-db")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.ok) {
+          localStorage.setItem(DB_INIT_FLAG_KEY, "1");
+        } else {
+          console.warn("init-db respondió con error:", data.error);
+        }
+      })
+      .catch((err) => {
+        console.warn("init-db no disponible (¿corriendo local sin Vercel, o SUPABASE_DB_URL sin configurar?):", err.message);
+      });
+  }
+
   const chatForm = document.getElementById("chat-form");
   const chatInput = document.getElementById("chat-input");
   const chatFeed = document.getElementById("chat-feed");

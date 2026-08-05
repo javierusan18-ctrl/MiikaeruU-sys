@@ -1,0 +1,9 @@
+{
+  "name": "miikaeru-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "PWA estática de Miikaeru — este package.json existe solo para que Vercel instale las dependencias de las Serverless Functions en /api (ver api/init-db.js). El sitio en sí sigue siendo HTML/CSS/JS puro, sin build step.",
+  "dependencies": {
+    "pg": "^8.11.5"
+  }
+}
