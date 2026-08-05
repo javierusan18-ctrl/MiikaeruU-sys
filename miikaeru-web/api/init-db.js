@@ -79,6 +79,50 @@ async function ensureRealtimeEnabled(client) {
   }
 }
 
+// Debe coincidir EXACTAMENTE con ADMIN_EMAIL en app.js — ver
+// checkAdminSession()/el submit de #admin-login-form ahí. Ese archivo
+// exige además que este email sea el de una sesión de Supabase Auth
+// real y válida (Authentication → Users en el Dashboard de Supabase);
+// esta constante por sí sola no le da a nadie acceso, solo le abre la
+// puerta de la política RLS al email que YA logró loguearse de verdad.
+const ADMIN_EMAIL = "javierusan18@gmail.com";
+
+// Políticas de admin para `feedback` (Bugs & Sugerencias, Bloque 35) —
+// antes se pedía correrlas a mano en el SQL Editor de Supabase (ver
+// PROGRESS_LOG Bloque 37); se migran acá al mismo mecanismo automático
+// que las tablas de Amigos/Chat, por el mismo pedido explícito del
+// usuario de no tener que tocar el panel de Supabase a mano. DROP+CREATE
+// por el mismo motivo que las policies de arriba: CREATE POLICY no
+// admite IF NOT EXISTS, así es como se hace idempotente.
+//
+// Chequea que la tabla exista ANTES de tocarla (a diferencia de las de
+// Amigos/Chat, esta no la crea este archivo — la creó el usuario a mano
+// en el Bloque 35) para no romper el resto del init si por lo que sea
+// todavía no existe en este proyecto de Supabase.
+async function ensureFeedbackAdminPolicies(client) {
+  const { rows } = await client.query(
+    `select 1 from information_schema.tables where table_schema = 'public' and table_name = 'feedback'`
+  );
+  if (rows.length === 0) return;
+
+  await client.query(`alter table public.feedback add column if not exists status text not null default 'pendiente'`);
+
+  await client.query(`drop policy if exists "admin can read feedback" on public.feedback`);
+  await client.query(
+    `create policy "admin can read feedback" on public.feedback
+       for select to authenticated
+       using (auth.jwt() ->> 'email' = '${ADMIN_EMAIL}')`
+  );
+
+  await client.query(`drop policy if exists "admin can update feedback" on public.feedback`);
+  await client.query(
+    `create policy "admin can update feedback" on public.feedback
+       for update to authenticated
+       using (auth.jwt() ->> 'email' = '${ADMIN_EMAIL}')
+       with check (auth.jwt() ->> 'email' = '${ADMIN_EMAIL}')`
+  );
+}
+
 module.exports = async function handler(req, res) {
   const connectionString = process.env.SUPABASE_DB_URL;
   if (!connectionString) {
@@ -97,7 +141,8 @@ module.exports = async function handler(req, res) {
       await client.query(statement);
     }
     await ensureRealtimeEnabled(client);
-    res.status(200).json({ ok: true, message: "Tablas de Amigos/Chat verificadas/creadas correctamente." });
+    await ensureFeedbackAdminPolicies(client);
+    res.status(200).json({ ok: true, message: "Tablas de Amigos/Chat y políticas de Admin verificadas/creadas correctamente." });
   } catch (err) {
     console.error("init-db falló:", err);
     res.status(500).json({ ok: false, error: err.message });

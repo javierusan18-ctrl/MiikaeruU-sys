@@ -656,7 +656,7 @@ const supabaseClient = (typeof window !== "undefined" && window.supabase && wind
 // (Authentication → Users → Add User, ver instrucciones al final del
 // cambio) — ver checkAdminSession()/applySuperAdminVisibility() dentro
 // de DOMContentLoaded para cómo se usa.
-const ADMIN_EMAIL = "admin@miikaeru.com";
+const ADMIN_EMAIL = "javierusan18@gmail.com";
 
 // Respaldo de "mejor esfuerzo" de una transacción del ledger de negocios
 // hacia la tabla `transactions` de Supabase (ver el SQL entregado junto
@@ -5577,6 +5577,34 @@ function loadState() {
 let state = loadState();
 
 function persist() {
+  // Defensa contra progreso "fantasma": el Nivel nunca baja en este
+  // juego (no existe ningún flujo que reste state.level), así que si lo
+  // que ya está guardado en localStorage tiene un Nivel MÁS ALTO que el
+  // que esta pestaña tiene en memoria, es porque otra pestaña/ventana
+  // (o la PWA instalada, abierta aparte del navegador) con el mismo
+  // perfil ya guardó progreso más nuevo mientras esta quedó con una
+  // copia vieja en memoria — sin este chequeo, el próximo persist() de
+  // ESTA pestaña (por cualquier acción menor: cambiar de idioma, abrir
+  // un modal, etc.) pisaría ese progreso más nuevo con uno más viejo,
+  // dando la sensación de que "el Nivel volvió a 1" al recargar. Se
+  // adopta ese progreso más alto a memoria antes de guardar, en vez de
+  // perderlo.
+  try {
+    const stored = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (stored && typeof stored.level === "number" && stored.level > state.level) {
+      console.warn(
+        `Miikaeru: se encontró Nivel ${stored.level} ya guardado (esta pestaña tenía Nivel ${state.level} en memoria) — se adopta el más alto para no perder progreso.`
+      );
+      state.level = stored.level;
+      state.xp = stored.xp;
+      state.xpToNext = stored.xpToNext;
+      state.gold = stored.gold;
+      state.diamonds = stored.diamonds;
+    }
+  } catch (err) {
+    // localStorage corrupto/vacío: no hay nada que adoptar, se sigue de largo.
+  }
+
   // El campo `image` de los mensajes de chat vive solo en memoria de sesión,
   // por eso se excluye al serializar hacia localStorage.
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state, (key, value) => (key === "image" ? undefined : value)));
@@ -6146,7 +6174,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // de funciones) /api/init-db no existe: el fetch falla, se atrapa en
   // el catch y la app sigue funcionando igual — mismo criterio "mejor
   // esfuerzo" que el resto de las integraciones con Supabase acá.
-  const DB_INIT_FLAG_KEY = "miikaeru_db_init_v20260805-28";
+  const DB_INIT_FLAG_KEY = "miikaeru_db_init_v20260805-32";
   if (!localStorage.getItem(DB_INIT_FLAG_KEY)) {
     fetch("/api/init-db")
       .then((res) => res.json())
