@@ -936,6 +936,31 @@ const I18N = {
     automationDiscardBtn: "❌ Descartar",
     automationRowCount: "Tareas encontradas:",
     automationEmptyState: "Sin tareas en cola. n8n las agrega automáticamente a la tabla automation_tasks de Supabase.",
+    adminPanelTabUsers: "👥 Usuarios",
+    usersStatTotal: "Operadores",
+    usersStatAvgLevel: "Nivel Promedio",
+    usersStatActiveToday: "Activos Hoy",
+    usersColOperator: "Operador",
+    usersColPhone: "Teléfono",
+    usersColLevel: "Nivel",
+    usersColXp: "XP",
+    usersColStreak: "Racha",
+    usersColStatus: "Estado",
+    usersColActions: "Acciones",
+    usersEditBtn: "✏️ Editar",
+    usersUnnamedOperator: "Sin nombre",
+    usersStatusToday: "Hoy",
+    usersStatusDaysAgo: "Hace {n} días",
+    usersStatusUnknown: "Sin actividad registrada",
+    usersRowCount: "Operadores encontrados:",
+    playerEditTitle: "✏️ Editar Operador",
+    playerEditLevelLabel: "Nivel",
+    playerEditXpLabel: "XP actual",
+    playerEditXpToNextLabel: "XP para subir de Nivel",
+    playerEditGoldLabel: "Oro 🪙",
+    playerEditDiamondsLabel: "Diamantes 💎",
+    playerEditStreakLabel: "Racha 🔥",
+    playerEditSaveBtn: "Guardar Cambios",
     negocioCurrencyLabel: "Moneda del Negocio",
     negocioNombreLabel: "Nombre del Negocio",
     negocioColaboradorLabel: "Colaborador / Vendedor *",
@@ -1679,6 +1704,31 @@ const I18N = {
     automationDiscardBtn: "❌ Discard",
     automationRowCount: "Tasks found:",
     automationEmptyState: "No tasks queued. n8n adds them automatically to Supabase's automation_tasks table.",
+    adminPanelTabUsers: "👥 Users",
+    usersStatTotal: "Operators",
+    usersStatAvgLevel: "Average Level",
+    usersStatActiveToday: "Active Today",
+    usersColOperator: "Operator",
+    usersColPhone: "Phone",
+    usersColLevel: "Level",
+    usersColXp: "XP",
+    usersColStreak: "Streak",
+    usersColStatus: "Status",
+    usersColActions: "Actions",
+    usersEditBtn: "✏️ Edit",
+    usersUnnamedOperator: "Unnamed",
+    usersStatusToday: "Today",
+    usersStatusDaysAgo: "{n} days ago",
+    usersStatusUnknown: "No activity recorded",
+    usersRowCount: "Operators found:",
+    playerEditTitle: "✏️ Edit Operator",
+    playerEditLevelLabel: "Level",
+    playerEditXpLabel: "Current XP",
+    playerEditXpToNextLabel: "XP to next Level",
+    playerEditGoldLabel: "Gold 🪙",
+    playerEditDiamondsLabel: "Diamonds 💎",
+    playerEditStreakLabel: "Streak 🔥",
+    playerEditSaveBtn: "Save Changes",
     negocioCurrencyLabel: "Business Currency",
     negocioNombreLabel: "Business Name",
     negocioColaboradorLabel: "Collaborator / Seller *",
@@ -2422,6 +2472,31 @@ const I18N = {
     automationDiscardBtn: "❌ 却下",
     automationRowCount: "見つかったタスク：",
     automationEmptyState: "キューにタスクはありません。n8nがSupabaseのautomation_tasksテーブルに自動で追加します。",
+    adminPanelTabUsers: "👥 ユーザー",
+    usersStatTotal: "オペレーター数",
+    usersStatAvgLevel: "平均レベル",
+    usersStatActiveToday: "本日アクティブ",
+    usersColOperator: "オペレーター",
+    usersColPhone: "電話番号",
+    usersColLevel: "レベル",
+    usersColXp: "XP",
+    usersColStreak: "連続記録",
+    usersColStatus: "状態",
+    usersColActions: "操作",
+    usersEditBtn: "✏️ 編集",
+    usersUnnamedOperator: "名前未設定",
+    usersStatusToday: "本日",
+    usersStatusDaysAgo: "{n}日前",
+    usersStatusUnknown: "活動記録なし",
+    usersRowCount: "見つかったオペレーター：",
+    playerEditTitle: "✏️ オペレーターを編集",
+    playerEditLevelLabel: "レベル",
+    playerEditXpLabel: "現在のXP",
+    playerEditXpToNextLabel: "次のレベルまでのXP",
+    playerEditGoldLabel: "ゴールド 🪙",
+    playerEditDiamondsLabel: "ダイヤモンド 💎",
+    playerEditStreakLabel: "連続記録 🔥",
+    playerEditSaveBtn: "変更を保存",
     negocioCurrencyLabel: "ビジネスの通貨",
     negocioNombreLabel: "ビジネス名",
     negocioColaboradorLabel: "協力者 / 販売員 *",
@@ -6174,7 +6249,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // de funciones) /api/init-db no existe: el fetch falla, se atrapa en
   // el catch y la app sigue funcionando igual — mismo criterio "mejor
   // esfuerzo" que el resto de las integraciones con Supabase acá.
-  const DB_INIT_FLAG_KEY = "miikaeru_db_init_v20260805-32";
+  const DB_INIT_FLAG_KEY = "miikaeru_db_init_v20260806-1";
   if (!localStorage.getItem(DB_INIT_FLAG_KEY)) {
     fetch("/api/init-db")
       .then((res) => res.json())
@@ -6381,6 +6456,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const adminPanelTabTransactions = document.getElementById("admin-panel-tab-transactions");
   const adminPanelTabInspector = document.getElementById("admin-panel-tab-inspector");
   const adminPanelTabAutomation = document.getElementById("admin-panel-tab-automation");
+  const adminPanelTabUsers = document.getElementById("admin-panel-tab-users");
   const adminPanelRefreshBtn = document.getElementById("admin-panel-refresh-btn");
   const adminPanelExportBtn = document.getElementById("admin-panel-export-btn");
   const adminPanelStatus = document.getElementById("admin-panel-status");
@@ -6406,6 +6482,29 @@ document.addEventListener("DOMContentLoaded", () => {
   const automationStatApproved = document.getElementById("automation-stat-approved");
   const automationStatDiscarded = document.getElementById("automation-stat-discarded");
   const automationCards = document.getElementById("automation-cards");
+
+  // Usuarios (pestaña dentro del Panel de Administrador) — lee/edita
+  // `player_progress` de Supabase (respaldo en la nube del Nivel/XP/Oro/
+  // Diamantes/Racha de cada operador, ver syncPlayerProgressToSupabase()
+  // más abajo). Tabla + modal de edición rápida separado.
+  const usersRefreshBtn = document.getElementById("users-refresh-btn");
+  const usersStatus = document.getElementById("users-status");
+  const usersStatTotal = document.getElementById("users-stat-total");
+  const usersStatAvgLevel = document.getElementById("users-stat-avg-level");
+  const usersStatActiveToday = document.getElementById("users-stat-active-today");
+  const usersTableBody = document.getElementById("users-table-body");
+
+  const playerEditModal = document.getElementById("player-edit-modal");
+  const playerEditModalClose = document.getElementById("player-edit-modal-close");
+  const playerEditSubtitle = document.getElementById("player-edit-subtitle");
+  const playerEditForm = document.getElementById("player-edit-form");
+  const playerEditLevelInput = document.getElementById("player-edit-level");
+  const playerEditXpInput = document.getElementById("player-edit-xp");
+  const playerEditXpToNextInput = document.getElementById("player-edit-xp-to-next");
+  const playerEditGoldInput = document.getElementById("player-edit-gold");
+  const playerEditDiamondsInput = document.getElementById("player-edit-diamonds");
+  const playerEditStreakInput = document.getElementById("player-edit-streak");
+  const playerEditError = document.getElementById("player-edit-error");
 
   // Login de Administrador (Supabase Auth real — ver ADMIN_EMAIL/
   // checkAdminSession() arriba del todo del archivo)
@@ -7522,10 +7621,15 @@ document.addEventListener("DOMContentLoaded", () => {
     adminPanelTabTransactions.hidden = target !== "transactions";
     adminPanelTabInspector.hidden = target !== "inspector";
     adminPanelTabAutomation.hidden = target !== "automation";
+    adminPanelTabUsers.hidden = target !== "users";
     if (target === "inspector") fetchInspectorFeedback();
     if (target === "automation") {
       fetchAutomationTasks();
       wireAutomationRealtime();
+    }
+    if (target === "users") {
+      fetchPlayerProgress();
+      wirePlayerProgressRealtime();
     }
   }
 
@@ -7983,6 +8087,191 @@ document.addEventListener("DOMContentLoaded", () => {
 
   automationRefreshBtn.addEventListener("click", fetchAutomationTasks);
 
+  // ---------------- Usuarios (Panel de Administrador) ----------------
+  // Lee/edita `player_progress` — respaldo en la nube del Nivel/XP/Oro/
+  // Diamantes/Racha de cada operador (ver syncPlayerProgressToSupabase()
+  // arriba). Mismo patrón visual/estructural que Transacciones (tabla +
+  // botón por fila), con estadísticas rápidas como Inspector/
+  // Automatización. La protección real es la misma de siempre en este
+  // Panel: isSuperAdmin (revalidado acá también, no solo en
+  // openAdminPanel()) — sin eso, ni el botón que abre el Panel es
+  // visible.
+  let usersRows = [];
+  let usersRealtimeChannel = null;
+  let editingPlayerRow = null;
+
+  function setUsersStatus(text) {
+    usersStatus.textContent = text;
+  }
+
+  function renderUsersStats(rows) {
+    usersStatTotal.textContent = rows.length;
+    const avgLevel = rows.length
+      ? Math.round(rows.reduce((sum, row) => sum + (Number(row.level) || 1), 0) / rows.length)
+      : 0;
+    usersStatAvgLevel.textContent = avgLevel;
+    const today = new Date().toISOString().slice(0, 10);
+    usersStatActiveToday.textContent = rows.filter((row) => row.last_active_date === today).length;
+  }
+
+  // "Estado" de la fila: hace cuántos días fue la última actividad
+  // registrada (last_active_date, la misma fecha que updateActivityStreak()
+  // guarda en state.lastActiveDate) — no es una sesión "en vivo", es la
+  // última vez que ese operador sincronizó progreso.
+  function formatPlayerStatus(lastActiveDate) {
+    if (!lastActiveDate) return t("usersStatusUnknown");
+    const today = new Date().toISOString().slice(0, 10);
+    if (lastActiveDate === today) return t("usersStatusToday");
+    const diffDays = Math.round((new Date(today) - new Date(lastActiveDate)) / 86400000);
+    if (diffDays < 0) return t("usersStatusToday");
+    return t("usersStatusDaysAgo").replace("{n}", diffDays);
+  }
+
+  function renderUsersTable(rows) {
+    usersTableBody.innerHTML = "";
+    rows.forEach((row) => {
+      const tr = document.createElement("tr");
+
+      const cells = [
+        row.operator_name || t("usersUnnamedOperator"),
+        row.phone || "—",
+        row.level != null ? row.level : "—",
+        row.xp != null ? `${row.xp} / ${row.xp_to_next || "—"}` : "—",
+        row.streak != null ? row.streak : "—",
+        formatPlayerStatus(row.last_active_date),
+      ];
+      cells.forEach((value) => {
+        const td = document.createElement("td");
+        td.textContent = value;
+        tr.appendChild(td);
+      });
+
+      const actionsTd = document.createElement("td");
+      const editBtn = document.createElement("button");
+      editBtn.type = "button";
+      editBtn.className = "btn-scan";
+      editBtn.textContent = t("usersEditBtn");
+      editBtn.addEventListener("click", () => openPlayerEditModal(row));
+      actionsTd.appendChild(editBtn);
+      tr.appendChild(actionsTd);
+
+      usersTableBody.appendChild(tr);
+    });
+  }
+
+  function fetchPlayerProgress() {
+    if (!isSuperAdmin) return;
+    if (!supabaseClient) {
+      setUsersStatus(t("adminPanelNoClient"));
+      return;
+    }
+    setUsersStatus(t("adminPanelLoading"));
+    supabaseClient
+      .from("player_progress")
+      .select("*")
+      .order("updated_at", { ascending: false })
+      .then(({ data, error }) => {
+        if (error) {
+          // Caso esperado hasta que /api/init-db termine de crear
+          // `player_progress` (se auto-provisiona sola, ver init-db.js) —
+          // mensaje honesto en vez de una tabla vacía sin explicación.
+          usersRows = [];
+          renderUsersStats([]);
+          renderUsersTable([]);
+          setUsersStatus(`${t("adminPanelError")} ${error.message}`);
+          return;
+        }
+        usersRows = data || [];
+        renderUsersStats(usersRows);
+        renderUsersTable(usersRows);
+        setUsersStatus(`${t("usersRowCount")} ${usersRows.length}`);
+      })
+      .catch(() => {
+        usersRows = [];
+        setUsersStatus(t("adminPanelNetworkError"));
+      });
+  }
+
+  // Suscripción realtime: si otra sesión de admin (u otro dispositivo
+  // sincronizando) toca `player_progress`, esta pestaña se refresca sola
+  // mientras esté abierta — mismo patrón que wireAutomationRealtime().
+  function wirePlayerProgressRealtime() {
+    if (usersRealtimeChannel || !supabaseClient) return;
+    usersRealtimeChannel = supabaseClient
+      .channel("player_progress_changes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "player_progress" },
+        () => fetchPlayerProgress()
+      )
+      .subscribe();
+  }
+
+  usersRefreshBtn.addEventListener("click", fetchPlayerProgress);
+
+  // ---------------- Modal de edición rápida de operador ----------------
+
+  function openPlayerEditModal(row) {
+    if (!isSuperAdmin) return;
+    editingPlayerRow = row;
+    playerEditError.hidden = true;
+    playerEditSubtitle.textContent = `${row.operator_name || t("usersUnnamedOperator")} · ${row.phone || "—"}`;
+    playerEditLevelInput.value = row.level != null ? row.level : 1;
+    playerEditXpInput.value = row.xp != null ? row.xp : 0;
+    playerEditXpToNextInput.value = row.xp_to_next != null ? row.xp_to_next : 100;
+    playerEditGoldInput.value = row.gold != null ? row.gold : 0;
+    playerEditDiamondsInput.value = row.diamonds != null ? row.diamonds : 0;
+    playerEditStreakInput.value = row.streak != null ? row.streak : 0;
+    playerEditModal.hidden = false;
+  }
+
+  function closePlayerEditModal() {
+    playerEditModal.hidden = true;
+    editingPlayerRow = null;
+  }
+
+  playerEditModalClose.addEventListener("click", closePlayerEditModal);
+  playerEditModal.addEventListener("click", (event) => {
+    if (event.target === playerEditModal) closePlayerEditModal();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !playerEditModal.hidden) closePlayerEditModal();
+  });
+
+  playerEditForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!isSuperAdmin || !editingPlayerRow || !supabaseClient) return;
+    playerEditError.hidden = true;
+
+    const updates = {
+      level: Math.max(1, parseInt(playerEditLevelInput.value, 10) || 1),
+      xp: Math.max(0, parseInt(playerEditXpInput.value, 10) || 0),
+      xp_to_next: Math.max(1, parseInt(playerEditXpToNextInput.value, 10) || 1),
+      gold: Math.max(0, parseInt(playerEditGoldInput.value, 10) || 0),
+      diamonds: Math.max(0, parseInt(playerEditDiamondsInput.value, 10) || 0),
+      streak: Math.max(0, parseInt(playerEditStreakInput.value, 10) || 0),
+      updated_at: new Date().toISOString(),
+    };
+
+    supabaseClient
+      .from("player_progress")
+      .update(updates)
+      .eq("profile_id", editingPlayerRow.profile_id)
+      .then(({ error }) => {
+        if (error) {
+          playerEditError.textContent = `${t("adminPanelError")} ${error.message}`;
+          playerEditError.hidden = false;
+          return;
+        }
+        closePlayerEditModal();
+        fetchPlayerProgress();
+      })
+      .catch(() => {
+        playerEditError.textContent = t("adminPanelNetworkError");
+        playerEditError.hidden = false;
+      });
+  });
+
   // ---------------- Chat ----------------
 
   function renderChatHistory() {
@@ -8112,6 +8401,7 @@ document.addEventListener("DOMContentLoaded", () => {
         text: `Subiste a Nivel ${state.level} · Rango ${rankForLevel(state.level)}. +${levelsGained * 10} 🪙`,
         variant: "system",
       });
+      syncPlayerProgressToSupabase();
     }
 
     renderHud();
@@ -8588,6 +8878,44 @@ document.addEventListener("DOMContentLoaded", () => {
   function myFriendPhone() {
     const account = loadMasterAccount();
     return account && account.phone ? account.phone : null;
+  }
+
+  // Respaldo en la nube del progreso del operador (Nivel/XP/Oro/
+  // Diamantes/Racha) — localStorage sigue siendo la ÚNICA fuente de
+  // verdad real (mismo criterio que syncTransactionToSupabase()); esto
+  // es "mejor esfuerzo", no bloqueante, solo para que el Panel de
+  // Administrador → "👥 Usuarios" tenga algo que mostrar. Clave
+  // `profile_id` (activeProfileId), NO `phone`: la Cuenta Principal es
+  // UNA por dispositivo pero puede tener varios Sub-Perfiles, así que
+  // `phone` por sí solo no identifica a un operador (mismo criterio ya
+  // usado por syncTransactionToSupabase()).
+  //
+  // Se llama en momentos puntuales (subida de Nivel, actualización de
+  // racha, carga inicial de página) en vez de en CADA persist() — eso
+  // sería decenas de llamadas a Supabase por sesión sin necesidad; el
+  // admin no necesita ver el XP subir tick a tick, solo el progreso
+  // real del operador con una frecuencia razonable.
+  function syncPlayerProgressToSupabase() {
+    if (!supabaseClient) return;
+    supabaseClient
+      .from("player_progress")
+      .upsert({
+        profile_id: activeProfileId,
+        operator_name: state.operatorName,
+        phone: myFriendPhone(),
+        level: state.level,
+        xp: state.xp,
+        xp_to_next: state.xpToNext,
+        gold: state.gold,
+        diamonds: state.diamonds,
+        streak: state.streak,
+        last_active_date: state.lastActiveDate,
+        updated_at: new Date().toISOString(),
+      })
+      .then(({ error }) => {
+        if (error) console.warn("Supabase: no se pudo sincronizar el progreso del operador:", error.message);
+      })
+      .catch((err) => console.warn("Supabase: fallo de red al sincronizar el progreso del operador:", err));
   }
 
   // Se llama al entrar a "Amigos" — hace que el propio teléfono sea
@@ -15183,6 +15511,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // ---------------- Render inicial ----------------
 
   updateActivityStreak();
+  // Una vez por carga de página (no en cada persist()) — ver comentario
+  // completo en syncPlayerProgressToSupabase(). Corre DESPUÉS de
+  // updateActivityStreak() para respaldar la racha ya recalculada.
+  syncPlayerProgressToSupabase();
   pickRandomHudBanner();
   startAvatarIdleCarousel();
   checkAdminSession();

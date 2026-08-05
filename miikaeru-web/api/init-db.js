@@ -51,9 +51,31 @@ const SCHEMA_STATEMENTS = [
     translation_status text not null default 'pending',
     created_at timestamptz not null default now()
   )`,
+  // player_progress: respaldo en la nube del Nivel/XP/Oro/Diamantes/
+  // Racha de cada operador (antes solo vivían en localStorage, ver
+  // state en app.js) — necesario para que el nuevo Panel de
+  // Administrador → "👥 Usuarios" pueda listar y editar operadores desde
+  // cualquier dispositivo. `profile_id` (activeProfileId en app.js) es
+  // la clave, no `phone`: un mismo teléfono de Cuenta Principal puede
+  // tener varios Sub-Perfiles en el mismo dispositivo (ver
+  // syncTransactionToSupabase(), que ya usa este mismo criterio).
+  `create table if not exists public.player_progress (
+    profile_id text primary key,
+    operator_name text,
+    phone text,
+    level integer not null default 1,
+    xp integer not null default 0,
+    xp_to_next integer not null default 100,
+    gold integer not null default 0,
+    diamonds integer not null default 0,
+    streak integer not null default 0,
+    last_active_date text,
+    updated_at timestamptz not null default now()
+  )`,
   `alter table public.app_contacts enable row level security`,
   `alter table public.app_friendships enable row level security`,
   `alter table public.app_friend_messages enable row level security`,
+  `alter table public.player_progress enable row level security`,
   // DROP + CREATE en vez de "IF NOT EXISTS": CREATE POLICY no acepta esa
   // cláusula en Postgres, así que este es el patrón real para que el
   // statement sea repetible sin tirar "policy already exists" en la
@@ -61,21 +83,32 @@ const SCHEMA_STATEMENTS = [
   // para ADMIN_PANEL_PASSWORD/transactions/feedback: sin autenticación
   // real de usuario final en esta app, así que sin RLS por usuario acá
   // tampoco — cualquiera con la anon key (pública) puede leer/escribir.
+  // player_progress sigue el mismo criterio que transactions (no el de
+  // feedback, que sí exige auth real): cada dispositivo necesita poder
+  // escribir SU PROPIO progreso vía la anon key sin sesión de Supabase
+  // Auth, así que no hay forma de restringir la escritura por RLS sin
+  // autenticación real de usuario final (que esta app no tiene) — la
+  // protección de la vista de edición del admin es 100% del lado de la
+  // interfaz (isSuperAdmin), documentado igual que en el resto del
+  // Panel de Administrador.
   `drop policy if exists "anon full access contacts" on public.app_contacts`,
   `create policy "anon full access contacts" on public.app_contacts for all using (true) with check (true)`,
   `drop policy if exists "anon full access friendships" on public.app_friendships`,
   `create policy "anon full access friendships" on public.app_friendships for all using (true) with check (true)`,
   `drop policy if exists "anon full access friend_messages" on public.app_friend_messages`,
   `create policy "anon full access friend_messages" on public.app_friend_messages for all using (true) with check (true)`,
+  `drop policy if exists "anon full access player_progress" on public.player_progress`,
+  `create policy "anon full access player_progress" on public.player_progress for all using (true) with check (true)`,
 ];
 
-async function ensureRealtimeEnabled(client) {
+async function ensureRealtimeEnabled(client, tableName) {
   const { rows } = await client.query(
     `select 1 from pg_publication_tables
-     where pubname = 'supabase_realtime' and schemaname = 'public' and tablename = 'app_friend_messages'`
+     where pubname = 'supabase_realtime' and schemaname = 'public' and tablename = $1`,
+    [tableName]
   );
   if (rows.length === 0) {
-    await client.query(`alter publication supabase_realtime add table public.app_friend_messages`);
+    await client.query(`alter publication supabase_realtime add table public.${tableName}`);
   }
 }
 
@@ -140,7 +173,8 @@ module.exports = async function handler(req, res) {
     for (const statement of SCHEMA_STATEMENTS) {
       await client.query(statement);
     }
-    await ensureRealtimeEnabled(client);
+    await ensureRealtimeEnabled(client, "app_friend_messages");
+    await ensureRealtimeEnabled(client, "player_progress");
     await ensureFeedbackAdminPolicies(client);
     res.status(200).json({ ok: true, message: "Tablas de Amigos/Chat y políticas de Admin verificadas/creadas correctamente." });
   } catch (err) {

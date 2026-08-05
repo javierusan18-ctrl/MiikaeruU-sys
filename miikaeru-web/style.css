@@ -8340,6 +8340,78 @@ textarea,
   }
 }
 
+/* Pestaña Usuarios: solo 3 estadísticas (Operadores/Nivel Promedio/
+   Activos Hoy) — mismo componente .inspector-stat, columnas propias en
+   vez de heredar el repeat(4, 1fr) genérico de arriba. */
+#users-stats {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* Botón "✏️ Editar" por fila — reutiliza .btn-scan (mismo estilo ya
+   usado en toda la app para acciones secundarias), sin necesidad de una
+   clase nueva. La tabla en sí (#users-table) hereda .admin-panel__table
+   sin cambios (misma cuadrícula que Transacciones). */
+#users-table td:last-child {
+  white-space: nowrap;
+}
+#users-table .btn-scan {
+  padding: 6px 12px;
+  font-size: 0.7rem;
+}
+
+/* Modal de edición rápida de operador — mismo patrón apilado de
+   #admin-login-form (label + input, foco magenta), reutilizado para
+   consistencia visual con el resto de la autenticación/administración
+   real de la app. */
+.modal--player-edit {
+  max-width: 380px;
+  text-align: left;
+}
+
+.modal--player-edit .modal-app__title {
+  text-align: center;
+}
+
+#player-edit-subtitle {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  margin-bottom: 10px;
+}
+
+#player-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#player-edit-form label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  margin-bottom: -4px;
+}
+
+#player-edit-form input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 46, 154, 0.3);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  outline: none;
+}
+
+#player-edit-form input:focus {
+  border-color: var(--neon-magenta);
+  box-shadow: 0 0 10px rgba(255, 46, 154, 0.4);
+}
+
+#player-edit-form .btn-register {
+  margin-top: 6px;
+}
+
 .admin-panel__toolbar {
   display: flex;
   flex-wrap: wrap;

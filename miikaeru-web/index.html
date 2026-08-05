@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260805-32" />
+  <link rel="stylesheet" href="style.css?v=20260806-1" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -2368,6 +2368,7 @@
         <button type="button" class="admin-panel-tab admin-panel-tab--active" data-admin-tab="transactions" data-i18n="adminPanelTabTransactions">💳 Transacciones</button>
         <button type="button" class="admin-panel-tab" data-admin-tab="inspector" data-i18n="adminPanelTabInspector">🕵️ Inspector de Bugs</button>
         <button type="button" class="admin-panel-tab" data-admin-tab="automation" data-i18n="adminPanelTabAutomation">🤖 Automatización (n8n)</button>
+        <button type="button" class="admin-panel-tab" data-admin-tab="users" data-i18n="adminPanelTabUsers">👥 Usuarios</button>
       </div>
 
       <!-- Pestaña: Transacciones (contenido original, sin cambios de lógica) -->
@@ -2466,6 +2467,91 @@
           <!-- tarjetas renderizadas por app.js -->
         </div>
       </div>
+
+      <!-- Pestaña: Usuarios — lee `player_progress` de Supabase (respaldo
+           en la nube del Nivel/XP/Oro/Diamantes/Racha de cada operador,
+           ver syncPlayerProgressToSupabase() en app.js). Solo lista
+           operadores que ya sincronizaron al menos una vez (subieron de
+           Nivel o cargaron la página con Supabase disponible) — no es un
+           listado de TODAS las instalaciones de la app, ya que esta sigue
+           siendo local-first (localStorage es la única fuente de verdad
+           real; esta tabla es un espejo de "mejor esfuerzo"). -->
+      <div id="admin-panel-tab-users" hidden>
+        <div class="admin-panel__toolbar">
+          <button type="button" class="btn-scan" id="users-refresh-btn" data-i18n="adminPanelRefreshBtn">🔄 Actualizar</button>
+        </div>
+        <p class="admin-panel__status" id="users-status"></p>
+
+        <div class="inspector-stats" id="users-stats">
+          <div class="inspector-stat">
+            <span class="inspector-stat__value" id="users-stat-total">0</span>
+            <span class="inspector-stat__label" data-i18n="usersStatTotal">Operadores</span>
+          </div>
+          <div class="inspector-stat">
+            <span class="inspector-stat__value" id="users-stat-avg-level">0</span>
+            <span class="inspector-stat__label" data-i18n="usersStatAvgLevel">Nivel Promedio</span>
+          </div>
+          <div class="inspector-stat inspector-stat--approved">
+            <span class="inspector-stat__value" id="users-stat-active-today">0</span>
+            <span class="inspector-stat__label" data-i18n="usersStatActiveToday">Activos Hoy</span>
+          </div>
+        </div>
+
+        <div class="admin-panel__table-wrap">
+          <table class="admin-panel__table" id="users-table">
+            <thead>
+              <tr>
+                <th data-i18n="usersColOperator">Operador</th>
+                <th data-i18n="usersColPhone">Teléfono</th>
+                <th data-i18n="usersColLevel">Nivel</th>
+                <th data-i18n="usersColXp">XP</th>
+                <th data-i18n="usersColStreak">Racha</th>
+                <th data-i18n="usersColStatus">Estado</th>
+                <th data-i18n="usersColActions">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="users-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: EDICIÓN RÁPIDA DE OPERADOR — se abre desde el botón
+       "✏️ Editar" de la pestaña Usuarios de arriba. Formulario chico,
+       flotante encima del Panel de Administrador; el UPDATE se hace
+       directo contra `player_progress` en Supabase (ver
+       submitPlayerEditForm() en app.js) y la tabla se refresca sola al
+       guardar. Protegido por el mismo isSuperAdmin que el resto del
+       Panel — openPlayerEditModal() revalida antes de abrir. -->
+  <div class="modal-overlay" id="player-edit-modal" hidden>
+    <div class="modal modal--player-edit glass">
+      <button type="button" class="btn-modal-close" id="player-edit-modal-close" aria-label="Cerrar">✕</button>
+      <h2 class="modal-app__title" data-i18n="playerEditTitle">✏️ Editar Operador</h2>
+      <p class="modal__subtitle" id="player-edit-subtitle"></p>
+
+      <form id="player-edit-form">
+        <label for="player-edit-level" data-i18n="playerEditLevelLabel">Nivel</label>
+        <input type="number" id="player-edit-level" min="1" step="1" required />
+
+        <label for="player-edit-xp" data-i18n="playerEditXpLabel">XP actual</label>
+        <input type="number" id="player-edit-xp" min="0" step="1" required />
+
+        <label for="player-edit-xp-to-next" data-i18n="playerEditXpToNextLabel">XP para subir de Nivel</label>
+        <input type="number" id="player-edit-xp-to-next" min="1" step="1" required />
+
+        <label for="player-edit-gold" data-i18n="playerEditGoldLabel">Oro 🪙</label>
+        <input type="number" id="player-edit-gold" min="0" step="1" required />
+
+        <label for="player-edit-diamonds" data-i18n="playerEditDiamondsLabel">Diamantes 💎</label>
+        <input type="number" id="player-edit-diamonds" min="0" step="1" required />
+
+        <label for="player-edit-streak" data-i18n="playerEditStreakLabel">Racha 🔥</label>
+        <input type="number" id="player-edit-streak" min="0" step="1" required />
+
+        <button type="submit" class="btn-register" data-i18n="playerEditSaveBtn">Guardar Cambios</button>
+        <p class="admin-panel__error" id="player-edit-error" hidden></p>
+      </form>
     </div>
   </div>
 
@@ -2684,7 +2770,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260805-32"></script>
+  <script src="app.js?v=20260806-1"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de
