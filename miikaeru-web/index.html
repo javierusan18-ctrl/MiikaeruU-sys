@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260805-29" />
+  <link rel="stylesheet" href="style.css?v=20260805-30" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -458,17 +458,19 @@
                autenticación real — mismo criterio ya documentado en
                ADMIN_PANEL_PASSWORD/transactions/feedback en app.js. -->
           <div class="chat-tab-panel chat-tab-panel--empty" id="chat-tab-friends" data-chat-panel="friends" hidden>
-            <!-- Selector de "Elige tu idioma" para el chat — separado a
-                 propósito del selector de idioma de INTERFAZ (ES/EN/JA,
-                 arriba en el header) porque el chat necesita cubrir
-                 idiomas que la interfaz de la app todavía no traduce
-                 (Vietnamita, Chino, Portugués): es el idioma en el que
-                 VOS escribís, usado como origen real de la traducción
-                 automática (ver CHAT_LANGUAGES/loadChatLanguage() en
-                 app.js). Con banderas, mismo estilo visual pedido
-                 ("similar a la captura" del selector de Idiomas). -->
+            <!-- "Tu idioma" para el chat — UNA sola fila compacta de
+                 chips con bandera, separada a propósito del selector de
+                 idioma de INTERFAZ (ES/EN/JA, header) porque el chat
+                 necesita cubrir idiomas que la interfaz todavía no
+                 traduce (Vietnamita, Chino, Portugués): es el idioma en
+                 el que VOS escribís, usado como origen real de la
+                 traducción automática (ver CHAT_LANGUAGES/
+                 loadChatLanguage() en app.js). renderLangPickerGrid()
+                 pinta la MISMA plantilla compacta acá y en el fallback
+                 de prueba de abajo — un solo componente, dos usos, para
+                 no duplicar el diseño en pantalla. -->
             <div class="chat-lang-picker" id="chat-lang-picker">
-              <p class="chat-lang-picker__label" data-i18n="chatMyLanguageLabel">Tu idioma para el chat</p>
+              <span class="chat-lang-picker__label" data-i18n="chatMyLanguageLabel">Tu idioma:</span>
               <div class="chat-lang-picker__grid" id="chat-lang-picker-grid"></div>
             </div>
 
@@ -485,17 +487,21 @@
             <p class="chat-friends-add__status" id="chat-friend-add-status" hidden></p>
 
             <!-- Fallback de prueba: aparece SOLO cuando "Agregar" falla
-                 porque el número no está registrado (createTestContactAndAddFriend()
-                 en app.js) — crea un contacto real en Supabase, marcado
-                 explícitamente como "(prueba)" en su nombre para no
-                 confundirse nunca con un amigo real, así podés probar el
-                 chat bilingüe sin depender de un segundo teléfono. -->
+                 (número real no registrado, o tablas de Supabase
+                 todavía sin crear). Modo Simulación Local (pedido
+                 explícito): createLocalTestContact() en app.js crea el
+                 contacto y sus mensajes 100% en localStorage de este
+                 dispositivo — NUNCA toca Supabase, así que nunca puede
+                 fallar por base de datos caída o ausente. Se marca
+                 "(prueba)" en el nombre + una insignia 🧪 en la lista
+                 para que jamás se confunda con un amigo real. -->
             <div class="chat-friend-test-fallback" id="chat-friend-test-fallback" hidden>
-              <p class="chat-friend-test-fallback__hint" data-i18n="chatFriendTestHint">¿Es para probar el chat? Podés crear un contacto de prueba con este número y elegirle un idioma.</p>
+              <p class="chat-friend-test-fallback__hint" data-i18n="chatFriendTestHint">Podés crear un contacto de prueba local para probar el chat.</p>
               <div class="chat-lang-picker chat-lang-picker--compact" id="chat-friend-test-lang-picker">
+                <span class="chat-lang-picker__label" data-i18n="chatTestLanguageLabel">Su idioma:</span>
                 <div class="chat-lang-picker__grid" id="chat-friend-test-lang-grid"></div>
               </div>
-              <button type="button" class="chat-friend-test-fallback__btn" id="chat-friend-test-create-btn" data-i18n="chatFriendTestCreateBtn">🧪 Crear contacto de prueba</button>
+              <button type="button" class="chat-friend-test-fallback__btn" id="chat-friend-test-create-btn" data-i18n="chatFriendTestCreateBtn">🧪 Crear contacto de prueba local</button>
             </div>
 
             <div class="chat-friends-list" id="chat-friends-list"></div>
@@ -2671,7 +2677,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260805-29"></script>
+  <script src="app.js?v=20260805-30"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de

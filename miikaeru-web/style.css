@@ -8790,6 +8790,12 @@ textarea,
 
 .chat-friends-add input {
   flex: 1;
+  /* min-width:0 — sin esto, un <input> dentro de un flex row nunca se
+     encoge por debajo de su ancho de contenido intrínseco, y en
+     pantallas angostas el "+ Agregar" queda empujado fuera del modal
+     (bug real de overflow horizontal en mobile, encontrado al
+     verificar). */
+  min-width: 0;
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-sm);
@@ -8827,41 +8833,53 @@ textarea,
 .chat-friends-add__status--ok { color: var(--neon-gold); }
 .chat-friends-add__status--error { color: var(--neon-magenta); }
 
-/* Selector "Elige tu idioma" (banderas) — reutilizado en dos lugares:
-   el idioma propio del usuario (#chat-lang-picker-grid) y el idioma del
-   contacto de prueba (#chat-friend-test-lang-grid, versión --compact,
-   tarjetas más chicas). Mismo estilo visual de tarjeta que el resto de
-   selectores de la app (.habits-tab/.chat-tab: borde sutil, activo en
-   dorado). */
+/* Selector "Elige tu idioma" — rediseñado a UNA sola fila de chips
+   (pastilla flag+código) en vez de la grilla de 3 columnas / 2 filas
+   anterior, que ocupaba demasiado alto y, duplicada en el fallback de
+   prueba, se sentía como el mismo control repetido dos veces (pedido
+   explícito: "compacta y limpia... eliminando elementos repetidos").
+   flex-wrap en vez de grid: en pantallas angostas los chips que no
+   entran bajan de línea solos, nunca fuerzan scroll horizontal.
+   Reutilizado en dos lugares: el idioma propio
+   (#chat-lang-picker-grid) y el idioma del contacto de prueba
+   (#chat-friend-test-lang-grid, versión --compact, chips más chicos). */
 .chat-lang-picker {
-  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
 .chat-lang-picker__label {
   font-size: 0.68rem;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
+  letter-spacing: 0.3px;
   color: var(--text-secondary);
-  margin-bottom: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .chat-lang-picker__grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  flex: 1;
+  min-width: 0;
 }
 
 .chat-lang-card {
-  display: flex;
-  flex-direction: column;
+  display: inline-flex;
   align-items: center;
-  gap: 3px;
-  padding: 8px 4px;
-  border-radius: var(--radius-sm);
+  gap: 4px;
+  padding: 5px 9px;
+  border-radius: 999px;
   border: 1px solid var(--glass-border);
   background: var(--glass-bg);
   color: var(--text-secondary);
   font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
   cursor: pointer;
   transition: border-color 0.2s ease, color 0.2s ease;
 }
@@ -8878,21 +8896,21 @@ textarea,
 }
 
 .chat-lang-card__flag {
-  font-size: 1.1rem;
+  font-size: 0.9rem;
+  line-height: 1;
 }
 
-.chat-lang-picker--compact .chat-lang-picker__grid {
-  grid-template-columns: repeat(6, 1fr);
-  gap: 4px;
+.chat-lang-picker--compact {
+  margin-bottom: 8px;
 }
 
 .chat-lang-picker--compact .chat-lang-card {
-  padding: 6px 2px;
+  padding: 4px 7px;
   font-size: 0.6rem;
 }
 
 .chat-lang-picker--compact .chat-lang-card__flag {
-  font-size: 0.95rem;
+  font-size: 0.8rem;
 }
 
 /* Fallback "contacto de prueba" — solo visible cuando "Agregar amigo"
@@ -8996,6 +9014,19 @@ textarea,
   height: 8px;
   border-radius: 50%;
   background: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+/* Contacto de prueba local (Modo Simulación Local) — insignia + borde
+   magenta punteado, mismo acento que .chat-friend-test-fallback, para
+   que nunca se confunda con un amigo real agregado vía Supabase. */
+.chat-friend-item--local {
+  border-style: dashed;
+  border-color: rgba(255, 46, 154, 0.4);
+}
+
+.chat-friend-item__local-badge {
+  font-size: 0.8rem;
   flex-shrink: 0;
 }
 

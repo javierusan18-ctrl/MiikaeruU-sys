@@ -789,8 +789,10 @@ const I18N = {
     chatFriendInputPlaceholder: "Escribe un mensaje...",
     chatFriendTranslating: "Traduciendo…",
     chatFriendTranslateFailed: "No se pudo traducir — mostrando solo el original.",
-    chatMyLanguageLabel: "Tu idioma para el chat",
-    chatFriendTestHint: "¿Es para probar el chat? Podés crear un contacto de prueba con este número y elegirle un idioma.",
+    chatMyLanguageLabel: "Tu idioma:",
+    chatTestLanguageLabel: "Su idioma:",
+    chatFriendTestHint: "Podés crear un contacto de prueba local para probar el chat.",
+    chatFriendLocalBadgeTitle: "Contacto de prueba local",
     chatFriendTestCreateBtn: "🧪 Crear contacto de prueba",
     chatFriendTestContactPrefix: "Contacto de prueba",
     chatFriendTestSuccess: "¡Contacto de prueba creado y agregado!",
@@ -1531,8 +1533,10 @@ const I18N = {
     chatFriendInputPlaceholder: "Type a message...",
     chatFriendTranslating: "Translating…",
     chatFriendTranslateFailed: "Couldn't translate — showing original only.",
-    chatMyLanguageLabel: "Your language for chat",
-    chatFriendTestHint: "Testing the chat? You can create a test contact with this number and pick its language.",
+    chatMyLanguageLabel: "Your language:",
+    chatTestLanguageLabel: "Their language:",
+    chatFriendTestHint: "You can create a local test contact to try out the chat.",
+    chatFriendLocalBadgeTitle: "Local test contact",
     chatFriendTestCreateBtn: "🧪 Create test contact",
     chatFriendTestContactPrefix: "Test contact",
     chatFriendTestSuccess: "Test contact created and added!",
@@ -2273,8 +2277,10 @@ const I18N = {
     chatFriendInputPlaceholder: "メッセージを入力...",
     chatFriendTranslating: "翻訳中…",
     chatFriendTranslateFailed: "翻訳できませんでした — 原文のみ表示します。",
-    chatMyLanguageLabel: "チャットで使う言語",
-    chatFriendTestHint: "チャットを試したいですか？この番号でテスト用の連絡先を作成し、言語を選べます。",
+    chatMyLanguageLabel: "あなたの言語:",
+    chatTestLanguageLabel: "相手の言語:",
+    chatFriendTestHint: "ローカルのテスト用連絡先を作成してチャットを試せます。",
+    chatFriendLocalBadgeTitle: "ローカルのテスト用連絡先",
     chatFriendTestCreateBtn: "🧪 テスト用連絡先を作成",
     chatFriendTestContactPrefix: "テスト連絡先",
     chatFriendTestSuccess: "テスト用連絡先を作成して追加しました！",
@@ -8500,12 +8506,12 @@ document.addEventListener("DOMContentLoaded", () => {
   // soportados de verdad por MyMemory (translateViaMyMemory ya usa
   // estos mismos códigos ISO como langpair).
   const CHAT_LANGUAGES = [
-    { code: "es", flag: "🇪🇸", label: "Español" },
-    { code: "en", flag: "🇺🇸", label: "English" },
-    { code: "ja", flag: "🇯🇵", label: "日本語" },
-    { code: "zh", flag: "🇨🇳", label: "中文" },
-    { code: "pt", flag: "🇵🇹", label: "Português" },
-    { code: "vi", flag: "🇻🇳", label: "Tiếng Việt" },
+    { code: "es", flag: "🇪🇸", label: "Español", short: "ES" },
+    { code: "en", flag: "🇺🇸", label: "English", short: "EN" },
+    { code: "ja", flag: "🇯🇵", label: "日本語", short: "JA" },
+    { code: "zh", flag: "🇨🇳", label: "中文", short: "ZH" },
+    { code: "pt", flag: "🇵🇹", label: "Português", short: "PT" },
+    { code: "vi", flag: "🇻🇳", label: "Tiếng Việt", short: "VI" },
   ];
 
   const CHAT_LANG_KEY = scopedKey("miikaeru_chat_language", activeProfileId);
@@ -8523,10 +8529,13 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem(CHAT_LANG_KEY, code);
   }
 
-  // Pinta la grilla de banderas de CHAT_LANGUAGES dentro de `container`,
-  // marca `selectedCode` como activa y llama a `onSelect(code)` al
-  // clickear una tarjeta — reutilizada para "tu idioma" y para el
-  // idioma del contacto de prueba (ver más abajo).
+  // Pinta la fila compacta de chips (bandera + código corto) de
+  // CHAT_LANGUAGES dentro de `container`, marca `selectedCode` como
+  // activo y llama a `onSelect(code)` al clickear uno — reutilizada
+  // para "tu idioma" y para el idioma del contacto de prueba (ver más
+  // abajo). El nombre completo (lang.label) queda como `title` — sigue
+  // disponible al pasar el mouse/mantener presionado, solo no ocupa
+  // espacio en pantalla todo el tiempo.
   function renderLangPickerGrid(container, selectedCode, onSelect) {
     if (!container) return;
     container.innerHTML = "";
@@ -8535,6 +8544,7 @@ document.addEventListener("DOMContentLoaded", () => {
       card.type = "button";
       card.className = `chat-lang-card${lang.code === selectedCode ? " chat-lang-card--active" : ""}`;
       card.dataset.lang = lang.code;
+      card.title = lang.label;
 
       const flag = document.createElement("span");
       flag.className = "chat-lang-card__flag";
@@ -8542,7 +8552,7 @@ document.addEventListener("DOMContentLoaded", () => {
       card.appendChild(flag);
 
       const label = document.createElement("span");
-      label.textContent = lang.label;
+      label.textContent = lang.short;
       card.appendChild(label);
 
       card.addEventListener("click", () => onSelect(lang.code));
@@ -8585,6 +8595,68 @@ document.addEventListener("DOMContentLoaded", () => {
     renderLangPickerGrid(chatLangPickerGrid, loadChatLanguage(), onOwnLangSelected);
   }
 
+  // ---- Modo Simulación Local (pedido explícito) ----
+  // Contactos y mensajes de PRUEBA que viven 100% en localStorage de
+  // este dispositivo/perfil — nunca tocan Supabase, así que nunca
+  // pueden fallar por "tabla no existe" ni por red caída. No es una
+  // simulación deshonesta del chat en sí: la traducción sigue siendo la
+  // llamada real a MyMemory (translateViaMyMemory); lo único "local" es
+  // que el contacto de prueba no representa a una persona real del otro
+  // lado — por eso su nombre queda marcado "(prueba)" (ver
+  // chatFriendTestContactPrefix) y su tarjeta en la lista lleva una
+  // insignia 🧪 (ver renderChatFriendsList) — nunca se confunde con un
+  // amigo real agregado vía Supabase.
+  const LOCAL_TEST_CONTACTS_KEY = scopedKey("miikaeru_local_test_contacts", activeProfileId);
+  const LOCAL_TEST_MESSAGES_KEY = scopedKey("miikaeru_local_test_messages", activeProfileId);
+
+  function loadLocalTestContacts() {
+    try {
+      return JSON.parse(localStorage.getItem(LOCAL_TEST_CONTACTS_KEY)) || {};
+    } catch (err) {
+      return {};
+    }
+  }
+
+  function saveLocalTestContacts(map) {
+    localStorage.setItem(LOCAL_TEST_CONTACTS_KEY, JSON.stringify(map));
+  }
+
+  function loadLocalTestMessages(phone) {
+    try {
+      const all = JSON.parse(localStorage.getItem(LOCAL_TEST_MESSAGES_KEY)) || {};
+      return all[phone] || [];
+    } catch (err) {
+      return [];
+    }
+  }
+
+  function saveLocalTestMessages(phone, messages) {
+    let all = {};
+    try {
+      all = JSON.parse(localStorage.getItem(LOCAL_TEST_MESSAGES_KEY)) || {};
+    } catch (err) {
+      all = {};
+    }
+    all[phone] = messages;
+    localStorage.setItem(LOCAL_TEST_MESSAGES_KEY, JSON.stringify(all));
+  }
+
+  // Crea (o reemplaza) un contacto de prueba local — NO llama a
+  // Supabase para nada, así que no puede arrojar el error de "tablas
+  // todavía no existen". Devuelve el contacto ya armado, listo para
+  // pasarle a openFriendThread().
+  function createLocalTestContact(phone, lang) {
+    const contacts = loadLocalTestContacts();
+    contacts[phone] = {
+      phone,
+      display_name: `${t("chatFriendTestContactPrefix")} ${phone}`,
+      preferred_language: lang,
+      isLocal: true,
+    };
+    saveLocalTestContacts(contacts);
+    return contacts[phone];
+  }
+
   async function addFriendByPhone(targetPhone) {
     const myPhone = myFriendPhone();
     if (!myPhone || !supabaseClient) throw new Error("no-session");
@@ -8610,37 +8682,26 @@ document.addEventListener("DOMContentLoaded", () => {
     if (error) throw new Error("schema-missing");
   }
 
-  // Contacto de prueba (pedido explícito: poder probar el chat con
-  // traducción sin depender de un segundo teléfono real) — crea una
-  // fila REAL en app_contacts (no simula nada del lado del cliente: el
-  // Realtime/traducción que siguen son 100% reales), pero con el nombre
-  // marcado explícitamente "(prueba)" para que nunca se confunda con un
-  // amigo real en la lista. Se ofrece SOLO cuando "Agregar amigo" falló
-  // por número no encontrado — nunca reemplaza esa validación real.
-  async function createTestContactAndAddFriend(targetPhone, lang) {
-    if (!supabaseClient) throw new Error("no-session");
-    const { error: upsertError } = await supabaseClient.from("app_contacts").upsert({
-      phone: targetPhone,
-      display_name: `${t("chatFriendTestContactPrefix")} ${targetPhone}`,
-      preferred_language: lang,
-      updated_at: new Date().toISOString(),
-    });
-    if (upsertError) throw new Error("schema-missing");
-    await addFriendByPhone(targetPhone);
-  }
-
+  // Amigos reales (Supabase) + contactos de prueba locales, combinados
+  // en una sola lista — así ambos aparecen juntos en "Amigos" sin
+  // necesitar dos secciones separadas en pantalla. Si Supabase no
+  // responde (tablas sin crear, sin sesión, etc.) igual devuelve los
+  // contactos de prueba locales: el Modo Simulación Local nunca depende
+  // de que el backend esté arriba.
   async function loadFriends() {
+    const localContacts = Object.values(loadLocalTestContacts());
     const myPhone = myFriendPhone();
-    if (!myPhone || !supabaseClient) return [];
+    if (!myPhone || !supabaseClient) return localContacts;
+
     const { data: friendships, error } = await supabaseClient
       .from("app_friendships")
       .select("phone_a, phone_b")
       .or(`phone_a.eq.${myPhone},phone_b.eq.${myPhone}`);
-    if (error || !friendships || !friendships.length) return [];
+    if (error || !friendships || !friendships.length) return localContacts;
 
     const friendPhones = friendships.map((f) => (f.phone_a === myPhone ? f.phone_b : f.phone_a));
     const { data: contacts } = await supabaseClient.from("app_contacts").select("*").in("phone", friendPhones);
-    return contacts || [];
+    return [...(contacts || []), ...localContacts];
   }
 
   // Lista de "Amigos" — ahora con datos reales de Supabase. Si `friends`
@@ -8680,7 +8741,7 @@ document.addEventListener("DOMContentLoaded", () => {
     friends.forEach((friend) => {
       const item = document.createElement("button");
       item.type = "button";
-      item.className = "chat-friend-item";
+      item.className = `chat-friend-item${friend.isLocal ? " chat-friend-item--local" : ""}`;
 
       const avatar = document.createElement("span");
       avatar.className = "chat-friend-item__avatar";
@@ -8691,6 +8752,16 @@ document.addEventListener("DOMContentLoaded", () => {
       name.className = "chat-friend-item__name";
       name.textContent = friend.display_name;
       item.appendChild(name);
+
+      // Insignia de "contacto de prueba local" — nunca se confunde con
+      // un amigo real (ver createLocalTestContact()).
+      if (friend.isLocal) {
+        const badge = document.createElement("span");
+        badge.className = "chat-friend-item__local-badge";
+        badge.textContent = "🧪";
+        badge.title = t("chatFriendLocalBadgeTitle");
+        item.appendChild(badge);
+      }
 
       const status = document.createElement("span");
       status.className = "chat-friend-item__status";
@@ -8765,8 +8836,13 @@ document.addEventListener("DOMContentLoaded", () => {
   if (chatFriendTestCreateBtn) {
     chatFriendTestCreateBtn.addEventListener("click", async () => {
       if (!pendingTestPhone) return;
+      // Modo Simulación Local: createLocalTestContact() es puro
+      // localStorage, no llama a Supabase para nada — no hay ningún
+      // error de base de datos que pueda tirar acá (el try/catch queda
+      // solo como resguardo ante un caso extremo de localStorage lleno/
+      // bloqueado, no por "tablas ausentes").
       try {
-        await createTestContactAndAddFriend(pendingTestPhone, pendingTestLang);
+        createLocalTestContact(pendingTestPhone, pendingTestLang);
         chatFriendPhoneInput.value = "";
         hideTestFallback();
         chatFriendAddStatus.textContent = t("chatFriendTestSuccess");
@@ -8774,8 +8850,7 @@ document.addEventListener("DOMContentLoaded", () => {
         chatFriendAddStatus.hidden = false;
         renderChatFriendsList(await loadFriends());
       } catch (err) {
-        const key = err.message === "schema-missing" ? "chatFriendSchemaMissing" : "chatFriendAddError";
-        chatFriendAddStatus.textContent = t(key);
+        chatFriendAddStatus.textContent = t("chatFriendAddError");
         chatFriendAddStatus.className = "chat-friends-add__status chat-friends-add__status--error";
         chatFriendAddStatus.hidden = false;
       }
@@ -8853,9 +8928,20 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function loadFriendMessages() {
-    if (!chatFriendFeed || !activeFriend || !supabaseClient) return;
-    const myPhone = myFriendPhone();
+    if (!chatFriendFeed || !activeFriend) return;
     chatFriendFeed.innerHTML = "";
+
+    // Contacto de prueba local: los mensajes viven en localStorage, sin
+    // ninguna consulta a Supabase — no hay forma de que esto falle por
+    // base de datos caída/ausente.
+    if (activeFriend.isLocal) {
+      loadLocalTestMessages(activeFriend.phone).forEach((msg) => appendFriendMessage(msg));
+      chatFriendFeed.scrollTop = chatFriendFeed.scrollHeight;
+      return;
+    }
+
+    if (!supabaseClient) return;
+    const myPhone = myFriendPhone();
 
     const { data, error } = await supabaseClient
       .from("app_friend_messages")
@@ -8878,7 +8964,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function wireFriendRealtime() {
     stopFriendRealtime();
-    if (!supabaseClient || !activeFriend) return;
+    // Un contacto local es de un solo dispositivo por definición — no
+    // hay ningún otro cliente con el que sincronizar, así que no tiene
+    // sentido abrir un canal de Realtime para él.
+    if (!supabaseClient || !activeFriend || activeFriend.isLocal) return;
     const myPhone = myFriendPhone();
     const friendPhone = activeFriend.phone;
 
@@ -8922,10 +9011,48 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function sendFriendMessage(text) {
     const myPhone = myFriendPhone();
-    if (!myPhone || !activeFriend || !supabaseClient || !text.trim()) return;
+    if (!myPhone || !activeFriend || !text.trim()) return;
 
     const senderLanguage = loadChatLanguage();
     const targetLanguage = activeFriend.preferred_language || "es";
+
+    // Contacto de prueba local: mensaje + traducción sin ninguna
+    // llamada a Supabase. La traducción SÍ sigue siendo real
+    // (translateViaMyMemory, misma API que el chat con amigos reales) —
+    // lo único "local" es dónde vive el mensaje.
+    if (activeFriend.isLocal) {
+      const message = {
+        id: `local-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+        phone_from: myPhone,
+        phone_to: activeFriend.phone,
+        original_text: text,
+        sender_language: senderLanguage,
+        target_language: targetLanguage,
+        translated_text: null,
+        translation_status: "pending",
+        created_at: new Date().toISOString(),
+      };
+      const messages = loadLocalTestMessages(activeFriend.phone);
+      messages.push(message);
+      saveLocalTestMessages(activeFriend.phone, messages);
+      // Sin Realtime local: se pinta directo acá (a diferencia del
+      // camino real, donde la propia inserción vuelve por el canal).
+      appendFriendMessage(message);
+
+      try {
+        message.translated_text =
+          senderLanguage === targetLanguage ? text : await translateViaMyMemory(text, targetLanguage, senderLanguage);
+        message.translation_status = "done";
+      } catch (err) {
+        message.translation_status = "failed";
+      }
+      const updated = loadLocalTestMessages(activeFriend.phone).map((m) => (m.id === message.id ? message : m));
+      saveLocalTestMessages(activeFriend.phone, updated);
+      updateFriendMessage(message);
+      return;
+    }
+
+    if (!supabaseClient) return;
 
     const { data: inserted, error } = await supabaseClient
       .from("app_friend_messages")
