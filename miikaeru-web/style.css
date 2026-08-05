@@ -8827,6 +8827,109 @@ textarea,
 .chat-friends-add__status--ok { color: var(--neon-gold); }
 .chat-friends-add__status--error { color: var(--neon-magenta); }
 
+/* Selector "Elige tu idioma" (banderas) — reutilizado en dos lugares:
+   el idioma propio del usuario (#chat-lang-picker-grid) y el idioma del
+   contacto de prueba (#chat-friend-test-lang-grid, versión --compact,
+   tarjetas más chicas). Mismo estilo visual de tarjeta que el resto de
+   selectores de la app (.habits-tab/.chat-tab: borde sutil, activo en
+   dorado). */
+.chat-lang-picker {
+  margin-bottom: 12px;
+}
+
+.chat-lang-picker__label {
+  font-size: 0.68rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.chat-lang-picker__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.chat-lang-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 8px 4px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  color: var(--text-secondary);
+  font-size: 0.68rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.chat-lang-card:hover {
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+}
+
+.chat-lang-card--active {
+  border-color: var(--neon-gold);
+  color: var(--neon-gold);
+  background: rgba(255, 183, 0, 0.08);
+}
+
+.chat-lang-card__flag {
+  font-size: 1.1rem;
+}
+
+.chat-lang-picker--compact .chat-lang-picker__grid {
+  grid-template-columns: repeat(6, 1fr);
+  gap: 4px;
+}
+
+.chat-lang-picker--compact .chat-lang-card {
+  padding: 6px 2px;
+  font-size: 0.6rem;
+}
+
+.chat-lang-picker--compact .chat-lang-card__flag {
+  font-size: 0.95rem;
+}
+
+/* Fallback "contacto de prueba" — solo visible cuando "Agregar amigo"
+   falla por número no encontrado (ver JS). Borde magenta para
+   diferenciarlo claramente de la lista real de amigos (glass neutro) y
+   del estado de éxito (dorado). */
+.chat-friend-test-fallback {
+  border: 1px dashed rgba(255, 46, 154, 0.4);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  background: rgba(255, 46, 154, 0.04);
+}
+
+.chat-friend-test-fallback__hint {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.chat-friend-test-fallback__btn {
+  width: 100%;
+  margin-top: 8px;
+  border: 1px solid var(--neon-magenta);
+  background: transparent;
+  color: var(--neon-magenta);
+  border-radius: var(--radius-sm);
+  padding: 7px 12px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.chat-friend-test-fallback__btn:hover {
+  background: rgba(255, 46, 154, 0.12);
+}
+
 /* Hilo de conversación con un amigo (#chat-friend-thread) — mismo
    .chat__feed/.chat__input que "Todos", solo agrega el encabezado con
    botón de volver. */

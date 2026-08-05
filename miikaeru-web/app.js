@@ -789,6 +789,12 @@ const I18N = {
     chatFriendInputPlaceholder: "Escribe un mensaje...",
     chatFriendTranslating: "Traduciendo…",
     chatFriendTranslateFailed: "No se pudo traducir — mostrando solo el original.",
+    chatMyLanguageLabel: "Tu idioma para el chat",
+    chatFriendTestHint: "¿Es para probar el chat? Podés crear un contacto de prueba con este número y elegirle un idioma.",
+    chatFriendTestCreateBtn: "🧪 Crear contacto de prueba",
+    chatFriendTestContactPrefix: "Contacto de prueba",
+    chatFriendTestSuccess: "¡Contacto de prueba creado y agregado!",
+    chatFriendSchemaMissing: "Las tablas de Amigos todavía no existen en Supabase — revisá SUPABASE_DB_URL en Vercel.",
     pillarFinanzas: "Finanzas",
     pillarTemplo: "Templo",
     pillarFisico: "Estado Físico",
@@ -1525,6 +1531,12 @@ const I18N = {
     chatFriendInputPlaceholder: "Type a message...",
     chatFriendTranslating: "Translating…",
     chatFriendTranslateFailed: "Couldn't translate — showing original only.",
+    chatMyLanguageLabel: "Your language for chat",
+    chatFriendTestHint: "Testing the chat? You can create a test contact with this number and pick its language.",
+    chatFriendTestCreateBtn: "🧪 Create test contact",
+    chatFriendTestContactPrefix: "Test contact",
+    chatFriendTestSuccess: "Test contact created and added!",
+    chatFriendSchemaMissing: "The Friends tables don't exist in Supabase yet — check SUPABASE_DB_URL in Vercel.",
     pillarFinanzas: "Finance",
     pillarTemplo: "Temple",
     pillarFisico: "Physical State",
@@ -2261,6 +2273,12 @@ const I18N = {
     chatFriendInputPlaceholder: "メッセージを入力...",
     chatFriendTranslating: "翻訳中…",
     chatFriendTranslateFailed: "翻訳できませんでした — 原文のみ表示します。",
+    chatMyLanguageLabel: "チャットで使う言語",
+    chatFriendTestHint: "チャットを試したいですか？この番号でテスト用の連絡先を作成し、言語を選べます。",
+    chatFriendTestCreateBtn: "🧪 テスト用連絡先を作成",
+    chatFriendTestContactPrefix: "テスト連絡先",
+    chatFriendTestSuccess: "テスト用連絡先を作成して追加しました！",
+    chatFriendSchemaMissing: "Amigo用のテーブルがまだSupabaseに存在しません — VercelのSUPABASE_DB_URLを確認してください。",
     pillarFinanzas: "財務",
     pillarTemplo: "神殿",
     pillarFisico: "身体状態",
@@ -6166,6 +6184,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const chatFriendFeed = document.getElementById("chat-friend-feed");
   const chatFriendForm = document.getElementById("chat-friend-form");
   const chatFriendInput = document.getElementById("chat-friend-input");
+  const chatLangPickerGrid = document.getElementById("chat-lang-picker-grid");
+  const chatFriendTestFallback = document.getElementById("chat-friend-test-fallback");
+  const chatFriendTestLangGrid = document.getElementById("chat-friend-test-lang-grid");
+  const chatFriendTestCreateBtn = document.getElementById("chat-friend-test-create-btn");
   const wishlistOpenBtn = document.getElementById("wishlist-open-btn");
   const wishlistModal = document.getElementById("wishlist-modal");
   const wishlistModalClose = document.getElementById("wishlist-modal-close");
@@ -8469,6 +8491,65 @@ document.addEventListener("DOMContentLoaded", () => {
     return translated;
   }
 
+  // Idiomas soportados por el chat de Amigos — deliberadamente MÁS
+  // amplio que el selector de idioma de INTERFAZ de la app (ES/EN/JA,
+  // header), porque acá lo que importa es el idioma en el que la
+  // PERSONA escribe, no en qué idioma ve los menús. Vietnamita
+  // (pedido explícito) y Chino/Portugués (mismo set que el selector de
+  // "Elige un Idioma" de Idiomas, para consistencia visual) — todos
+  // soportados de verdad por MyMemory (translateViaMyMemory ya usa
+  // estos mismos códigos ISO como langpair).
+  const CHAT_LANGUAGES = [
+    { code: "es", flag: "🇪🇸", label: "Español" },
+    { code: "en", flag: "🇺🇸", label: "English" },
+    { code: "ja", flag: "🇯🇵", label: "日本語" },
+    { code: "zh", flag: "🇨🇳", label: "中文" },
+    { code: "pt", flag: "🇵🇹", label: "Português" },
+    { code: "vi", flag: "🇻🇳", label: "Tiếng Việt" },
+  ];
+
+  const CHAT_LANG_KEY = scopedKey("miikaeru_chat_language", activeProfileId);
+
+  // Separado de currentLanguage (idioma de INTERFAZ) a propósito — ver
+  // comentario de CHAT_LANGUAGES arriba. Si nunca se eligió, arranca en
+  // el idioma de interfaz actual (si es uno de los soportados) o 'es'.
+  function loadChatLanguage() {
+    const saved = localStorage.getItem(CHAT_LANG_KEY);
+    if (saved && CHAT_LANGUAGES.some((l) => l.code === saved)) return saved;
+    return CHAT_LANGUAGES.some((l) => l.code === currentLanguage) ? currentLanguage : "es";
+  }
+
+  function saveChatLanguage(code) {
+    localStorage.setItem(CHAT_LANG_KEY, code);
+  }
+
+  // Pinta la grilla de banderas de CHAT_LANGUAGES dentro de `container`,
+  // marca `selectedCode` como activa y llama a `onSelect(code)` al
+  // clickear una tarjeta — reutilizada para "tu idioma" y para el
+  // idioma del contacto de prueba (ver más abajo).
+  function renderLangPickerGrid(container, selectedCode, onSelect) {
+    if (!container) return;
+    container.innerHTML = "";
+    CHAT_LANGUAGES.forEach((lang) => {
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className = `chat-lang-card${lang.code === selectedCode ? " chat-lang-card--active" : ""}`;
+      card.dataset.lang = lang.code;
+
+      const flag = document.createElement("span");
+      flag.className = "chat-lang-card__flag";
+      flag.textContent = lang.flag;
+      card.appendChild(flag);
+
+      const label = document.createElement("span");
+      label.textContent = lang.label;
+      card.appendChild(label);
+
+      card.addEventListener("click", () => onSelect(lang.code));
+      container.appendChild(card);
+    });
+  }
+
   function myFriendPhone() {
     const account = loadMasterAccount();
     return account && account.phone ? account.phone : null;
@@ -8476,7 +8557,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Se llama al entrar a "Amigos" — hace que el propio teléfono sea
   // encontrable por otros dispositivos (upsert: si ya existe, solo
-  // refresca nombre/idioma).
+  // refresca nombre/idioma). preferred_language ahora viene de
+  // loadChatLanguage(), no de currentLanguage — así alguien que habla
+  // vietnamita/chino/portugués puede registrarse en ese idioma aunque
+  // la interfaz de la app siga en español.
   async function ensureContactRegistered() {
     const phone = myFriendPhone();
     if (!phone || !supabaseClient) return;
@@ -8484,7 +8568,7 @@ document.addEventListener("DOMContentLoaded", () => {
       await supabaseClient.from("app_contacts").upsert({
         phone,
         display_name: state.operatorName || "Operador",
-        preferred_language: currentLanguage,
+        preferred_language: loadChatLanguage(),
         updated_at: new Date().toISOString(),
       });
     } catch (err) {
@@ -8492,22 +8576,57 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  function onOwnLangSelected(code) {
+    saveChatLanguage(code);
+    renderLangPickerGrid(chatLangPickerGrid, code, onOwnLangSelected);
+    ensureContactRegistered();
+  }
+  if (chatLangPickerGrid) {
+    renderLangPickerGrid(chatLangPickerGrid, loadChatLanguage(), onOwnLangSelected);
+  }
+
   async function addFriendByPhone(targetPhone) {
     const myPhone = myFriendPhone();
     if (!myPhone || !supabaseClient) throw new Error("no-session");
     if (targetPhone === myPhone) throw new Error("self");
 
-    const { data: contact } = await supabaseClient
+    // Distingue explícitamente "la consulta falló" (tablas todavía no
+    // creadas, red caída, etc. — ver /api/init-db) de "la consulta
+    // funcionó pero no hay fila" (número real que no está registrado).
+    // Antes esto se trataba igual y ambos casos mostraban "no
+    // encontrado", lo cual era confuso cuando el problema real era que
+    // las tablas de Supabase no existían todavía.
+    const { data: contact, error: selectError } = await supabaseClient
       .from("app_contacts")
       .select("phone")
       .eq("phone", targetPhone)
       .maybeSingle();
+    if (selectError) throw new Error("schema-missing");
     if (!contact) throw new Error("not-found");
 
     const { error } = await supabaseClient
       .from("app_friendships")
       .upsert({ phone_a: myPhone, phone_b: targetPhone }, { onConflict: "phone_a,phone_b" });
-    if (error) throw error;
+    if (error) throw new Error("schema-missing");
+  }
+
+  // Contacto de prueba (pedido explícito: poder probar el chat con
+  // traducción sin depender de un segundo teléfono real) — crea una
+  // fila REAL en app_contacts (no simula nada del lado del cliente: el
+  // Realtime/traducción que siguen son 100% reales), pero con el nombre
+  // marcado explícitamente "(prueba)" para que nunca se confunda con un
+  // amigo real en la lista. Se ofrece SOLO cuando "Agregar amigo" falló
+  // por número no encontrado — nunca reemplaza esa validación real.
+  async function createTestContactAndAddFriend(targetPhone, lang) {
+    if (!supabaseClient) throw new Error("no-session");
+    const { error: upsertError } = await supabaseClient.from("app_contacts").upsert({
+      phone: targetPhone,
+      display_name: `${t("chatFriendTestContactPrefix")} ${targetPhone}`,
+      preferred_language: lang,
+      updated_at: new Date().toISOString(),
+    });
+    if (upsertError) throw new Error("schema-missing");
+    await addFriendByPhone(targetPhone);
   }
 
   async function loadFriends() {
@@ -8584,6 +8703,30 @@ document.addEventListener("DOMContentLoaded", () => {
   renderChatFriendsList();
 
   // Agregar amigo por teléfono
+  let pendingTestPhone = null;
+  let pendingTestLang = "vi"; // arranca en un idioma distinto del propio para que la traducción sea visible al probar
+
+  function hideTestFallback() {
+    if (chatFriendTestFallback) chatFriendTestFallback.hidden = true;
+    pendingTestPhone = null;
+  }
+
+  function onTestLangSelected(code) {
+    pendingTestLang = code;
+    renderLangPickerGrid(chatFriendTestLangGrid, code, onTestLangSelected);
+  }
+
+  function showTestFallback(phone) {
+    if (!chatFriendTestFallback) return;
+    pendingTestPhone = phone;
+    // Default: el primer idioma de la lista que NO sea el propio, para
+    // que probar el chat muestre una traducción real de entrada.
+    const ownLang = loadChatLanguage();
+    pendingTestLang = CHAT_LANGUAGES.find((l) => l.code !== ownLang).code;
+    renderLangPickerGrid(chatFriendTestLangGrid, pendingTestLang, onTestLangSelected);
+    chatFriendTestFallback.hidden = false;
+  }
+
   if (chatFriendAddForm) {
     chatFriendAddForm.addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -8591,6 +8734,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!phone) return;
 
       chatFriendAddStatus.hidden = true;
+      hideTestFallback();
       try {
         await addFriendByPhone(phone);
         chatFriendPhoneInput.value = "";
@@ -8603,7 +8747,34 @@ document.addEventListener("DOMContentLoaded", () => {
           err.message === "not-found" ? "chatFriendAddNotFound" :
           err.message === "self" ? "chatFriendAddSelf" :
           err.message === "no-session" ? "chatFriendAddNoSession" :
+          err.message === "schema-missing" ? "chatFriendSchemaMissing" :
           "chatFriendAddError";
+        chatFriendAddStatus.textContent = t(key);
+        chatFriendAddStatus.className = "chat-friends-add__status chat-friends-add__status--error";
+        chatFriendAddStatus.hidden = false;
+        // Fallback de prueba: cuando el número real no está registrado,
+        // o también cuando las tablas todavía no existen (pedido
+        // explícito — poder probar sin bloquearse con el mensaje
+        // restrictivo). NO se ofrece para "self"/"no-session": esos no
+        // tienen sentido resolverlos con un contacto de prueba.
+        if (err.message === "not-found" || err.message === "schema-missing") showTestFallback(phone);
+      }
+    });
+  }
+
+  if (chatFriendTestCreateBtn) {
+    chatFriendTestCreateBtn.addEventListener("click", async () => {
+      if (!pendingTestPhone) return;
+      try {
+        await createTestContactAndAddFriend(pendingTestPhone, pendingTestLang);
+        chatFriendPhoneInput.value = "";
+        hideTestFallback();
+        chatFriendAddStatus.textContent = t("chatFriendTestSuccess");
+        chatFriendAddStatus.className = "chat-friends-add__status chat-friends-add__status--ok";
+        chatFriendAddStatus.hidden = false;
+        renderChatFriendsList(await loadFriends());
+      } catch (err) {
+        const key = err.message === "schema-missing" ? "chatFriendSchemaMissing" : "chatFriendAddError";
         chatFriendAddStatus.textContent = t(key);
         chatFriendAddStatus.className = "chat-friends-add__status chat-friends-add__status--error";
         chatFriendAddStatus.hidden = false;
@@ -8753,7 +8924,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const myPhone = myFriendPhone();
     if (!myPhone || !activeFriend || !supabaseClient || !text.trim()) return;
 
-    const senderLanguage = currentLanguage;
+    const senderLanguage = loadChatLanguage();
     const targetLanguage = activeFriend.preferred_language || "es";
 
     const { data: inserted, error } = await supabaseClient
