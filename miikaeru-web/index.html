@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260805-26" />
+  <link rel="stylesheet" href="style.css?v=20260805-27" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -449,13 +449,50 @@
             </div>
           </div>
 
-          <!-- Pestaña "Amigos": estructura visual real y funcional
-               (renderChatFriendsList() en app.js), lista para pintar
-               contactos apenas exista un sistema de amigos/red social —
-               hoy arranca vacía a propósito, en vez de precargar
-               usuarios de mentira (ver comentario junto a esa función). -->
+          <!-- Pestaña "Amigos": red de contactos REAL vía Supabase
+               (app_contacts/app_friendships/app_friend_messages — ver
+               app.js). La identidad es el teléfono de la cuenta
+               principal del dispositivo (MASTER_ACCOUNT_KEY); no hay
+               Supabase Auth por usuario final acá (solo el SUPER_ADMIN
+               la usa), así que es "quién conoce el número", no
+               autenticación real — mismo criterio ya documentado en
+               ADMIN_PANEL_PASSWORD/transactions/feedback en app.js. -->
           <div class="chat-tab-panel chat-tab-panel--empty" id="chat-tab-friends" data-chat-panel="friends" hidden>
+            <form class="chat-friends-add" id="chat-friend-add-form">
+              <input
+                type="tel"
+                id="chat-friend-phone-input"
+                data-i18n-placeholder="chatFriendAddPlaceholder"
+                placeholder="Número de teléfono del amigo"
+                autocomplete="off"
+              />
+              <button type="submit" id="chat-friend-add-btn" data-i18n="chatFriendAddBtn">+ Agregar</button>
+            </form>
+            <p class="chat-friends-add__status" id="chat-friend-add-status" hidden></p>
             <div class="chat-friends-list" id="chat-friends-list"></div>
+          </div>
+
+          <!-- Sub-vista: hilo de conversación con UN amigo específico —
+               reemplaza la lista mientras está abierta (openFriendThread()/
+               closeFriendThread() en app.js), reutiliza el mismo
+               .chat__feed/.chat__input y las mismas burbujas .message de
+               la pestaña "Todos". -->
+          <div class="chat-tab-panel" id="chat-friend-thread" data-chat-panel="friend-thread" hidden>
+            <button type="button" class="chat-friend-thread__back" id="chat-friend-thread-back" data-i18n="chatFriendThreadBack">← Amigos</button>
+            <h3 class="chat-friend-thread__name" id="chat-friend-thread-name"></h3>
+            <div class="chat__feed" id="chat-friend-feed"></div>
+            <form class="chat__input" id="chat-friend-form">
+              <input
+                type="text"
+                id="chat-friend-input"
+                data-i18n-placeholder="chatFriendInputPlaceholder"
+                placeholder="Escribe un mensaje..."
+                autocomplete="off"
+              />
+              <button type="submit" class="btn-send" aria-label="Enviar mensaje">
+                <span data-i18n="chatSend">Enviar</span>
+              </button>
+            </form>
           </div>
         </div>
       </div>
@@ -2605,7 +2642,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260805-26"></script>
+  <script src="app.js?v=20260805-27"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de

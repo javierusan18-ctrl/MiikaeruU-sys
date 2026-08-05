@@ -778,6 +778,17 @@ const I18N = {
     chatSquadEmptyDesc: "Cuando el modo multijugador esté disponible, tu equipo va a aparecer acá.",
     chatFriendsEmptyTitle: "Todavía no agregaste amigos",
     chatFriendsEmptyDesc: "Cuando exista un sistema de amigos, tus contactos van a aparecer en esta lista.",
+    chatFriendAddPlaceholder: "Número de teléfono del amigo",
+    chatFriendAddBtn: "+ Agregar",
+    chatFriendAddSuccess: "¡Amigo agregado!",
+    chatFriendAddNotFound: "Ese número todavía no abrió la pestaña Amigos en Miikaeru.",
+    chatFriendAddSelf: "Ese es tu propio número.",
+    chatFriendAddNoSession: "Inicia sesión primero para agregar amigos.",
+    chatFriendAddError: "No se pudo agregar — intenta de nuevo.",
+    chatFriendThreadBack: "← Amigos",
+    chatFriendInputPlaceholder: "Escribe un mensaje...",
+    chatFriendTranslating: "Traduciendo…",
+    chatFriendTranslateFailed: "No se pudo traducir — mostrando solo el original.",
     pillarFinanzas: "Finanzas",
     pillarTemplo: "Templo",
     pillarFisico: "Estado Físico",
@@ -1503,6 +1514,17 @@ const I18N = {
     chatSquadEmptyDesc: "Once multiplayer mode is available, your team will show up here.",
     chatFriendsEmptyTitle: "You haven't added any friends yet",
     chatFriendsEmptyDesc: "Once a friends system exists, your contacts will show up in this list.",
+    chatFriendAddPlaceholder: "Friend's phone number",
+    chatFriendAddBtn: "+ Add",
+    chatFriendAddSuccess: "Friend added!",
+    chatFriendAddNotFound: "That number hasn't opened the Friends tab in Miikaeru yet.",
+    chatFriendAddSelf: "That's your own number.",
+    chatFriendAddNoSession: "Log in first to add friends.",
+    chatFriendAddError: "Couldn't add friend — try again.",
+    chatFriendThreadBack: "← Friends",
+    chatFriendInputPlaceholder: "Type a message...",
+    chatFriendTranslating: "Translating…",
+    chatFriendTranslateFailed: "Couldn't translate — showing original only.",
     pillarFinanzas: "Finance",
     pillarTemplo: "Temple",
     pillarFisico: "Physical State",
@@ -2228,6 +2250,17 @@ const I18N = {
     chatSquadEmptyDesc: "マルチプレイヤーモードが利用可能になると、チームがここに表示されます。",
     chatFriendsEmptyTitle: "まだフレンドを追加していません",
     chatFriendsEmptyDesc: "フレンド機能が実装されると、連絡先がこのリストに表示されます。",
+    chatFriendAddPlaceholder: "フレンドの電話番号",
+    chatFriendAddBtn: "+ 追加",
+    chatFriendAddSuccess: "フレンドを追加しました！",
+    chatFriendAddNotFound: "その番号はまだMiikaeruのフレンドタブを開いていません。",
+    chatFriendAddSelf: "それはあなた自身の番号です。",
+    chatFriendAddNoSession: "フレンドを追加するにはまずログインしてください。",
+    chatFriendAddError: "追加できませんでした — もう一度試してください。",
+    chatFriendThreadBack: "← フレンド",
+    chatFriendInputPlaceholder: "メッセージを入力...",
+    chatFriendTranslating: "翻訳中…",
+    chatFriendTranslateFailed: "翻訳できませんでした — 原文のみ表示します。",
     pillarFinanzas: "財務",
     pillarTemplo: "神殿",
     pillarFisico: "身体状態",
@@ -6091,6 +6124,16 @@ document.addEventListener("DOMContentLoaded", () => {
   // wiring completo junto a openChatModal()/closeChatModal() más abajo.
   const chatTabsEl = document.getElementById("chat-tabs");
   const chatFriendsList = document.getElementById("chat-friends-list");
+  const chatFriendAddForm = document.getElementById("chat-friend-add-form");
+  const chatFriendPhoneInput = document.getElementById("chat-friend-phone-input");
+  const chatFriendAddStatus = document.getElementById("chat-friend-add-status");
+  const chatTabFriendsPanel = document.getElementById("chat-tab-friends");
+  const chatFriendThreadPanel = document.getElementById("chat-friend-thread");
+  const chatFriendThreadBack = document.getElementById("chat-friend-thread-back");
+  const chatFriendThreadName = document.getElementById("chat-friend-thread-name");
+  const chatFriendFeed = document.getElementById("chat-friend-feed");
+  const chatFriendForm = document.getElementById("chat-friend-form");
+  const chatFriendInput = document.getElementById("chat-friend-input");
   const wishlistOpenBtn = document.getElementById("wishlist-open-btn");
   const wishlistModal = document.getElementById("wishlist-modal");
   const wishlistModalClose = document.getElementById("wishlist-modal-close");
@@ -8322,6 +8365,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   function closeChatModal() {
     chatModal.hidden = true;
+    stopFriendRealtime();
   }
   chatOpenBtn.addEventListener("click", openChatModal);
   chatModalClose.addEventListener("click", closeChatModal);
@@ -8333,47 +8377,131 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // ---- Pestañas del chat flotante estilo MOBA (Todos/Escuadrón/Amigos) ----
-  // Puramente de navegación: alterna [hidden] entre los 3 `.chat-tab-panel`
-  // de index.html. "Todos" reutiliza el feed real (#chat-feed/#chat-form)
-  // sin tocar su lógica; "Escuadrón"/"Amigos" son estados vacíos honestos
-  // (ver comentario de renderChatFriendsList() más abajo) — esta app
-  // todavía no tiene multijugador ni una red de contactos real, así que
-  // no hay ningún dato que cambiar al entrar a esas pestañas, solo
-  // mostrar/ocultar el panel correspondiente.
+  // Alterna [hidden] entre los `.chat-tab-panel` de index.html. "Todos"
+  // reutiliza el feed real (#chat-feed/#chat-form) sin tocar su lógica.
+  // "Escuadrón" sigue siendo un estado vacío honesto — la app no tiene
+  // multijugador real. "Amigos" SÍ tiene datos reales ahora (ver bloque
+  // de abajo): al entrar, registra el contacto propio y carga la lista
+  // de amigos real desde Supabase.
   if (chatTabsEl) {
     const chatTabButtons = Array.from(chatTabsEl.querySelectorAll(".chat-tab"));
     chatTabButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
+      btn.addEventListener("click", async () => {
         const target = btn.dataset.chatTab;
         chatTabButtons.forEach((b) => {
           const active = b === btn;
           b.classList.toggle("chat-tab--active", active);
           b.setAttribute("aria-selected", String(active));
         });
+        closeFriendThread();
         document.querySelectorAll(".chat-tab-panel").forEach((panel) => {
           panel.hidden = panel.dataset.chatPanel !== target;
         });
         if (target === "all") chatFeed.scrollTop = chatFeed.scrollHeight;
+        if (target === "friends") {
+          await ensureContactRegistered();
+          renderChatFriendsList(await loadFriends());
+        }
       });
     });
   }
 
-  // Lista de "Amigos" — la app no tiene todavía ningún sistema de
-  // amistades/red social real (no hay backend de usuarios conectados
-  // entre sí), así que en vez de precargar contactos falsos esto arranca
-  // con `friends` vacío y muestra el estado vacío de index.html
-  // (.chat-empty-state, dentro de #chat-tab-friends). La función queda
-  // lista para recibir datos reales el día que exista ese sistema —
-  // basta con llamar renderChatFriendsList(listaReal) desde donde sea
-  // que ese backend termine viviendo.
+  // ---- Amigos: contactos y chat bilingüe REALES (Supabase) ----
+  // Identidad = el teléfono de la cuenta principal del dispositivo (ver
+  // loadMasterAccount()/MASTER_ACCOUNT_KEY) — esta app no tiene Supabase
+  // Auth por usuario final (solo el SUPER_ADMIN la usa, ver
+  // checkAdminSession() más abajo), así que "agregar amigo" es
+  // "quién conoce el número de teléfono", NO autenticación real. Mismo
+  // criterio ya documentado en esta misma app para ADMIN_PANEL_PASSWORD/
+  // transactions/feedback: honesto sobre lo que sí y no protege, en vez
+  // de fingir seguridad que no existe.
+  //
+  // Traducción: MyMemory Translated (api.mymemory.translated.net), API
+  // pública gratuita SIN llave — funciona directo desde el navegador
+  // porque esta PWA es 100% estática (sin servidor propio donde guardar
+  // una llave secreta de Google/DeepL). Mejor esfuerzo (rate-limited,
+  // ~5000 palabras/día por IP en el tier anónimo): si falla, el mensaje
+  // ya insertado se queda con translation_status:"failed" y el original
+  // siempre visible — nunca se pierde el mensaje por un fallo de
+  // traducción.
+  const MYMEMORY_ENDPOINT = "https://api.mymemory.translated.net/get";
+
+  async function translateViaMyMemory(text, targetLanguage, sourceLanguage) {
+    if (!text || !text.trim() || sourceLanguage === targetLanguage) return text;
+    const url = `${MYMEMORY_ENDPOINT}?q=${encodeURIComponent(text)}&langpair=${encodeURIComponent(sourceLanguage)}|${encodeURIComponent(targetLanguage)}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`MyMemory respondió ${res.status}`);
+    const data = await res.json();
+    const translated = data && data.responseData && data.responseData.translatedText;
+    if (!translated) throw new Error("MyMemory sin traducción.");
+    return translated;
+  }
+
+  function myFriendPhone() {
+    const account = loadMasterAccount();
+    return account && account.phone ? account.phone : null;
+  }
+
+  // Se llama al entrar a "Amigos" — hace que el propio teléfono sea
+  // encontrable por otros dispositivos (upsert: si ya existe, solo
+  // refresca nombre/idioma).
+  async function ensureContactRegistered() {
+    const phone = myFriendPhone();
+    if (!phone || !supabaseClient) return;
+    try {
+      await supabaseClient.from("app_contacts").upsert({
+        phone,
+        display_name: state.operatorName || "Operador",
+        preferred_language: currentLanguage,
+        updated_at: new Date().toISOString(),
+      });
+    } catch (err) {
+      console.warn("No se pudo registrar el contacto en Supabase:", err);
+    }
+  }
+
+  async function addFriendByPhone(targetPhone) {
+    const myPhone = myFriendPhone();
+    if (!myPhone || !supabaseClient) throw new Error("no-session");
+    if (targetPhone === myPhone) throw new Error("self");
+
+    const { data: contact } = await supabaseClient
+      .from("app_contacts")
+      .select("phone")
+      .eq("phone", targetPhone)
+      .maybeSingle();
+    if (!contact) throw new Error("not-found");
+
+    const { error } = await supabaseClient
+      .from("app_friendships")
+      .upsert({ phone_a: myPhone, phone_b: targetPhone }, { onConflict: "phone_a,phone_b" });
+    if (error) throw error;
+  }
+
+  async function loadFriends() {
+    const myPhone = myFriendPhone();
+    if (!myPhone || !supabaseClient) return [];
+    const { data: friendships, error } = await supabaseClient
+      .from("app_friendships")
+      .select("phone_a, phone_b")
+      .or(`phone_a.eq.${myPhone},phone_b.eq.${myPhone}`);
+    if (error || !friendships || !friendships.length) return [];
+
+    const friendPhones = friendships.map((f) => (f.phone_a === myPhone ? f.phone_b : f.phone_a));
+    const { data: contacts } = await supabaseClient.from("app_contacts").select("*").in("phone", friendPhones);
+    return contacts || [];
+  }
+
+  // Lista de "Amigos" — ahora con datos reales de Supabase. Si `friends`
+  // viene vacío (nadie agregado todavía, o falló la carga), se muestra
+  // el mismo estado vacío honesto de siempre.
   function renderChatFriendsList(friends = []) {
     if (!chatFriendsList) return;
     chatFriendsList.innerHTML = "";
     // .chat-tab-panel--empty centra el estado vacío verticalmente; con
     // datos reales la lista debe fluir normal (scroll, no centrada), así
     // que el modificador se activa/desactiva según haya o no contenido.
-    const friendsPanel = document.getElementById("chat-tab-friends");
-    if (friendsPanel) friendsPanel.classList.toggle("chat-tab-panel--empty", friends.length === 0);
+    if (chatTabFriendsPanel) chatTabFriendsPanel.classList.toggle("chat-tab-panel--empty", friends.length === 0);
 
     if (!friends.length) {
       const empty = document.createElement("div");
@@ -8399,27 +8527,241 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     friends.forEach((friend) => {
-      const item = document.createElement("div");
-      item.className = `chat-friend-item${friend.online ? " chat-friend-item--online" : ""}`;
+      const item = document.createElement("button");
+      item.type = "button";
+      item.className = "chat-friend-item";
 
       const avatar = document.createElement("span");
       avatar.className = "chat-friend-item__avatar";
-      avatar.textContent = friend.icon || "🦁";
+      avatar.textContent = "🦁";
       item.appendChild(avatar);
 
       const name = document.createElement("span");
       name.className = "chat-friend-item__name";
-      name.textContent = friend.name;
+      name.textContent = friend.display_name;
       item.appendChild(name);
 
       const status = document.createElement("span");
       status.className = "chat-friend-item__status";
       item.appendChild(status);
 
+      item.addEventListener("click", () => openFriendThread(friend));
       chatFriendsList.appendChild(item);
     });
   }
   renderChatFriendsList();
+
+  // Agregar amigo por teléfono
+  if (chatFriendAddForm) {
+    chatFriendAddForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const phone = chatFriendPhoneInput.value.trim();
+      if (!phone) return;
+
+      chatFriendAddStatus.hidden = true;
+      try {
+        await addFriendByPhone(phone);
+        chatFriendPhoneInput.value = "";
+        chatFriendAddStatus.textContent = t("chatFriendAddSuccess");
+        chatFriendAddStatus.className = "chat-friends-add__status chat-friends-add__status--ok";
+        chatFriendAddStatus.hidden = false;
+        renderChatFriendsList(await loadFriends());
+      } catch (err) {
+        const key =
+          err.message === "not-found" ? "chatFriendAddNotFound" :
+          err.message === "self" ? "chatFriendAddSelf" :
+          err.message === "no-session" ? "chatFriendAddNoSession" :
+          "chatFriendAddError";
+        chatFriendAddStatus.textContent = t(key);
+        chatFriendAddStatus.className = "chat-friends-add__status chat-friends-add__status--error";
+        chatFriendAddStatus.hidden = false;
+      }
+    });
+  }
+
+  // ---- Hilo de conversación con un amigo específico ----
+  let activeFriend = null;
+  let friendMessagesChannel = null;
+
+  function friendConversationMatches(msg, myPhone, friendPhone) {
+    return (
+      (msg.phone_from === myPhone && msg.phone_to === friendPhone) ||
+      (msg.phone_from === friendPhone && msg.phone_to === myPhone)
+    );
+  }
+
+  function buildFriendMessageElement(msg) {
+    const myPhone = myFriendPhone();
+    const isOwn = msg.phone_from === myPhone;
+
+    const el = document.createElement("div");
+    el.className = `message ${isOwn ? "message--user" : "message--friend"}`;
+    el.dataset.msgId = msg.id;
+
+    const author = document.createElement("span");
+    author.className = "message__author";
+    author.textContent = isOwn ? (state.operatorName || "TÚ") : (activeFriend ? activeFriend.display_name : "");
+    el.appendChild(author);
+
+    const original = document.createElement("p");
+    original.className = "message__text";
+    original.textContent = msg.original_text;
+    el.appendChild(original);
+
+    // Traducción SIEMPRE visible junto al original cuando existe y
+    // difiere de él — transparencia pedida explícitamente: "muestra el
+    // texto original del emisor y el texto traducido para el receptor
+    // de manera transparente y automática".
+    if (msg.translated_text && msg.translated_text !== msg.original_text) {
+      const translated = document.createElement("p");
+      translated.className = "message__translated";
+      translated.textContent = `🌐 ${msg.translated_text}`;
+      el.appendChild(translated);
+    } else if (msg.translation_status === "pending") {
+      const pending = document.createElement("p");
+      pending.className = "message__translated message__translated--pending";
+      pending.textContent = t("chatFriendTranslating");
+      el.appendChild(pending);
+    } else if (msg.translation_status === "failed") {
+      const failed = document.createElement("p");
+      failed.className = "message__translated message__translated--pending";
+      failed.textContent = t("chatFriendTranslateFailed");
+      el.appendChild(failed);
+    }
+
+    const time = document.createElement("span");
+    time.className = "message__time";
+    time.textContent = formatTime(new Date(msg.created_at));
+    el.appendChild(time);
+
+    return el;
+  }
+
+  function appendFriendMessage(msg) {
+    if (!chatFriendFeed) return;
+    chatFriendFeed.appendChild(buildFriendMessageElement(msg));
+    chatFriendFeed.scrollTop = chatFriendFeed.scrollHeight;
+  }
+
+  function updateFriendMessage(msg) {
+    if (!chatFriendFeed) return;
+    const existing = chatFriendFeed.querySelector(`[data-msg-id="${msg.id}"]`);
+    if (existing) existing.replaceWith(buildFriendMessageElement(msg));
+  }
+
+  async function loadFriendMessages() {
+    if (!chatFriendFeed || !activeFriend || !supabaseClient) return;
+    const myPhone = myFriendPhone();
+    chatFriendFeed.innerHTML = "";
+
+    const { data, error } = await supabaseClient
+      .from("app_friend_messages")
+      .select("*")
+      .or(
+        `and(phone_from.eq.${myPhone},phone_to.eq.${activeFriend.phone}),and(phone_from.eq.${activeFriend.phone},phone_to.eq.${myPhone})`
+      )
+      .order("created_at", { ascending: true });
+
+    if (!error && data) data.forEach((msg) => appendFriendMessage(msg));
+    chatFriendFeed.scrollTop = chatFriendFeed.scrollHeight;
+  }
+
+  function stopFriendRealtime() {
+    if (friendMessagesChannel && supabaseClient) {
+      supabaseClient.removeChannel(friendMessagesChannel);
+      friendMessagesChannel = null;
+    }
+  }
+
+  function wireFriendRealtime() {
+    stopFriendRealtime();
+    if (!supabaseClient || !activeFriend) return;
+    const myPhone = myFriendPhone();
+    const friendPhone = activeFriend.phone;
+
+    friendMessagesChannel = supabaseClient
+      .channel(`friend-chat-${[myPhone, friendPhone].sort().join("-")}`)
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "app_friend_messages" },
+        (payload) => {
+          if (friendConversationMatches(payload.new, myPhone, friendPhone)) appendFriendMessage(payload.new);
+        }
+      )
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "app_friend_messages" },
+        (payload) => {
+          if (friendConversationMatches(payload.new, myPhone, friendPhone)) updateFriendMessage(payload.new);
+        }
+      )
+      .subscribe();
+  }
+
+  async function openFriendThread(friend) {
+    activeFriend = friend;
+    chatTabFriendsPanel.hidden = true;
+    chatFriendThreadPanel.hidden = false;
+    chatFriendThreadName.textContent = `🦁 ${friend.display_name}`;
+    await loadFriendMessages();
+    wireFriendRealtime();
+  }
+
+  function closeFriendThread() {
+    if (!activeFriend) return;
+    activeFriend = null;
+    stopFriendRealtime();
+    chatFriendThreadPanel.hidden = true;
+    chatTabFriendsPanel.hidden = false;
+  }
+
+  if (chatFriendThreadBack) chatFriendThreadBack.addEventListener("click", closeFriendThread);
+
+  async function sendFriendMessage(text) {
+    const myPhone = myFriendPhone();
+    if (!myPhone || !activeFriend || !supabaseClient || !text.trim()) return;
+
+    const senderLanguage = currentLanguage;
+    const targetLanguage = activeFriend.preferred_language || "es";
+
+    const { data: inserted, error } = await supabaseClient
+      .from("app_friend_messages")
+      .insert({
+        phone_from: myPhone,
+        phone_to: activeFriend.phone,
+        original_text: text,
+        sender_language: senderLanguage,
+        target_language: targetLanguage,
+        translation_status: "pending",
+      })
+      .select()
+      .single();
+    // La propia inserción también llega por Realtime (INSERT event) —
+    // no se pinta acá para no duplicar la burbuja; wireFriendRealtime()
+    // es la única fuente que agrega mensajes al feed.
+    if (error || !inserted) return;
+
+    try {
+      const translated =
+        senderLanguage === targetLanguage ? text : await translateViaMyMemory(text, targetLanguage, senderLanguage);
+      await supabaseClient
+        .from("app_friend_messages")
+        .update({ translated_text: translated, translation_status: "done" })
+        .eq("id", inserted.id);
+    } catch (err) {
+      await supabaseClient.from("app_friend_messages").update({ translation_status: "failed" }).eq("id", inserted.id);
+    }
+  }
+
+  if (chatFriendForm) {
+    chatFriendForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const text = chatFriendInput.value.trim();
+      if (!text) return;
+      chatFriendInput.value = "";
+      sendFriendMessage(text);
+    });
+  }
 
   // Chat Guía: resalta con un parpadeo neón el ícono del dock al que la
   // respuesta hace referencia (ver CHAT_GUIDE_INTENTS/matchChatGuideIntent

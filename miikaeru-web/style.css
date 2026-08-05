@@ -8764,10 +8764,109 @@ textarea,
   display: flex;
   align-items: center;
   gap: 10px;
+  width: 100%;
   padding: 9px 12px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--glass-border);
   background: var(--glass-bg);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.chat-friend-item:hover {
+  border-color: var(--neon-cyan);
+}
+
+/* Formulario "Agregar amigo por teléfono" (#chat-friend-add-form) —
+   mismo patrón visual que .chat__input (input + botón en fila). */
+.chat-friends-add {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.chat-friends-add input {
+  flex: 1;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  color: var(--text-primary);
+  font-size: 0.82rem;
+  outline: none;
+}
+
+.chat-friends-add input:focus {
+  border-color: var(--neon-cyan);
+}
+
+.chat-friends-add button {
+  border: 1px solid var(--neon-gold);
+  background: transparent;
+  color: var(--neon-gold);
+  border-radius: var(--radius-sm);
+  padding: 8px 14px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.chat-friends-add button:hover {
+  background: rgba(255, 183, 0, 0.1);
+}
+
+.chat-friends-add__status {
+  font-size: 0.72rem;
+  margin-bottom: 10px;
+}
+
+.chat-friends-add__status--ok { color: var(--neon-gold); }
+.chat-friends-add__status--error { color: var(--neon-magenta); }
+
+/* Hilo de conversación con un amigo (#chat-friend-thread) — mismo
+   .chat__feed/.chat__input que "Todos", solo agrega el encabezado con
+   botón de volver. */
+.chat-friend-thread__back {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  color: var(--neon-cyan);
+  font-size: 0.78rem;
+  cursor: pointer;
+  padding: 4px 0;
+  margin-bottom: 4px;
+}
+
+.chat-friend-thread__name {
+  font-size: 0.88rem;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+/* Burbuja del amigo (mensaje ajeno) — cian, igual criterio que
+   .message--bot (border-color sólido de variable, sin rgba fijo). */
+.message--friend {
+  align-self: flex-start;
+  border-color: var(--neon-cyan);
+}
+.message--friend .message__author { color: var(--neon-cyan); }
+
+/* Línea de traducción — siempre debajo del texto original, en gris
+   secundario para diferenciarla visualmente sin competir con él. */
+.message__translated {
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  margin-top: 4px;
+  font-style: italic;
+}
+
+.message__translated--pending {
+  opacity: 0.7;
 }
 
 .chat-friend-item__avatar {
