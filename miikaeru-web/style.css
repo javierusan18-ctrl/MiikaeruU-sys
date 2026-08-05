@@ -8900,19 +8900,6 @@ textarea,
   line-height: 1;
 }
 
-.chat-lang-picker--compact {
-  margin-bottom: 8px;
-}
-
-.chat-lang-picker--compact .chat-lang-card {
-  padding: 4px 7px;
-  font-size: 0.6rem;
-}
-
-.chat-lang-picker--compact .chat-lang-card__flag {
-  font-size: 0.8rem;
-}
-
 /* Fallback "contacto de prueba" — solo visible cuando "Agregar amigo"
    falla por número no encontrado (ver JS). Borde magenta para
    diferenciarlo claramente de la lista real de amigos (glass neutro) y
@@ -8931,17 +8918,41 @@ textarea,
   margin-bottom: 8px;
 }
 
+/* Idioma del contacto + botón de crear en UNA fila — reemplaza la
+   segunda fila de banderas que había antes acá (pedido explícito: "sin
+   duplicar banderas"). min-width:0 en el <select> por el mismo motivo
+   que en .chat-friends-add input: sin eso, en mobile angosto el select
+   podía empujar el botón fuera de la caja. */
+.chat-friend-test-fallback__row {
+  display: flex;
+  gap: 8px;
+}
+
+.chat-friend-test-lang-select {
+  flex: 0 0 auto;
+  min-width: 0;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  padding: 7px 8px;
+  color: var(--text-primary);
+  font-size: 0.72rem;
+}
+
 .chat-friend-test-fallback__btn {
-  width: 100%;
-  margin-top: 8px;
+  flex: 1;
+  min-width: 0;
   border: 1px solid var(--neon-magenta);
   background: transparent;
   color: var(--neon-magenta);
   border-radius: var(--radius-sm);
-  padding: 7px 12px;
-  font-size: 0.74rem;
+  padding: 7px 10px;
+  font-size: 0.72rem;
   font-weight: 700;
   cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .chat-friend-test-fallback__btn:hover {

@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260805-30" />
+  <link rel="stylesheet" href="style.css?v=20260805-31" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -488,20 +488,27 @@
 
             <!-- Fallback de prueba: aparece SOLO cuando "Agregar" falla
                  (número real no registrado, o tablas de Supabase
-                 todavía sin crear). Modo Simulación Local (pedido
-                 explícito): createLocalTestContact() en app.js crea el
-                 contacto y sus mensajes 100% en localStorage de este
-                 dispositivo — NUNCA toca Supabase, así que nunca puede
-                 fallar por base de datos caída o ausente. Se marca
-                 "(prueba)" en el nombre + una insignia 🧪 en la lista
-                 para que jamás se confunda con un amigo real. -->
+                 todavía sin crear — este segundo caso ya no muestra
+                 ninguna alerta roja, ver el catch del submit más abajo
+                 en app.js). Modo Simulación Local: createLocalTestContact()
+                 en app.js crea el contacto y sus mensajes 100% en
+                 localStorage de este dispositivo — NUNCA toca Supabase,
+                 así que nunca puede fallar por base de datos caída o
+                 ausente. Se marca "(prueba)" en el nombre + una insignia
+                 🧪 en la lista para que jamás se confunda con un amigo
+                 real.
+                 El idioma del contacto ya NO repite la fila de banderas
+                 de "Tu idioma" de arriba (pedido explícito: "sin
+                 duplicar banderas") — un <select> nativo compacto, en la
+                 misma fila que el botón de crear, alcanza para elegir
+                 entre los mismos CHAT_LANGUAGES sin ocupar una segunda
+                 fila de chips idéntica en pantalla. -->
             <div class="chat-friend-test-fallback" id="chat-friend-test-fallback" hidden>
               <p class="chat-friend-test-fallback__hint" data-i18n="chatFriendTestHint">Podés crear un contacto de prueba local para probar el chat.</p>
-              <div class="chat-lang-picker chat-lang-picker--compact" id="chat-friend-test-lang-picker">
-                <span class="chat-lang-picker__label" data-i18n="chatTestLanguageLabel">Su idioma:</span>
-                <div class="chat-lang-picker__grid" id="chat-friend-test-lang-grid"></div>
+              <div class="chat-friend-test-fallback__row">
+                <select class="chat-friend-test-lang-select" id="chat-friend-test-lang-select" aria-label="Idioma del contacto de prueba"></select>
+                <button type="button" class="chat-friend-test-fallback__btn" id="chat-friend-test-create-btn" data-i18n="chatFriendTestCreateBtn">🧪 Crear contacto de prueba</button>
               </div>
-              <button type="button" class="chat-friend-test-fallback__btn" id="chat-friend-test-create-btn" data-i18n="chatFriendTestCreateBtn">🧪 Crear contacto de prueba local</button>
             </div>
 
             <div class="chat-friends-list" id="chat-friends-list"></div>
@@ -2677,7 +2684,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260805-30"></script>
+  <script src="app.js?v=20260805-31"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de

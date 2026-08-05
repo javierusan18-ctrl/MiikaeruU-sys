@@ -790,7 +790,6 @@ const I18N = {
     chatFriendTranslating: "Traduciendo…",
     chatFriendTranslateFailed: "No se pudo traducir — mostrando solo el original.",
     chatMyLanguageLabel: "Tu idioma:",
-    chatTestLanguageLabel: "Su idioma:",
     chatFriendTestHint: "Podés crear un contacto de prueba local para probar el chat.",
     chatFriendLocalBadgeTitle: "Contacto de prueba local",
     chatFriendTestCreateBtn: "🧪 Crear contacto de prueba",
@@ -1534,7 +1533,6 @@ const I18N = {
     chatFriendTranslating: "Translating…",
     chatFriendTranslateFailed: "Couldn't translate — showing original only.",
     chatMyLanguageLabel: "Your language:",
-    chatTestLanguageLabel: "Their language:",
     chatFriendTestHint: "You can create a local test contact to try out the chat.",
     chatFriendLocalBadgeTitle: "Local test contact",
     chatFriendTestCreateBtn: "🧪 Create test contact",
@@ -2278,7 +2276,6 @@ const I18N = {
     chatFriendTranslating: "翻訳中…",
     chatFriendTranslateFailed: "翻訳できませんでした — 原文のみ表示します。",
     chatMyLanguageLabel: "あなたの言語:",
-    chatTestLanguageLabel: "相手の言語:",
     chatFriendTestHint: "ローカルのテスト用連絡先を作成してチャットを試せます。",
     chatFriendLocalBadgeTitle: "ローカルのテスト用連絡先",
     chatFriendTestCreateBtn: "🧪 テスト用連絡先を作成",
@@ -6192,7 +6189,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const chatFriendInput = document.getElementById("chat-friend-input");
   const chatLangPickerGrid = document.getElementById("chat-lang-picker-grid");
   const chatFriendTestFallback = document.getElementById("chat-friend-test-fallback");
-  const chatFriendTestLangGrid = document.getElementById("chat-friend-test-lang-grid");
+  const chatFriendTestLangSelect = document.getElementById("chat-friend-test-lang-select");
   const chatFriendTestCreateBtn = document.getElementById("chat-friend-test-create-btn");
   const wishlistOpenBtn = document.getElementById("wishlist-open-btn");
   const wishlistModal = document.getElementById("wishlist-modal");
@@ -8782,9 +8779,18 @@ document.addEventListener("DOMContentLoaded", () => {
     pendingTestPhone = null;
   }
 
-  function onTestLangSelected(code) {
-    pendingTestLang = code;
-    renderLangPickerGrid(chatFriendTestLangGrid, code, onTestLangSelected);
+  // Select compacto en vez de una segunda fila de banderas (pedido
+  // explícito: "sin duplicar banderas") — se completa una sola vez, acá,
+  // en vez de re-renderizarse en cada cambio como hacía el grid viejo.
+  function populateTestLangSelect() {
+    if (!chatFriendTestLangSelect) return;
+    chatFriendTestLangSelect.innerHTML = "";
+    CHAT_LANGUAGES.forEach((lang) => {
+      const option = document.createElement("option");
+      option.value = lang.code;
+      option.textContent = `${lang.flag} ${lang.short}`;
+      chatFriendTestLangSelect.appendChild(option);
+    });
   }
 
   function showTestFallback(phone) {
@@ -8794,7 +8800,10 @@ document.addEventListener("DOMContentLoaded", () => {
     // que probar el chat muestre una traducción real de entrada.
     const ownLang = loadChatLanguage();
     pendingTestLang = CHAT_LANGUAGES.find((l) => l.code !== ownLang).code;
-    renderLangPickerGrid(chatFriendTestLangGrid, pendingTestLang, onTestLangSelected);
+    if (chatFriendTestLangSelect) {
+      if (!chatFriendTestLangSelect.options.length) populateTestLangSelect();
+      chatFriendTestLangSelect.value = pendingTestLang;
+    }
     chatFriendTestFallback.hidden = false;
   }
 
@@ -8814,15 +8823,24 @@ document.addEventListener("DOMContentLoaded", () => {
         chatFriendAddStatus.hidden = false;
         renderChatFriendsList(await loadFriends());
       } catch (err) {
-        const key =
-          err.message === "not-found" ? "chatFriendAddNotFound" :
-          err.message === "self" ? "chatFriendAddSelf" :
-          err.message === "no-session" ? "chatFriendAddNoSession" :
-          err.message === "schema-missing" ? "chatFriendSchemaMissing" :
-          "chatFriendAddError";
-        chatFriendAddStatus.textContent = t(key);
-        chatFriendAddStatus.className = "chat-friends-add__status chat-friends-add__status--error";
-        chatFriendAddStatus.hidden = false;
+        // "schema-missing" (Supabase todavía no configurado en producción)
+        // NO se muestra como alerta roja — es un detalle de infraestructura
+        // ajeno al usuario, y ya existe el Modo Simulación Local para
+        // seguir probando sin fricción. Sí se muestra "not-found": ahí el
+        // número real simplemente no está registrado todavía, información
+        // legítima para quien está agregando un amigo.
+        if (err.message === "schema-missing") {
+          chatFriendAddStatus.hidden = true;
+        } else {
+          const key =
+            err.message === "not-found" ? "chatFriendAddNotFound" :
+            err.message === "self" ? "chatFriendAddSelf" :
+            err.message === "no-session" ? "chatFriendAddNoSession" :
+            "chatFriendAddError";
+          chatFriendAddStatus.textContent = t(key);
+          chatFriendAddStatus.className = "chat-friends-add__status chat-friends-add__status--error";
+          chatFriendAddStatus.hidden = false;
+        }
         // Fallback de prueba: cuando el número real no está registrado,
         // o también cuando las tablas todavía no existen (pedido
         // explícito — poder probar sin bloquearse con el mensaje
@@ -8830,6 +8848,12 @@ document.addEventListener("DOMContentLoaded", () => {
         // tienen sentido resolverlos con un contacto de prueba.
         if (err.message === "not-found" || err.message === "schema-missing") showTestFallback(phone);
       }
+    });
+  }
+
+  if (chatFriendTestLangSelect) {
+    chatFriendTestLangSelect.addEventListener("change", () => {
+      pendingTestLang = chatFriendTestLangSelect.value;
     });
   }
 
