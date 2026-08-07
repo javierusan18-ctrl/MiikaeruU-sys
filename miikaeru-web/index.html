@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260806-2" />
+  <link rel="stylesheet" href="style.css?v=20260807-1" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -219,13 +219,13 @@
            adentro del mismo modal (#city-map-modal) — cero funcionalidad
            perdida, solo reubicada. -->
       <button type="button" class="hud-dock__icon hud-dock__icon--citymap" id="city-map-open-btn" data-i18n-title="cityMapTitle" title="🌐 Expansión de Territorio">🌐</button>
-      <!-- Galería de Skins desbloqueables (ver MIIKAERU_SKINS en app.js) —
-           vive en el dock izquierdo junto a Chat/Wishlist/Mapa por el
-           mismo criterio: un ícono más, sin abrir un tercer cluster nuevo
-           en la pantalla. -->
+      <!-- Skins del León y Mi Personaje YA NO son modales propios — los
+           dos ábren el Modal de Lore (#story-modal) directo en la ficha
+           de Miikaeru o del mellizo elegido, ver el listener de estos
+           botones en app.js e irAVistaPersonajes() en storyEngine.js. -->
       <button type="button" class="hud-dock__icon hud-dock__icon--skins" id="skins-open-btn" data-i18n-title="skinsOpenBtn" title="🎭 Skins del León">🎭</button>
-      <!-- Mi Personaje (Fesha/Mijashi) — ver #character-modal /
-           #character-select-modal más abajo. -->
+      <!-- Mi Personaje (Fesha/Mijashi) — si `state.playerCharacter` todavía
+           es null, abre #character-select-modal más abajo en su lugar. -->
       <button type="button" class="hud-dock__icon hud-dock__icon--character" id="character-open-btn" data-i18n-title="characterOpenBtn" title="🧬 Mi Personaje">🧬</button>
 
       <div class="hud-dock__divider"></div>
@@ -423,13 +423,13 @@
             <form class="chat__input" id="chat-form">
               <button type="button" class="btn-attach" id="attach-btn" title="Adjuntar evidencia" aria-label="Adjuntar evidencia">📷</button>
               <input type="file" id="evidence-input" accept="image/*" hidden />
-              <input
-                type="text"
+              <textarea
                 id="chat-input"
+                rows="1"
                 data-i18n-placeholder="chatPlaceholder"
                 placeholder="Escribe un mensaje a Miikaeru..."
                 autocomplete="off"
-              />
+              ></textarea>
               <button type="submit" class="btn-send" aria-label="Enviar mensaje">
                 <span data-i18n="chatSend">Enviar</span>
               </button>
@@ -524,13 +524,13 @@
             <h3 class="chat-friend-thread__name" id="chat-friend-thread-name"></h3>
             <div class="chat__feed" id="chat-friend-feed"></div>
             <form class="chat__input" id="chat-friend-form">
-              <input
-                type="text"
+              <textarea
                 id="chat-friend-input"
+                rows="1"
                 data-i18n-placeholder="chatFriendInputPlaceholder"
                 placeholder="Escribe un mensaje..."
                 autocomplete="off"
-              />
+              ></textarea>
               <button type="submit" class="btn-send" aria-label="Enviar mensaje">
                 <span data-i18n="chatSend">Enviar</span>
               </button>
@@ -2212,6 +2212,18 @@
       <!-- párrafos del capítulo renderizados por renderStoryChapter() en app.js -->
       <div class="story-modal__body" id="story-modal-body"></div>
 
+      <!-- Colección de Skins (Miikaeru) o Evolución (Fesha/Mijashi) — acá
+           viven fusionados los antiguos modales separados "🎭 Skins del
+           León" y "🧬 Mi Personaje" (ver irAVistaPersonajes()/
+           renderizarPersonaje() en storyEngine.js, y getMiikaeruSkinsData()/
+           getPlayerCharacterEvolutionData() en app.js). Oculto para el
+           resto de los personajes/categorías y siempre en la vista
+           Capítulos. -->
+      <div class="story-modal__collection" id="story-modal-collection" hidden>
+        <h3 class="story-modal__collection-title" id="story-modal-collection-title">—</h3>
+        <div class="skins-grid" id="story-modal-collection-grid"></div>
+      </div>
+
       <!-- Lectura Inmersiva de Japonés (ver readerEngine.js/storyEngine.js)
            — botón visible solo si el capítulo trae `lectura_inmersiva_jp`
            en storyData.json; alterna entre el texto en español de arriba
@@ -2260,25 +2272,6 @@
     </div>
   </div>
 
-  <!-- MODAL: SKINS DEL LEÓN — galería de las variantes de MIIKAERU_SKINS
-       (ver app.js). Grid renderizado por renderSkinsGrid(): cada tarjeta
-       muestra la miniatura del skin; los todavía no alcanzados quedan
-       atenuados con su nivel requerido (mismo criterio "visible pero
-       inerte" que .story-modal__tab--locked/.mpass-tier--locked), y los
-       desbloqueados se pueden seleccionar con un click para que
-       reemplacen el carrusel ambiental del León mientras esté en reposo. -->
-  <div class="modal-overlay" id="skins-modal" hidden>
-    <div class="modal glass modal--skins">
-      <button type="button" class="btn-modal-close" id="skins-modal-close" aria-label="Cerrar">✕</button>
-      <div class="panel__header">
-        <h2 data-i18n="skinsModalTitle">🎭 Skins del León</h2>
-        <span class="panel__tag" data-i18n="skinsModalSubtitle">colección desbloqueable</span>
-      </div>
-      <div class="skins-grid" id="skins-grid"></div>
-      <button type="button" class="btn-skins-close" id="skins-modal-close-btn" data-i18n="skinsModalCloseBtn">Cerrar</button>
-    </div>
-  </div>
-
   <!-- MODAL: SELECCIÓN DE AVATAR INICIAL — Fesha o Mijashi (ver
        PLAYER_CHARACTERS en app.js). Se abre UNA sola vez, la primera vez
        que el Operador entra (justo después de crear su cuenta/nombre de
@@ -2304,25 +2297,6 @@
           <span class="character-select-card__tag" data-i18n="characterSelectMale">Mellizo Masculino</span>
         </button>
       </div>
-    </div>
-  </div>
-
-  <!-- MODAL: MI PERSONAJE — visor de las fases de evolución del avatar
-       elegido (ver renderCharacterModal() en app.js). Abre desde el
-       ícono 🧬 del dock izquierdo: si `state.playerCharacter` todavía es
-       null (perfiles creados antes de este Bloque), abre la selección de
-       arriba en su lugar en vez de mostrar un visor vacío. -->
-  <div class="modal-overlay" id="character-modal" hidden>
-    <div class="modal glass modal--character">
-      <button type="button" class="btn-modal-close" id="character-modal-close" aria-label="Cerrar">✕</button>
-      <div class="panel__header">
-        <h2 id="character-modal-name">—</h2>
-        <span class="panel__tag" id="character-modal-rank">—</span>
-      </div>
-      <img class="character-modal__image" id="character-modal-image" alt="" />
-      <p class="character-modal__phase-title" id="character-modal-phase-title">—</p>
-      <div class="character-evolution-grid" id="character-evolution-grid"></div>
-      <button type="button" class="btn-skins-close" id="character-modal-close-btn" data-i18n="skinsModalCloseBtn">Cerrar</button>
     </div>
   </div>
 
@@ -2790,7 +2764,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260806-2"></script>
+  <script src="app.js?v=20260807-1"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de
@@ -2802,7 +2776,7 @@
        aparte, mismo patrón que MiikaeruHub, cargado después de app.js
        porque app.js llama a window.MiikaeruStoryEngine desde el click
        del avatar/León. -->
-  <script src="storyEngine.js?v=20260806-2"></script>
+  <script src="storyEngine.js?v=20260807-1"></script>
   <!-- Service Worker: estrategia Cache First para assets estáticos (ver
        sw.js) — carga instantánea en visitas repetidas y funcionamiento
        offline. Registro envuelto en try/catch + comprobación de

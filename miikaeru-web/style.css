@@ -2322,6 +2322,16 @@ textarea,
   -webkit-backdrop-filter: blur(6px);
   position: relative;
   animation: fadeIn 0.3s ease;
+  /* Corrección de desbordamiento: un mensaje largo sin espacios (URL,
+     texto en japonés/chino sin separadores naturales) antes se salía del
+     globo en vez de cortar línea — overflow-wrap corta en cualquier
+     punto si hace falta, word-break refuerza lo mismo para navegadores
+     viejos, y min-width:0 es necesario porque .message vive dentro de un
+     flex column (.chat__feed) donde un item sin min-width explícito
+     nunca se encoge por debajo del ancho de su contenido más largo. */
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  min-width: 0;
 }
 
 @keyframes fadeIn {
@@ -2392,24 +2402,40 @@ textarea,
   border-top: 1px solid rgba(0, 240, 255, 0.15);
 }
 
-.chat__input input {
+.chat__input input,
+.chat__input textarea {
   flex: 1;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(0, 240, 255, 0.25);
   border-radius: var(--radius-sm);
   padding: 10px 14px;
   color: var(--text-primary);
+  font-family: inherit;
   font-size: 0.9rem;
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.chat__input input:focus {
+/* #chat-input/#chat-friend-input: <textarea rows="1"> en vez de <input>
+   (ver wireTextareaEnterEnvia() en app.js) para poder agrandarse a mano
+   — Enter sigue enviando el mensaje, Shift+Enter mete un salto de línea.
+   min-height replica la altura de una sola línea de <input> de siempre;
+   resize:vertical evita que estirarlo invada el botón "Enviar" al lado. */
+.chat__input textarea {
+  resize: vertical;
+  min-height: 40px;
+  max-height: 220px;
+  line-height: 1.4;
+}
+
+.chat__input input:focus,
+.chat__input textarea:focus {
   border-color: var(--neon-cyan);
   box-shadow: var(--shadow-neon-cyan);
 }
 
-.chat__input input::placeholder {
+.chat__input input::placeholder,
+.chat__input textarea::placeholder {
   color: var(--text-secondary);
 }
 
@@ -7599,6 +7625,31 @@ textarea,
   margin: 0;
 }
 
+/* Colección del personaje (ex-"Skins del León" / "Mi Personaje", ahora
+   fusionadas dentro de la ficha de Personajes — ver #story-modal-collection
+   en index.html / renderizarColeccionPersonaje() en storyEngine.js).
+   Reutiliza .skins-grid/.skin-card tal cual, solo agrega el encabezado. */
+.story-modal__collection-title {
+  font-size: 0.72rem;
+  letter-spacing: 1px;
+  color: var(--neon-cyan);
+  margin: 0 0 8px;
+  text-transform: uppercase;
+}
+
+.story-modal__collection .skins-grid {
+  max-height: 40vh;
+}
+
+/* Grilla de fases de Fesha/Mijashi: solo lectura, sin el cursor/hover de
+   "clickeable" que .skin-card trae por defecto (esa sí equipa algo). */
+.skin-card--readonly {
+  cursor: default;
+}
+.skin-card--readonly:hover {
+  transform: none;
+}
+
 .btn-story-close {
   width: 100%;
   padding: 12px;
@@ -7634,19 +7685,49 @@ textarea,
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  max-width: min(680px, 92vw);
-  max-height: 92vh;
+  width: min(680px, 92vw);
+  max-width: 96vw;
+  height: min(600px, 92vh);
+  max-height: 96vh;
   padding: 20px;
   border-radius: var(--radius-lg);
   border: 1px solid rgba(0, 240, 255, 0.35);
   background: var(--glass-bg);
   backdrop-filter: blur(18px);
   box-shadow: 0 0 40px rgba(0, 240, 255, 0.15);
+  /* Contenedor de imagen redimensionable a mano (pedido explícito) —
+     width/height explícitos arriba (en vez de solo max-*) son lo que le
+     da a resize:both algo concreto para agrandar/achicar; overflow:auto
+     habilita el asa nativa del navegador. */
+  resize: both;
+  overflow: auto;
+  min-width: 280px;
+  min-height: 280px;
+}
+
+.story-lightbox::after {
+  content: "";
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  width: 13px;
+  height: 13px;
+  pointer-events: none;
+  opacity: 0.85;
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgba(0, 242, 255, 0.65) 0px,
+    rgba(0, 242, 255, 0.65) 1.5px,
+    transparent 1.5px,
+    transparent 4px
+  );
 }
 
 .story-lightbox__image {
   max-width: 100%;
   max-height: 62vh;
+  flex: 1;
+  min-height: 0;
   object-fit: contain;
   border-radius: var(--radius-md);
   border: 1px solid rgba(0, 240, 255, 0.3);
@@ -7704,13 +7785,6 @@ textarea,
   .story-lightbox__image {
     max-height: 50vh;
   }
-}
-
-/* Modal de Skins del León (ver MIIKAERU_SKINS en app.js) — grid de
-   tarjetas cuadradas, mismo lenguaje visual "vidrio + borde neón" que el
-   resto de los modales. */
-.modal--skins {
-  max-width: 640px;
 }
 
 .skins-grid {
@@ -7793,25 +7867,6 @@ textarea,
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
 }
 
-.btn-skins-close {
-  width: 100%;
-  padding: 12px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--neon-cyan);
-  background: rgba(0, 240, 255, 0.08);
-  color: var(--neon-cyan);
-  font-weight: 700;
-  letter-spacing: 1px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn-skins-close:hover {
-  background: var(--neon-cyan);
-  color: #04121a;
-  box-shadow: var(--shadow-neon-cyan);
-}
-
 /* Selección de Avatar Inicial (Fesha/Mijashi) — 2 tarjetas grandes, sin
    botón de cerrar en el modal (ver comentario en index.html: es una
    elección obligatoria la primera vez, no un aviso descartable). */
@@ -7865,38 +7920,6 @@ textarea,
   color: var(--text-secondary);
   letter-spacing: 0.5px;
   text-transform: uppercase;
-}
-
-/* Mi Personaje (visor de fases, ver #character-modal) — retrato grande +
-   grilla de fases reutilizando el lenguaje visual de .skin-card. */
-.modal--character {
-  max-width: 560px;
-}
-
-.character-modal__image {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  object-fit: contain;
-  background: rgba(0, 10, 20, 0.4);
-  border-radius: var(--radius-md);
-  border: 1px solid rgba(0, 240, 255, 0.3);
-  margin: 12px 0;
-}
-
-.character-modal__phase-title {
-  text-align: center;
-  font-weight: 700;
-  color: var(--neon-gold);
-  margin: 0 0 14px;
-  font-size: 0.9rem;
-  letter-spacing: 0.5px;
-}
-
-.character-evolution-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
-  gap: 8px;
-  margin-bottom: 14px;
 }
 
 .modal--city-map {
@@ -8786,6 +8809,30 @@ textarea,
 .modal--chat {
   transform: scale(var(--chat-scale, 1));
   transition: transform 0.15s ease;
+  /* Ventana redimensionable a mano (mismo criterio que .resizable más
+     arriba): overflow-y ya es auto por la regla de arriba, así que el
+     navegador dibuja el asa nativa sin más cambios — solo hace falta un
+     piso de tamaño para que no se pueda achicar hasta desaparecer. */
+  resize: vertical;
+  min-height: 360px;
+}
+
+.modal--chat::after {
+  content: "";
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  width: 13px;
+  height: 13px;
+  pointer-events: none;
+  opacity: 0.85;
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgba(0, 242, 255, 0.65) 0px,
+    rgba(0, 242, 255, 0.65) 1.5px,
+    transparent 1.5px,
+    transparent 4px
+  );
 }
 
 .modal--chat .chat__feed {
@@ -9155,6 +9202,11 @@ textarea,
   color: var(--text-secondary);
   margin-top: 4px;
   font-style: italic;
+  /* Mismo criterio que .message más arriba — la traducción automática
+     (CJK sin espacios, textos largos) es la que más fácil se sale del
+     globo si no se corta. */
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .message__translated--pending {
@@ -9374,7 +9426,7 @@ textarea,
   }
 
   #chat-modal {
-    position: static;
+    position: relative;
     inset: auto;
     background: transparent;
     backdrop-filter: none;
@@ -9385,6 +9437,35 @@ textarea,
     flex: 1;
     max-width: 380px;
     z-index: auto;
+    /* En desktop el "panel" real es este flex item, no .modal--chat de
+       adentro (que acá solo se estira a 100%/100% para llenarlo) — así
+       que el resize:both + el asa nativa viven acá, igual que el viejo
+       .panel--chat. Su alto de arranque lo sigue dando el flex layout
+       (align-items:stretch del padre); min-height solo evita que se
+       pueda arrastrar hasta desaparecer. */
+    resize: both;
+    overflow: auto;
+    min-width: 280px;
+    min-height: 220px;
+    max-height: 100vh;
+  }
+
+  #chat-modal::after {
+    content: "";
+    position: absolute;
+    right: 4px;
+    bottom: 4px;
+    width: 13px;
+    height: 13px;
+    pointer-events: none;
+    opacity: 0.85;
+    background-image: repeating-linear-gradient(
+      135deg,
+      rgba(0, 242, 255, 0.65) 0px,
+      rgba(0, 242, 255, 0.65) 1.5px,
+      transparent 1.5px,
+      transparent 4px
+    );
   }
 
   #chat-modal .modal--chat {
@@ -9396,6 +9477,14 @@ textarea,
     padding: 20px;
     display: flex;
     flex-direction: column;
+    /* El resize vive en #chat-modal (ver arriba) — acá se apaga el
+       resize:vertical + el asa heredados de la regla base de
+       .modal--chat para no mostrar dos asas de arrastre superpuestas. */
+    resize: none;
+  }
+
+  #chat-modal .modal--chat::after {
+    content: none;
   }
 
   #chat-modal .chat__feed {

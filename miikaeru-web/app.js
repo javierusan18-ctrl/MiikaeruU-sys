@@ -3067,8 +3067,9 @@ const AVATAR_STATE_ASSETS = {
 // lore, no variantes del avatar del Operador). `nivelRequerido` escala
 // junto con los rangos reales de RANKS (1/10/20/30/50) para que
 // desbloquear un skin nuevo se sienta ligado al progreso real, no a un
-// sistema paralelo. El Operador elige uno desde el modal de Skins
-// (#skins-modal, ver DOMContentLoaded más abajo); `state.selectedSkin`
+// sistema paralelo. El Operador elige uno desde la Colección de la ficha
+// de Miikaeru dentro del Modal de Lore (ver #story-modal-collection en
+// index.html / irAVistaPersonajes() en storyEngine.js); `state.selectedSkin`
 // guarda el id elegido y sustituye al carrusel ambiental de
 // startAvatarIdleCarousel() mientras esté activo (ver
 // currentIdleLionSrc()) — `null` vuelve a la rotación de 3 estados de
@@ -6327,6 +6328,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const chatFriendTestFallback = document.getElementById("chat-friend-test-fallback");
   const chatFriendTestLangSelect = document.getElementById("chat-friend-test-lang-select");
   const chatFriendTestCreateBtn = document.getElementById("chat-friend-test-create-btn");
+
+  // #chat-input/#chat-friend-input pasaron de <input type="text"> a
+  // <textarea rows="1"> para poder redimensionarse (resize:vertical, ver
+  // style.css) — como <textarea> no envía el form con Enter por defecto,
+  // se restaura ese comportamiento a mano: Enter solo (sin Shift) envía,
+  // Shift+Enter deja el salto de línea normal para mensajes largos.
+  function wireTextareaEnterEnvia(textarea, form) {
+    if (!textarea || !form) return;
+    textarea.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" || event.shiftKey) return;
+      event.preventDefault();
+      if (form.requestSubmit) form.requestSubmit();
+      else form.dispatchEvent(new Event("submit", { cancelable: true }));
+    });
+  }
+  wireTextareaEnterEnvia(chatInput, chatForm);
+  wireTextareaEnterEnvia(chatFriendInput, chatFriendForm);
+
   const wishlistOpenBtn = document.getElementById("wishlist-open-btn");
   const wishlistModal = document.getElementById("wishlist-modal");
   const wishlistModalClose = document.getElementById("wishlist-modal-close");
@@ -7277,51 +7296,23 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   if (cityMapOpenBtn) cityMapOpenBtn.addEventListener("click", openCityMapModal);
 
-  // Modal de Skins del León (ver MIIKAERU_SKINS/skinUnlocked/
-  // currentIdleLionSrc() arriba, fuera de este closure) — grid de
-  // tarjetas, click en una desbloqueada la fija como `state.selectedSkin`
-  // y refresca de inmediato el retrato si el avatar está en reposo.
+  // "Skins del León" y "Mi Personaje" ERAN dos modales separados que
+  // mostraban, básicamente, lo mismo (una galería de retratos con
+  // desbloqueo por Nivel) — se fusionaron en una sola interfaz dentro
+  // del Modal de Lore (ver storyEngine.js, vista "🧬 Entidades del
+  // Nexus"): cada ficha de Miikaeru/Fesha/Mijashi ahora incluye su
+  // propia sección de colección/evolución inline, junto a su bio y su
+  // galería de fotos real — un solo lugar para "ver arte de un
+  // personaje", en vez de tres. Los dos botones del dock (🎭/🧬) siguen
+  // existiendo pero ahora abren el Modal de Lore directo en la ficha
+  // correspondiente (ver más abajo); #skins-modal/#character-modal ya
+  // no existen en el HTML.
   const skinsOpenBtn = document.getElementById("skins-open-btn");
-  const skinsModal = document.getElementById("skins-modal");
-  const skinsModalClose = document.getElementById("skins-modal-close");
-  const skinsModalCloseBtn = document.getElementById("skins-modal-close-btn");
-  const skinsGrid = document.getElementById("skins-grid");
-
-  function renderSkinsGrid() {
-    skinsGrid.innerHTML = "";
-    MIIKAERU_SKINS.forEach((skin) => {
-      const unlocked = skinUnlocked(skin, state.level);
-      const card = document.createElement("button");
-      card.type = "button";
-      card.className =
-        "skin-card" +
-        (unlocked ? "" : " skin-card--locked") +
-        (state.selectedSkin === skin.id ? " skin-card--selected" : "");
-      card.disabled = !unlocked;
-
-      const img = document.createElement("img");
-      img.src = skin.src;
-      img.alt = `Skin Nv. ${skin.nivelRequerido}`;
-      img.loading = "lazy";
-      card.appendChild(img);
-
-      if (!unlocked) {
-        const lockOverlay = document.createElement("span");
-        lockOverlay.className = "skin-card__lock";
-        lockOverlay.innerHTML = `🔒<span>Nv. ${skin.nivelRequerido}</span>`;
-        card.appendChild(lockOverlay);
-      } else {
-        card.addEventListener("click", () => selectSkin(skin.id));
-      }
-
-      skinsGrid.appendChild(card);
-    });
-  }
+  const characterOpenBtn = document.getElementById("character-open-btn");
 
   function selectSkin(skinId) {
     state.selectedSkin = state.selectedSkin === skinId ? null : skinId; // click de nuevo sobre el ya elegido = volver al carrusel de siempre
     persist();
-    renderSkinsGrid();
     if (avatarCurrentState === "idle") {
       crossfadeAvatarLayer(document.getElementById("avatar-visual-img"), currentIdleLionSrc());
     }
@@ -7337,11 +7328,49 @@ document.addEventListener("DOMContentLoaded", () => {
     const skinValue = GALLERY_SKIN_PREFIX + src;
     state.selectedSkin = state.selectedSkin === skinValue ? null : skinValue;
     persist();
-    renderSkinsGrid(); // por si el modal de Skins está abierto detrás, que refleje el cambio
     if (avatarCurrentState === "idle") {
       crossfadeAvatarLayer(document.getElementById("avatar-visual-img"), currentIdleLionSrc());
     }
     return state.selectedSkin === skinValue;
+  }
+
+  // Datos crudos (sin DOM) para que storyEngine.js arme su propio grid
+  // de tarjetas dentro de la ficha de Miikaeru — mismo criterio de
+  // "mejor esfuerzo, sin comida rápida" que el resto del puente: acá
+  // solo se calculan flags (unlocked/selected), storyEngine.js decide
+  // cómo pintarlos.
+  function getMiikaeruSkinsData() {
+    return MIIKAERU_SKINS.map((skin) => ({
+      id: skin.id,
+      src: skin.src,
+      nivelRequerido: skin.nivelRequerido,
+      unlocked: skinUnlocked(skin, state.level),
+      selected: state.selectedSkin === skin.id,
+    }));
+  }
+
+  // Igual que arriba pero para la evolución de Fesha/Mijashi
+  // (PLAYER_CHARACTERS) — funciona para CUALQUIER idPersonaje, no solo
+  // el elegido por el Operador (faseActualPersonaje ya lo permitía):
+  // así la ficha de cada mellizo en el Modal de Lore puede mostrar su
+  // propia evolución aunque el Operador haya elegido al otro.
+  function getPlayerCharacterEvolutionData(idPersonaje) {
+    const personaje = PLAYER_CHARACTERS[idPersonaje];
+    if (!personaje) return null;
+    const faseActual = faseActualPersonaje(idPersonaje, state.level);
+    return {
+      nombre: personaje.nombre,
+      esElElegido: state.playerCharacter === idPersonaje,
+      faseActualId: faseActual ? faseActual.id : null,
+      fases: personaje.evoluciones.map((fase) => ({
+        id: fase.id,
+        src: fase.src,
+        titulo: fase.titulo,
+        nivelRequerido: fase.nivelRequerido,
+        unlocked: skinUnlocked(fase, state.level),
+        actual: !!(faseActual && faseActual.id === fase.id),
+      })),
+    };
   }
 
   // Puente hacia storyEngine.js, que vive fuera de este closure a
@@ -7351,25 +7380,13 @@ document.addEventListener("DOMContentLoaded", () => {
   window.MiikaeruSkinAPI = {
     equipGallerySkin,
     isGallerySkinEquipped: (src) => state.selectedSkin === GALLERY_SKIN_PREFIX + src,
+    selectCuratedSkin: selectSkin,
+    getMiikaeruSkinsData,
+    getPlayerCharacterEvolutionData,
+    getLevel: () => state.level,
+    hasChosenPlayerCharacter: () => !!state.playerCharacter,
+    getChosenPlayerCharacterId: () => state.playerCharacter,
   };
-
-  function openSkinsModal() {
-    renderSkinsGrid();
-    skinsModal.hidden = false;
-  }
-
-  function closeSkinsModal() {
-    skinsModal.hidden = true;
-  }
-
-  if (skinsOpenBtn) skinsOpenBtn.addEventListener("click", openSkinsModal);
-  if (skinsModalClose) skinsModalClose.addEventListener("click", closeSkinsModal);
-  if (skinsModalCloseBtn) skinsModalCloseBtn.addEventListener("click", closeSkinsModal);
-  if (skinsModal) {
-    skinsModal.addEventListener("click", (event) => {
-      if (event.target === skinsModal) closeSkinsModal();
-    });
-  }
 
   // ---------------- Selección de Avatar Inicial (Fesha/Mijashi) ----------------
   // Ver PLAYER_CHARACTERS/faseActualPersonaje() arriba, fuera de este
@@ -7379,15 +7396,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const characterSelectModal = document.getElementById("character-select-modal");
   const characterSelectFeshaBtn = document.getElementById("character-select-fesha");
   const characterSelectMijashiBtn = document.getElementById("character-select-mijashi");
-  const characterOpenBtn = document.getElementById("character-open-btn");
-  const characterModal = document.getElementById("character-modal");
-  const characterModalClose = document.getElementById("character-modal-close");
-  const characterModalCloseBtn = document.getElementById("character-modal-close-btn");
-  const characterModalName = document.getElementById("character-modal-name");
-  const characterModalRank = document.getElementById("character-modal-rank");
-  const characterModalImage = document.getElementById("character-modal-image");
-  const characterModalPhaseTitle = document.getElementById("character-modal-phase-title");
-  const characterEvolutionGrid = document.getElementById("character-evolution-grid");
 
   function openCharacterSelectModal() {
     if (characterSelectModal) characterSelectModal.hidden = false;
@@ -7405,65 +7413,25 @@ document.addEventListener("DOMContentLoaded", () => {
   if (characterSelectFeshaBtn) characterSelectFeshaBtn.addEventListener("click", () => chooseCharacter("fesha"));
   if (characterSelectMijashiBtn) characterSelectMijashiBtn.addEventListener("click", () => chooseCharacter("mijashi"));
 
-  function renderCharacterModal() {
-    const personaje = PLAYER_CHARACTERS[state.playerCharacter];
-    if (!personaje) return;
-
-    const faseActual = faseActualPersonaje(state.playerCharacter, state.level);
-    characterModalName.textContent = personaje.nombre;
-    characterModalRank.textContent = faseActual ? `${faseActual.rango} · Nv. ${faseActual.nivelRequerido}` : "—";
-    characterModalPhaseTitle.textContent = faseActual ? faseActual.titulo : "—";
-    if (faseActual) {
-      characterModalImage.src = faseActual.src;
-      characterModalImage.alt = `${personaje.nombre} — ${faseActual.titulo}`;
-    }
-
-    characterEvolutionGrid.innerHTML = "";
-    personaje.evoluciones.forEach((fase) => {
-      const unlocked = skinUnlocked(fase, state.level);
-      const card = document.createElement("button");
-      card.type = "button";
-      card.className =
-        "skin-card" +
-        (unlocked ? "" : " skin-card--locked") +
-        (faseActual && faseActual.id === fase.id ? " skin-card--selected" : "");
-      card.disabled = true; // solo lectura: la fase avanza sola con el nivel, no se elige a mano
-
-      const img = document.createElement("img");
-      img.src = fase.src;
-      img.alt = fase.titulo;
-      img.loading = "lazy";
-      card.appendChild(img);
-
-      if (!unlocked) {
-        const lockOverlay = document.createElement("span");
-        lockOverlay.className = "skin-card__lock";
-        lockOverlay.innerHTML = `🔒<span>Nv. ${fase.nivelRequerido}</span>`;
-        card.appendChild(lockOverlay);
-      }
-      characterEvolutionGrid.appendChild(card);
+  // Los dos botones del dock que antes abrían #skins-modal/#character-modal
+  // ahora abren el Modal de Lore directo en la ficha correspondiente (ver
+  // irAVistaPersonajes() en storyEngine.js). "Mi Personaje" conserva su
+  // regla especial: si todavía no eligió Fesha/Mijashi, primero pide esa
+  // elección en vez de abrir una ficha vacía.
+  if (skinsOpenBtn) {
+    skinsOpenBtn.addEventListener("click", () => {
+      window.MiikaeruStoryEngine.alHacerClicEnAvatarLeon({ nivel: state.level });
+      window.MiikaeruStoryEngine.irAVistaPersonajes("miikaeru");
     });
   }
-
-  function openCharacterModal() {
-    if (!state.playerCharacter) {
-      openCharacterSelectModal();
-      return;
-    }
-    renderCharacterModal();
-    if (characterModal) characterModal.hidden = false;
-  }
-
-  function closeCharacterModal() {
-    if (characterModal) characterModal.hidden = true;
-  }
-
-  if (characterOpenBtn) characterOpenBtn.addEventListener("click", openCharacterModal);
-  if (characterModalClose) characterModalClose.addEventListener("click", closeCharacterModal);
-  if (characterModalCloseBtn) characterModalCloseBtn.addEventListener("click", closeCharacterModal);
-  if (characterModal) {
-    characterModal.addEventListener("click", (event) => {
-      if (event.target === characterModal) closeCharacterModal();
+  if (characterOpenBtn) {
+    characterOpenBtn.addEventListener("click", () => {
+      if (!state.playerCharacter) {
+        openCharacterSelectModal();
+        return;
+      }
+      window.MiikaeruStoryEngine.alHacerClicEnAvatarLeon({ nivel: state.level });
+      window.MiikaeruStoryEngine.irAVistaPersonajes(state.playerCharacter);
     });
   }
 

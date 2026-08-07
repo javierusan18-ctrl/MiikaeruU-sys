@@ -104,6 +104,9 @@ const MiikaeruStoryEngine = (() => {
       lightboxCaption: document.getElementById("story-lightbox-caption"),
       lightboxEquipBtn: document.getElementById("story-lightbox-equip-btn"),
       lightboxEquipStatus: document.getElementById("story-lightbox-equip-status"),
+      collectionSection: document.getElementById("story-modal-collection"),
+      collectionTitle: document.getElementById("story-modal-collection-title"),
+      collectionGrid: document.getElementById("story-modal-collection-grid"),
     };
   }
 
@@ -491,6 +494,100 @@ const MiikaeruStoryEngine = (() => {
     });
   }
 
+  // ---------------- Colección (ex-"Skins del León" / "Mi Personaje") ----------------
+  // Fusionadas dentro de la ficha de Personajes (pedido explícito: ya no
+  // deben vivir como modales separados porque comparten la misma lógica
+  // de avatares/aspectos). Miikaeru muestra su grilla de skins
+  // desbloqueables (clickeable, equipa vía window.MiikaeruSkinAPI); Fesha
+  // y Mijashi muestran su grilla de fases de evolución (solo lectura,
+  // mismo comportamiento que el viejo "Mi Personaje"); cualquier otro
+  // personaje del Nexus no tiene colección propia y la sección se oculta.
+
+  function renderizarColeccionMiikaeru(refs) {
+    if (!window.MiikaeruSkinAPI) {
+      refs.collectionSection.hidden = true;
+      return;
+    }
+    const skins = window.MiikaeruSkinAPI.getMiikaeruSkinsData();
+    refs.collectionTitle.textContent = "🎭 Skins del León";
+    refs.collectionGrid.innerHTML = "";
+    skins.forEach((skin) => {
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className =
+        "skin-card" + (skin.unlocked ? "" : " skin-card--locked") + (skin.selected ? " skin-card--selected" : "");
+      const img = document.createElement("img");
+      img.src = skin.src;
+      img.alt = skin.id;
+      img.loading = "lazy";
+      img.onerror = () => {
+        card.style.display = "none";
+      };
+      card.appendChild(img);
+      if (!skin.unlocked) {
+        const lock = document.createElement("div");
+        lock.className = "skin-card__lock";
+        lock.innerHTML = `<span>🔒</span><span>Nv. ${skin.nivelRequerido}</span>`;
+        card.appendChild(lock);
+      } else {
+        card.addEventListener("click", () => {
+          window.MiikaeruSkinAPI.selectCuratedSkin(skin.id);
+          renderizarColeccionMiikaeru(refs);
+        });
+      }
+      refs.collectionGrid.appendChild(card);
+    });
+    refs.collectionSection.hidden = false;
+  }
+
+  function renderizarColeccionPersonajeJugador(refs, idPersonaje) {
+    if (!window.MiikaeruSkinAPI) {
+      refs.collectionSection.hidden = true;
+      return;
+    }
+    const datos = window.MiikaeruSkinAPI.getPlayerCharacterEvolutionData(idPersonaje);
+    if (!datos) {
+      refs.collectionSection.hidden = true;
+      return;
+    }
+    refs.collectionTitle.textContent = `🧬 Fases de ${datos.nombre}`;
+    refs.collectionGrid.innerHTML = "";
+    datos.fases.forEach((fase) => {
+      const card = document.createElement("div");
+      card.className =
+        "skin-card skin-card--readonly" +
+        (fase.unlocked ? "" : " skin-card--locked") +
+        (fase.actual ? " skin-card--selected" : "");
+      const img = document.createElement("img");
+      img.src = fase.src;
+      img.alt = fase.titulo || "";
+      img.loading = "lazy";
+      img.onerror = () => {
+        card.style.display = "none";
+      };
+      card.appendChild(img);
+      if (!fase.unlocked) {
+        const lock = document.createElement("div");
+        lock.className = "skin-card__lock";
+        lock.innerHTML = `<span>🔒</span><span>Nv. ${fase.nivelRequerido}</span>`;
+        card.appendChild(lock);
+      }
+      refs.collectionGrid.appendChild(card);
+    });
+    refs.collectionSection.hidden = false;
+  }
+
+  function renderizarColeccionPersonaje(refs, idPersonaje) {
+    if (!refs.collectionSection) return;
+    if (idPersonaje === "miikaeru") {
+      renderizarColeccionMiikaeru(refs);
+    } else if (idPersonaje === "fesha" || idPersonaje === "mijashi") {
+      renderizarColeccionPersonajeJugador(refs, idPersonaje);
+    } else {
+      refs.collectionSection.hidden = true;
+    }
+  }
+
   function renderizarPersonaje(refs, idPersonaje) {
     if (!personajes) return;
     const personaje = personajes.find((entrada) => entrada.id === idPersonaje);
@@ -510,6 +607,7 @@ const MiikaeruStoryEngine = (() => {
     });
     refs.cuerpo.scrollTop = 0;
 
+    renderizarColeccionPersonaje(refs, idPersonaje);
     renderizarTabsPersonajes(refs, personajes, idPersonaje);
   }
 
@@ -543,7 +641,30 @@ const MiikaeruStoryEngine = (() => {
     mostrarVistaCapitulos(refs);
   }
 
-  return { alHacerClicEnAvatarLeon };
+  // Entrada pública para los dockbuttons "🎭 Skins del León" / "🧬 Mi
+  // Personaje" (ver app.js): abre el modal directo en la vista
+  // Personajes, mostrando la ficha del `idPersonaje` pedido (no la
+  // primera de la lista, a diferencia de mostrarVistaPersonajes) — así
+  // "Skins del León" salta a Miikaeru y "Mi Personaje" salta a Fesha o
+  // Mijashi según lo que el Operador ya haya elegido.
+  function irAVistaPersonajes(idPersonaje) {
+    const refs = obtenerRefs();
+    if (!refs.modal) {
+      console.warn("StoryEngine: #story-modal no existe en el DOM todavía.");
+      return;
+    }
+    asegurarListeners(refs);
+    refs.modal.hidden = false;
+    vistaActual = "personajes";
+    marcarVistaActiva(refs);
+    cargarPersonajes().then((lista) => {
+      if (!lista.length) return; // fallback silencioso: sin datos, el modal queda abierto pero vacío
+      const existe = lista.some((personaje) => personaje.id === idPersonaje);
+      renderizarPersonaje(refs, existe ? idPersonaje : lista[0].id);
+    });
+  }
+
+  return { alHacerClicEnAvatarLeon, irAVistaPersonajes };
 })();
 
 window.MiikaeruStoryEngine = MiikaeruStoryEngine;

@@ -115,7 +115,10 @@
     "galeria": [
       { "rol": "forma_alada", "src": "assets/skins/Ateneea_HijaDeMiikaeruu/Gemini_Generated_Image_h91sesh91sesh91s.png" },
       { "rol": "katana_ciberpunk", "src": "assets/skins/Ateneea_HijaDeMiikaeruu/Gemini_Generated_Image_nua7qmnua7qmnua7.png" },
-      { "rol": "laboratorio_nexus", "src": "assets/skins/Ateneea_HijaDeMiikaeruu/Gemini_Generated_Image_upapz1upapz1upap.png" }
+      { "rol": "laboratorio_nexus", "src": "assets/skins/Ateneea_HijaDeMiikaeruu/Gemini_Generated_Image_upapz1upapz1upap.png" },
+      { "rol": "armadura_alada_2", "src": "assets/skins/Ateneea_HijaDeMiikaeruu/c24972b6c2eae7709ddc4ff39be2a059.jpg" },
+      { "rol": "retrato_cercano", "src": "assets/skins/Ateneea_HijaDeMiikaeruu/12da464ab71e37cc9b87eae03bc7c01f.jpg" },
+      { "rol": "junto_a_bestia_guardiana", "src": "assets/skins/Ateneea_HijaDeMiikaeruu/d81a6e35e9a2471310c9caac511ac101.jpg" }
     ],
     "descripcion": [
       "Ateneea es hija del vínculo entre Metrakaela y el fragmento restaurado de Miikaeru, nacida junto a su hermano Metatron de la misma unión de código y luz solar. Heredó de su madre la ferocidad protectora, y de su padre la calidez que templa esa ferocidad.",
