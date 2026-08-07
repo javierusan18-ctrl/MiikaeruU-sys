@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260807-2" />
+  <link rel="stylesheet" href="style.css?v=20260808-1" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -167,6 +167,18 @@
     </div>
 
     <div class="hud__profile" id="hud-profile">
+      <!-- Avatar del Héroe — centro de identidad del Operador (pedido
+           explícito). Reemplaza los antiguos botones separados del dock
+           "🎭 Skins del León" / "🧬 Mi Personaje": un único punto de
+           entrada que abre #hero-modal más abajo, con la foto de
+           `state.avatar` ya cargada (ver renderHeaderHeroAvatar() en
+           app.js, llamado siempre al iniciar sesión). Empieza hidden
+           porque hasta que el Operador complete el Onboarding
+           (#character-select-modal) no hay ninguna imagen que mostrar
+           todavía. -->
+      <button class="hud__hero-avatar" id="hero-open-btn" type="button" data-i18n-title="heroOpenBtn" title="Héroe">
+        <img id="hud-hero-avatar-img" src="" alt="Héroe" hidden />
+      </button>
       <!-- Botón unificado de instalación PWA — icono "M" estilizado +
            flecha de descarga (ver handleInstallAppClick() en app.js),
            oculto por defecto y solo visible cuando existe una vía real
@@ -219,14 +231,6 @@
            adentro del mismo modal (#city-map-modal) — cero funcionalidad
            perdida, solo reubicada. -->
       <button type="button" class="hud-dock__icon hud-dock__icon--citymap" id="city-map-open-btn" data-i18n-title="cityMapTitle" title="🌐 Expansión de Territorio">🌐</button>
-      <!-- Skins del León y Mi Personaje YA NO son modales propios — los
-           dos ábren el Modal de Lore (#story-modal) directo en la ficha
-           de Miikaeru o del mellizo elegido, ver el listener de estos
-           botones en app.js e irAVistaPersonajes() en storyEngine.js. -->
-      <button type="button" class="hud-dock__icon hud-dock__icon--skins" id="skins-open-btn" data-i18n-title="skinsOpenBtn" title="🎭 Skins del León">🎭</button>
-      <!-- Mi Personaje (Fesha/Mijashi) — si `state.playerCharacter` todavía
-           es null, abre #character-select-modal más abajo en su lugar. -->
-      <button type="button" class="hud-dock__icon hud-dock__icon--character" id="character-open-btn" data-i18n-title="characterOpenBtn" title="🧬 Mi Personaje">🧬</button>
 
       <div class="hud-dock__divider"></div>
 
@@ -308,13 +312,9 @@
           <span class="cyber-tile__icon">🌐</span>
           <span class="cyber-tile__label" data-i18n="cityMapTitle">Expansión de Territorio</span>
         </button>
-        <button type="button" class="cyber-tile cyber-tile--gold" data-forward="#skins-open-btn">
-          <span class="cyber-tile__icon">🎭</span>
-          <span class="cyber-tile__label" data-i18n="skinsOpenBtn">Skins del León</span>
-        </button>
-        <button type="button" class="cyber-tile cyber-tile--blue" data-forward="#character-open-btn">
-          <span class="cyber-tile__icon">🧬</span>
-          <span class="cyber-tile__label" data-i18n="characterOpenBtn">Mi Personaje</span>
+        <button type="button" class="cyber-tile cyber-tile--gold" data-forward="#hero-open-btn">
+          <span class="cyber-tile__icon">🦸</span>
+          <span class="cyber-tile__label" data-i18n="heroOpenBtn">Héroe</span>
         </button>
       </div>
 
@@ -2275,18 +2275,6 @@
       <!-- párrafos del capítulo renderizados por renderStoryChapter() en app.js -->
       <div class="story-modal__body" id="story-modal-body"></div>
 
-      <!-- Colección de Skins (Miikaeru) o Evolución (Fesha/Mijashi) — acá
-           viven fusionados los antiguos modales separados "🎭 Skins del
-           León" y "🧬 Mi Personaje" (ver irAVistaPersonajes()/
-           renderizarPersonaje() en storyEngine.js, y getMiikaeruSkinsData()/
-           getPlayerCharacterEvolutionData() en app.js). Oculto para el
-           resto de los personajes/categorías y siempre en la vista
-           Capítulos. -->
-      <div class="story-modal__collection" id="story-modal-collection" hidden>
-        <h3 class="story-modal__collection-title" id="story-modal-collection-title">—</h3>
-        <div class="skins-grid" id="story-modal-collection-grid"></div>
-      </div>
-
       <!-- Lectura Inmersiva de Japonés (ver readerEngine.js/storyEngine.js)
            — botón visible solo si el capítulo trae `lectura_inmersiva_jp`
            en storyData.json; alterna entre el texto en español de arriba
@@ -2335,13 +2323,19 @@
     </div>
   </div>
 
-  <!-- MODAL: SELECCIÓN DE AVATAR INICIAL — Fesha o Mijashi (ver
-       PLAYER_CHARACTERS en app.js). Se abre UNA sola vez, la primera vez
-       que el Operador entra (justo después de crear su cuenta/nombre de
-       Operador, o al detectar que un perfil viejo todavía no eligió) —
-       sin botón de cerrar a propósito: es una elección, no un aviso
-       descartable. Elegir uno queda guardado en `state.playerCharacter`
-       para siempre. -->
+  <!-- MODAL: SELECCIÓN DE AVATAR INICIAL (Onboarding del Héroe) — Fesha,
+       Mijashi o Miikaeru (ver HERO_AVATAR_OPTIONS en app.js, mínimo 3
+       opciones pedidas explícitamente). Se abre UNA sola vez, la primera
+       vez que el Operador entra sin `state.avatar` guardado (justo
+       después de crear su cuenta/nombre de Operador, o al detectar que
+       un perfil viejo todavía no eligió) — sin botón de cerrar a
+       propósito: es una elección, no un aviso descartable. Elegir uno
+       queda guardado en `state.avatar` para siempre (reelegible después
+       desde #hero-modal). Las 3 imágenes se resuelven en JS
+       (renderCharacterSelectCards()) para poder reflejar al instante
+       cualquier URL que el Admin haya cargado en el Panel de
+       Administrador → 📸 Fotos — los `src` de acá abajo son solo el
+       placeholder inicial antes de que ese script corra. -->
   <div class="modal-overlay" id="character-select-modal" hidden>
     <div class="modal glass modal--character-select">
       <div class="panel__header">
@@ -2359,6 +2353,38 @@
           <span class="character-select-card__name">Mijashi</span>
           <span class="character-select-card__tag" data-i18n="characterSelectMale">Mellizo Masculino</span>
         </button>
+        <button type="button" class="character-select-card" id="character-select-miikaeru">
+          <img src="assets/skins/Miikaeruu/mikaeru_idle_chakras.png" alt="Miikaeru" />
+          <span class="character-select-card__name">Miikaeru</span>
+          <span class="character-select-card__tag" data-i18n="heroSelectLion">Guía del Núcleo</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: HÉROE — hub único de identidad del Operador (pedido
+       explícito de "centro de la identidad del usuario"). Reemplaza los
+       antiguos modales/botones separados "🎭 Skins del León" / "🧬 Mi
+       Personaje": 2 pestañas, "Personaje" (reelegir entre Fesha/Mijashi/
+       Miikaeru, HERO_AVATAR_OPTIONS en app.js) y "Skins" (la grilla de
+       MIIKAERU_SKINS de siempre, reutiliza .skins-grid/.skin-card tal
+       cual). Se abre desde el avatar redondo del Header (#hero-open-btn,
+       ver arriba) — ver openHeroModal()/showHeroTab() en app.js. -->
+  <div class="modal-overlay" id="hero-modal" hidden>
+    <div class="modal glass modal--hero">
+      <button type="button" class="btn-modal-close" id="hero-modal-close" aria-label="Cerrar">✕</button>
+      <div class="panel__header">
+        <h2 data-i18n="heroModalTitle">🦸 Héroe</h2>
+      </div>
+      <div class="hero-modal__tabs" id="hero-modal-tabs">
+        <button type="button" class="hero-modal__tab hero-modal__tab--active" data-hero-tab="character" data-i18n="heroTabCharacter">🧬 Personaje</button>
+        <button type="button" class="hero-modal__tab" data-hero-tab="skins" data-i18n="heroTabSkins">🎭 Skins</button>
+      </div>
+      <div id="hero-tab-character">
+        <div class="hero-character-grid" id="hero-character-grid"></div>
+      </div>
+      <div id="hero-tab-skins" hidden>
+        <div class="skins-grid" id="hero-skins-grid"></div>
       </div>
     </div>
   </div>
@@ -2426,6 +2452,7 @@
         <button type="button" class="admin-panel-tab" data-admin-tab="inspector" data-i18n="adminPanelTabInspector">🕵️ Inspector de Bugs</button>
         <button type="button" class="admin-panel-tab" data-admin-tab="automation" data-i18n="adminPanelTabAutomation">🤖 Automatización (n8n)</button>
         <button type="button" class="admin-panel-tab" data-admin-tab="users" data-i18n="adminPanelTabUsers">👥 Usuarios</button>
+        <button type="button" class="admin-panel-tab" data-admin-tab="photos" data-i18n="adminPanelTabPhotos">📸 Fotos</button>
       </div>
 
       <!-- Pestaña: Transacciones (contenido original, sin cambios de lógica) -->
@@ -2570,6 +2597,19 @@
             <tbody id="users-table-body"></tbody>
           </table>
         </div>
+      </div>
+
+      <!-- Pestaña: Fotos — infraestructura para que el Admin reemplace
+           las 3 fotos predeterminadas del Héroe (Fesha/Mijashi/Miikaeru)
+           por una URL propia. Guarda en localStorage (instantáneo en
+           Onboarding/#hero-modal/Header, ver renderAdminPhotosTab() en
+           app.js) + best-effort en Supabase (`hero_avatars`) para que el
+           cambio también llegue a otros dispositivos. -->
+      <div id="admin-panel-tab-photos" hidden>
+        <p class="admin-panel__status admin-panel__status--hint" data-i18n="adminPhotosHint">
+          Pega la URL de una imagen para cada personaje y guarda — se refleja al instante en la pantalla de elección de Héroe.
+        </p>
+        <div class="admin-photos-rows" id="admin-photos-rows"></div>
       </div>
     </div>
   </div>
@@ -2827,7 +2867,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260807-2"></script>
+  <script src="app.js?v=20260808-1"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de
@@ -2839,7 +2879,7 @@
        aparte, mismo patrón que MiikaeruHub, cargado después de app.js
        porque app.js llama a window.MiikaeruStoryEngine desde el click
        del avatar/León. -->
-  <script src="storyEngine.js?v=20260807-2"></script>
+  <script src="storyEngine.js?v=20260808-1"></script>
   <!-- Service Worker: estrategia Cache First para assets estáticos (ver
        sw.js) — carga instantánea en visitas repetidas y funcionamiento
        offline. Registro envuelto en try/catch + comprobación de

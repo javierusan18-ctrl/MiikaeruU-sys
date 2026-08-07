@@ -947,6 +947,10 @@ const I18N = {
     automationRowCount: "Tareas encontradas:",
     automationEmptyState: "Sin tareas en cola. n8n las agrega automáticamente a la tabla automation_tasks de Supabase.",
     adminPanelTabUsers: "👥 Usuarios",
+    adminPanelTabPhotos: "📸 Fotos",
+    adminPhotosHint: "Pega la URL de una imagen para cada personaje y guarda — se refleja al instante en la pantalla de elección de Héroe.",
+    adminPhotosUrlPlaceholder: "https://...",
+    adminPhotosSaveBtn: "Guardar",
     usersStatTotal: "Operadores",
     usersStatAvgLevel: "Nivel Promedio",
     usersStatActiveToday: "Activos Hoy",
@@ -1053,15 +1057,15 @@ const I18N = {
     storyModalClueTitle: "📡 PRÓXIMA PISTA",
     storyModalCloseBtn: "🔌 CERRAR ENLACE",
     storyLightboxEquipBtn: "⚡ EQUIPAR SKIN",
-    skinsOpenBtn: "🎭 Skins del León",
-    skinsModalTitle: "🎭 Skins del León",
-    skinsModalSubtitle: "colección desbloqueable",
-    skinsModalCloseBtn: "Cerrar",
-    characterOpenBtn: "🧬 Mi Personaje",
+    heroOpenBtn: "Héroe",
+    heroModalTitle: "🦸 Héroe",
+    heroTabCharacter: "🧬 Personaje",
+    heroTabSkins: "🎭 Skins",
     characterSelectTitle: "🧬 Elige tu Avatar Inicial",
     characterSelectSubtitle: "evolucionará contigo, nivel a nivel",
     characterSelectFemale: "Mellizo Femenino",
     characterSelectMale: "Mellizo Masculino",
+    heroSelectLion: "Guía del Núcleo",
     cityMapTitle: "🌐 Expansión de Territorio",
     cityMapHeadline: "Próximamente: Ten tus deseos listos en tu ciudad",
     feedbackTitle: "🐞 Bugs & Sugerencias",
@@ -1726,6 +1730,10 @@ const I18N = {
     automationRowCount: "Tasks found:",
     automationEmptyState: "No tasks queued. n8n adds them automatically to Supabase's automation_tasks table.",
     adminPanelTabUsers: "👥 Users",
+    adminPanelTabPhotos: "📸 Photos",
+    adminPhotosHint: "Paste an image URL for each character and save — reflected instantly on the Hero selection screen.",
+    adminPhotosUrlPlaceholder: "https://...",
+    adminPhotosSaveBtn: "Save",
     usersStatTotal: "Operators",
     usersStatAvgLevel: "Average Level",
     usersStatActiveToday: "Active Today",
@@ -1832,15 +1840,15 @@ const I18N = {
     storyModalClueTitle: "📡 NEXT CLUE",
     storyModalCloseBtn: "🔌 CLOSE LINK",
     storyLightboxEquipBtn: "⚡ EQUIP SKIN",
-    skinsOpenBtn: "🎭 Lion Skins",
-    skinsModalTitle: "🎭 Lion Skins",
-    skinsModalSubtitle: "unlockable collection",
-    skinsModalCloseBtn: "Close",
-    characterOpenBtn: "🧬 My Character",
+    heroOpenBtn: "Hero",
+    heroModalTitle: "🦸 Hero",
+    heroTabCharacter: "🧬 Character",
+    heroTabSkins: "🎭 Skins",
     characterSelectTitle: "🧬 Choose your Starting Avatar",
     characterSelectSubtitle: "will evolve with you, level by level",
     characterSelectFemale: "Female Twin",
     characterSelectMale: "Male Twin",
+    heroSelectLion: "Core Guide",
     cityMapTitle: "🌐 Territory Expansion",
     cityMapHeadline: "Coming soon: have your wishes ready in your city",
     feedbackTitle: "🐞 Bugs & Suggestions",
@@ -2505,6 +2513,10 @@ const I18N = {
     automationRowCount: "見つかったタスク：",
     automationEmptyState: "キューにタスクはありません。n8nがSupabaseのautomation_tasksテーブルに自動で追加します。",
     adminPanelTabUsers: "👥 ユーザー",
+    adminPanelTabPhotos: "📸 写真",
+    adminPhotosHint: "各キャラクターの画像URLを貼り付けて保存してください — ヒーロー選択画面に即反映されます。",
+    adminPhotosUrlPlaceholder: "https://...",
+    adminPhotosSaveBtn: "保存",
     usersStatTotal: "オペレーター数",
     usersStatAvgLevel: "平均レベル",
     usersStatActiveToday: "本日アクティブ",
@@ -2611,15 +2623,15 @@ const I18N = {
     storyModalClueTitle: "📡 次の手がかり",
     storyModalCloseBtn: "🔌 回線を切断",
     storyLightboxEquipBtn: "⚡ スキンを装備",
-    skinsOpenBtn: "🎭 ライオンスキン",
-    skinsModalTitle: "🎭 ライオンスキン",
-    skinsModalSubtitle: "解放可能なコレクション",
-    skinsModalCloseBtn: "閉じる",
-    characterOpenBtn: "🧬 マイキャラクター",
+    heroOpenBtn: "ヒーロー",
+    heroModalTitle: "🦸 ヒーロー",
+    heroTabCharacter: "🧬 キャラクター",
+    heroTabSkins: "🎭 スキン",
     characterSelectTitle: "🧬 初期アバターを選んでください",
     characterSelectSubtitle: "レベルとともに進化します",
     characterSelectFemale: "双子の女の子",
     characterSelectMale: "双子の男の子",
+    heroSelectLion: "コアガイド",
     cityMapTitle: "🌐 都市拡張",
     cityMapHeadline: "近日公開：あなたの街で願いを叶える準備を",
     feedbackTitle: "🐞 バグ＆提案",
@@ -3097,9 +3109,9 @@ const AVATAR_STATE_ASSETS = {
 // lore, no variantes del avatar del Operador). `nivelRequerido` escala
 // junto con los rangos reales de RANKS (1/10/20/30/50) para que
 // desbloquear un skin nuevo se sienta ligado al progreso real, no a un
-// sistema paralelo. El Operador elige uno desde la Colección de la ficha
-// de Miikaeru dentro del Modal de Lore (ver #story-modal-collection en
-// index.html / irAVistaPersonajes() en storyEngine.js); `state.selectedSkin`
+// sistema paralelo. El Operador elige uno desde la pestaña "🎭 Skins" del
+// Héroe (ver #hero-modal en index.html / renderHeroSkinsTab() más abajo);
+// `state.selectedSkin`
 // guarda el id elegido y sustituye al carrusel ambiental de
 // startAvatarIdleCarousel() mientras esté activo (ver
 // currentIdleLionSrc()) — `null` vuelve a la rotación de 3 estados de
@@ -3173,6 +3185,19 @@ const PLAYER_CHARACTERS = {
   fesha: { id: "fesha", nombre: "Fesha", evoluciones: FESHA_EVOLUTIONS },
   mijashi: { id: "mijashi", nombre: "Mijashi", evoluciones: MIJASHI_EVOLUTIONS },
 };
+
+// Roster del Héroe (Onboarding + #hero-modal, ver DOMContentLoaded más
+// abajo) — mínimo 3 opciones pedidas explícitamente. Fesha/Mijashi
+// reutilizan su primer retrato de evolución de siempre; Miikaeru usa su
+// retrato "idle" ya existente (AVATAR_STATE_ASSETS, definido arriba) en
+// vez de inventar un cuarto asset. `defaultSrc` es el placeholder real
+// que se ve hasta que el Admin cargue su propia URL (ver heroAvatarSrc()
+// / Panel de Administrador → 📸 Fotos, infraestructura ya lista para eso).
+const HERO_AVATAR_OPTIONS = [
+  { id: "fesha", nombre: "Fesha", defaultSrc: FESHA_EVOLUTIONS[0].src },
+  { id: "mijashi", nombre: "Mijashi", defaultSrc: MIJASHI_EVOLUTIONS[0].src },
+  { id: "miikaeru", nombre: "Miikaeru", defaultSrc: AVATAR_STATE_ASSETS.idle.lion },
+];
 
 // La fase más alta que el nivel actual ya alcanza — mismo criterio de
 // "lo más reciente que ya desbloqueaste" que MIIKAERU_SKINS/Miika Pass.
@@ -5532,9 +5557,17 @@ function defaultState() {
     // carrusel ambiental de siempre (idle/meditando/batalla rotando).
     selectedSkin: null,
     // Avatar Inicial elegido en el primer ingreso (ver PLAYER_CHARACTERS
-    // arriba) — "fesha" | "mijashi" | null (todavía no eligió, dispara
-    // openCharacterSelectModal() la próxima vez que se detecte).
+    // arriba) — "fesha" | "mijashi" | null. Sigue existiendo separado de
+    // `avatar` de abajo solo para no romper la mecánica de evolución ya
+    // guardada de quienes eligieron Fesha/Mijashi antes de que existiera
+    // el Héroe unificado.
     playerCharacter: null,
+    // Héroe: "fesha" | "mijashi" | "miikaeru" | null (todavía no eligió,
+    // dispara openCharacterSelectModal() la próxima vez que se detecte —
+    // ver HERO_AVATAR_OPTIONS arriba). Es el campo que decide qué imagen
+    // se ve en el avatar del Header (#hero-open-btn) y el único
+    // reelegible libremente desde #hero-modal en cualquier momento.
+    avatar: null,
     // Mock temporal: % de misiones completadas esta semana. Reemplazar por
     // un cálculo real (historial de pilares) cuando exista esa lógica.
     weeklyMissions: { completed: 3, total: 5 },
@@ -5699,6 +5732,12 @@ function loadState() {
     return {
       ...base,
       ...parsed,
+      // Migración: perfiles guardados antes de que existiera el Héroe
+      // unificado ya tienen `playerCharacter` (Fesha/Mijashi) pero nunca
+      // `avatar` — se adopta ese valor como avatar de entrada para que no
+      // se les pida elegir de nuevo (openCharacterSelectModal() solo se
+      // dispara si `avatar` sigue siendo null de verdad).
+      avatar: parsed.avatar || parsed.playerCharacter || base.avatar,
       pillars: {
         finanzas: mergedFinanzas,
         fisico: mergedFisico,
@@ -6557,6 +6596,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const adminPanelTabInspector = document.getElementById("admin-panel-tab-inspector");
   const adminPanelTabAutomation = document.getElementById("admin-panel-tab-automation");
   const adminPanelTabUsers = document.getElementById("admin-panel-tab-users");
+  const adminPanelTabPhotos = document.getElementById("admin-panel-tab-photos");
   const adminPanelRefreshBtn = document.getElementById("admin-panel-refresh-btn");
   const adminPanelExportBtn = document.getElementById("admin-panel-export-btn");
   const adminPanelStatus = document.getElementById("admin-panel-status");
@@ -7007,6 +7047,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const operatorNameInput = document.getElementById("operator-name-input");
   const profileName = document.getElementById("profile-name");
   const logoutBtn = document.getElementById("logout-btn");
+  // Avatar del Héroe en el Header — centro de identidad del Operador (ver
+  // #hero-open-btn/#hero-modal más abajo, reemplaza los antiguos botones
+  // "🎭 Skins del León" / "🧬 Mi Personaje" del dock izquierdo).
+  const hudHeroAvatarImg = document.getElementById("hud-hero-avatar-img");
   const installAppBtn = document.getElementById("install-app-btn");
   const pwaInstallIosModal = document.getElementById("pwa-install-ios-modal");
   const pwaInstallIosModalClose = document.getElementById("pwa-install-ios-modal-close");
@@ -7344,20 +7388,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   if (cityMapOpenBtn) cityMapOpenBtn.addEventListener("click", openCityMapModal);
 
-  // "Skins del León" y "Mi Personaje" ERAN dos modales separados que
-  // mostraban, básicamente, lo mismo (una galería de retratos con
-  // desbloqueo por Nivel) — se fusionaron en una sola interfaz dentro
-  // del Modal de Lore (ver storyEngine.js, vista "🧬 Entidades del
-  // Nexus"): cada ficha de Miikaeru/Fesha/Mijashi ahora incluye su
-  // propia sección de colección/evolución inline, junto a su bio y su
-  // galería de fotos real — un solo lugar para "ver arte de un
-  // personaje", en vez de tres. Los dos botones del dock (🎭/🧬) siguen
-  // existiendo pero ahora abren el Modal de Lore directo en la ficha
-  // correspondiente (ver más abajo); #skins-modal/#character-modal ya
-  // no existen en el HTML.
-  const skinsOpenBtn = document.getElementById("skins-open-btn");
-  const characterOpenBtn = document.getElementById("character-open-btn");
-
   function selectSkin(skinId) {
     state.selectedSkin = state.selectedSkin === skinId ? null : skinId; // click de nuevo sobre el ya elegido = volver al carrusel de siempre
     persist();
@@ -7422,66 +7452,324 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Puente hacia storyEngine.js, que vive fuera de este closure a
-  // propósito (ver su propio comentario de cabecera) — mismo patrón que
-  // window.MiikaeruStoryEngine/window.MiikaeruReader, expuesto en
-  // `window` en vez de compartir el closure de DOMContentLoaded.
+  // propósito (ver su propio comentario de cabecera) — el único
+  // consumidor que queda es el botón "EQUIPAR SKIN" del lightbox de la
+  // Galería del Núcleo (ver equipGallerySkin() arriba). La selección de
+  // Personaje/Skins en sí ahora vive en el Héroe (#hero-modal, ver más
+  // abajo), no en el Modal de Lore.
   window.MiikaeruSkinAPI = {
     equipGallerySkin,
     isGallerySkinEquipped: (src) => state.selectedSkin === GALLERY_SKIN_PREFIX + src,
-    selectCuratedSkin: selectSkin,
-    getMiikaeruSkinsData,
-    getPlayerCharacterEvolutionData,
-    getLevel: () => state.level,
-    hasChosenPlayerCharacter: () => !!state.playerCharacter,
-    getChosenPlayerCharacterId: () => state.playerCharacter,
   };
 
-  // ---------------- Selección de Avatar Inicial (Fesha/Mijashi) ----------------
-  // Ver PLAYER_CHARACTERS/faseActualPersonaje() arriba, fuera de este
-  // closure. openCharacterSelectModal() se llama UNA vez, la primera vez
-  // que el Operador entra (ver onMasterAuthSuccess()/registrationForm más
-  // abajo) — sin botón de cerrar en el modal, es una elección obligatoria.
+  // ==================== HÉROE: identidad unificada del Operador ====================
+  // Reemplaza los antiguos botones separados del dock "🎭 Skins del León"
+  // / "🧬 Mi Personaje" (y su fusión anterior dentro del Modal de Lore,
+  // ya retirada): ahora hay un único punto de entrada, el avatar redondo
+  // del Header (#hero-open-btn) que abre #hero-modal con dos pestañas —
+  // "🧬 Personaje" (elegir entre Fesha/Mijashi/Miikaeru, mínimo 3
+  // opciones pedidas explícitamente) y "🎭 Skins" (la grilla de skins de
+  // Miikaeru, MIIKAERU_SKINS, sin cambios en su desbloqueo por Nivel).
+  // `state.avatar` guarda cuál de los 3 se ve en el Header — separado de
+  // `state.playerCharacter` (que sigue rastreando la evolución de
+  // Fesha/Mijashi sin tocar esa mecánica) y de `state.selectedSkin` (el
+  // skin de Miikaeru elegido en la pestaña Skins).
+
+  // ---- Overrides de foto por personaje (Panel de Administrador → 📸 Fotos) ----
+  // Fuente de verdad local-first: localStorage refleja al instante en la
+  // pantalla de Onboarding/#hero-modal apenas el Admin guarda una URL
+  // nueva; Supabase (`hero_avatars`) es respaldo best-effort para que el
+  // cambio también viaje a otros dispositivos, mismo criterio que el
+  // resto del proyecto (transactions/player_progress) — si la tabla
+  // todavía no existe o no hay red, el override local sigue funcionando.
+  const HERO_AVATAR_OVERRIDES_KEY = "miikaeru_hero_avatar_overrides";
+
+  function loadHeroAvatarOverrides() {
+    try {
+      return JSON.parse(localStorage.getItem(HERO_AVATAR_OVERRIDES_KEY)) || {};
+    } catch (err) {
+      return {};
+    }
+  }
+
+  function saveHeroAvatarOverrideLocal(characterId, url) {
+    const overrides = loadHeroAvatarOverrides();
+    if (url) overrides[characterId] = url;
+    else delete overrides[characterId];
+    localStorage.setItem(HERO_AVATAR_OVERRIDES_KEY, JSON.stringify(overrides));
+  }
+
+  function heroAvatarSrc(characterId) {
+    const overrides = loadHeroAvatarOverrides();
+    if (overrides[characterId]) return overrides[characterId];
+    const opcion = HERO_AVATAR_OPTIONS.find((o) => o.id === characterId);
+    return opcion ? opcion.defaultSrc : null;
+  }
+
+  function syncHeroAvatarOverrideToSupabase(characterId, url) {
+    if (!supabaseClient) return;
+    supabaseClient
+      .from("hero_avatars")
+      .upsert({ character_id: characterId, image_url: url, updated_at: new Date().toISOString() })
+      .then(({ error }) => {
+        if (error) console.warn("Hero avatars: no se pudo sincronizar con Supabase:", error.message);
+      })
+      .catch((err) => console.warn("Hero avatars: fallo de red al sincronizar:", err));
+  }
+
+  async function fetchHeroAvatarOverridesFromSupabase() {
+    if (!supabaseClient) return;
+    try {
+      const { data, error } = await supabaseClient.from("hero_avatars").select("character_id, image_url");
+      if (error || !data) return;
+      const overrides = loadHeroAvatarOverrides();
+      data.forEach((row) => {
+        if (row.image_url) overrides[row.character_id] = row.image_url;
+      });
+      localStorage.setItem(HERO_AVATAR_OVERRIDES_KEY, JSON.stringify(overrides));
+      renderCharacterSelectCards();
+      renderHeroCharacterTab();
+      renderHeaderHeroAvatar();
+    } catch (err) {
+      console.warn("Hero avatars: no se pudo sincronizar desde Supabase:", err);
+    }
+  }
+
+  // ---- Header: avatar del Héroe (centro de identidad, #hero-open-btn) ----
+  function renderHeaderHeroAvatar() {
+    if (!hudHeroAvatarImg) return;
+    const src = state.avatar ? heroAvatarSrc(state.avatar) : null;
+    if (src) {
+      hudHeroAvatarImg.src = src;
+      hudHeroAvatarImg.hidden = false;
+    } else {
+      hudHeroAvatarImg.hidden = true;
+    }
+  }
+
+  // ---- Onboarding: elegir avatar inicial (Fesha/Mijashi/Miikaeru) ----
+  // openCharacterSelectModal() se llama la primera vez que el Operador
+  // entra y no tiene `state.avatar` todavía (ver onMasterAuthSuccess()/
+  // registrationForm más abajo) — sin botón de cerrar, es una elección
+  // obligatoria la primera vez; después es reelegible libremente desde
+  // #hero-modal.
   const characterSelectModal = document.getElementById("character-select-modal");
-  const characterSelectFeshaBtn = document.getElementById("character-select-fesha");
-  const characterSelectMijashiBtn = document.getElementById("character-select-mijashi");
+  const characterSelectCards = {
+    fesha: document.getElementById("character-select-fesha"),
+    mijashi: document.getElementById("character-select-mijashi"),
+    miikaeru: document.getElementById("character-select-miikaeru"),
+  };
+
+  function renderCharacterSelectCards() {
+    HERO_AVATAR_OPTIONS.forEach((opcion) => {
+      const card = characterSelectCards[opcion.id];
+      const img = card && card.querySelector("img");
+      if (img) img.src = heroAvatarSrc(opcion.id);
+    });
+  }
 
   function openCharacterSelectModal() {
+    renderCharacterSelectCards();
     if (characterSelectModal) characterSelectModal.hidden = false;
   }
 
-  function chooseCharacter(idPersonaje) {
-    state.playerCharacter = idPersonaje;
+  function chooseHeroAvatar(idPersonaje) {
+    state.avatar = idPersonaje;
+    // Fesha/Mijashi siguen alimentando la mecánica de evolución existente
+    // (PLAYER_CHARACTERS/faseActualPersonaje) — Miikaeru no tiene esa
+    // mecánica, solo se guarda como avatar del Header.
+    if (idPersonaje === "fesha" || idPersonaje === "mijashi") state.playerCharacter = idPersonaje;
     persist();
     if (characterSelectModal) characterSelectModal.hidden = true;
-    const personaje = PLAYER_CHARACTERS[idPersonaje];
-    setAvatarSpeech(`${personaje.nombre} despierta contigo. Crecerá junto a cada nivel que alcances.`);
+    closeHeroModal();
+    renderHeaderHeroAvatar();
+    const opcion = HERO_AVATAR_OPTIONS.find((o) => o.id === idPersonaje);
+    setAvatarSpeech(`${opcion ? opcion.nombre : "Tu Héroe"} despierta contigo.`);
     playAvatarEmote("welcome", 3000);
   }
 
-  if (characterSelectFeshaBtn) characterSelectFeshaBtn.addEventListener("click", () => chooseCharacter("fesha"));
-  if (characterSelectMijashiBtn) characterSelectMijashiBtn.addEventListener("click", () => chooseCharacter("mijashi"));
+  Object.entries(characterSelectCards).forEach(([id, btn]) => {
+    if (btn) btn.addEventListener("click", () => chooseHeroAvatar(id));
+  });
 
-  // Los dos botones del dock que antes abrían #skins-modal/#character-modal
-  // ahora abren el Modal de Lore directo en la ficha correspondiente (ver
-  // irAVistaPersonajes() en storyEngine.js). "Mi Personaje" conserva su
-  // regla especial: si todavía no eligió Fesha/Mijashi, primero pide esa
-  // elección en vez de abrir una ficha vacía.
-  if (skinsOpenBtn) {
-    skinsOpenBtn.addEventListener("click", () => {
-      window.MiikaeruStoryEngine.alHacerClicEnAvatarLeon({ nivel: state.level });
-      window.MiikaeruStoryEngine.irAVistaPersonajes("miikaeru");
+  // ---- #hero-modal: hub único (pestañas "Personaje" + "Skins") ----
+  const heroOpenBtn = document.getElementById("hero-open-btn");
+  const heroModal = document.getElementById("hero-modal");
+  const heroModalClose = document.getElementById("hero-modal-close");
+  const heroModalTabs = document.getElementById("hero-modal-tabs");
+  const heroTabCharacter = document.getElementById("hero-tab-character");
+  const heroTabSkins = document.getElementById("hero-tab-skins");
+  const heroCharacterGrid = document.getElementById("hero-character-grid");
+  const heroSkinsGrid = document.getElementById("hero-skins-grid");
+
+  function showHeroTab(target) {
+    if (heroModalTabs) {
+      heroModalTabs.querySelectorAll(".hero-modal__tab").forEach((btn) => {
+        btn.classList.toggle("hero-modal__tab--active", btn.dataset.heroTab === target);
+      });
+    }
+    if (heroTabCharacter) heroTabCharacter.hidden = target !== "character";
+    if (heroTabSkins) heroTabSkins.hidden = target !== "skins";
+  }
+
+  if (heroModalTabs) {
+    heroModalTabs.addEventListener("click", (event) => {
+      const btn = event.target.closest(".hero-modal__tab");
+      if (!btn) return;
+      showHeroTab(btn.dataset.heroTab);
     });
   }
-  if (characterOpenBtn) {
-    characterOpenBtn.addEventListener("click", () => {
-      if (!state.playerCharacter) {
-        openCharacterSelectModal();
-        return;
+
+  function renderHeroCharacterTab() {
+    if (!heroCharacterGrid) return;
+    heroCharacterGrid.innerHTML = "";
+    HERO_AVATAR_OPTIONS.forEach((opcion) => {
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className = "hero-character-card" + (state.avatar === opcion.id ? " hero-character-card--active" : "");
+
+      const img = document.createElement("img");
+      img.src = heroAvatarSrc(opcion.id);
+      img.alt = opcion.nombre;
+      card.appendChild(img);
+
+      const name = document.createElement("span");
+      name.className = "hero-character-card__name";
+      name.textContent = opcion.nombre;
+      card.appendChild(name);
+
+      if (opcion.id === "fesha" || opcion.id === "mijashi") {
+        const evolucion = getPlayerCharacterEvolutionData(opcion.id);
+        const faseActual = evolucion && evolucion.fases.find((f) => f.id === evolucion.faseActualId);
+        if (faseActual) {
+          const tag = document.createElement("span");
+          tag.className = "hero-character-card__tag";
+          tag.textContent = faseActual.titulo;
+          card.appendChild(tag);
+        }
       }
-      window.MiikaeruStoryEngine.alHacerClicEnAvatarLeon({ nivel: state.level });
-      window.MiikaeruStoryEngine.irAVistaPersonajes(state.playerCharacter);
+
+      card.addEventListener("click", () => {
+        chooseHeroAvatar(opcion.id);
+        renderHeroCharacterTab();
+      });
+      heroCharacterGrid.appendChild(card);
     });
   }
+
+  function renderHeroSkinsTab() {
+    if (!heroSkinsGrid) return;
+    heroSkinsGrid.innerHTML = "";
+    getMiikaeruSkinsData().forEach((skin) => {
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className =
+        "skin-card" + (skin.unlocked ? "" : " skin-card--locked") + (skin.selected ? " skin-card--selected" : "");
+      const img = document.createElement("img");
+      img.src = skin.src;
+      img.alt = skin.id;
+      img.loading = "lazy";
+      img.onerror = () => {
+        card.style.display = "none";
+      };
+      card.appendChild(img);
+      if (!skin.unlocked) {
+        const lock = document.createElement("div");
+        lock.className = "skin-card__lock";
+        lock.innerHTML = `<span>🔒</span><span>Nv. ${skin.nivelRequerido}</span>`;
+        card.appendChild(lock);
+      } else {
+        card.addEventListener("click", () => {
+          selectSkin(skin.id);
+          renderHeroSkinsTab();
+        });
+      }
+      heroSkinsGrid.appendChild(card);
+    });
+  }
+
+  function openHeroModal() {
+    if (!heroModal) return;
+    if (!state.avatar) {
+      openCharacterSelectModal();
+      return;
+    }
+    renderHeroCharacterTab();
+    renderHeroSkinsTab();
+    showHeroTab("character");
+    heroModal.hidden = false;
+  }
+
+  function closeHeroModal() {
+    if (heroModal) heroModal.hidden = true;
+  }
+
+  if (heroOpenBtn) heroOpenBtn.addEventListener("click", openHeroModal);
+  if (heroModalClose) heroModalClose.addEventListener("click", closeHeroModal);
+  if (heroModal) {
+    heroModal.addEventListener("click", (event) => {
+      if (event.target === heroModal) closeHeroModal();
+    });
+  }
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && heroModal && !heroModal.hidden) closeHeroModal();
+  });
+
+  // ---- Panel de Administrador → pestaña "📸 Fotos" ----
+  // Infraestructura lista para que el Admin reemplace cualquiera de las
+  // 3 fotos predeterminadas por una URL propia — instantáneo en Onboarding/
+  // #hero-modal/Header de esta pestaña (localStorage) y best-effort hacia
+  // Supabase para los demás dispositivos (ver funciones de arriba).
+  const adminPhotosRows = document.getElementById("admin-photos-rows");
+
+  function renderAdminPhotosTab() {
+    if (!adminPhotosRows) return;
+    adminPhotosRows.innerHTML = "";
+    const overrides = loadHeroAvatarOverrides();
+    HERO_AVATAR_OPTIONS.forEach((opcion) => {
+      const row = document.createElement("div");
+      row.className = "admin-photos-row";
+
+      const preview = document.createElement("img");
+      preview.className = "admin-photos-row__preview";
+      preview.src = heroAvatarSrc(opcion.id);
+      preview.alt = opcion.nombre;
+      row.appendChild(preview);
+
+      const name = document.createElement("span");
+      name.className = "admin-photos-row__name";
+      name.textContent = opcion.nombre;
+      row.appendChild(name);
+
+      const input = document.createElement("input");
+      input.type = "url";
+      input.className = "admin-photos-row__input";
+      input.placeholder = t("adminPhotosUrlPlaceholder");
+      input.value = overrides[opcion.id] || "";
+      row.appendChild(input);
+
+      const saveBtn = document.createElement("button");
+      saveBtn.type = "button";
+      saveBtn.className = "admin-photos-row__save";
+      saveBtn.textContent = t("adminPhotosSaveBtn");
+      saveBtn.addEventListener("click", () => {
+        const url = input.value.trim();
+        saveHeroAvatarOverrideLocal(opcion.id, url);
+        syncHeroAvatarOverrideToSupabase(opcion.id, url);
+        preview.src = heroAvatarSrc(opcion.id);
+        renderCharacterSelectCards();
+        renderHeroCharacterTab();
+        renderHeaderHeroAvatar();
+      });
+      row.appendChild(saveBtn);
+
+      adminPhotosRows.appendChild(row);
+    });
+  }
+
+  renderCharacterSelectCards();
+  renderHeaderHeroAvatar();
+  fetchHeroAvatarOverridesFromSupabase();
 
   // El Modal de Lore / Cuento Interactivo (se abre al hacer click en el
   // avatar/León) vive en su propio módulo, storyEngine.js — mismo patrón
@@ -7697,6 +7985,7 @@ document.addEventListener("DOMContentLoaded", () => {
     adminPanelTabInspector.hidden = target !== "inspector";
     adminPanelTabAutomation.hidden = target !== "automation";
     adminPanelTabUsers.hidden = target !== "users";
+    if (adminPanelTabPhotos) adminPanelTabPhotos.hidden = target !== "photos";
     if (target === "inspector") fetchInspectorFeedback();
     if (target === "automation") {
       fetchAutomationTasks();
@@ -7706,6 +7995,7 @@ document.addEventListener("DOMContentLoaded", () => {
       fetchPlayerProgress();
       wirePlayerProgressRealtime();
     }
+    if (target === "photos") renderAdminPhotosTab();
   }
 
   adminPanelTabs.addEventListener("click", (event) => {
@@ -15716,9 +16006,11 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       playAvatarEmote("welcome", 3500);
       setAvatarSpeech(`¡Bienvenido de vuelta, ${state.operatorName}!`);
-      // Perfiles creados antes de este Bloque no tienen playerCharacter
-      // guardado — se les pide elegir recién ahora, una sola vez.
-      if (!state.playerCharacter) openCharacterSelectModal();
+      // Perfiles creados antes de que existiera el Héroe unificado no
+      // tienen `avatar` guardado (loadState() ya migra desde
+      // playerCharacter cuando existe) — se les pide elegir recién ahora,
+      // una sola vez.
+      if (!state.avatar) openCharacterSelectModal();
     }
   }
 
@@ -15833,6 +16125,11 @@ document.addEventListener("DOMContentLoaded", () => {
   // pisando cualquier skin ya equipado hasta el próximo click manual.
   document.getElementById("avatar-visual-img").src = currentIdleLionSrc();
   startAvatarIdleCarousel();
+  // El avatar del Héroe en el Header debe cargarse siempre al iniciar
+  // sesión (pedido explícito) — mismo motivo que la línea de arriba: sin
+  // esto, `state.avatar` ya guardado no se reflejaba hasta la próxima
+  // elección manual.
+  renderHeaderHeroAvatar();
   checkAdminSession();
   renderChatHistory();
   renderHud();

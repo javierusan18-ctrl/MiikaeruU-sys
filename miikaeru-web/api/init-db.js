@@ -72,10 +72,24 @@ const SCHEMA_STATEMENTS = [
     last_active_date text,
     updated_at timestamptz not null default now()
   )`,
+  // hero_avatars: respaldo en la nube de las URLs de foto que el
+  // SUPER_ADMIN carga desde el Panel de Administrador → "📸 Fotos" para
+  // cada personaje del Héroe (Fesha/Mijashi/Miikaeru, ver
+  // HERO_AVATAR_OPTIONS en app.js). localStorage sigue siendo la fuente
+  // de verdad LOCAL (instantánea en Onboarding/#hero-modal/Header, ver
+  // heroAvatarSrc() en app.js) — esta tabla es best-effort para que la
+  // URL elegida también llegue a otros dispositivos. `character_id` es
+  // la clave ("fesha" | "mijashi" | "miikaeru").
+  `create table if not exists public.hero_avatars (
+    character_id text primary key,
+    image_url text not null,
+    updated_at timestamptz not null default now()
+  )`,
   `alter table public.app_contacts enable row level security`,
   `alter table public.app_friendships enable row level security`,
   `alter table public.app_friend_messages enable row level security`,
   `alter table public.player_progress enable row level security`,
+  `alter table public.hero_avatars enable row level security`,
   // DROP + CREATE en vez de "IF NOT EXISTS": CREATE POLICY no acepta esa
   // cláusula en Postgres, así que este es el patrón real para que el
   // statement sea repetible sin tirar "policy already exists" en la
@@ -99,6 +113,8 @@ const SCHEMA_STATEMENTS = [
   `create policy "anon full access friend_messages" on public.app_friend_messages for all using (true) with check (true)`,
   `drop policy if exists "anon full access player_progress" on public.player_progress`,
   `create policy "anon full access player_progress" on public.player_progress for all using (true) with check (true)`,
+  `drop policy if exists "anon full access hero_avatars" on public.hero_avatars`,
+  `create policy "anon full access hero_avatars" on public.hero_avatars for all using (true) with check (true)`,
 ];
 
 async function ensureRealtimeEnabled(client, tableName) {
