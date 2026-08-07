@@ -789,6 +789,16 @@ const I18N = {
     chatFriendInputPlaceholder: "Escribe un mensaje...",
     chatFriendTranslating: "Traduciendo…",
     chatFriendTranslateFailed: "No se pudo traducir — mostrando solo el original.",
+    conversationModeOpenBtn: "🎙️ Modo Conversación",
+    conversationModeBack: "← Volver al chat",
+    conversationModeYou: "Tú",
+    conversationModeAutoSpeak: "🔊 Leer traducciones en voz alta",
+    conversationModeSpeakerMe: "Hablas tú",
+    conversationModeSpeakerFriend: "Habla tu amigo",
+    conversationModeTextPlaceholder: "O escribe aquí...",
+    conversationModeEmptyHint: "Toca un micrófono o escribe abajo para traducir en tiempo real.",
+    conversationModeNoSpeechSupport: "Tu navegador no soporta dictado por voz — escribe tu mensaje abajo.",
+    conversationTranslateFailed: "No se pudo traducir",
     chatMyLanguageLabel: "Tu idioma:",
     chatFriendTestHint: "Podés crear un contacto de prueba local para probar el chat.",
     chatFriendLocalBadgeTitle: "Contacto de prueba local",
@@ -1558,6 +1568,16 @@ const I18N = {
     chatFriendInputPlaceholder: "Type a message...",
     chatFriendTranslating: "Translating…",
     chatFriendTranslateFailed: "Couldn't translate — showing original only.",
+    conversationModeOpenBtn: "🎙️ Conversation Mode",
+    conversationModeBack: "← Back to chat",
+    conversationModeYou: "You",
+    conversationModeAutoSpeak: "🔊 Read translations aloud",
+    conversationModeSpeakerMe: "You speak",
+    conversationModeSpeakerFriend: "Your friend speaks",
+    conversationModeTextPlaceholder: "Or type here...",
+    conversationModeEmptyHint: "Tap a microphone or type below to translate in real time.",
+    conversationModeNoSpeechSupport: "Your browser doesn't support voice dictation — type your message below.",
+    conversationTranslateFailed: "Couldn't translate",
     chatMyLanguageLabel: "Your language:",
     chatFriendTestHint: "You can create a local test contact to try out the chat.",
     chatFriendLocalBadgeTitle: "Local test contact",
@@ -2327,6 +2347,16 @@ const I18N = {
     chatFriendInputPlaceholder: "メッセージを入力...",
     chatFriendTranslating: "翻訳中…",
     chatFriendTranslateFailed: "翻訳できませんでした — 原文のみ表示します。",
+    conversationModeOpenBtn: "🎙️ 会話モード",
+    conversationModeBack: "← チャットに戻る",
+    conversationModeYou: "あなた",
+    conversationModeAutoSpeak: "🔊 翻訳を音声で読み上げる",
+    conversationModeSpeakerMe: "あなたが話す",
+    conversationModeSpeakerFriend: "友達が話す",
+    conversationModeTextPlaceholder: "またはここに入力...",
+    conversationModeEmptyHint: "マイクをタップするか、下に入力してリアルタイム翻訳を始めましょう。",
+    conversationModeNoSpeechSupport: "お使いのブラウザは音声入力に対応していません — 下にメッセージを入力してください。",
+    conversationTranslateFailed: "翻訳できませんでした",
     chatMyLanguageLabel: "あなたの言語:",
     chatFriendTestHint: "ローカルのテスト用連絡先を作成してチャットを試せます。",
     chatFriendLocalBadgeTitle: "ローカルのテスト用連絡先",
@@ -6329,6 +6359,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const chatFriendTestLangSelect = document.getElementById("chat-friend-test-lang-select");
   const chatFriendTestCreateBtn = document.getElementById("chat-friend-test-create-btn");
 
+  // ---- Modo Conversación (traductor cara a cara) ----
+  const conversationModeOpenBtn = document.getElementById("conversation-mode-open-btn");
+  const conversationModePanel = document.getElementById("chat-conversation-mode");
+  const conversationModeClose = document.getElementById("conversation-mode-close");
+  const conversationPanelFriend = document.getElementById("conversation-panel-friend");
+  const conversationFriendTranscript = document.getElementById("conversation-friend-transcript");
+  const conversationFriendFlag = document.getElementById("conversation-friend-flag");
+  const conversationFriendName = document.getElementById("conversation-friend-name");
+  const conversationFriendMicBtn = document.getElementById("conversation-friend-mic");
+  const conversationMeTranscript = document.getElementById("conversation-me-transcript");
+  const conversationMeFlag = document.getElementById("conversation-me-flag");
+  const conversationMeMicBtn = document.getElementById("conversation-me-mic");
+  const conversationAutoSpeakToggle = document.getElementById("conversation-auto-speak-toggle");
+  const conversationTextForm = document.getElementById("conversation-text-form");
+  const conversationTextSpeaker = document.getElementById("conversation-text-speaker");
+  const conversationTextInput = document.getElementById("conversation-text-input");
+  const conversationNoSpeechHint = document.getElementById("conversation-no-speech-hint");
+
   // #chat-input/#chat-friend-input pasaron de <input type="text"> a
   // <textarea rows="1"> para poder redimensionarse (resize:vertical, ver
   // style.css) — como <textarea> no envía el form con Enter por defecto,
@@ -8768,6 +8816,11 @@ document.addEventListener("DOMContentLoaded", () => {
   function closeChatModal() {
     chatModal.hidden = true;
     stopFriendRealtime();
+    // Corta cualquier micrófono/voz de Modo Conversación en curso — no
+    // dejar el reconocimiento de voz escuchando de fondo (ni una lectura
+    // de speechSynthesis hablando sola) con el chat ya cerrado.
+    stopConversationListening();
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
   }
   chatOpenBtn.addEventListener("click", openChatModal);
   chatModalClose.addEventListener("click", closeChatModal);
@@ -9410,6 +9463,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!activeFriend) return;
     activeFriend = null;
     stopFriendRealtime();
+    stopConversationListening(); // por si quedó un micrófono de Modo Conversación abierto
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+    if (conversationModePanel) conversationModePanel.hidden = true;
     chatFriendThreadPanel.hidden = true;
     chatTabFriendsPanel.hidden = false;
   }
@@ -9499,6 +9555,228 @@ document.addEventListener("DOMContentLoaded", () => {
       sendFriendMessage(text);
     });
   }
+
+  // ---- Modo Conversación (traductor cara a cara) ----
+  // Vista aparte del hilo async de Amigos, estilo "Conversation mode" de
+  // Google/Microsoft Translator: pantalla dividida en 2 paneles grandes
+  // (uno por persona) con micrófono propio, pensada para cuando las dos
+  // personas están JUNTAS y se van turnando el mismo celular — no un
+  // chat a distancia. Por eso a propósito NO escribe en
+  // app_friend_messages/mensajes de prueba locales (ver el comentario
+  // de #chat-conversation-mode en index.html): ese historial representa
+  // una conversación asíncrona entre DOS cuentas/dispositivos distintos,
+  // y acá ambos lados comparten el mismo — mezclar los dos modelos de
+  // datos sería engañoso. La traducción reutiliza translateViaMyMemory()
+  // de arriba: misma API, mismo "mejor esfuerzo" que el resto del chat.
+  const CONVERSATION_LOCALE_MAP = {
+    es: "es-ES", en: "en-US", ja: "ja-JP", zh: "zh-CN", pt: "pt-PT", vi: "vi-VN",
+  };
+  function conversationLocale(langCode) {
+    return CONVERSATION_LOCALE_MAP[langCode] || "es-ES";
+  }
+  function conversationLangMeta(langCode) {
+    return CHAT_LANGUAGES.find((l) => l.code === langCode) || CHAT_LANGUAGES[0];
+  }
+
+  // SpeechRecognition (dictado) solo existe de verdad en navegadores
+  // basados en Chromium (Chrome/Edge/Android WebView) — Firefox/Safari
+  // no lo implementan o lo hacen muy limitado. Se detecta UNA vez acá y,
+  // si no está disponible, los botones de micrófono quedan
+  // deshabilitados con una pista visible en vez de simular un
+  // reconocimiento de voz falso (mismo criterio "no fake features" de
+  // siempre) — el campo de texto de abajo sigue siendo 100% funcional
+  // como alternativa real, para ambos lados de la conversación.
+  const SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition || null;
+  let conversationRecognition = null;
+  let conversationListeningSide = null; // "me" | "friend" | null
+
+  function stopConversationListening() {
+    if (conversationRecognition) {
+      try {
+        conversationRecognition.stop();
+      } catch (err) {
+        // noop — stop() puede tirar si ya estaba detenido
+      }
+    }
+    conversationListeningSide = null;
+    if (conversationMeMicBtn) conversationMeMicBtn.classList.remove("conversation-mic-btn--listening");
+    if (conversationFriendMicBtn) conversationFriendMicBtn.classList.remove("conversation-mic-btn--listening");
+  }
+
+  function speakConversationText(text, langCode) {
+    if (!conversationAutoSpeakToggle || !conversationAutoSpeakToggle.checked) return;
+    if (!("speechSynthesis" in window) || !text) return;
+    window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = conversationLocale(langCode);
+    window.speechSynthesis.speak(utter);
+  }
+
+  function clearConversationEmptyHint() {
+    const hint = conversationFriendTranscript && conversationFriendTranscript.querySelector(".conversation-panel__empty-hint");
+    if (hint) hint.remove();
+  }
+
+  // Pinta UN intercambio en AMBOS paneles: el texto grande de quien
+  // habló va en su propio panel, la traducción grande va en el panel de
+  // quien escucha — y una segunda línea chica con el otro texto en los
+  // DOS lados, para que "tanto el mensaje original como su traducción"
+  // queden visibles sin importar cuál panel se esté mirando (pedido
+  // explícito del Modo Conversación).
+  function renderConversationExchange(side, originalText, translatedText, failed) {
+    clearConversationEmptyHint();
+    const speakerListEl = side === "me" ? conversationMeTranscript : conversationFriendTranscript;
+    const listenerListEl = side === "me" ? conversationFriendTranscript : conversationMeTranscript;
+    if (!speakerListEl || !listenerListEl) return;
+
+    const speakerBubble = document.createElement("div");
+    speakerBubble.className = "conversation-bubble conversation-bubble--own";
+    const speakerMain = document.createElement("p");
+    speakerMain.className = "conversation-bubble__text";
+    speakerMain.textContent = originalText;
+    speakerBubble.appendChild(speakerMain);
+    if (!failed && translatedText && translatedText !== originalText) {
+      const speakerSub = document.createElement("p");
+      speakerSub.className = "conversation-bubble__sub";
+      speakerSub.textContent = `🌐 ${translatedText}`;
+      speakerBubble.appendChild(speakerSub);
+    }
+    speakerListEl.appendChild(speakerBubble);
+    speakerListEl.scrollTop = speakerListEl.scrollHeight;
+
+    const listenerBubble = document.createElement("div");
+    listenerBubble.className = "conversation-bubble conversation-bubble--incoming";
+    const listenerMain = document.createElement("p");
+    listenerMain.className = "conversation-bubble__text";
+    listenerMain.textContent = failed ? originalText : translatedText;
+    listenerBubble.appendChild(listenerMain);
+    const listenerSub = document.createElement("p");
+    listenerSub.className = "conversation-bubble__sub";
+    listenerSub.textContent = failed ? t("conversationTranslateFailed") : originalText;
+    listenerBubble.appendChild(listenerSub);
+    listenerListEl.appendChild(listenerBubble);
+    listenerListEl.scrollTop = listenerListEl.scrollHeight;
+  }
+
+  async function handleConversationUtterance(side, text) {
+    if (!text || !text.trim() || !activeFriend) return;
+    const myLang = loadChatLanguage();
+    const friendLang = activeFriend.preferred_language || "es";
+    const speakerLang = side === "me" ? myLang : friendLang;
+    const targetLang = side === "me" ? friendLang : myLang;
+
+    let translated = text;
+    let failed = false;
+    try {
+      translated = speakerLang === targetLang ? text : await translateViaMyMemory(text, targetLang, speakerLang);
+    } catch (err) {
+      failed = true;
+    }
+    renderConversationExchange(side, text, translated, failed);
+    if (!failed) speakConversationText(translated, targetLang);
+  }
+
+  function startConversationListening(side) {
+    if (!SpeechRecognitionCtor || !activeFriend) return;
+    // Un solo reconocimiento activo a la vez — tocar el otro micrófono
+    // corta el actual en vez de superponer dos capturas de audio.
+    if (conversationListeningSide === side) {
+      stopConversationListening();
+      return;
+    }
+    stopConversationListening();
+
+    const myLang = loadChatLanguage();
+    const friendLang = activeFriend.preferred_language || "es";
+    const langCode = side === "me" ? myLang : friendLang;
+
+    const recognition = new SpeechRecognitionCtor();
+    recognition.lang = conversationLocale(langCode);
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    recognition.continuous = false;
+
+    recognition.onresult = (event) => {
+      const transcript =
+        event.results && event.results[0] && event.results[0][0] ? event.results[0][0].transcript : "";
+      handleConversationUtterance(side, transcript);
+    };
+    recognition.onerror = () => {
+      stopConversationListening();
+    };
+    recognition.onend = () => {
+      if (conversationListeningSide === side) stopConversationListening();
+    };
+
+    conversationRecognition = recognition;
+    conversationListeningSide = side;
+    const btn = side === "me" ? conversationMeMicBtn : conversationFriendMicBtn;
+    if (btn) btn.classList.add("conversation-mic-btn--listening");
+    try {
+      recognition.start();
+    } catch (err) {
+      stopConversationListening();
+    }
+  }
+
+  if (conversationMeMicBtn) conversationMeMicBtn.addEventListener("click", () => startConversationListening("me"));
+  if (conversationFriendMicBtn) {
+    conversationFriendMicBtn.addEventListener("click", () => startConversationListening("friend"));
+  }
+
+  if (!SpeechRecognitionCtor) {
+    if (conversationMeMicBtn) conversationMeMicBtn.disabled = true;
+    if (conversationFriendMicBtn) conversationFriendMicBtn.disabled = true;
+    if (conversationNoSpeechHint) conversationNoSpeechHint.hidden = false;
+  }
+
+  if (conversationTextForm) {
+    conversationTextForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const text = conversationTextInput.value.trim();
+      if (!text) return;
+      const side = conversationTextSpeaker ? conversationTextSpeaker.value : "me";
+      conversationTextInput.value = "";
+      handleConversationUtterance(side, text);
+    });
+  }
+
+  function openConversationMode() {
+    if (!activeFriend || !conversationModePanel) return;
+    stopConversationListening();
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+
+    const myLang = loadChatLanguage();
+    const friendLang = activeFriend.preferred_language || "es";
+    const myMeta = conversationLangMeta(myLang);
+    const friendMeta = conversationLangMeta(friendLang);
+
+    if (conversationMeFlag) conversationMeFlag.textContent = myMeta.flag;
+    if (conversationFriendFlag) conversationFriendFlag.textContent = friendMeta.flag;
+    if (conversationFriendName) conversationFriendName.textContent = activeFriend.display_name;
+
+    if (conversationMeTranscript) conversationMeTranscript.innerHTML = "";
+    if (conversationFriendTranscript) {
+      conversationFriendTranscript.innerHTML = "";
+      const hint = document.createElement("p");
+      hint.className = "conversation-panel__empty-hint";
+      hint.textContent = t("conversationModeEmptyHint");
+      conversationFriendTranscript.appendChild(hint);
+    }
+
+    chatFriendThreadPanel.hidden = true;
+    conversationModePanel.hidden = false;
+  }
+
+  function closeConversationMode() {
+    stopConversationListening();
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+    if (conversationModePanel) conversationModePanel.hidden = true;
+    if (chatFriendThreadPanel) chatFriendThreadPanel.hidden = false;
+  }
+
+  if (conversationModeOpenBtn) conversationModeOpenBtn.addEventListener("click", openConversationMode);
+  if (conversationModeClose) conversationModeClose.addEventListener("click", closeConversationMode);
 
   // Chat Guía: resalta con un parpadeo neón el ícono del dock al que la
   // respuesta hace referencia (ver CHAT_GUIDE_INTENTS/matchChatGuideIntent

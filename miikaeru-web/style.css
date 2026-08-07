@@ -9168,22 +9168,300 @@ textarea,
 
 /* Hilo de conversación con un amigo (#chat-friend-thread) — mismo
    .chat__feed/.chat__input que "Todos", solo agrega el encabezado con
-   botón de volver. */
+   botón de volver + el botón de entrada a Modo Conversación. */
+.chat-friend-thread__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
 .chat-friend-thread__back {
-  align-self: flex-start;
   background: none;
   border: none;
   color: var(--neon-cyan);
   font-size: 0.78rem;
   cursor: pointer;
   padding: 4px 0;
-  margin-bottom: 4px;
+  flex-shrink: 0;
 }
 
 .chat-friend-thread__name {
   font-size: 0.88rem;
   color: var(--text-primary);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chat-friend-thread__conversation-btn {
+  flex-shrink: 0;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--neon-magenta);
+  background: rgba(255, 46, 154, 0.08);
+  color: var(--neon-magenta);
+  font-size: 0.68rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.chat-friend-thread__conversation-btn:hover {
+  background: var(--neon-magenta);
+  color: #04121a;
+  box-shadow: 0 0 12px rgba(255, 46, 154, 0.4);
+}
+
+/* ===================== MODO CONVERSACIÓN =====================
+   Traductor cara a cara estilo app de traductor móvil: pantalla
+   dividida en 2 paneles grandes, uno por persona, cada uno con su
+   propio micrófono. El panel del amigo (arriba) va rotado 180° para
+   que, apoyando el celular en la mesa entre las dos personas, cada
+   quien lea su mitad de frente — mismo patrón que Google/Microsoft
+   Translator "Conversation mode". Ver #chat-conversation-mode en
+   index.html / handleConversationUtterance() en app.js. */
+.chat-conversation-mode {
+  gap: 0;
+}
+
+.conversation-panel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 130px;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.conversation-panel--friend {
+  transform: rotate(180deg);
+  border-color: rgba(255, 46, 154, 0.35);
   margin-bottom: 8px;
+}
+
+.conversation-panel--me {
+  border-color: rgba(0, 240, 255, 0.35);
+  margin-top: 8px;
+}
+
+.conversation-panel__transcript {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.conversation-panel__empty-hint {
+  margin: auto;
+  text-align: center;
+  font-size: 0.74rem;
+  color: var(--text-secondary);
+  padding: 10px;
+}
+
+.conversation-panel__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 12px;
+  flex-shrink: 0;
+}
+
+.conversation-panel--me .conversation-panel__footer {
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.conversation-panel--friend .conversation-panel__footer {
+  border-top: 1px solid var(--glass-border);
+}
+
+.conversation-panel__lang {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.74rem;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.conversation-panel__flag {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.conversation-mic-btn {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 2px solid var(--neon-cyan);
+  background: rgba(0, 240, 255, 0.1);
+  color: var(--neon-cyan);
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.conversation-mic-btn:hover {
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.conversation-mic-btn--listening {
+  background: var(--neon-magenta);
+  border-color: var(--neon-magenta);
+  color: #04121a;
+  animation: conversationMicPulse 1.1s ease-in-out infinite;
+}
+
+.conversation-mic-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+@keyframes conversationMicPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 46, 154, 0.5); }
+  50% { box-shadow: 0 0 0 12px rgba(255, 46, 154, 0); }
+}
+
+.conversation-mode__center {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 2px;
+  flex-shrink: 0;
+}
+
+.conversation-mode__close {
+  background: none;
+  border: none;
+  color: var(--neon-cyan);
+  font-size: 0.74rem;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.conversation-mode__auto-speak {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.64rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  text-align: right;
+}
+
+.conversation-bubble {
+  max-width: 92%;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+}
+
+.conversation-bubble--own {
+  align-self: flex-end;
+  border-color: var(--neon-gold);
+}
+
+.conversation-bubble--incoming {
+  align-self: flex-start;
+  border-color: var(--neon-cyan);
+}
+
+.conversation-bubble__text {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.conversation-bubble__sub {
+  margin: 4px 0 0;
+  font-size: 0.7rem;
+  font-style: italic;
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.conversation-mode__text-fallback {
+  display: flex;
+  gap: 8px;
+  padding: 8px 0 0;
+  flex-shrink: 0;
+}
+
+.conversation-mode__text-fallback select {
+  flex-shrink: 0;
+  max-width: 34%;
+  font-size: 0.7rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  padding: 0 4px;
+}
+
+.conversation-mode__text-fallback input {
+  flex: 1;
+  min-width: 0;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(0, 240, 255, 0.25);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  outline: none;
+}
+
+.conversation-mode__text-fallback input:focus {
+  border-color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.conversation-mode__no-speech-hint {
+  margin: 6px 0 0;
+  font-size: 0.68rem;
+  color: var(--neon-gold);
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .conversation-mic-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 1.2rem;
+  }
+  .conversation-bubble__text {
+    font-size: 0.92rem;
+  }
+  .conversation-mode__auto-speak span {
+    display: none;
+  }
+  .conversation-mode__auto-speak::after {
+    content: "🔊";
+    font-size: 0.9rem;
+  }
 }
 
 /* Burbuja del amigo (mensaje ajeno) — cian, igual criterio que

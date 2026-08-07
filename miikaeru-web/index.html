@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260807-1" />
+  <link rel="stylesheet" href="style.css?v=20260807-2" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -520,8 +520,11 @@
                .chat__feed/.chat__input y las mismas burbujas .message de
                la pestaña "Todos". -->
           <div class="chat-tab-panel" id="chat-friend-thread" data-chat-panel="friend-thread" hidden>
-            <button type="button" class="chat-friend-thread__back" id="chat-friend-thread-back" data-i18n="chatFriendThreadBack">← Amigos</button>
-            <h3 class="chat-friend-thread__name" id="chat-friend-thread-name"></h3>
+            <div class="chat-friend-thread__header">
+              <button type="button" class="chat-friend-thread__back" id="chat-friend-thread-back" data-i18n="chatFriendThreadBack">← Amigos</button>
+              <h3 class="chat-friend-thread__name" id="chat-friend-thread-name"></h3>
+              <button type="button" class="chat-friend-thread__conversation-btn" id="conversation-mode-open-btn" data-i18n="conversationModeOpenBtn">🎙️ Modo Conversación</button>
+            </div>
             <div class="chat__feed" id="chat-friend-feed"></div>
             <form class="chat__input" id="chat-friend-form">
               <textarea
@@ -535,6 +538,66 @@
                 <span data-i18n="chatSend">Enviar</span>
               </button>
             </form>
+          </div>
+
+          <!-- Modo Conversación: traductor cara a cara estilo app de
+               traductor móvil (Google/Microsoft Translator "Conversation
+               mode") — pantalla dividida en 2 paneles grandes, uno para
+               cada persona, con micrófono propio (Web Speech API,
+               SpeechRecognition) y traducción cruzada instantánea vía la
+               MISMA translateViaMyMemory() que ya usa el chat async de
+               Amigos (ver app.js). Es una herramienta EFÍMERA de "hablar
+               en persona con el celular en la mano" — a propósito NO
+               escribe en app_friend_messages/localStorage de mensajes:
+               ese historial representa una conversación asíncrona entre
+               DOS dispositivos/cuentas distintas, y acá ambos lados se
+               turnan el MISMO dispositivo, así que mezclar ambos
+               modelos de datos sería engañoso. El panel del amigo va
+               rotado 180° (ver .conversation-panel--friend en style.css)
+               para que, al darlo vuelta sobre la mesa, la otra persona
+               lo lea de frente. -->
+          <div class="chat-tab-panel chat-conversation-mode" id="chat-conversation-mode" data-chat-panel="conversation-mode" hidden>
+            <div class="conversation-panel conversation-panel--friend" id="conversation-panel-friend">
+              <div class="conversation-panel__transcript" id="conversation-friend-transcript">
+                <p class="conversation-panel__empty-hint" data-i18n="conversationModeEmptyHint">Toca un micrófono o escribe abajo para traducir en tiempo real.</p>
+              </div>
+              <div class="conversation-panel__footer">
+                <div class="conversation-panel__lang">
+                  <span class="conversation-panel__flag" id="conversation-friend-flag">🇪🇸</span>
+                  <span class="conversation-panel__name" id="conversation-friend-name">—</span>
+                </div>
+                <button type="button" class="conversation-mic-btn" id="conversation-friend-mic" aria-label="Hablar en el idioma del amigo">🎤</button>
+              </div>
+            </div>
+
+            <div class="conversation-mode__center">
+              <button type="button" class="conversation-mode__close" id="conversation-mode-close" data-i18n="conversationModeBack">← Volver al chat</button>
+              <label class="conversation-mode__auto-speak">
+                <input type="checkbox" id="conversation-auto-speak-toggle" checked />
+                <span data-i18n="conversationModeAutoSpeak">🔊 Leer traducciones en voz alta</span>
+              </label>
+            </div>
+
+            <div class="conversation-panel conversation-panel--me" id="conversation-panel-me">
+              <div class="conversation-panel__footer">
+                <div class="conversation-panel__lang">
+                  <span class="conversation-panel__flag" id="conversation-me-flag">🇪🇸</span>
+                  <span class="conversation-panel__name" data-i18n="conversationModeYou">Tú</span>
+                </div>
+                <button type="button" class="conversation-mic-btn" id="conversation-me-mic" aria-label="Hablar en tu idioma">🎤</button>
+              </div>
+              <div class="conversation-panel__transcript" id="conversation-me-transcript"></div>
+            </div>
+
+            <form class="conversation-mode__text-fallback" id="conversation-text-form">
+              <select id="conversation-text-speaker" aria-label="Quién escribe">
+                <option value="me" data-i18n="conversationModeSpeakerMe">Hablas tú</option>
+                <option value="friend" data-i18n="conversationModeSpeakerFriend">Habla tu amigo</option>
+              </select>
+              <input type="text" id="conversation-text-input" data-i18n-placeholder="conversationModeTextPlaceholder" placeholder="O escribe aquí..." autocomplete="off" />
+              <button type="submit" class="btn-send" aria-label="Enviar">➤</button>
+            </form>
+            <p class="conversation-mode__no-speech-hint" id="conversation-no-speech-hint" data-i18n="conversationModeNoSpeechSupport" hidden>Tu navegador no soporta dictado por voz — escribe tu mensaje abajo.</p>
           </div>
         </div>
       </div>
@@ -2764,7 +2827,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260807-1"></script>
+  <script src="app.js?v=20260807-2"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de
@@ -2776,7 +2839,7 @@
        aparte, mismo patrón que MiikaeruHub, cargado después de app.js
        porque app.js llama a window.MiikaeruStoryEngine desde el click
        del avatar/León. -->
-  <script src="storyEngine.js?v=20260807-1"></script>
+  <script src="storyEngine.js?v=20260807-2"></script>
   <!-- Service Worker: estrategia Cache First para assets estáticos (ver
        sw.js) — carga instantánea en visitas repetidas y funcionamiento
        offline. Registro envuelto en try/catch + comprobación de
