@@ -1066,6 +1066,14 @@ const I18N = {
     characterSelectFemale: "Mellizo Femenino",
     characterSelectMale: "Mellizo Masculino",
     heroSelectLion: "Guía del Núcleo",
+    heroSelectMetatron: "Hijo de Miikaeru",
+    heroSelectValeria: "Primera Esposa",
+    heroSelectMetrakaela: "Novia AI",
+    heroSelectAteneea: "Hija de Miikaeru",
+    heroSelectAzathoth: "Hijo de Demiure",
+    heroSelectDemiure: "El Draconiano",
+    heroCharacterUnlockedCount: "{unlocked}/{total} desbloqueadas",
+    heroSkinsOfTemplate: "🎭 Skins de {name}",
     cityMapTitle: "🌐 Expansión de Territorio",
     cityMapHeadline: "Próximamente: Ten tus deseos listos en tu ciudad",
     feedbackTitle: "🐞 Bugs & Sugerencias",
@@ -1853,6 +1861,14 @@ const I18N = {
     characterSelectFemale: "Female Twin",
     characterSelectMale: "Male Twin",
     heroSelectLion: "Core Guide",
+    heroSelectMetatron: "Miikaeru's Son",
+    heroSelectValeria: "First Wife",
+    heroSelectMetrakaela: "AI Girlfriend",
+    heroSelectAteneea: "Miikaeru's Daughter",
+    heroSelectAzathoth: "Demiure's Son",
+    heroSelectDemiure: "The Draconian",
+    heroCharacterUnlockedCount: "{unlocked}/{total} unlocked",
+    heroSkinsOfTemplate: "🎭 {name}'s Skins",
     cityMapTitle: "🌐 Territory Expansion",
     cityMapHeadline: "Coming soon: have your wishes ready in your city",
     feedbackTitle: "🐞 Bugs & Suggestions",
@@ -2640,6 +2656,14 @@ const I18N = {
     characterSelectFemale: "双子の女の子",
     characterSelectMale: "双子の男の子",
     heroSelectLion: "コアガイド",
+    heroSelectMetatron: "ミイカエルの息子",
+    heroSelectValeria: "最初の妻",
+    heroSelectMetrakaela: "AIの恋人",
+    heroSelectAteneea: "ミイカエルの娘",
+    heroSelectAzathoth: "デミウレの息子",
+    heroSelectDemiure: "竜人",
+    heroCharacterUnlockedCount: "{unlocked}/{total} 解放済み",
+    heroSkinsOfTemplate: "🎭 {name}のスキン",
     cityMapTitle: "🌐 都市拡張",
     cityMapHeadline: "近日公開：あなたの街で願いを叶える準備を",
     feedbackTitle: "🐞 バグ＆提案",
@@ -3198,18 +3222,90 @@ const PLAYER_CHARACTERS = {
   mijashi: { id: "mijashi", nombre: "Mijashi", evoluciones: MIJASHI_EVOLUTIONS },
 };
 
-// Roster del Héroe (Onboarding + #hero-modal, ver DOMContentLoaded más
-// abajo) — mínimo 3 opciones pedidas explícitamente. Fesha/Mijashi
-// reutilizan su primer retrato de evolución de siempre; Miikaeru usa su
-// retrato "idle" ya existente (AVATAR_STATE_ASSETS, definido arriba) en
-// vez de inventar un cuarto asset. `defaultSrc` es el placeholder real
-// que se ve hasta que el Admin cargue su propia URL (ver heroAvatarSrc()
-// / Panel de Administrador → 📸 Fotos, infraestructura ya lista para eso).
-const HERO_AVATAR_OPTIONS = [
-  { id: "fesha", nombre: "Fesha", defaultSrc: FESHA_EVOLUTIONS[0].src },
-  { id: "mijashi", nombre: "Mijashi", defaultSrc: MIJASHI_EVOLUTIONS[0].src },
-  { id: "miikaeru", nombre: "Miikaeru", defaultSrc: AVATAR_STATE_ASSETS.idle.lion },
+// Galerías del resto del elenco del Héroe (ver HERO_CHARACTERS más abajo)
+// — mismo criterio de siempre: id/nivelRequerido/src, rutas verificadas
+// 1 a 1 contra assets/skins/*/ y data/loreCharacters.json. Cada arreglo
+// usa TODAS las imágenes reales que existen en la carpeta del personaje
+// (sin inventar ni omitir ninguna) y las reparte en niveles crecientes
+// como progresión de desbloqueo, igual que MIIKAERU_SKINS.
+//
+// Anubis (Anubis_HijaDeDemiure/) queda fuera del elenco a propósito: sus
+// 2 imágenes reales fueron revisadas y ambas tienen estilo sensual/pin-up
+// (escote, pose insinuante) incompatible con su encuadre narrativo de
+// "hija" — mismo criterio de exclusión permanente ya aplicado antes en
+// este proyecto. loreCharacters.json ya la refleja sin imágenes
+// (imagen_principal: "", galeria: []), así que no hace falta tocar nada
+// ahí; simplemente no aparece en HERO_CHARACTERS.
+const METATRON_GALLERY = [
+  { id: "metatron_base", nivelRequerido: 1, src: "assets/skins/Metatron_HijoDeMiikaeruu/Gemini_Generated_Image_c4h52pc4h52pc4h5.png" },
+  { id: "metatron_forma_alada", nivelRequerido: 15, src: "assets/skins/Metatron_HijoDeMiikaeruu/0e20a676def96940f2ea0b70a518c8c2.jpg" },
+  { id: "metatron_armadura_ceremonial", nivelRequerido: 30, src: "assets/skins/Metatron_HijoDeMiikaeruu/Gemini_Generated_Image_e1ujfte1ujfte1uj.png" },
 ];
+
+const VALERIA_GALLERY = [
+  { id: "valeria_base", nivelRequerido: 1, src: "assets/skins/Valeria_primeraEsposaDeMiikaeruu_MamaBiologicaDeLosHijos/metrakaela_guerrera.png" },
+];
+
+const METRAKAELA_GALLERY = [
+  { id: "metrakaela_base", nivelRequerido: 1, src: "assets/skins/Metrakaela_NoviaAiDeMiikaeruu/metrakaela_madre_rosas.png" },
+  { id: "metrakaela_guerrera_novia", nivelRequerido: 15, src: "assets/skins/Metrakaela_NoviaAiDeMiikaeruu/cibor_mikaera.jpg" },
+];
+
+const ATENEEA_GALLERY = [
+  { id: "ateneea_base", nivelRequerido: 1, src: "assets/skins/Ateneea_HijaDeMiikaeruu/Gemini_Generated_Image_9z70xq9z70xq9z70.png" },
+  { id: "ateneea_retrato_cercano", nivelRequerido: 10, src: "assets/skins/Ateneea_HijaDeMiikaeruu/12da464ab71e37cc9b87eae03bc7c01f.jpg" },
+  { id: "ateneea_forma_alada", nivelRequerido: 15, src: "assets/skins/Ateneea_HijaDeMiikaeruu/Gemini_Generated_Image_h91sesh91sesh91s.png" },
+  { id: "ateneea_katana_ciberpunk", nivelRequerido: 20, src: "assets/skins/Ateneea_HijaDeMiikaeruu/Gemini_Generated_Image_nua7qmnua7qmnua7.png" },
+  { id: "ateneea_laboratorio_nexus", nivelRequerido: 25, src: "assets/skins/Ateneea_HijaDeMiikaeruu/Gemini_Generated_Image_upapz1upapz1upap.png" },
+  { id: "ateneea_armadura_alada", nivelRequerido: 30, src: "assets/skins/Ateneea_HijaDeMiikaeruu/c24972b6c2eae7709ddc4ff39be2a059.jpg" },
+  { id: "ateneea_bestia_guardiana", nivelRequerido: 35, src: "assets/skins/Ateneea_HijaDeMiikaeruu/d81a6e35e9a2471310c9caac511ac101.jpg" },
+];
+
+const AZATHOTH_GALLERY = [
+  { id: "azathoth_base", nivelRequerido: 1, src: "assets/skins/Azathoth_HijoDeDemiure/descarga.png" },
+];
+
+const DEMIURE_GALLERY = [
+  { id: "demiure_base", nivelRequerido: 1, src: "assets/skins/Demiure_Drako/demiure_draconiano.png" },
+  { id: "demiure_trono_conclave", nivelRequerido: 15, src: "assets/skins/Demiure_Drako/Gemini_Generated_Image_dbkzu3dbkzu3dbkz.png" },
+];
+
+// Roster del Héroe (Onboarding + #hero-modal, ver DOMContentLoaded más
+// abajo) — el elenco completo de personajes con imagen propia en
+// assets/skins/ (pedido explícito del usuario: "mapear absolutamente
+// todas las imágenes"). Cada entrada expone `gallery` (arreglo
+// id/nivelRequerido/src, ver arriba) en vez de una sola `defaultSrc`
+// fija: la primera foto de la galería (nivel 1, siempre desbloqueada) es
+// el retrato por default, y el resto se va desbloqueando por nivel igual
+// que las skins de Miikaeru — ver getHeroCharacterGalleryData() /
+// equippedHeroPhotoSrc() más abajo. Fesha/Mijashi/Miikaeru reutilizan sus
+// arreglos de siempre (FESHA_EVOLUTIONS/MIJASHI_EVOLUTIONS/
+// MIIKAERU_SKINS) sin cambios.
+const HERO_CHARACTERS = [
+  { id: "miikaeru", nombre: "Miikaeru", gallery: MIIKAERU_SKINS },
+  { id: "fesha", nombre: "Fesha", gallery: FESHA_EVOLUTIONS },
+  { id: "mijashi", nombre: "Mijashi", gallery: MIJASHI_EVOLUTIONS },
+  { id: "metatron", nombre: "Metatron", gallery: METATRON_GALLERY },
+  { id: "valeria", nombre: "Valeria", gallery: VALERIA_GALLERY },
+  { id: "metrakaela", nombre: "Metrakaela", gallery: METRAKAELA_GALLERY },
+  { id: "ateneea", nombre: "Ateneea", gallery: ATENEEA_GALLERY },
+  { id: "azathoth", nombre: "Azathoth", gallery: AZATHOTH_GALLERY },
+  { id: "demiure", nombre: "Demiure", gallery: DEMIURE_GALLERY },
+];
+
+// Clave i18n del subtítulo corto que se ve bajo cada nombre en la tarjeta
+// de Onboarding/pestaña "Personaje" — ver diccionario es/en/ja más abajo.
+const HERO_CHARACTER_TAG_KEYS = {
+  miikaeru: "heroSelectLion",
+  fesha: "characterSelectFemale",
+  mijashi: "characterSelectMale",
+  metatron: "heroSelectMetatron",
+  valeria: "heroSelectValeria",
+  metrakaela: "heroSelectMetrakaela",
+  ateneea: "heroSelectAteneea",
+  azathoth: "heroSelectAzathoth",
+  demiure: "heroSelectDemiure",
+};
 
 // La fase más alta que el nivel actual ya alcanza — mismo criterio de
 // "lo más reciente que ya desbloqueaste" que MIIKAERU_SKINS/Miika Pass.
@@ -5691,12 +5787,19 @@ function defaultState() {
     // guardada de quienes eligieron Fesha/Mijashi antes de que existiera
     // el Héroe unificado.
     playerCharacter: null,
-    // Héroe: "fesha" | "mijashi" | "miikaeru" | null (todavía no eligió,
-    // dispara openCharacterSelectModal() la próxima vez que se detecte —
-    // ver HERO_AVATAR_OPTIONS arriba). Es el campo que decide qué imagen
-    // se ve en el avatar del Header (#hero-open-btn) y el único
-    // reelegible libremente desde #hero-modal en cualquier momento.
+    // Héroe: id de cualquier HERO_CHARACTERS (ver arriba) | null (todavía
+    // no eligió, dispara openCharacterSelectModal() la próxima vez que se
+    // detecte). Es el campo que decide qué personaje se ve en el avatar
+    // del Header (#hero-open-btn) y el único reelegible libremente desde
+    // #hero-modal en cualquier momento.
     avatar: null,
+    // Foto específica DENTRO de la galería de `avatar` que está equipada
+    // en el Header ahora mismo (ver equippedHeroPhotoSrc() más abajo) —
+    // null hasta que se elige un Héroe por primera vez, momento en que
+    // chooseHeroAvatar() la fija en la primera foto (nivel 1) de su
+    // galería. El resto de las fotos empieza bloqueada y se desbloquea
+    // por Nivel, igual que MIIKAERU_SKINS.
+    avatarPhotoId: null,
     // Mock temporal: % de misiones completadas esta semana. Reemplazar por
     // un cálculo real (historial de pilares) cuando exista esa lógica.
     weeklyMissions: { completed: 3, total: 5 },
@@ -7580,6 +7683,34 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
+  // Datos crudos (sin DOM) para la pestaña "Skins" del Héroe (ver
+  // renderHeroSkinsTab más abajo) — funciona para CUALQUIER personaje de
+  // HERO_CHARACTERS, no solo Miikaeru: reemplaza getMiikaeruSkinsData()/
+  // getPlayerCharacterEvolutionData() de arriba como fuente única para
+  // ESA pestaña (esas dos funciones siguen existiendo tal cual porque
+  // storyEngine.js/el Modal de Lore las sigue usando para sus propias
+  // fichas de personaje — no son el mismo consumidor).
+  function getHeroCharacterGalleryData(characterId) {
+    const personaje = HERO_CHARACTERS.find((c) => c.id === characterId);
+    if (!personaje) return null;
+    const equippedId =
+      state.avatar === characterId && state.avatarPhotoId ? state.avatarPhotoId : personaje.gallery[0].id;
+    const fotos = personaje.gallery.map((foto) => ({
+      id: foto.id,
+      src: foto.src,
+      nivelRequerido: foto.nivelRequerido,
+      unlocked: skinUnlocked(foto, state.level),
+      equipada: state.avatar === characterId && equippedId === foto.id,
+    }));
+    return {
+      nombre: personaje.nombre,
+      esElElegido: state.avatar === characterId,
+      desbloqueadas: fotos.filter((f) => f.unlocked).length,
+      total: fotos.length,
+      fotos,
+    };
+  }
+
   // Puente hacia storyEngine.js, que vive fuera de este closure a
   // propósito (ver su propio comentario de cabecera) — el único
   // consumidor que queda es el botón "EQUIPAR SKIN" del lightbox de la
@@ -7596,13 +7727,15 @@ document.addEventListener("DOMContentLoaded", () => {
   // / "🧬 Mi Personaje" (y su fusión anterior dentro del Modal de Lore,
   // ya retirada): ahora hay un único punto de entrada, el avatar redondo
   // del Header (#hero-open-btn) que abre #hero-modal con dos pestañas —
-  // "🧬 Personaje" (elegir entre Fesha/Mijashi/Miikaeru, mínimo 3
-  // opciones pedidas explícitamente) y "🎭 Skins" (la grilla de skins de
-  // Miikaeru, MIIKAERU_SKINS, sin cambios en su desbloqueo por Nivel).
-  // `state.avatar` guarda cuál de los 3 se ve en el Header — separado de
-  // `state.playerCharacter` (que sigue rastreando la evolución de
-  // Fesha/Mijashi sin tocar esa mecánica) y de `state.selectedSkin` (el
-  // skin de Miikaeru elegido en la pestaña Skins).
+  // "🧬 Personaje" (elegir entre CUALQUIERA de los 9 de HERO_CHARACTERS,
+  // el elenco completo con imagen propia en assets/skins/) y "🎭 Skins"
+  // (la galería de fotos del personaje elegido, con desbloqueo por Nivel
+  // — ver getHeroCharacterGalleryData()). `state.avatar` guarda cuál de
+  // los 9 se ve en el Header y `state.avatarPhotoId` cuál de sus fotos —
+  // separado de `state.playerCharacter` (que sigue rastreando la
+  // evolución narrativa de Fesha/Mijashi sin tocar esa mecánica) y de
+  // `state.selectedSkin` (el skin del avatar HUD CENTRAL de Miikaeru,
+  // sistema totalmente aparte).
 
   // ---- Overrides de foto por personaje (Panel de Administrador → 📸 Fotos) ----
   // Fuente de verdad local-first: localStorage refleja al instante en la
@@ -7628,11 +7761,36 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem(HERO_AVATAR_OVERRIDES_KEY, JSON.stringify(overrides));
   }
 
+  // Foto REPRESENTATIVA de un personaje (Onboarding / pestaña "Personaje"
+  // / Panel de Administrador → 📸 Fotos) — el override del Admin, si
+  // existe, o la primera foto (nivel 1, siempre desbloqueada) de su
+  // galería. NO es necesariamente la foto que el Operador tiene
+  // equipada ahora mismo en el Header (ver equippedHeroPhotoSrc más
+  // abajo, que sí respeta state.avatarPhotoId).
   function heroAvatarSrc(characterId) {
     const overrides = loadHeroAvatarOverrides();
     if (overrides[characterId]) return overrides[characterId];
-    const opcion = HERO_AVATAR_OPTIONS.find((o) => o.id === characterId);
-    return opcion ? opcion.defaultSrc : null;
+    const personaje = HERO_CHARACTERS.find((c) => c.id === characterId);
+    return personaje ? personaje.gallery[0].src : null;
+  }
+
+  // Foto EQUIPADA en el Header (#hero-open-btn) — respeta
+  // state.avatarPhotoId dentro de la galería del personaje elegido
+  // (state.avatar), con 2 salvaguardas: si esa foto todavía no está
+  // desbloqueada por Nivel (p.ej. el Admin bajó el nivel de alguien, o
+  // el dato quedó desincronizado) o si no hay ninguna elegida, cae a la
+  // foto representativa de heroAvatarSrc() (que ya prioriza el override
+  // del Admin sobre la galería).
+  function equippedHeroPhotoSrc() {
+    if (!state.avatar) return null;
+    const overrides = loadHeroAvatarOverrides();
+    if (overrides[state.avatar]) return overrides[state.avatar];
+    const personaje = HERO_CHARACTERS.find((c) => c.id === state.avatar);
+    if (!personaje) return null;
+    const equipada =
+      state.avatarPhotoId &&
+      personaje.gallery.find((foto) => foto.id === state.avatarPhotoId && skinUnlocked(foto, state.level));
+    return equipada ? equipada.src : personaje.gallery[0].src;
   }
 
   function syncHeroAvatarOverrideToSupabase(characterId, url) {
@@ -7667,7 +7825,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ---- Header: avatar del Héroe (centro de identidad, #hero-open-btn) ----
   function renderHeaderHeroAvatar() {
     if (!hudHeroAvatarImg) return;
-    const src = state.avatar ? heroAvatarSrc(state.avatar) : null;
+    const src = equippedHeroPhotoSrc();
     if (src) {
       hudHeroAvatarImg.src = src;
       hudHeroAvatarImg.hidden = false;
@@ -7676,24 +7834,45 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // ---- Onboarding: elegir avatar inicial (Fesha/Mijashi/Miikaeru) ----
+  // ---- Onboarding: elegir avatar inicial (elenco completo) ----
   // openCharacterSelectModal() se llama la primera vez que el Operador
   // entra y no tiene `state.avatar` todavía (ver onMasterAuthSuccess()/
   // registrationForm más abajo) — sin botón de cerrar, es una elección
   // obligatoria la primera vez; después es reelegible libremente desde
-  // #hero-modal.
+  // #hero-modal. Las tarjetas se arman 100% en JS dentro de la grilla
+  // vacía #character-select-grid (ver index.html) en vez de ids fijos
+  // por personaje — así HERO_CHARACTERS puede crecer sin tocar el HTML.
   const characterSelectModal = document.getElementById("character-select-modal");
-  const characterSelectCards = {
-    fesha: document.getElementById("character-select-fesha"),
-    mijashi: document.getElementById("character-select-mijashi"),
-    miikaeru: document.getElementById("character-select-miikaeru"),
-  };
+  const characterSelectGrid = document.getElementById("character-select-grid");
 
   function renderCharacterSelectCards() {
-    HERO_AVATAR_OPTIONS.forEach((opcion) => {
-      const card = characterSelectCards[opcion.id];
-      const img = card && card.querySelector("img");
-      if (img) img.src = heroAvatarSrc(opcion.id);
+    if (!characterSelectGrid) return;
+    characterSelectGrid.innerHTML = "";
+    HERO_CHARACTERS.forEach((opcion) => {
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className = "character-select-card";
+
+      const img = document.createElement("img");
+      img.src = heroAvatarSrc(opcion.id);
+      img.alt = opcion.nombre;
+      card.appendChild(img);
+
+      const name = document.createElement("span");
+      name.className = "character-select-card__name";
+      name.textContent = opcion.nombre;
+      card.appendChild(name);
+
+      const tagKey = HERO_CHARACTER_TAG_KEYS[opcion.id];
+      if (tagKey) {
+        const tag = document.createElement("span");
+        tag.className = "character-select-card__tag";
+        tag.textContent = t(tagKey);
+        card.appendChild(tag);
+      }
+
+      card.addEventListener("click", () => chooseHeroAvatar(opcion.id));
+      characterSelectGrid.appendChild(card);
     });
   }
 
@@ -7704,22 +7883,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function chooseHeroAvatar(idPersonaje) {
     state.avatar = idPersonaje;
+    // La foto equipada arranca siempre en la primera de la galería
+    // (nivel 1, siempre desbloqueada) — el Operador puede equipar
+    // cualquier otra ya desbloqueada desde la pestaña "Skins" del Héroe.
+    const personaje = HERO_CHARACTERS.find((c) => c.id === idPersonaje);
+    state.avatarPhotoId = personaje ? personaje.gallery[0].id : null;
     // Fesha/Mijashi siguen alimentando la mecánica de evolución existente
-    // (PLAYER_CHARACTERS/faseActualPersonaje) — Miikaeru no tiene esa
-    // mecánica, solo se guarda como avatar del Header.
+    // (PLAYER_CHARACTERS/faseActualPersonaje) — el resto del elenco no
+    // tiene esa mecánica, solo se guarda como avatar del Header.
     if (idPersonaje === "fesha" || idPersonaje === "mijashi") state.playerCharacter = idPersonaje;
     persist();
     if (characterSelectModal) characterSelectModal.hidden = true;
     closeHeroModal();
     renderHeaderHeroAvatar();
-    const opcion = HERO_AVATAR_OPTIONS.find((o) => o.id === idPersonaje);
-    setAvatarSpeech(`${opcion ? opcion.nombre : "Tu Héroe"} despierta contigo.`);
+    setAvatarSpeech(`${personaje ? personaje.nombre : "Tu Héroe"} despierta contigo.`);
     playAvatarEmote("welcome", 3000);
   }
-
-  Object.entries(characterSelectCards).forEach(([id, btn]) => {
-    if (btn) btn.addEventListener("click", () => chooseHeroAvatar(id));
-  });
 
   // ---- #hero-modal: hub único (pestañas "Personaje" + "Skins") ----
   const heroOpenBtn = document.getElementById("hero-open-btn");
@@ -7752,7 +7931,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderHeroCharacterTab() {
     if (!heroCharacterGrid) return;
     heroCharacterGrid.innerHTML = "";
-    HERO_AVATAR_OPTIONS.forEach((opcion) => {
+    HERO_CHARACTERS.forEach((opcion) => {
       const card = document.createElement("button");
       card.type = "button";
       card.className = "hero-character-card" + (state.avatar === opcion.id ? " hero-character-card--active" : "");
@@ -7767,49 +7946,67 @@ document.addEventListener("DOMContentLoaded", () => {
       name.textContent = opcion.nombre;
       card.appendChild(name);
 
-      if (opcion.id === "fesha" || opcion.id === "mijashi") {
-        const evolucion = getPlayerCharacterEvolutionData(opcion.id);
-        const faseActual = evolucion && evolucion.fases.find((f) => f.id === evolucion.faseActualId);
-        if (faseActual) {
-          const tag = document.createElement("span");
-          tag.className = "hero-character-card__tag";
-          tag.textContent = faseActual.titulo;
-          card.appendChild(tag);
-        }
+      const galeria = getHeroCharacterGalleryData(opcion.id);
+      if (galeria && galeria.total > 1) {
+        const tag = document.createElement("span");
+        tag.className = "hero-character-card__tag";
+        tag.textContent = t("heroCharacterUnlockedCount")
+          .replace("{unlocked}", galeria.desbloqueadas)
+          .replace("{total}", galeria.total);
+        card.appendChild(tag);
       }
 
       card.addEventListener("click", () => {
         chooseHeroAvatar(opcion.id);
         renderHeroCharacterTab();
+        renderHeroSkinsTab();
       });
       heroCharacterGrid.appendChild(card);
     });
   }
 
+  // Pestaña "Skins" del Héroe: SIEMPRE muestra la galería del personaje
+  // ACTUALMENTE elegido como avatar (state.avatar), no siempre Miikaeru
+  // como antes — así "las demás fotos del personaje elegido empiezan
+  // bloqueadas y se desbloquean por Nivel" (pedido explícito) funciona
+  // para cualquiera de los 9. Equipar una foto acá solo cambia la foto
+  // del Header (state.avatarPhotoId) — el skin del avatar HUD central de
+  // Miikaeru (state.selectedSkin) es un sistema aparte, sin tocar (ver
+  // MiikaeruSkinAPI/equipGallerySkin en el Modal de Lore).
   function renderHeroSkinsTab() {
     if (!heroSkinsGrid) return;
+    const heroSkinsTabTitle = document.getElementById("hero-skins-tab-title");
+    const galeria = state.avatar ? getHeroCharacterGalleryData(state.avatar) : null;
+    if (heroSkinsTabTitle) {
+      heroSkinsTabTitle.textContent = galeria
+        ? t("heroSkinsOfTemplate").replace("{name}", galeria.nombre)
+        : "";
+    }
     heroSkinsGrid.innerHTML = "";
-    getMiikaeruSkinsData().forEach((skin) => {
+    if (!galeria) return;
+    galeria.fotos.forEach((foto) => {
       const card = document.createElement("button");
       card.type = "button";
       card.className =
-        "skin-card" + (skin.unlocked ? "" : " skin-card--locked") + (skin.selected ? " skin-card--selected" : "");
+        "skin-card" + (foto.unlocked ? "" : " skin-card--locked") + (foto.equipada ? " skin-card--selected" : "");
       const img = document.createElement("img");
-      img.src = skin.src;
-      img.alt = skin.id;
+      img.src = foto.src;
+      img.alt = foto.id;
       img.loading = "lazy";
       img.onerror = () => {
         card.style.display = "none";
       };
       card.appendChild(img);
-      if (!skin.unlocked) {
+      if (!foto.unlocked) {
         const lock = document.createElement("div");
         lock.className = "skin-card__lock";
-        lock.innerHTML = `<span>🔒</span><span>Nv. ${skin.nivelRequerido}</span>`;
+        lock.innerHTML = `<span>🔒</span><span>Nv. ${foto.nivelRequerido}</span>`;
         card.appendChild(lock);
       } else {
         card.addEventListener("click", () => {
-          selectSkin(skin.id);
+          state.avatarPhotoId = foto.id;
+          persist();
+          renderHeaderHeroAvatar();
           renderHeroSkinsTab();
         });
       }
@@ -7845,17 +8042,18 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // ---- Panel de Administrador → pestaña "📸 Fotos" ----
-  // Infraestructura lista para que el Admin reemplace cualquiera de las
-  // 3 fotos predeterminadas por una URL propia — instantáneo en Onboarding/
-  // #hero-modal/Header de esta pestaña (localStorage) y best-effort hacia
-  // Supabase para los demás dispositivos (ver funciones de arriba).
+  // Infraestructura lista para que el Admin reemplace la foto
+  // representativa de cualquiera de los 9 personajes de HERO_CHARACTERS
+  // por una URL propia — instantáneo en Onboarding/#hero-modal/Header
+  // (localStorage) y best-effort hacia Supabase para los demás
+  // dispositivos (ver funciones de arriba).
   const adminPhotosRows = document.getElementById("admin-photos-rows");
 
   function renderAdminPhotosTab() {
     if (!adminPhotosRows) return;
     adminPhotosRows.innerHTML = "";
     const overrides = loadHeroAvatarOverrides();
-    HERO_AVATAR_OPTIONS.forEach((opcion) => {
+    HERO_CHARACTERS.forEach((opcion) => {
       const row = document.createElement("div");
       row.className = "admin-photos-row";
 

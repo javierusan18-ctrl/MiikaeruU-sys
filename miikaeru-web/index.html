@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260808-2" />
+  <link rel="stylesheet" href="style.css?v=20260808-3" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -2331,45 +2331,32 @@
        un perfil viejo todavía no eligió) — sin botón de cerrar a
        propósito: es una elección, no un aviso descartable. Elegir uno
        queda guardado en `state.avatar` para siempre (reelegible después
-       desde #hero-modal). Las 3 imágenes se resuelven en JS
-       (renderCharacterSelectCards()) para poder reflejar al instante
-       cualquier URL que el Admin haya cargado en el Panel de
-       Administrador → 📸 Fotos — los `src` de acá abajo son solo el
-       placeholder inicial antes de que ese script corra. -->
+       desde #hero-modal). El elenco completo (HERO_CHARACTERS en app.js,
+       todos los personajes con imagen propia en assets/skins/) se arma
+       100% en JS (renderCharacterSelectCards()) dentro de la grilla
+       vacía de abajo — así puede crecer sin tocar este HTML de nuevo y
+       reflejar al instante cualquier URL que el Admin haya cargado en el
+       Panel de Administrador → 📸 Fotos. max-height+overflow porque 9
+       tarjetas no entran siempre en una pantalla chica. -->
   <div class="modal-overlay" id="character-select-modal" hidden>
     <div class="modal glass modal--character-select">
       <div class="panel__header">
         <h2 data-i18n="characterSelectTitle">🧬 Elige tu Avatar Inicial</h2>
         <span class="panel__tag" data-i18n="characterSelectSubtitle">evolucionará contigo, nivel a nivel</span>
       </div>
-      <div class="character-select-grid">
-        <button type="button" class="character-select-card" id="character-select-fesha">
-          <img src="assets/skins/Mascotas/mikaeru_skin_cachorro_dormido.png" alt="Fesha" />
-          <span class="character-select-card__name">Fesha</span>
-          <span class="character-select-card__tag" data-i18n="characterSelectFemale">Mellizo Femenino</span>
-        </button>
-        <button type="button" class="character-select-card" id="character-select-mijashi">
-          <img src="assets/skins/Mascotas/mikaeru_skin_cachorro_galactico.png" alt="Mijashi" />
-          <span class="character-select-card__name">Mijashi</span>
-          <span class="character-select-card__tag" data-i18n="characterSelectMale">Mellizo Masculino</span>
-        </button>
-        <button type="button" class="character-select-card" id="character-select-miikaeru">
-          <img src="assets/skins/Miikaeruu/mikaeru_idle_chakras.png" alt="Miikaeru" />
-          <span class="character-select-card__name">Miikaeru</span>
-          <span class="character-select-card__tag" data-i18n="heroSelectLion">Guía del Núcleo</span>
-        </button>
-      </div>
+      <div class="character-select-grid" id="character-select-grid"></div>
     </div>
   </div>
 
   <!-- MODAL: HÉROE — hub único de identidad del Operador (pedido
        explícito de "centro de la identidad del usuario"). Reemplaza los
        antiguos modales/botones separados "🎭 Skins del León" / "🧬 Mi
-       Personaje": 2 pestañas, "Personaje" (reelegir entre Fesha/Mijashi/
-       Miikaeru, HERO_AVATAR_OPTIONS en app.js) y "Skins" (la grilla de
-       MIIKAERU_SKINS de siempre, reutiliza .skins-grid/.skin-card tal
-       cual). Se abre desde el avatar redondo del Header (#hero-open-btn,
-       ver arriba) — ver openHeroModal()/showHeroTab() en app.js. -->
+       Personaje": 2 pestañas, "Personaje" (reelegir entre cualquiera de
+       HERO_CHARACTERS en app.js) y "Skins" (galería de fotos del
+       personaje actualmente elegido, con desbloqueo por Nivel — reutiliza
+       .skins-grid/.skin-card tal cual). Se abre desde el avatar redondo
+       del Header (#hero-open-btn, ver arriba) — ver
+       openHeroModal()/showHeroTab() en app.js. -->
   <div class="modal-overlay" id="hero-modal" hidden>
     <div class="modal glass modal--hero">
       <button type="button" class="btn-modal-close" id="hero-modal-close" aria-label="Cerrar">✕</button>
@@ -2384,6 +2371,7 @@
         <div class="hero-character-grid" id="hero-character-grid"></div>
       </div>
       <div id="hero-tab-skins" hidden>
+        <span class="panel__tag" id="hero-skins-tab-title"></span>
         <div class="skins-grid" id="hero-skins-grid"></div>
       </div>
     </div>
@@ -2867,7 +2855,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260808-2"></script>
+  <script src="app.js?v=20260808-3"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de
@@ -2879,7 +2867,7 @@
        aparte, mismo patrón que MiikaeruHub, cargado después de app.js
        porque app.js llama a window.MiikaeruStoryEngine desde el click
        del avatar/León. -->
-  <script src="storyEngine.js?v=20260808-2"></script>
+  <script src="storyEngine.js?v=20260808-3"></script>
   <!-- Service Worker: estrategia Cache First para assets estáticos (ver
        sw.js) — carga instantánea en visitas repetidas y funcionamiento
        offline. Registro envuelto en try/catch + comprobación de

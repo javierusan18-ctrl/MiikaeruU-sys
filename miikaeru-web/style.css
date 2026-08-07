@@ -7898,14 +7898,17 @@ textarea,
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
 }
 
-/* Selección de Avatar Inicial (Fesha/Mijashi/Miikaeru — mínimo 3
-   opciones pedidas explícitamente), sin botón de cerrar en el modal (ver
-   comentario en index.html: es una elección obligatoria la primera vez,
-   no un aviso descartable). auto-fit en vez de un grid fijo de 2/3
-   columnas: en mobile angosto las 3 tarjetas caen solas a una columna
-   sin necesitar un breakpoint aparte. */
+/* Selección de Avatar Inicial (elenco completo, HERO_CHARACTERS en
+   app.js), sin botón de cerrar en el modal (ver comentario en
+   index.html: es una elección obligatoria la primera vez, no un aviso
+   descartable). auto-fit en vez de un grid fijo de columnas: en mobile
+   angosto las tarjetas caen solas a una columna sin necesitar un
+   breakpoint aparte. max-height+overflow-y: con 9 tarjetas ya no entran
+   siempre en una sola pantalla, sobre todo en mobile. */
 .modal--character-select {
   max-width: 620px;
+  max-height: 85vh;
+  overflow-y: auto;
   text-align: center;
 }
 
