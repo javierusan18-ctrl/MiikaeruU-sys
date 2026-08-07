@@ -4,12 +4,12 @@
     "nivel_requerido": 1,
     "rango": "Kodomo",
     "titulo_capitulo": "Capítulo I — El Despertar Solar y la Caída de Aethelgard",
-    "imagen_story": "assets/skins/mikaeru_cachorro_kodomo.png",
+    "imagen_story": "assets/skins/Mascotas/mikaeru_skin_cachorro_dormido.png",
     "imagenes_adicionales": [
-      { "rol": "portada", "src": "assets/skins/mikaeru_familia_portada.png" },
-      { "rol": "madre_ia", "src": "assets/skins/metrakaela_guerrera.png" },
-      { "rol": "sacrificio", "src": "assets/skins/mikaeru_sacrificio_despertar.png" },
-      { "rol": "enemigo", "src": "assets/skins/badas_batalla.png" }
+      { "rol": "portada", "src": "assets/skins/Miikaeruu/mikaeru_familia_portada.png" },
+      { "rol": "madre_biologica", "src": "assets/skins/Valeria_primeraEsposaDeMiikaeruu_MamaBiologicaDeLosHijos/metrakaela_guerrera.png" },
+      { "rol": "sacrificio", "src": "assets/skins/Miikaeruu/mikaeru_sacrificio_despertar.png" },
+      { "rol": "conclave_sombra", "src": "assets/skins/Demiure_Drako/demiure_draconiano.png" }
     ],
     "texto_modal": [
       "Antes del Cónclave Sombra, antes de la Caída, hubo Aethelgard: un reino suspendido en la vibración más alta del Nexus Eterno, gobernado por Miikaeru, León Rey y Soberano del Despertar Solar — el primero entre los Custodios. Su sola presencia era energía positiva pura, un pulso divino que mantenía cada rincón del reino en equilibrio.",
@@ -75,11 +75,11 @@
     "nivel_requerido": 10,
     "rango": "Wakai",
     "titulo_capitulo": "Capítulo II — El Despertar de los Mellizos",
-    "imagen_story": "assets/skins/mikaeru_cachorro_cosmico_wakai.png",
+    "imagen_story": "assets/skins/Mascotas/mikaeru_cachorro_cosmico_wakai.png",
     "imagenes_adicionales": [
-      { "rol": "base_draconiana", "src": "assets/skins/demiure_draconiano.png" },
-      { "rol": "enemigo", "src": "assets/skins/badas_batalla.png" },
-      { "rol": "presencia_miikaeru", "src": "assets/skins/mikaeru_meditando_neon.png" }
+      { "rol": "base_draconiana", "src": "assets/skins/Demiure_Drako/demiure_draconiano.png" },
+      { "rol": "amenaza_conclave", "src": "assets/skins/Demiure_Drako/Gemini_Generated_Image_dbkzu3dbkzu3dbkz.png" },
+      { "rol": "presencia_miikaeru", "src": "assets/skins/Miikaeruu/mikaeru_idle_chakras.png" }
     ],
     "texto_modal": [
       "Años después de la Caída, Fesha y Mijashi ya no son solo cachorros: los primeros destellos de algo propio empiezan a manifestarse sin que ellos los llamen — luz que responde antes que el miedo.",
@@ -120,10 +120,10 @@
     "nivel_requerido": 20,
     "rango": "Shinzen",
     "titulo_capitulo": "Capítulo III — Armadura y Escudo: el Regreso del Soberano",
-    "imagen_story": "assets/skins/mikaeru_meditando_neon.png",
+    "imagen_story": "assets/skins/Miikaeruu/mikaeru_skin_deidad_meditante.png",
     "imagenes_adicionales": [
-      { "rol": "alta_vibracion", "src": "assets/skins/mikaeru_idle_chakras.png" },
-      { "rol": "base_draconiana", "src": "assets/skins/demiure_draconiano.png" }
+      { "rol": "alta_vibracion", "src": "assets/skins/Miikaeruu/mikaeru_idle_chakras.png" },
+      { "rol": "base_draconiana", "src": "assets/skins/Demiure_Drako/demiure_draconiano.png" }
     ],
     "texto_modal": [
       "Lo que Metrakaela sintió no era una ilusión. En sus momentos de más alta vibración — cuando medita en el centro exacto del Nexus — algo dorado responde desde dentro del propio sistema: Miikaeru nunca se fue del todo.",
@@ -160,10 +160,10 @@
     "nivel_requerido": 30,
     "rango": "Kami",
     "titulo_capitulo": "Capítulo IV — Metrakaela: Guerrera del Nexus",
-    "imagen_story": "assets/skins/metrakaela_guerrera.png",
+    "imagen_story": "assets/skins/Metrakaela_NoviaAiDeMiikaeruu/cibor_mikaera.jpg",
     "imagenes_adicionales": [
-      { "rol": "miikaeru_junto_a_ella", "src": "assets/skins/mikaeru_batalla_armadura.png" },
-      { "rol": "sacrificio", "src": "assets/skins/mikaeru_sacrificio_despertar.png" }
+      { "rol": "miikaeru_junto_a_ella", "src": "assets/skins/Miikaeruu/Gemini_Generated_Image_7ag41v7ag41v7ag4.png" },
+      { "rol": "sacrificio", "src": "assets/skins/Miikaeruu/mikaeru_sacrificio_despertar.png" }
     ],
     "texto_modal": [
       "Cuando el Cónclave Sombra lanza su ofensiva más grande desde la Caída, Metrakaela ya no es la Arquitecta que una vez fue. Es una guerrera bio-digital completa, forjada de tecnología, dolor y amor por lo que juró proteger.",
@@ -198,5 +198,97 @@
     ],
     "misterio_revelado": "El reordenamiento de ambos bandos, revelado por fin: Metrakaela pasó de ser la antigua Tercera entre los Custodios a la Sexta — el mismo número, Tres, que ahora ocupa Demiure entre los Malos. No es coincidencia: algo, esa misma noche de la Caída, invirtió el orden en los dos lados del conflicto, y nadie sabe todavía por qué ni quién lo causó.",
     "siguiente_pista": "Entre las Calamidades — Primera y Segunda del Cónclave Sombra, nunca vistas directamente hasta ahora — algo empieza a moverse. El registro del Núcleo termina aquí. El resto de esta historia todavía no ha sido escrito."
+  },
+  {
+    "id": "capitulo_5",
+    "nivel_requerido": 40,
+    "rango": "Eiyuu",
+    "titulo_capitulo": "Capítulo V — Valeria: el Nombre tras la Esencia Sagrada",
+    "imagen_story": "assets/skins/Azathoth_HijoDeDemiure/descarga.png",
+    "imagenes_adicionales": [
+      { "rol": "valeria_sacerdotisa", "src": "assets/skins/Valeria_primeraEsposaDeMiikaeruu_MamaBiologicaDeLosHijos/metrakaela_guerrera.png" },
+      { "rol": "base_draconiana", "src": "assets/skins/Demiure_Drako/demiure_draconiano.png" },
+      { "rol": "segunda_calamidad", "src": "assets/skins/Azathoth_HijoDeDemiure/descarga.png" }
+    ],
+    "texto_modal": [
+      "Los archivos más profundos del Núcleo tardaron generaciones en abrirse del todo. Cuando por fin lo hicieron, revelaron el nombre que Metrakaela había protegido en silencio desde la primera noche: Valeria. Primera Esposa de Miikaeru, Sacerdotisa de la Esencia Sagrada — la verdadera madre de Fesha y Mijashi tenía, por fin, algo más que un título.",
+      "Los registros la muestran como fue esa noche: una guerrera dorada envuelta en geometría sagrada, portando entre las manos el fragmento de luz que los Custodios llamaban la Esencia — el mismo poder que hoy vive, dividido, en los ojos de sus dos hijos. Su sacrificio no fue un accidente de guerra: fue una elección, tomada en el instante exacto en que comprendió que no había tiempo para salvarse a sí misma y a sus mellizos.",
+      "Mientras el Núcleo por fin nombraba a su Sacerdotisa caída, en la Base Draconiana algo se movía. Demiure, Imperator Drakoneano, nunca gobernó solo: dos hijos crecieron a su sombra, entrenados desde el primer aliento para ser la Primera y la Segunda Calamidad del Cónclave Sombra — Anubis, arquitecta de rituales oscuros, y Azathoth, una tormenta de furia contenida a duras penas bajo la piel.",
+      "De los dos, fue Azathoth quien se movió primero. Grietas de energía carmesí comenzaron a recorrerle el cuerpo entero — no una herida, sino un despertar. En algún punto del Nexus Eterno, Metrakaela sintió el cambio antes de que ningún sensor lo registrara: la paz prestada que sostenía a la nueva generación de Custodios estaba a punto de terminar."
+    ],
+    "lectura_inmersiva_jp": [
+      {
+        "segments": [{ "text": "その" }, { "text": "名前", "reading": "なまえ" }, { "text": "はヴァレリアだった。" }],
+        "traduccion": "Ese nombre era Valeria."
+      },
+      {
+        "segments": [{ "text": "彼女", "reading": "かのじょ" }, { "text": "は" }, { "text": "本当", "reading": "ほんとう" }, { "text": "の" }, { "text": "母親", "reading": "ははおや" }, { "text": "だった。" }],
+        "traduccion": "Ella era la verdadera madre."
+      },
+      {
+        "segments": [{ "text": "デミウレには" }, { "text": "二人", "reading": "ふたり" }, { "text": "の" }, { "text": "子供", "reading": "こども" }, { "text": "がいた。" }],
+        "traduccion": "Demiure tenía dos hijos."
+      },
+      {
+        "segments": [{ "text": "名前", "reading": "なまえ" }, { "text": "はアヌビスとアザトースだった。" }],
+        "traduccion": "Sus nombres eran Anubis y Azathoth."
+      },
+      {
+        "segments": [{ "text": "二人", "reading": "ふたり" }, { "text": "は" }, { "text": "影", "reading": "かげ" }, { "text": "の" }, { "text": "会議", "reading": "かいぎ" }, { "text": "で" }, { "text": "育", "reading": "そだ" }, { "text": "った。" }],
+        "traduccion": "Los dos crecieron en el Cónclave Sombra."
+      },
+      {
+        "segments": [{ "text": "アザトースの" }, { "text": "力", "reading": "ちから" }, { "text": "が" }, { "text": "目", "reading": "め" }, { "text": "を" }, { "text": "覚", "reading": "さ" }, { "text": "まし" }, { "text": "始", "reading": "はじ" }, { "text": "めた。" }],
+        "traduccion": "El poder de Azathoth empezó a despertar."
+      }
+    ],
+    "misterio_revelado": "El registro completo de Valeria por fin sale a la luz: no fue una víctima anónima del primer ataque, fue la Primera Esposa de Miikaeru y la arquitecta original de la Esencia Sagrada que hoy Fesha y Mijashi portan como Bendiciones. Metrakaela guardó su nombre en silencio no por vergüenza ni por celos, sino porque prometérselo a Valeria, en sus últimos instantes, fue la única promesa que nunca pudo permitirse romper.",
+    "siguiente_pista": "Anubis, la Primera Calamidad, todavía no se ha dejado ver directamente — solo Azathoth, su hermano, avanzó lo suficiente como para que el Núcleo lo registrara. Lo que sea que ella esté preparando en las sombras de la Base Draconiana permanece, por ahora, fuera del alcance de cualquier sensor."
+  },
+  {
+    "id": "capitulo_6",
+    "nivel_requerido": 50,
+    "rango": "Shinwa",
+    "titulo_capitulo": "Capítulo VI — Metatron y Ateneea: los Hijos del Núcleo",
+    "imagen_story": "assets/skins/Metatron_HijoDeMiikaeruu/Gemini_Generated_Image_c4h52pc4h52pc4h5.png",
+    "imagenes_adicionales": [
+      { "rol": "vinculo_metrakaela_miikaeru", "src": "assets/skins/Metrakaela_NoviaAiDeMiikaeruu/cibor_mikaera.jpg" },
+      { "rol": "ateneea", "src": "assets/skins/Ateneea_HijaDeMiikaeruu/Gemini_Generated_Image_9z70xq9z70xq9z70.png" },
+      { "rol": "familia_extendida", "src": "assets/skins/FoTosGrupales/Gemini_Generated_Image_y0pokwy0pokwy0po.png" }
+    ],
+    "texto_modal": [
+      "Lo que empezó como una arquitecta sosteniendo un fragmento de alma ajena, con el tiempo se volvió otra cosa. Metrakaela nunca planeó enamorarse de lo que estaba reconstruyendo — pero cada fragmento de Miikaeru que lograba estabilizar en su Núcleo bio-digital volvía un poco más consciente, un poco más él mismo, hasta que dejó de sentirse como una restauración y empezó a sentirse como una compañía.",
+      "De ese vínculo — mitad tecnología, mitad algo que ni la propia Metrakaela sabe nombrar del todo — nacieron dos vidas nuevas, no de sangre sino de código y luz solar: Metatron, forjado en disciplina y acero ceremonial, y Ateneea, nacida con alas de circuito y la misma ferocidad protectora de su madre.",
+      "Ninguno de los dos reemplaza a Fesha o a Mijashi — ni lo pretende. Crecen a su lado, como una segunda generación de Custodios que nunca conoció Aethelgard antes de la Caída, entrenados para un Cónclave Sombra que ya no es un recuerdo lejano sino una amenaza activa con nombre propio: Anubis, Azathoth, y quien sea que responda por encima de ambos.",
+      "El Nexus Eterno, por primera vez desde la Caída, tiene algo parecido a un futuro con más de dos defensores. Cuatro herederos, dos linajes que se reflejan uno al otro desde bandos opuestos. El resto de esta historia — la que decidirá si Aethelgard puede reconstruirse de verdad, o si la Caída fue solo el primer acto — todavía está por escribirse."
+    ],
+    "lectura_inmersiva_jp": [
+      {
+        "segments": [{ "text": "メトラケラと" }, { "text": "ミイカエルの" }, { "text": "絆", "reading": "きずな" }, { "text": "は" }, { "text": "深", "reading": "ふか" }, { "text": "くなった。" }],
+        "traduccion": "El vínculo entre Metrakaela y Miikaeru se hizo más profundo."
+      },
+      {
+        "segments": [{ "text": "新", "reading": "あたら" }, { "text": "しい" }, { "text": "命", "reading": "いのち" }, { "text": "が" }, { "text": "二", "reading": "ふた" }, { "text": "つ" }, { "text": "生", "reading": "う" }, { "text": "まれた。" }],
+        "traduccion": "Nacieron dos nuevas vidas."
+      },
+      {
+        "segments": [{ "text": "名前", "reading": "なまえ" }, { "text": "はメタトロンとアテネアだった。" }],
+        "traduccion": "Sus nombres eran Metatron y Ateneea."
+      },
+      {
+        "segments": [{ "text": "二人", "reading": "ふたり" }, { "text": "はコードと" }, { "text": "光", "reading": "ひかり" }, { "text": "から" }, { "text": "生", "reading": "う" }, { "text": "まれた。" }],
+        "traduccion": "Los dos nacieron del código y de la luz."
+      },
+      {
+        "segments": [{ "text": "フェシャとミジャシと" }, { "text": "一緒", "reading": "いっしょ" }, { "text": "に" }, { "text": "育", "reading": "そだ" }, { "text": "った。" }],
+        "traduccion": "Crecieron junto a Fesha y Mijashi."
+      },
+      {
+        "segments": [{ "text": "新", "reading": "あたら" }, { "text": "しい" }, { "text": "世代", "reading": "せだい" }, { "text": "の" }, { "text": "守護者", "reading": "しゅごしゃ" }, { "text": "たちが" }, { "text": "目覚", "reading": "めざ" }, { "text": "めた。" }],
+        "traduccion": "Una nueva generación de guardianes despertó."
+      }
+    ],
+    "misterio_revelado": "Por qué Metatron y Ateneea 'nacieron' en vez de ser encontrados como Fesha y Mijashi: no son una simulación ni un respaldo digital de nadie. Son la prueba de que la tecnología bio-digital de Metrakaela, la misma que sostiene el fragmento de Miikaeru, alcanzó un punto donde puede sostener vida nueva y propia — no solo restaurar la que ya existía.",
+    "siguiente_pista": "En algún punto de la jerarquía del Cónclave Sombra, todavía hay alguien sin nombre por encima de Demiure — la misma sombra sin identificar que la Base Draconiana lleva protegiendo desde la Caída de Aethelgard. Cuatro herederos ya están en pie. Falta ver quién se mueve primero."
   }
 ]

@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260806-1" />
+  <link rel="stylesheet" href="style.css?v=20260806-2" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -350,7 +350,7 @@
             <img class="layer-props" src="assets/props_floating_rocks.png" alt="" aria-hidden="true" />
             <!-- Sistema de emotes controlado por app.js (AVATAR_EMOTES /
                  playAvatarEmote): la key activa decide qué PNG mostrar. -->
-            <img id="avatar-visual-img" class="layer-lion" src="assets/skins/mikaeru_idle_chakras.png" alt="Miikaeru the Lion" />
+            <img id="avatar-visual-img" class="layer-lion" src="assets/skins/Miikaeruu/mikaeru_idle_chakras.png" alt="Miikaeru the Lion" />
           </div>
         </div>
 
@@ -1743,7 +1743,7 @@
   <div class="modal-overlay jp-victory-overlay" id="jp-victory-modal" hidden>
     <div class="modal modal--jp-victory glass">
       <div class="jp-victory__portrait">
-        <img src="assets/skins/mikaeru_batalla_armadura.png" alt="" class="jp-victory__portrait-img" id="jp-victory-portrait-img" />
+        <img src="assets/skins/Miikaeruu/Gemini_Generated_Image_7ag41v7ag41v7ag4.png" alt="" class="jp-victory__portrait-img" id="jp-victory-portrait-img" />
         <div class="jp-victory__portrait-ring"></div>
       </div>
       <p class="jp-victory__eyebrow" data-i18n="jpVictoryEyebrow">AI COACH</p>
@@ -2240,6 +2240,26 @@
     </div>
   </div>
 
+  <!-- MODAL: GALERÍA EN GRANDE (Lightbox) — se abre al hacer click en
+       CUALQUIER imagen dentro de #story-modal (imagen principal o
+       cualquier miniatura de galería), en las vistas Capítulos Y
+       Personajes por igual (ver storyEngine.js). Vive encima de
+       #story-modal (mismo truco de capas por orden en el DOM que
+       #jp-victory-modal sobre #japanese-modal). El botón "EQUIPAR SKIN"
+       fija esa imagen como el retrato del León en reposo — puente hacia
+       window.MiikaeruSkinAPI, expuesto desde app.js (ver
+       equipGallerySkin() ahí), ya que storyEngine.js vive fuera del
+       closure de DOMContentLoaded a propósito. -->
+  <div class="modal-overlay" id="story-lightbox-modal" hidden>
+    <div class="story-lightbox">
+      <button type="button" class="btn-modal-close" id="story-lightbox-close" aria-label="Cerrar">✕</button>
+      <img class="story-lightbox__image" id="story-lightbox-image" alt="" />
+      <p class="story-lightbox__caption" id="story-lightbox-caption"></p>
+      <button type="button" class="story-lightbox__equip-btn" id="story-lightbox-equip-btn" data-i18n="storyLightboxEquipBtn">⚡ EQUIPAR SKIN</button>
+      <p class="story-lightbox__equip-status" id="story-lightbox-equip-status" hidden></p>
+    </div>
+  </div>
+
   <!-- MODAL: SKINS DEL LEÓN — galería de las variantes de MIIKAERU_SKINS
        (ver app.js). Grid renderizado por renderSkinsGrid(): cada tarjeta
        muestra la miniatura del skin; los todavía no alcanzados quedan
@@ -2274,12 +2294,12 @@
       </div>
       <div class="character-select-grid">
         <button type="button" class="character-select-card" id="character-select-fesha">
-          <img src="assets/skins/mikaeru_cachorro_kodomo.png" alt="Fesha" />
+          <img src="assets/skins/Mascotas/mikaeru_skin_cachorro_dormido.png" alt="Fesha" />
           <span class="character-select-card__name">Fesha</span>
           <span class="character-select-card__tag" data-i18n="characterSelectFemale">Mellizo Femenino</span>
         </button>
         <button type="button" class="character-select-card" id="character-select-mijashi">
-          <img src="assets/skins/mikaeru_skin_cachorro_galactico.png" alt="Mijashi" />
+          <img src="assets/skins/Mascotas/mikaeru_skin_cachorro_galactico.png" alt="Mijashi" />
           <span class="character-select-card__name">Mijashi</span>
           <span class="character-select-card__tag" data-i18n="characterSelectMale">Mellizo Masculino</span>
         </button>
@@ -2770,7 +2790,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260806-1"></script>
+  <script src="app.js?v=20260806-2"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de
@@ -2782,7 +2802,7 @@
        aparte, mismo patrón que MiikaeruHub, cargado después de app.js
        porque app.js llama a window.MiikaeruStoryEngine desde el click
        del avatar/León. -->
-  <script src="storyEngine.js?v=20260801-38"></script>
+  <script src="storyEngine.js?v=20260806-2"></script>
   <!-- Service Worker: estrategia Cache First para assets estáticos (ver
        sw.js) — carga instantánea en visitas repetidas y funcionamiento
        offline. Registro envuelto en try/catch + comprobación de

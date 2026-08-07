@@ -22,7 +22,7 @@
 // index.html (ver ese archivo) — subirlo a mano en cada deploy real
 // hace que `activate` borre el caché viejo y todo se vuelva a guardar
 // fresco, evitando que un celular se quede pegado en una versión vieja.
-const CACHE_NAME = "miikaeru-cache-v20260806-1";
+const CACHE_NAME = "miikaeru-cache-v20260806-2";
 
 const STATIC_ASSETS = [
   "./",
@@ -71,45 +71,36 @@ const STATIC_ASSETS = [
   // cuanto este .glb se agregue de verdad, la próxima instalación del SW
   // lo cachea solo, sin tocar código.
   "assets/models/leon_nivel1.glb",
-  // "Mikaeru skin" (assets/skins/) — arte real que reemplaza los 3 PNG
-  // placeholder anteriores (avatar_idle/avatar_meditating/avatar_boss_mode,
-  // ya no referenciados en ningún lado). Sirve tanto al avatar principal
-  // del HUD (ver AVATAR_STATE_ASSETS/AVATAR_EMOTES en app.js) como a las
-  // ilustraciones del Modal de Lore (ver data/storyData.json).
-  "assets/skins/mikaeru_idle_chakras.png",
-  "assets/skins/mikaeru_meditando_neon.png",
-  "assets/skins/mikaeru_batalla_armadura.png",
-  "assets/skins/mikaeru_familia_portada.png",
-  "assets/skins/mikaeru_sacrificio_despertar.png",
-  "assets/skins/demiure_draconiano.png",
-  "assets/skins/badas_batalla.png",
-  "assets/skins/mikaeru_cachorro_kodomo.png",
-  "assets/skins/mikaeru_cachorro_cosmico_wakai.png",
-  "assets/skins/metrakaela_guerrera.png",
-  // Retrato oficial de Metrakaela como madre de los leones (ver
-  // loreCharacters.json) + cría cósmica de Mijashi (ver
-  // MIJASHI_EVOLUTIONS en app.js) — ambos nuevos del Bloque 55.
-  "assets/skins/metrakaela_madre_rosas.png",
-  "assets/skins/mikaeru_skin_cachorro_galactico.png",
-  // Skins desbloqueables adicionales (ver MIIKAERU_SKINS en app.js /
-  // #skins-modal) — curadas de la misma carpeta "Mikaeru skin", todas
-  // retratos del propio León (se excluyen a propósito los de otros
-  // personajes, ya cacheados arriba solo para el Modal de Lore).
-  "assets/skins/mikaeru_skin_cristal_arcano.png",
-  "assets/skins/mikaeru_skin_cazador_neon.png",
-  "assets/skins/mikaeru_skin_cachorro_dormido.png",
-  "assets/skins/mikaeru_skin_soberano_estelar.png",
-  "assets/skins/mikaeru_skin_guardian_templo.png",
-  "assets/skins/mikaeru_skin_comandante_ejercito.png",
-  "assets/skins/mikaeru_skin_deidad_meditante.png",
-  "assets/skins/mikaeru_skin_heraldo_rugiente.png",
-  // Decoración del header del Modal de Lore (ver .story-modal__header-portrait
-  // en style.css) — estas 3 SÍ siguen sin existir todavía; degradan solas a
-  // un gradiente CSS mientras tanto, mismo "mejor esfuerzo" de arriba.
+  // "Mikaeru skin" (assets/skins/) — arte real, reorganizado por el
+  // usuario en subcarpetas por personaje (assets/skins/Miikaeruu/,
+  // Mascotas/, etc. — ver el resto de imágenes en cada carpeta, NO
+  // precacheadas acá a propósito: la Galería del Núcleo del Modal de
+  // Lore las pide bajo demanda y quedan cacheadas solas la primera vez
+  // que se ven, vía la regla genérica png/jpg del listener "fetch" más
+  // abajo). Acá solo se precachean los retratos de Miikaeru que hacen
+  // falta apenas arranca la app: el estado "idle" del avatar del HUD
+  // (ver AVATAR_STATE_ASSETS en app.js) y el set completo de
+  // MIIKAERU_SKINS (#skins-modal) para que el selector de skins funcione
+  // sin red incluso offline.
+  "assets/skins/Miikaeruu/mikaeru_idle_chakras.png",
+  "assets/skins/Miikaeruu/mikaeru_sacrificio_despertar.png",
+  "assets/skins/Miikaeruu/mikaeru_familia_portada.png",
+  "assets/skins/Miikaeruu/mikaeru_skin_cazador_neon.png",
+  "assets/skins/Miikaeruu/mikaeru_skin_guardian_templo.png",
+  "assets/skins/Miikaeruu/mikaeru_skin_soberano_estelar.png",
+  "assets/skins/Miikaeruu/mikaeru_skin_comandante_ejercito.png",
+  "assets/skins/Miikaeruu/mikaeru_skin_heraldo_rugiente.png",
+  "assets/skins/Miikaeruu/mikaeru_skin_deidad_meditante.png",
+  "assets/skins/Miikaeruu/Gemini_Generated_Image_7ag41v7ag41v7ag4.png",
+  "assets/skins/Mascotas/mikaeru_cachorro_cosmico_wakai.png",
+  "assets/skins/Mascotas/mikaeru_skin_cachorro_dormido.png",
+  "assets/skins/Mascotas/mikaeru_skin_cachorro_galactico.png",
+  // storyData.json/loreCharacters.json alimentan el Modal de Lore
+  // completo (capítulos + enciclopedia de Personajes, ver
+  // storyEngine.js) — el resto de las imágenes que referencian (Demiure,
+  // Metrakaela, Valeria, Metatron, Ateneea, Azathoth, Fotos Grupales...)
+  // se cachean solas al verse por primera vez, mismo criterio de arriba.
   "data/storyData.json",
-  // Enciclopedia de personajes de la vista "Personajes" del Modal de Lore
-  // (ver storyEngine.js) — mismas 10 imágenes de assets/skins/ de arriba,
-  // reutilizadas por rol; no agrega archivos nuevos aparte de este JSON.
   "data/loreCharacters.json",
   "assets/lion-base.png",
   "assets/mandala.png",

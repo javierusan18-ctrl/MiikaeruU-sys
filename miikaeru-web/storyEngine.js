@@ -98,7 +98,47 @@ const MiikaeruStoryEngine = (() => {
       readerPanel: document.getElementById("story-modal-reader-panel"),
       readerLines: document.getElementById("story-modal-reader-lines"),
       readerAuto: document.getElementById("story-modal-reader-auto"),
+      lightboxModal: document.getElementById("story-lightbox-modal"),
+      lightboxClose: document.getElementById("story-lightbox-close"),
+      lightboxImage: document.getElementById("story-lightbox-image"),
+      lightboxCaption: document.getElementById("story-lightbox-caption"),
+      lightboxEquipBtn: document.getElementById("story-lightbox-equip-btn"),
+      lightboxEquipStatus: document.getElementById("story-lightbox-equip-status"),
     };
+  }
+
+  // ---------------- Lightbox: ver en grande + Equipar Skin ----------------
+  // Click en CUALQUIER imagen de #story-modal (principal o miniatura de
+  // galería), en Capítulos o Personajes por igual, abre esta capa por
+  // encima del modal — pedido explícito de "al hacer clic en cualquier
+  // foto se abra un modal para verla en grande". "Equipar Skin" es un
+  // puente hacia window.MiikaeruSkinAPI (expuesto desde app.js, ver
+  // equipGallerySkin() ahí) — este archivo vive fuera del closure de
+  // DOMContentLoaded de app.js a propósito, así que no puede tocar
+  // `state` directo.
+  let lightboxSrcActual = null;
+
+  function actualizarBotonEquipar(refs) {
+    if (!refs.lightboxEquipBtn || !window.MiikaeruSkinAPI) return;
+    const equipado = window.MiikaeruSkinAPI.isGallerySkinEquipped(lightboxSrcActual);
+    refs.lightboxEquipBtn.textContent = equipado ? "✓ SKIN EQUIPADO" : "⚡ EQUIPAR SKIN";
+    refs.lightboxEquipBtn.classList.toggle("story-lightbox__equip-btn--equipped", equipado);
+    if (refs.lightboxEquipStatus) refs.lightboxEquipStatus.hidden = true;
+  }
+
+  function abrirLightbox(refs, src, caption) {
+    if (!refs.lightboxModal || !src) return;
+    lightboxSrcActual = src;
+    refs.lightboxImage.src = src;
+    refs.lightboxImage.alt = caption || "";
+    if (refs.lightboxCaption) refs.lightboxCaption.textContent = caption || "";
+    actualizarBotonEquipar(refs);
+    refs.lightboxModal.hidden = false;
+  }
+
+  function cerrarLightbox(refs) {
+    if (refs.lightboxModal) refs.lightboxModal.hidden = true;
+    lightboxSrcActual = null;
   }
 
   // Los listeners de cierre (X, botón, click fuera, Escape) y del selector
@@ -130,6 +170,38 @@ const MiikaeruStoryEngine = (() => {
     }
     if (refs.readerToggle) {
       refs.readerToggle.addEventListener("click", () => alternarLecturaInmersiva(refs));
+    }
+
+    // Lightbox: cierre (X, click fuera, Escape — comparte la tecla con el
+    // cierre del modal padre, ver más arriba) + el botón de Equipar.
+    if (refs.lightboxClose) refs.lightboxClose.addEventListener("click", () => cerrarLightbox(refs));
+    if (refs.lightboxModal) {
+      refs.lightboxModal.addEventListener("click", (event) => {
+        if (event.target === refs.lightboxModal) cerrarLightbox(refs);
+      });
+    }
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && refs.lightboxModal && !refs.lightboxModal.hidden) cerrarLightbox(refs);
+    });
+    if (refs.lightboxEquipBtn) {
+      refs.lightboxEquipBtn.addEventListener("click", () => {
+        if (!lightboxSrcActual || !window.MiikaeruSkinAPI) return;
+        window.MiikaeruSkinAPI.equipGallerySkin(lightboxSrcActual);
+        actualizarBotonEquipar(refs);
+        if (refs.lightboxEquipStatus) {
+          refs.lightboxEquipStatus.textContent = window.MiikaeruSkinAPI.isGallerySkinEquipped(lightboxSrcActual)
+            ? "¡Listo! Tu León ya luce este retrato."
+            : "Skin retirado — el León vuelve a su carrusel de siempre.";
+          refs.lightboxEquipStatus.hidden = false;
+        }
+      });
+    }
+
+    // Click en la imagen principal (portada del capítulo o retrato del
+    // personaje) también abre el lightbox — no solo las miniaturas.
+    if (refs.imagen) {
+      refs.imagen.style.cursor = "zoom-in";
+      refs.imagen.addEventListener("click", () => abrirLightbox(refs, imagenPrincipalSrcActual, refs.imagen.alt));
     }
 
     listenersListos = true;
@@ -214,11 +286,35 @@ const MiikaeruStoryEngine = (() => {
     return desbloqueados.reduce((mejor, capitulo) => (capitulo.nivel_requerido > mejor.nivel_requerido ? capitulo : mejor));
   }
 
+  // Ruta RELATIVA (tal como viene de storyData.json/loreCharacters.json)
+  // de lo que #story-modal-image muestra ahora mismo — separada del
+  // `.src` real del <img>, que el navegador siempre resuelve a una URL
+  // absoluta (http://host/assets/...). El click en la imagen principal
+  // (ver asegurarListeners) usa esta variable para abrir el lightbox, así
+  // el souvenir que equipGallerySkin() guarda en state.selectedSkin
+  // siempre es una ruta relativa portable — igual que cuando se abre
+  // desde una miniatura de galería, que ya recibe la ruta relativa
+  // directo del JSON.
+  let imagenPrincipalSrcActual = null;
+
   // Fallback de imagen: onerror oculta la imagen sola sin romper el
   // layout del modal, mismo criterio de "mejor esfuerzo" que ya usa
   // initAvatar3D() con el .glb del avatar de escritorio. Compartida entre
   // la imagen principal y los clicks de la galería, en ambas vistas.
   function fijarImagenPrincipal(refs, src, textoAlt) {
+    imagenPrincipalSrcActual = src || null;
+    // Guarda contra src vacío/ausente (ej. un Personaje todavía sin
+    // retrato propio, como Anubis en loreCharacters.json): asignar
+    // `img.src = ""` recarga el documento actual como imagen en algunos
+    // navegadores en vez de simplemente no mostrar nada — mejor cortar
+    // acá y ocultar el elemento, mismo criterio "mejor esfuerzo" que el
+    // resto del módulo.
+    if (!src) {
+      refs.imagen.removeAttribute("src");
+      refs.imagen.hidden = true;
+      refs.imagen.alt = "";
+      return;
+    }
     refs.imagen.onerror = () => {
       refs.imagen.hidden = true;
     };
@@ -241,7 +337,14 @@ const MiikaeruStoryEngine = (() => {
       miniatura.onerror = () => {
         miniatura.style.display = "none";
       };
-      miniatura.addEventListener("click", () => fijarImagenPrincipal(refs, extra.src, extra.rol || tituloAltFallback));
+      // Click: ver en grande directo (pedido explícito de "cualquier
+      // foto"), Y de paso deja la imagen principal en sincro con lo que
+      // se acaba de ver — mismo comportamiento de siempre + el lightbox
+      // nuevo encima.
+      miniatura.addEventListener("click", () => {
+        fijarImagenPrincipal(refs, extra.src, extra.rol || tituloAltFallback);
+        abrirLightbox(refs, extra.src, extra.rol || tituloAltFallback);
+      });
       refs.galeria.appendChild(miniatura);
     });
   }

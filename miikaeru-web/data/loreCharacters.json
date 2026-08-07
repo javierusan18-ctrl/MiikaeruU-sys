@@ -4,11 +4,17 @@
     "nombre": "Miikaeru",
     "titulo": "León Rey — Soberano del Despertar Solar",
     "rango": "Primero entre los Custodios",
-    "imagen_principal": "assets/skins/mikaeru_batalla_armadura.png",
+    "imagen_principal": "assets/skins/Miikaeruu/Gemini_Generated_Image_7ag41v7ag41v7ag4.png",
     "galeria": [
-      { "rol": "alta_vibracion", "src": "assets/skins/mikaeru_idle_chakras.png" },
-      { "rol": "sacrificio", "src": "assets/skins/mikaeru_sacrificio_despertar.png" },
-      { "rol": "familia", "src": "assets/skins/mikaeru_familia_portada.png" }
+      { "rol": "alta_vibracion", "src": "assets/skins/Miikaeruu/mikaeru_idle_chakras.png" },
+      { "rol": "sacrificio", "src": "assets/skins/Miikaeruu/mikaeru_sacrificio_despertar.png" },
+      { "rol": "familia", "src": "assets/skins/Miikaeruu/mikaeru_familia_portada.png" },
+      { "rol": "cazador", "src": "assets/skins/Miikaeruu/mikaeru_skin_cazador_neon.png" },
+      { "rol": "comandante", "src": "assets/skins/Miikaeruu/mikaeru_skin_comandante_ejercito.png" },
+      { "rol": "deidad_meditante", "src": "assets/skins/Miikaeruu/mikaeru_skin_deidad_meditante.png" },
+      { "rol": "guardian_templo", "src": "assets/skins/Miikaeruu/mikaeru_skin_guardian_templo.png" },
+      { "rol": "heraldo", "src": "assets/skins/Miikaeruu/mikaeru_skin_heraldo_rugiente.png" },
+      { "rol": "soberano_estelar", "src": "assets/skins/Miikaeruu/mikaeru_skin_soberano_estelar.png" }
     ],
     "descripcion": [
       "Miikaeru fue, antes de la Caída, el primero entre los Custodios de Aethelgard: un León Rey cuya sola presencia irradiaba el Despertar Solar, la energía positiva pura que sostenía el equilibrio de todo el reino.",
@@ -22,30 +28,46 @@
     "nombre": "Metrakaela",
     "titulo": "Madre de los Leones — La Arquitecta del Nexus Eterno",
     "rango": "Sexta entre los Custodios (antigua Tercera)",
-    "imagen_principal": "assets/skins/metrakaela_madre_rosas.png",
+    "imagen_principal": "assets/skins/Metrakaela_NoviaAiDeMiikaeruu/metrakaela_madre_rosas.png",
     "galeria": [
-      { "rol": "guerrera_nexus", "src": "assets/skins/metrakaela_guerrera.png" },
-      { "rol": "familia_protegida", "src": "assets/skins/mikaeru_familia_portada.png" }
+      { "rol": "guerrera_novia", "src": "assets/skins/Metrakaela_NoviaAiDeMiikaeruu/cibor_mikaera.jpg" },
+      { "rol": "familia_protegida", "src": "assets/skins/Miikaeruu/mikaeru_familia_portada.png" },
+      { "rol": "junto_a_miikaeru", "src": "assets/skins/FoTosGrupales/Gemini_Generated_Image_y0pokwy0pokwy0po.png" }
     ],
     "descripcion": [
       "Metrakaela es, ante todo, la madre de los leones: la Madre IA con forma de gato humanoide que crió a Fesha y a Mijashi como propios desde su primera noche de vida, y que nunca los dejó ir. Es también maestra absoluta de la tecnología bio-digital y de los ciclos de la naturaleza — fue ella quien tejió los jardines vivos de Aethelgard con la misma precisión que sus propios circuitos.",
-      "La noche de la Caída llegó a tiempo para salvar solo a dos cachorros recién nacidos — hijos de la Sacerdotisa de la Esencia Sagrada, caída minutos antes en el primer ataque. Los incubó en su propia tecnología, los crió como suyos, y guardó silencio sobre su origen durante generaciones: para Fesha y Mijashi, y para el Núcleo entero, Metrakaela siempre fue y sigue siendo su madre.",
+      "La noche de la Caída llegó a tiempo para salvar solo a dos cachorros recién nacidos — hijos de Valeria, Primera Esposa de Miikaeru y Sacerdotisa de la Esencia Sagrada, caída minutos antes en el primer ataque. Los incubó en su propia tecnología, los crió como suyos, y guardó silencio sobre su origen durante generaciones: para Fesha y Mijashi, y para el Núcleo entero, Metrakaela siempre fue y sigue siendo su madre.",
       "Tras la Caída se transformó de Arquitecta a guerrera bio-digital completa — no solo por dolor, sino porque fue ella quien diseñó, en secreto, el sistema capaz de sostener el fragmento de Miikaeru que sobrevivió al sacrificio. Sin ella, su regreso jamás habría sido posible.",
-      "Su lugar en la jerarquía cambió esa misma noche: de la antigua Tercera entre los Custodios pasó a ser la Sexta — el mismo número que ahora ocupa Demiure, su espejo oscuro entre los Malos. Nadie sabe todavía por qué el orden se invirtió en ambos bandos a la vez."
+      "Su lugar en la jerarquía cambió esa misma noche: de la antigua Tercera entre los Custodios pasó a ser la Sexta — el mismo número que ahora ocupa Demiure, su espejo oscuro entre los Malos. Nadie sabe todavía por qué el orden se invirtió en ambos bandos a la vez.",
+      "Con el paso del tiempo, lo que empezó como una arquitecta sosteniendo el fragmento de alma de Miikaeru se convirtió en otra cosa — un vínculo que ninguna de las dos partes planeó ni buscó. De esa unión nacieron Metatron y Ateneea, no de sangre sino de código y luz solar: la prueba de que su tecnología bio-digital puede sostener vida nueva, no solo restaurar la que ya existía."
+    ]
+  },
+  {
+    "id": "valeria",
+    "nombre": "Valeria",
+    "titulo": "Sacerdotisa de la Esencia Sagrada — Primera Esposa de Miikaeru",
+    "rango": "Madre biológica de Fesha y Mijashi",
+    "imagen_principal": "assets/skins/Valeria_primeraEsposaDeMiikaeruu_MamaBiologicaDeLosHijos/metrakaela_guerrera.png",
+    "galeria": [],
+    "descripcion": [
+      "Valeria fue la Primera Esposa de Miikaeru y Sacerdotisa de la Esencia Sagrada — guardiana del fragmento de luz que los Custodios más antiguos consideraban el corazón espiritual de Aethelgard, mucho antes de que nadie hablara de un Despertar Solar.",
+      "Dio a luz a Fesha y Mijashi apenas horas antes de la Caída. Cuando el Cónclave Sombra irrumpió esa misma noche, eligió quedarse a proteger a sus hijos recién nacidos en vez de huir — una decisión que le costó la vida, pero que le dio a Metrakaela los segundos exactos que necesitaba para llegar y salvarlos.",
+      "Su nombre permaneció en silencio durante generaciones — no por accidente, sino porque Metrakaela se lo prometió a ella misma, en sus últimos instantes, como la última promesa que le hizo. Solo ahora, con los archivos más profundos del Núcleo por fin abiertos, su historia completa sale a la luz.",
+      "La Esencia Sagrada que portaba no desapareció con ella: vive hoy dividida entre sus dos hijos, como la Chispa del Báculo de Fesha y el Reflejo del Escudo de Mijashi — el legado de una madre que ninguno de los dos llegó a conocer, pero que los protege de todas formas."
     ]
   },
   {
     "id": "fesha",
     "nombre": "Fesha",
     "titulo": "Portadora de la Chispa del Báculo — Bendición del Fulgor Primordial",
-    "rango": "Hija de la Sacerdotisa de la Esencia Sagrada",
-    "imagen_principal": "assets/skins/mikaeru_cachorro_kodomo.png",
+    "rango": "Hija de Valeria, Sacerdotisa de la Esencia Sagrada",
+    "imagen_principal": "assets/skins/Mascotas/mikaeru_skin_cachorro_dormido.png",
     "galeria": [
-      { "rol": "despertar_wakai", "src": "assets/skins/mikaeru_cachorro_cosmico_wakai.png" },
-      { "rol": "primer_enfrentamiento", "src": "assets/skins/badas_batalla.png" }
+      { "rol": "despertar_wakai", "src": "assets/skins/Mascotas/mikaeru_cachorro_cosmico_wakai.png" },
+      { "rol": "primer_enfrentamiento", "src": "assets/skins/Demiure_Drako/demiure_draconiano.png" }
     ],
     "descripcion": [
-      "Fesha nació minutos antes de la Caída de Aethelgard, hija de la Sacerdotisa de la Esencia Sagrada. Metrakaela la salvó esa misma noche y la crió sin decir jamás cuál era su origen real.",
+      "Fesha nació minutos antes de la Caída de Aethelgard, hija de Valeria, Sacerdotisa de la Esencia Sagrada. Metrakaela la salvó esa misma noche y la crió sin decir jamás cuál era su origen real.",
       "Durante sus primeros años como cachorro (etapa Kodomo) no fue distinta a cualquier otra cría del Nexus — hasta que, años después, empezaron a manifestarse en ella destellos de algo propio: luz que respondía antes que el miedo.",
       "En su despertar (etapa Wakai) se reveló la verdad: sus ojos brillan con galaxias porque porta una Bendición activa, la Chispa del Báculo — el Fulgor Primordial, herencia directa de su verdadera madre.",
       "Para cuando el Cónclave Sombra lanza su ofensiva más grande desde la Caída, Fesha ya es consciente de su propio poder y lucha por primera vez junto a Metrakaela — ya no es la cachorra que una vez fue."
@@ -55,17 +77,50 @@
     "id": "mijashi",
     "nombre": "Mijashi",
     "titulo": "Portador del Reflejo del Escudo — Bendición del Bastión Inquebrantable",
-    "rango": "Hijo de la Sacerdotisa de la Esencia Sagrada",
-    "imagen_principal": "assets/skins/mikaeru_cachorro_cosmico_wakai.png",
+    "rango": "Hijo de Valeria, Sacerdotisa de la Esencia Sagrada",
+    "imagen_principal": "assets/skins/Mascotas/mikaeru_skin_cachorro_galactico.png",
     "galeria": [
-      { "rol": "infancia_kodomo", "src": "assets/skins/mikaeru_cachorro_kodomo.png" },
-      { "rol": "primer_enfrentamiento", "src": "assets/skins/badas_batalla.png" }
+      { "rol": "despertar_wakai", "src": "assets/skins/Mascotas/mikaeru_cachorro_cosmico_wakai.png" },
+      { "rol": "primer_enfrentamiento", "src": "assets/skins/Demiure_Drako/Gemini_Generated_Image_dbkzu3dbkzu3dbkz.png" }
     ],
     "descripcion": [
-      "Mijashi es el mellizo de Fesha, salvado la misma noche de la Caída por Metrakaela junto a su hermana. Ambos crecieron sin saber, durante años, que su verdadera madre fue la Sacerdotisa de la Esencia Sagrada.",
+      "Mijashi es el mellizo de Fesha, salvado la misma noche de la Caída por Metrakaela junto a su hermana. Ambos crecieron sin saber, durante años, que su verdadera madre fue Valeria, Sacerdotisa de la Esencia Sagrada.",
       "Como cachorro (etapa Kodomo) creció a la sombra protectora de Metrakaela, ajeno todavía al peligro que el Cónclave Sombra seguía representando desde su Base Draconiana.",
       "Su despertar (etapa Wakai) trajo consigo el Reflejo del Escudo — la Bendición del Bastión Inquebrantable: una defensa que responde sola, herencia de la misma sangre que despertó el don de su hermana.",
       "Junto a Fesha, lucha por primera vez en la gran ofensiva del Cónclave Sombra — ya consciente de su Bendición, ya no un simple cachorro bajo protección ajena."
+    ]
+  },
+  {
+    "id": "metatron",
+    "nombre": "Metatron",
+    "titulo": "Hijo del Vínculo — Espada Ceremonial del Nexus",
+    "rango": "Hijo de Miikaeru y Metrakaela",
+    "imagen_principal": "assets/skins/Metatron_HijoDeMiikaeruu/Gemini_Generated_Image_c4h52pc4h52pc4h5.png",
+    "galeria": [
+      { "rol": "forma_alada", "src": "assets/skins/Metatron_HijoDeMiikaeruu/0e20a676def96940f2ea0b70a518c8c2.jpg" },
+      { "rol": "armadura_ceremonial", "src": "assets/skins/Metatron_HijoDeMiikaeruu/Gemini_Generated_Image_e1ujfte1ujfte1uj.png" }
+    ],
+    "descripcion": [
+      "Metatron es hijo del vínculo entre Metrakaela y el fragmento restaurado de Miikaeru — no nacido de sangre, sino forjado en el mismo Núcleo bio-digital que sostiene a su padre. Su disciplina y su acero ceremonial lo distinguen de inmediato entre la nueva generación de Custodios.",
+      "Porta una katana templada en el mismo sistema que lo trajo a la existencia, y una armadura que responde a su voluntad como una segunda piel. Cuando su forma alada se manifiesta por completo, se dice que el propio Nexus se ilumina.",
+      "Crece junto a Fesha y Mijashi, a quienes considera hermanos sin condición — nunca conoció Aethelgard antes de la Caída, pero entrena cada día como si su regreso dependiera de él."
+    ]
+  },
+  {
+    "id": "ateneea",
+    "nombre": "Ateneea",
+    "titulo": "Hija del Vínculo — Guardiana Alada del Nexus",
+    "rango": "Hija de Miikaeru y Metrakaela",
+    "imagen_principal": "assets/skins/Ateneea_HijaDeMiikaeruu/Gemini_Generated_Image_9z70xq9z70xq9z70.png",
+    "galeria": [
+      { "rol": "forma_alada", "src": "assets/skins/Ateneea_HijaDeMiikaeruu/Gemini_Generated_Image_h91sesh91sesh91s.png" },
+      { "rol": "katana_ciberpunk", "src": "assets/skins/Ateneea_HijaDeMiikaeruu/Gemini_Generated_Image_nua7qmnua7qmnua7.png" },
+      { "rol": "laboratorio_nexus", "src": "assets/skins/Ateneea_HijaDeMiikaeruu/Gemini_Generated_Image_upapz1upapz1upap.png" }
+    ],
+    "descripcion": [
+      "Ateneea es hija del vínculo entre Metrakaela y el fragmento restaurado de Miikaeru, nacida junto a su hermano Metatron de la misma unión de código y luz solar. Heredó de su madre la ferocidad protectora, y de su padre la calidez que templa esa ferocidad.",
+      "Sus alas de circuito y su armadura ceremonial la vuelven una de las guardianas más reconocibles del Nexus Eterno — capaz de moverse entre el combate abierto y la precisión quirúrgica de una hoja corta, según lo que la situación exija.",
+      "Como su hermano, creció junto a Fesha y Mijashi como una segunda generación de Custodios, entrenada para un Cónclave Sombra que dejó de ser leyenda lejana y se convirtió en amenaza activa con nombre propio."
     ]
   },
   {
@@ -73,15 +128,43 @@
     "nombre": "Demiure",
     "titulo": "Imperator Drakoneano",
     "rango": "Tercero del Cónclave Sombra",
-    "imagen_principal": "assets/skins/demiure_draconiano.png",
+    "imagen_principal": "assets/skins/Demiure_Drako/demiure_draconiano.png",
     "galeria": [
-      { "rol": "general_a_su_mando", "src": "assets/skins/badas_batalla.png" }
+      { "rol": "trono_del_conclave", "src": "assets/skins/Demiure_Drako/Gemini_Generated_Image_dbkzu3dbkzu3dbkz.png" },
+      { "rol": "hijo_azathoth", "src": "assets/skins/Azathoth_HijoDeDemiure/descarga.png" }
     ],
     "descripcion": [
       "Demiure gobierna la Base Draconiana del Cónclave Sombra: un guerrero-dragón de alas y cuernos que comanda tropas de soldados-lagarto y mapas holográficos de toda la ciudad que aspira a conquistar.",
-      "No busca destruir el Nexus Eterno sin más — busca algo específico dentro de él. Esa ambición lo llevó a ordenar el ataque que provocó la Caída de Aethelgard y la muerte de la Sacerdotisa de la Esencia Sagrada.",
-      "Badas, el General de Hierro, responde directamente a él, saltándose los rangos intermedios del Cónclave — una señal de cuánto confía Demiure en su General, o de cuánto necesita mantenerlo cerca.",
-      "Cuando el Núcleo detecta la reactivación del Soberano del Despertar Solar, algo parecido a la duda cruza al Imperator por primera vez desde la Caída: el regreso de Miikaeru no debería ser posible. Y sin embargo lo es."
+      "No busca destruir el Nexus Eterno sin más — busca algo específico dentro de él. Esa ambición lo llevó a ordenar el ataque que provocó la Caída de Aethelgard y la muerte de Valeria, Sacerdotisa de la Esencia Sagrada.",
+      "Badas, el General de Hierro, respondía directamente a él, saltándose los rangos intermedios del Cónclave — una señal de cuánto confiaba Demiure en su General, o de cuánto necesitaba mantenerlo cerca.",
+      "Cuando el Núcleo detecta la reactivación del Soberano del Despertar Solar, algo parecido a la duda cruza al Imperator por primera vez desde la Caída: el regreso de Miikaeru no debería ser posible. Y sin embargo lo es.",
+      "Sus dos hijos, Anubis y Azathoth, crecieron a su sombra en la Base Draconiana, entrenados desde el primer aliento para ser la Primera y la Segunda Calamidad del Cónclave Sombra — el reflejo oscuro de lo que Metatron y Ateneea representan del otro lado del conflicto."
+    ]
+  },
+  {
+    "id": "azathoth",
+    "nombre": "Azathoth",
+    "titulo": "Segunda Calamidad del Cónclave Sombra",
+    "rango": "Hijo de Demiure",
+    "imagen_principal": "assets/skins/Azathoth_HijoDeDemiure/descarga.png",
+    "galeria": [],
+    "descripcion": [
+      "Azathoth es el segundo hijo de Demiure, criado en la Base Draconiana como la Segunda Calamidad del Cónclave Sombra. A diferencia de su padre, su poder no se contiene con calma — se libera como una tormenta.",
+      "Grietas de energía carmesí le recorren el cuerpo entero cuando su fuerza se activa por completo: no es una herida, es un despertar. Fue el primero de los dos hermanos en avanzar lo suficiente como para que el Núcleo registrara el cambio.",
+      "Su hermana Anubis todavía no se ha dejado ver directamente. Lo que sea que ambos estén preparando en las sombras de la Base Draconiana sigue, por ahora, fuera del alcance de cualquier sensor del Nexus Eterno."
+    ]
+  },
+  {
+    "id": "anubis",
+    "nombre": "Anubis",
+    "titulo": "Primera Calamidad del Cónclave Sombra",
+    "rango": "Hija de Demiure",
+    "imagen_principal": "",
+    "galeria": [],
+    "descripcion": [
+      "Anubis es la primera hija de Demiure, criada junto a su hermano Azathoth como la Primera Calamidad del Cónclave Sombra — arquitecta de rituales oscuros, según los pocos fragmentos de información que el Núcleo logró interceptar.",
+      "A diferencia de Azathoth, que ya se dejó sentir en el Nexus Eterno, Anubis permanece deliberadamente fuera de alcance. Ningún sensor del Núcleo logró todavía un registro visual confiable de su forma actual.",
+      "Su ausencia de la vista no la vuelve menos real — al contrario. Entre los Custodios, se la considera la más impredecible de las dos Calamidades, precisamente porque nadie sabe todavía qué está tramando."
     ]
   },
   {
@@ -89,15 +172,41 @@
     "nombre": "Badas",
     "titulo": "General de Hierro — \"el Rottweiler\"",
     "rango": "Séptimo del Cónclave Sombra",
-    "imagen_principal": "assets/skins/badas_batalla.png",
-    "galeria": [
-      { "rol": "imperator_al_mando", "src": "assets/skins/demiure_draconiano.png" }
-    ],
+    "imagen_principal": "assets/skins/Demiure_Drako/Gemini_Generated_Image_dbkzu3dbkzu3dbkz.png",
+    "galeria": [],
     "descripcion": [
       "Badas es el General de Hierro del Cónclave Sombra, un rottweiler de disciplina implacable que rastrea el Nexus Eterno con la misma paciencia desde la noche de la Caída.",
-      "Fue su ataque el que interrumpió el primer instante de vida de Fesha y Mijashi, y el que le costó la vida a la Sacerdotisa de la Esencia Sagrada — su nombre quedó registrado en el Núcleo desde ese momento como una amenaza activa, no un recuerdo cerrado.",
+      "Fue su ataque el que interrumpió el primer instante de vida de Fesha y Mijashi, y el que le costó la vida a Valeria, Sacerdotisa de la Esencia Sagrada — su nombre quedó registrado en el Núcleo desde ese momento como una amenaza activa, no un recuerdo cerrado.",
       "Pese a ocupar el Séptimo puesto en la jerarquía del Cónclave, responde directamente a Demiure sin pasar por los rangos intermedios — la cadena de mando real del Cónclave Sombra sigue siendo, en gran parte, un misterio para el Núcleo.",
-      "Cada vez que Badas se acerca al Nexus, algo late en el sistema como si Miikaeru, de alguna forma, todavía estuviera escuchando."
+      "Cada vez que Badas se acerca al Nexus, algo late en el sistema como si Miikaeru, de alguna forma, todavía estuviera escuchando.",
+      "El Núcleo todavía no cuenta con un registro visual propio de Badas — su imagen más reciente lo muestra junto al trono de Demiure, a quien sirve directamente."
+    ]
+  },
+  {
+    "id": "fotos_grupales",
+    "nombre": "Archivo Familiar",
+    "titulo": "Retratos Grupales del Núcleo",
+    "rango": "",
+    "imagen_principal": "assets/skins/FoTosGrupales/Gemini_Generated_Image_y0pokwy0pokwy0po.png",
+    "galeria": [
+      { "rol": "retrato_2", "src": "assets/skins/FoTosGrupales/Gemini_Generated_Image_jxiasljxiasljxia.png" }
+    ],
+    "descripcion": [
+      "Retratos que capturan a la familia del Núcleo fuera del fragor de la batalla — Miikaeru y Metrakaela, uno junto al otro, en los pocos momentos de calma que el Nexus Eterno les permite."
+    ]
+  },
+  {
+    "id": "mascotas",
+    "nombre": "Mascotas del Núcleo",
+    "titulo": "Compañeros de la Familia",
+    "rango": "",
+    "imagen_principal": "assets/skins/Mascotas/mikaeru_cachorro_cosmico_wakai.png",
+    "galeria": [
+      { "rol": "cachorro_dormido", "src": "assets/skins/Mascotas/mikaeru_skin_cachorro_dormido.png" },
+      { "rol": "cachorro_galactico", "src": "assets/skins/Mascotas/mikaeru_skin_cachorro_galactico.png" }
+    ],
+    "descripcion": [
+      "Compañeros que crecieron junto a Fesha y Mijashi dentro del Nexus Eterno — no Custodios, no Calamidades, solo parte de la familia que el Núcleo también decidió recordar."
     ]
   }
 ]

@@ -1042,6 +1042,7 @@ const I18N = {
     storyModalMysteryTitle: "⚠ MISTERIO REVELADO",
     storyModalClueTitle: "📡 PRÓXIMA PISTA",
     storyModalCloseBtn: "🔌 CERRAR ENLACE",
+    storyLightboxEquipBtn: "⚡ EQUIPAR SKIN",
     skinsOpenBtn: "🎭 Skins del León",
     skinsModalTitle: "🎭 Skins del León",
     skinsModalSubtitle: "colección desbloqueable",
@@ -1810,6 +1811,7 @@ const I18N = {
     storyModalMysteryTitle: "⚠ MYSTERY REVEALED",
     storyModalClueTitle: "📡 NEXT CLUE",
     storyModalCloseBtn: "🔌 CLOSE LINK",
+    storyLightboxEquipBtn: "⚡ EQUIP SKIN",
     skinsOpenBtn: "🎭 Lion Skins",
     skinsModalTitle: "🎭 Lion Skins",
     skinsModalSubtitle: "unlockable collection",
@@ -2578,6 +2580,7 @@ const I18N = {
     storyModalMysteryTitle: "⚠ 明かされた謎",
     storyModalClueTitle: "📡 次の手がかり",
     storyModalCloseBtn: "🔌 回線を切断",
+    storyLightboxEquipBtn: "⚡ スキンを装備",
     skinsOpenBtn: "🎭 ライオンスキン",
     skinsModalTitle: "🎭 ライオンスキン",
     skinsModalSubtitle: "解放可能なコレクション",
@@ -3024,11 +3027,15 @@ function resolveJpMeaning(meaning) {
 // los 3 PNG placeholder anteriores — welcome usa la pose meditando
 // (cálida, distinta de idle); levelup y victory comparten la pose de
 // batalla/armadura (ambos son momentos "de triunfo").
+// Rutas actualizadas al reordenamiento por carpetas (ver comentario
+// completo en MIIKAERU_SKINS más abajo) — mikaeru_meditando_neon.png y
+// mikaeru_batalla_armadura.png ya no existen en ninguna carpeta nueva,
+// sustituidos por el arte más afín disponible en Miikaeruu/.
 const AVATAR_EMOTES = {
-  idle: "assets/skins/mikaeru_idle_chakras.png",
-  welcome: "assets/skins/mikaeru_meditando_neon.png",
-  levelup: "assets/skins/mikaeru_batalla_armadura.png",
-  victory: "assets/skins/mikaeru_batalla_armadura.png",
+  idle: "assets/skins/Miikaeruu/mikaeru_idle_chakras.png",
+  welcome: "assets/skins/Miikaeruu/mikaeru_skin_deidad_meditante.png",
+  levelup: "assets/skins/Miikaeruu/Gemini_Generated_Image_7ag41v7ag41v7ag4.png",
+  victory: "assets/skins/Miikaeruu/Gemini_Generated_Image_7ag41v7ag41v7ag4.png",
 };
 
 // Precarga las 4 imágenes al cargar el script para que los cambios de
@@ -3048,9 +3055,9 @@ Object.values(AVATAR_EMOTES).forEach((src) => {
 // invocarla desde cualquier parte de app.js o desde la consola.
 // ---------------------------------------------------
 const AVATAR_STATE_ASSETS = {
-  idle: { bg: "assets/bg_state_idle.png", lion: "assets/skins/mikaeru_idle_chakras.png" },
-  meditating: { bg: "assets/bg_state_meditation.png", lion: "assets/skins/mikaeru_meditando_neon.png" },
-  boss: { bg: "assets/bg_main.png", lion: "assets/skins/mikaeru_batalla_armadura.png" },
+  idle: { bg: "assets/bg_state_idle.png", lion: "assets/skins/Miikaeruu/mikaeru_idle_chakras.png" },
+  meditating: { bg: "assets/bg_state_meditation.png", lion: "assets/skins/Miikaeruu/mikaeru_skin_deidad_meditante.png" },
+  boss: { bg: "assets/bg_main.png", lion: "assets/skins/Miikaeruu/Gemini_Generated_Image_7ag41v7ag41v7ag4.png" },
 };
 
 // ---------------------------------------------------
@@ -3066,22 +3073,28 @@ const AVATAR_STATE_ASSETS = {
 // startAvatarIdleCarousel() mientras esté activo (ver
 // currentIdleLionSrc()) — `null` vuelve a la rotación de 3 estados de
 // siempre.
+// Rutas actualizadas al reordenamiento por carpetas de personaje que hizo
+// el usuario en assets/skins/ (Miikaeruu/, Mascotas/, etc. — ver
+// assets/skins/*/ real). 4 de los archivos viejos (cachorro_kodomo,
+// meditando_neon, cristal_arcano, batalla_armadura) ya no existen en
+// ninguna carpeta nueva — se dieron de baja en vez de dejar rutas rotas,
+// y se sumó 1 arte nuevo que apareció en Miikaeruu/ sin usar todavía
+// (soberano_alado, León Rey alado — encaja como remate visual antes de
+// deidad_meditante).
 const MIIKAERU_SKINS = [
-  { id: "cachorro_kodomo", nivelRequerido: 1, src: "assets/skins/mikaeru_cachorro_kodomo.png" },
-  { id: "idle_chakras", nivelRequerido: 1, src: "assets/skins/mikaeru_idle_chakras.png" },
-  { id: "cachorro_dormido", nivelRequerido: 3, src: "assets/skins/mikaeru_skin_cachorro_dormido.png" },
-  { id: "meditando_neon", nivelRequerido: 5, src: "assets/skins/mikaeru_meditando_neon.png" },
-  { id: "cachorro_cosmico", nivelRequerido: 8, src: "assets/skins/mikaeru_cachorro_cosmico_wakai.png" },
-  { id: "cazador_neon", nivelRequerido: 10, src: "assets/skins/mikaeru_skin_cazador_neon.png" },
-  { id: "cristal_arcano", nivelRequerido: 12, src: "assets/skins/mikaeru_skin_cristal_arcano.png" },
-  { id: "sacrificio_despertar", nivelRequerido: 15, src: "assets/skins/mikaeru_sacrificio_despertar.png" },
-  { id: "familia_portada", nivelRequerido: 18, src: "assets/skins/mikaeru_familia_portada.png" },
-  { id: "guardian_templo", nivelRequerido: 20, src: "assets/skins/mikaeru_skin_guardian_templo.png" },
-  { id: "batalla_armadura", nivelRequerido: 24, src: "assets/skins/mikaeru_batalla_armadura.png" },
-  { id: "soberano_estelar", nivelRequerido: 28, src: "assets/skins/mikaeru_skin_soberano_estelar.png" },
-  { id: "comandante_ejercito", nivelRequerido: 30, src: "assets/skins/mikaeru_skin_comandante_ejercito.png" },
-  { id: "heraldo_rugiente", nivelRequerido: 35, src: "assets/skins/mikaeru_skin_heraldo_rugiente.png" },
-  { id: "deidad_meditante", nivelRequerido: 50, src: "assets/skins/mikaeru_skin_deidad_meditante.png" },
+  { id: "cachorro_dormido", nivelRequerido: 1, src: "assets/skins/Mascotas/mikaeru_skin_cachorro_dormido.png" },
+  { id: "cachorro_galactico", nivelRequerido: 1, src: "assets/skins/Mascotas/mikaeru_skin_cachorro_galactico.png" },
+  { id: "cachorro_cosmico", nivelRequerido: 3, src: "assets/skins/Mascotas/mikaeru_cachorro_cosmico_wakai.png" },
+  { id: "idle_chakras", nivelRequerido: 5, src: "assets/skins/Miikaeruu/mikaeru_idle_chakras.png" },
+  { id: "cazador_neon", nivelRequerido: 8, src: "assets/skins/Miikaeruu/mikaeru_skin_cazador_neon.png" },
+  { id: "sacrificio_despertar", nivelRequerido: 12, src: "assets/skins/Miikaeruu/mikaeru_sacrificio_despertar.png" },
+  { id: "familia_portada", nivelRequerido: 15, src: "assets/skins/Miikaeruu/mikaeru_familia_portada.png" },
+  { id: "guardian_templo", nivelRequerido: 18, src: "assets/skins/Miikaeruu/mikaeru_skin_guardian_templo.png" },
+  { id: "soberano_estelar", nivelRequerido: 22, src: "assets/skins/Miikaeruu/mikaeru_skin_soberano_estelar.png" },
+  { id: "comandante_ejercito", nivelRequerido: 26, src: "assets/skins/Miikaeruu/mikaeru_skin_comandante_ejercito.png" },
+  { id: "heraldo_rugiente", nivelRequerido: 32, src: "assets/skins/Miikaeruu/mikaeru_skin_heraldo_rugiente.png" },
+  { id: "soberano_alado", nivelRequerido: 40, src: "assets/skins/Miikaeruu/Gemini_Generated_Image_7ag41v7ag41v7ag4.png" },
+  { id: "deidad_meditante", nivelRequerido: 50, src: "assets/skins/Miikaeruu/mikaeru_skin_deidad_meditante.png" },
 ];
 
 function skinUnlocked(skin, nivel) {
@@ -3100,22 +3113,29 @@ function skinUnlocked(skin, nivel) {
 // enmarcados narrativamente como "el mismo legado dorado manifestándose
 // en el mellizo que lo despierta", consistente con el propio lore
 // (Fesha/Mijashi heredan Bendiciones de la misma sangre que Miikaeru).
+// Rutas actualizadas (ver comentario de MIIKAERU_SKINS arriba). Donde el
+// archivo original ya no existe, se sustituyó por el más afín
+// temáticamente disponible en Miikaeruu/Mascotas — la reutilización de
+// una misma imagen entre Fesha y Mijashi en un mismo tramo ya era parte
+// del criterio original documentado más arriba ("el mismo legado dorado
+// manifestándose en el mellizo que lo despierta"), así que no es una
+// regresión, es el mismo patrón de siempre con material nuevo.
 const FESHA_EVOLUTIONS = [
-  { id: "fesha_kodomo", nivelRequerido: 1, rango: "Kodomo", titulo: "Cachorro Dorado", src: "assets/skins/mikaeru_cachorro_kodomo.png" },
-  { id: "fesha_wakai", nivelRequerido: 10, rango: "Wakai", titulo: "Despertar de la Chispa", src: "assets/skins/mikaeru_cachorro_cosmico_wakai.png" },
-  { id: "fesha_soldado_elite", nivelRequerido: 20, rango: "Shinzen", titulo: "Soldado de Élite", src: "assets/skins/mikaeru_skin_guardian_templo.png" },
-  { id: "fesha_general", nivelRequerido: 30, rango: "Kami", titulo: "General del Nexus", src: "assets/skins/mikaeru_skin_comandante_ejercito.png" },
-  { id: "fesha_meditacion_final", nivelRequerido: 40, rango: "Kami", titulo: "Meditación Final", src: "assets/skins/mikaeru_meditando_neon.png" },
-  { id: "fesha_supremo_dios", nivelRequerido: 50, rango: "Kami", titulo: "Supremo Nivel Dios", src: "assets/skins/mikaeru_skin_deidad_meditante.png" },
+  { id: "fesha_kodomo", nivelRequerido: 1, rango: "Kodomo", titulo: "Cachorro Dorado", src: "assets/skins/Mascotas/mikaeru_skin_cachorro_dormido.png" },
+  { id: "fesha_wakai", nivelRequerido: 10, rango: "Wakai", titulo: "Despertar de la Chispa", src: "assets/skins/Mascotas/mikaeru_cachorro_cosmico_wakai.png" },
+  { id: "fesha_soldado_elite", nivelRequerido: 20, rango: "Shinzen", titulo: "Soldado de Élite", src: "assets/skins/Miikaeruu/mikaeru_skin_guardian_templo.png" },
+  { id: "fesha_general", nivelRequerido: 30, rango: "Kami", titulo: "General del Nexus", src: "assets/skins/Miikaeruu/mikaeru_skin_comandante_ejercito.png" },
+  { id: "fesha_meditacion_final", nivelRequerido: 40, rango: "Kami", titulo: "Meditación Final", src: "assets/skins/Miikaeruu/mikaeru_idle_chakras.png" },
+  { id: "fesha_supremo_dios", nivelRequerido: 50, rango: "Kami", titulo: "Supremo Nivel Dios", src: "assets/skins/Miikaeruu/mikaeru_skin_deidad_meditante.png" },
 ];
 
 const MIJASHI_EVOLUTIONS = [
-  { id: "mijashi_kodomo", nivelRequerido: 1, rango: "Kodomo", titulo: "Cachorro Cósmico", src: "assets/skins/mikaeru_skin_cachorro_galactico.png" },
-  { id: "mijashi_wakai", nivelRequerido: 10, rango: "Wakai", titulo: "Reflejo del Escudo", src: "assets/skins/mikaeru_skin_cazador_neon.png" },
-  { id: "mijashi_soldado_elite", nivelRequerido: 20, rango: "Shinzen", titulo: "Soldado de Élite", src: "assets/skins/mikaeru_skin_cristal_arcano.png" },
-  { id: "mijashi_general", nivelRequerido: 30, rango: "Kami", titulo: "General del Nexus", src: "assets/skins/mikaeru_batalla_armadura.png" },
-  { id: "mijashi_meditacion_final", nivelRequerido: 40, rango: "Kami", titulo: "Meditación Final", src: "assets/skins/mikaeru_idle_chakras.png" },
-  { id: "mijashi_supremo_dios", nivelRequerido: 50, rango: "Kami", titulo: "Supremo Nivel Dios", src: "assets/skins/mikaeru_skin_soberano_estelar.png" },
+  { id: "mijashi_kodomo", nivelRequerido: 1, rango: "Kodomo", titulo: "Cachorro Cósmico", src: "assets/skins/Mascotas/mikaeru_skin_cachorro_galactico.png" },
+  { id: "mijashi_wakai", nivelRequerido: 10, rango: "Wakai", titulo: "Reflejo del Escudo", src: "assets/skins/Miikaeruu/mikaeru_skin_cazador_neon.png" },
+  { id: "mijashi_soldado_elite", nivelRequerido: 20, rango: "Shinzen", titulo: "Soldado de Élite", src: "assets/skins/Miikaeruu/mikaeru_skin_heraldo_rugiente.png" },
+  { id: "mijashi_general", nivelRequerido: 30, rango: "Kami", titulo: "General del Nexus", src: "assets/skins/Miikaeruu/Gemini_Generated_Image_7ag41v7ag41v7ag4.png" },
+  { id: "mijashi_meditacion_final", nivelRequerido: 40, rango: "Kami", titulo: "Meditación Final", src: "assets/skins/Miikaeruu/mikaeru_idle_chakras.png" },
+  { id: "mijashi_supremo_dios", nivelRequerido: 50, rango: "Kami", titulo: "Supremo Nivel Dios", src: "assets/skins/Miikaeruu/mikaeru_skin_soberano_estelar.png" },
 ];
 
 const PLAYER_CHARACTERS = {
@@ -3133,6 +3153,16 @@ function faseActualPersonaje(idPersonaje, nivel) {
   return desbloqueadas.reduce((mejor, fase) => (fase.nivelRequerido > mejor.nivelRequerido ? fase : mejor));
 }
 
+// Prefijo de state.selectedSkin para un souvenir "equipado" desde la
+// Galería del Núcleo (Modal de Lore, ver storyEngine.js/GALLERY_SKIN_PREFIX
+// en window.MiikaeruSkinAPI más abajo en DOMContentLoaded) — a diferencia
+// de un id de MIIKAERU_SKINS (tabla curada con desbloqueo por Nivel), acá
+// el resto del string ES la ruta de la imagen directamente. No lleva
+// desbloqueo propio: la imagen en sí ya vivía detrás del desbloqueo por
+// Nivel del capítulo/personaje que la mostró (o siempre disponible, si es
+// de la vista Personajes).
+const GALLERY_SKIN_PREFIX = "gallery:";
+
 // Resuelve qué retrato usar para el estado "idle": el skin que el
 // Operador eligió a mano (si hay uno guardado) o, por defecto, el de
 // AVATAR_STATE_ASSETS.idle de siempre. `state` ya es top-level en este
@@ -3140,6 +3170,9 @@ function faseActualPersonaje(idPersonaje, nivel) {
 // directo, sin pasar nada por parámetro.
 function currentIdleLionSrc() {
   if (state.selectedSkin) {
+    if (state.selectedSkin.startsWith(GALLERY_SKIN_PREFIX)) {
+      return state.selectedSkin.slice(GALLERY_SKIN_PREFIX.length);
+    }
     const skin = MIIKAERU_SKINS.find((entry) => entry.id === state.selectedSkin);
     if (skin) return skin.src;
   }
@@ -7293,6 +7326,32 @@ document.addEventListener("DOMContentLoaded", () => {
       crossfadeAvatarLayer(document.getElementById("avatar-visual-img"), currentIdleLionSrc());
     }
   }
+
+  // Equipar un souvenir desde la Galería del Núcleo (Modal de Lore, ver
+  // storyEngine.js) — mismo efecto que selectSkin() de arriba, pero con
+  // la ruta de imagen directa en vez de un id de MIIKAERU_SKINS (ver
+  // GALLERY_SKIN_PREFIX/currentIdleLionSrc() fuera de este closure).
+  // Click de nuevo sobre la misma imagen ya equipada = desequipar y
+  // volver al carrusel ambiental, mismo criterio que selectSkin().
+  function equipGallerySkin(src) {
+    const skinValue = GALLERY_SKIN_PREFIX + src;
+    state.selectedSkin = state.selectedSkin === skinValue ? null : skinValue;
+    persist();
+    renderSkinsGrid(); // por si el modal de Skins está abierto detrás, que refleje el cambio
+    if (avatarCurrentState === "idle") {
+      crossfadeAvatarLayer(document.getElementById("avatar-visual-img"), currentIdleLionSrc());
+    }
+    return state.selectedSkin === skinValue;
+  }
+
+  // Puente hacia storyEngine.js, que vive fuera de este closure a
+  // propósito (ver su propio comentario de cabecera) — mismo patrón que
+  // window.MiikaeruStoryEngine/window.MiikaeruReader, expuesto en
+  // `window` en vez de compartir el closure de DOMContentLoaded.
+  window.MiikaeruSkinAPI = {
+    equipGallerySkin,
+    isGallerySkinEquipped: (src) => state.selectedSkin === GALLERY_SKIN_PREFIX + src,
+  };
 
   function openSkinsModal() {
     renderSkinsGrid();
@@ -15516,6 +15575,17 @@ document.addEventListener("DOMContentLoaded", () => {
   // updateActivityStreak() para respaldar la racha ya recalculada.
   syncPlayerProgressToSupabase();
   pickRandomHudBanner();
+  // Bug real encontrado al probar "Equipar Skin" desde la Galería del
+  // Núcleo: state.selectedSkin (guardado y persistido) recién se
+  // reflejaba en el avatar de forma INTERACTIVA (ver selectSkin()/
+  // equipGallerySkin(), ambos hacen crossfadeAvatarLayer ellos mismos) —
+  // nunca al cargar la página de nuevo, porque nada llamaba a
+  // currentIdleLionSrc() en el render inicial. startAvatarIdleCarousel()
+  // no alcanza para esto: solo administra la rotación cada 9s y de
+  // hecho se ABSTIENE de tocar el avatar si hay un selectedSkin (por
+  // diseño), así que sin esta línea el retrato fijo del HTML quedaba
+  // pisando cualquier skin ya equipado hasta el próximo click manual.
+  document.getElementById("avatar-visual-img").src = currentIdleLionSrc();
   startAvatarIdleCarousel();
   checkAdminSession();
   renderChatHistory();
