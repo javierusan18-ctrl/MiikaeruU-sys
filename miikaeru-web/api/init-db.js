@@ -287,7 +287,7 @@ async function runStatement(client, statement) {
 }
 
 module.exports = async function handler(req, res) {
-  const connectionString = process.env.SUPABASE_DB_URL;
+  const connectionString = (process.env.SUPABASE_DB_URL || "").trim();
   if (!connectionString) {
     res.status(500).json({
       ok: false,

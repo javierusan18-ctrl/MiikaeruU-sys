@@ -31,7 +31,7 @@ module.exports = async function handler(req, res) {
     return;
   }
 
-  const connectionString = process.env.SUPABASE_DB_URL;
+  const connectionString = (process.env.SUPABASE_DB_URL || "").trim();
   if (!connectionString) {
     res.status(500).json({ ok: false, error: "Falta SUPABASE_DB_URL en las variables de entorno de Vercel." });
     return;
