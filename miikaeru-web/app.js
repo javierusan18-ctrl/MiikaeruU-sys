@@ -984,6 +984,7 @@ const I18N = {
     usersStatusDaysAgo: "Hace {n} días",
     usersStatusUnknown: "Sin actividad registrada",
     usersRowCount: "Operadores encontrados:",
+    usersTableMissingWarning: "⚠️ La tabla de Usuarios todavía no está creada en Supabase. Ejecuta /api/init-db para crearla — mientras tanto no hay datos que mostrar.",
     playerEditTitle: "✏️ Editar Operador",
     playerEditLevelLabel: "Nivel",
     playerEditXpLabel: "XP actual",
@@ -1796,6 +1797,7 @@ const I18N = {
     usersStatusDaysAgo: "{n} days ago",
     usersStatusUnknown: "No activity recorded",
     usersRowCount: "Operators found:",
+    usersTableMissingWarning: "⚠️ The Users table hasn't been created in Supabase yet. Run /api/init-db to create it — there's no data to show in the meantime.",
     playerEditTitle: "✏️ Edit Operator",
     playerEditLevelLabel: "Level",
     playerEditXpLabel: "Current XP",
@@ -2608,6 +2610,7 @@ const I18N = {
     usersStatusDaysAgo: "{n}日前",
     usersStatusUnknown: "活動記録なし",
     usersRowCount: "見つかったオペレーター：",
+    usersTableMissingWarning: "⚠️ ユーザーテーブルはまだSupabaseに作成されていません。/api/init-dbを実行して作成してください — それまで表示できるデータはありません。",
     playerEditTitle: "✏️ オペレーターを編集",
     playerEditLevelLabel: "レベル",
     playerEditXpLabel: "現在のXP",
@@ -8925,37 +8928,58 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  function fetchPlayerProgress() {
+  // Postgres "undefined_table" (42P01) o el "no encontrada en el schema
+  // cache" que devuelve PostgREST (PGRST205) — ambos significan lo mismo
+  // acá: /api/init-db todavía no corrió, la tabla no existe todavía. Se
+  // distingue de cualquier OTRO error (red, permisos, RLS) para poder
+  // mostrar una advertencia limpia y específica en vez del mensaje crudo
+  // de Supabase.
+  function isMissingTableError(error) {
+    if (!error) return false;
+    if (error.code === "42P01" || error.code === "PGRST205") return true;
+    const msg = (error.message || "").toLowerCase();
+    return msg.includes("does not exist") || msg.includes("could not find the table");
+  }
+
+  async function fetchPlayerProgress() {
     if (!isSuperAdmin) return;
     if (!supabaseClient) {
       setUsersStatus(t("adminPanelNoClient"));
       return;
     }
     setUsersStatus(t("adminPanelLoading"));
-    supabaseClient
-      .from("player_progress")
-      .select("*")
-      .order("updated_at", { ascending: false })
-      .then(({ data, error }) => {
-        if (error) {
-          // Caso esperado hasta que /api/init-db termine de crear
-          // `player_progress` (se auto-provisiona sola, ver init-db.js) —
-          // mensaje honesto en vez de una tabla vacía sin explicación.
-          usersRows = [];
-          renderUsersStats([]);
-          renderUsersTable([]);
-          setUsersStatus(`${t("adminPanelError")} ${error.message}`);
-          return;
-        }
-        usersRows = data || [];
-        renderUsersStats(usersRows);
-        renderUsersTable(usersRows);
-        setUsersStatus(`${t("usersRowCount")} ${usersRows.length}`);
-      })
-      .catch(() => {
+    // try/catch explícito (además del .catch() de la promesa) para que,
+    // pase lo que pase leyendo `player_progress` (tabla todavía no
+    // creada, RLS, red), la pestaña Usuarios SIEMPRE termine en un
+    // estado seguro — listado vacío + advertencia clara — y nunca rompa
+    // el resto del Panel de Administrador.
+    try {
+      const { data, error } = await supabaseClient
+        .from("player_progress")
+        .select("*")
+        .order("updated_at", { ascending: false });
+
+      if (error) {
         usersRows = [];
-        setUsersStatus(t("adminPanelNetworkError"));
-      });
+        renderUsersStats([]);
+        renderUsersTable([]);
+        setUsersStatus(
+          isMissingTableError(error) ? t("usersTableMissingWarning") : `${t("adminPanelError")} ${error.message}`
+        );
+        return;
+      }
+
+      usersRows = data || [];
+      renderUsersStats(usersRows);
+      renderUsersTable(usersRows);
+      setUsersStatus(`${t("usersRowCount")} ${usersRows.length}`);
+    } catch (err) {
+      console.warn("Usuarios: no se pudo leer player_progress:", err);
+      usersRows = [];
+      renderUsersStats([]);
+      renderUsersTable([]);
+      setUsersStatus(t("adminPanelNetworkError"));
+    }
   }
 
   // Suscripción realtime: si otra sesión de admin (u otro dispositivo
@@ -8963,14 +8987,23 @@ document.addEventListener("DOMContentLoaded", () => {
   // mientras esté abierta — mismo patrón que wireAutomationRealtime().
   function wirePlayerProgressRealtime() {
     if (usersRealtimeChannel || !supabaseClient) return;
-    usersRealtimeChannel = supabaseClient
-      .channel("player_progress_changes")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "player_progress" },
-        () => fetchPlayerProgress()
-      )
-      .subscribe();
+    try {
+      usersRealtimeChannel = supabaseClient
+        .channel("player_progress_changes")
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "player_progress" },
+          () => fetchPlayerProgress()
+        )
+        .subscribe();
+    } catch (err) {
+      // Mejor esfuerzo: si la tabla todavía no existe o la suscripción
+      // falla por cualquier motivo, la pestaña sigue funcionando con
+      // fetchPlayerProgress() manual (botón Refrescar) — no debe romper
+      // el resto del Panel de Administrador.
+      console.warn("Usuarios: no se pudo suscribir a cambios en tiempo real de player_progress:", err);
+      usersRealtimeChannel = null;
+    }
   }
 
   usersRefreshBtn.addEventListener("click", fetchPlayerProgress);
