@@ -986,6 +986,15 @@ const I18N = {
     automationRowCount: "Tareas encontradas:",
     automationEmptyState: "Sin tareas en cola. n8n las agrega automáticamente a la tabla automation_tasks de Supabase.",
     adminPanelTabUsers: "👥 Usuarios",
+    adminPanelTabMetrics: "📊 Métricas",
+    metricsStatOperators: "Operadores",
+    metricsStatContacts: "Contactos",
+    metricsStatRelationships: "Relaciones (Siguiendo)",
+    metricsStatMutual: "Amigos Mutuos",
+    metricsNoClient: "⚠️ No se pudo conectar con Supabase.",
+    metricsLoading: "Cargando métricas...",
+    metricsTableMissingWarning: "⚠️ Las tablas todavía no existen — corré /api/init-db desde la pestaña Base de Datos.",
+    metricsNetworkError: "⚠️ Error de red al conectar con Supabase.",
     adminPanelTabPhotos: "📸 Fotos",
     adminPhotosHint: "Pega la URL de una imagen para cada personaje y guarda — se refleja al instante en la pantalla de elección de Héroe.",
     adminPhotosUrlPlaceholder: "https://...",
@@ -1826,6 +1835,15 @@ const I18N = {
     automationRowCount: "Tasks found:",
     automationEmptyState: "No tasks queued. n8n adds them automatically to Supabase's automation_tasks table.",
     adminPanelTabUsers: "👥 Users",
+    adminPanelTabMetrics: "📊 Metrics",
+    metricsStatOperators: "Operators",
+    metricsStatContacts: "Contacts",
+    metricsStatRelationships: "Relationships (Following)",
+    metricsStatMutual: "Mutual Friends",
+    metricsNoClient: "⚠️ Couldn't connect to Supabase.",
+    metricsLoading: "Loading metrics...",
+    metricsTableMissingWarning: "⚠️ The tables don't exist yet — run /api/init-db from the Database tab.",
+    metricsNetworkError: "⚠️ Network error connecting to Supabase.",
     adminPanelTabPhotos: "📸 Photos",
     adminPhotosHint: "Paste an image URL for each character and save — reflected instantly on the Hero selection screen.",
     adminPhotosUrlPlaceholder: "https://...",
@@ -2666,6 +2684,15 @@ const I18N = {
     automationRowCount: "見つかったタスク：",
     automationEmptyState: "キューにタスクはありません。n8nがSupabaseのautomation_tasksテーブルに自動で追加します。",
     adminPanelTabUsers: "👥 ユーザー",
+    adminPanelTabMetrics: "📊 メトリクス",
+    metricsStatOperators: "オペレーター数",
+    metricsStatContacts: "コンタクト数",
+    metricsStatRelationships: "関係（フォロー中）",
+    metricsStatMutual: "相互フレンド",
+    metricsNoClient: "⚠️ Supabaseに接続できませんでした。",
+    metricsLoading: "メトリクスを読み込み中...",
+    metricsTableMissingWarning: "⚠️ テーブルがまだ存在しません — 「データベース」タブから /api/init-db を実行してください。",
+    metricsNetworkError: "⚠️ Supabaseへの接続でネットワークエラーが発生しました。",
     adminPanelTabPhotos: "📸 写真",
     adminPhotosHint: "各キャラクターの画像URLを貼り付けて保存してください — ヒーロー選択画面に即反映されます。",
     adminPhotosUrlPlaceholder: "https://...",
@@ -7006,6 +7033,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const adminPanelTabInspector = document.getElementById("admin-panel-tab-inspector");
   const adminPanelTabAutomation = document.getElementById("admin-panel-tab-automation");
   const adminPanelTabUsers = document.getElementById("admin-panel-tab-users");
+  const adminPanelTabMetrics = document.getElementById("admin-panel-tab-metrics");
   const adminPanelTabPhotos = document.getElementById("admin-panel-tab-photos");
   const adminPanelRefreshBtn = document.getElementById("admin-panel-refresh-btn");
   const adminPanelExportBtn = document.getElementById("admin-panel-export-btn");
@@ -7050,6 +7078,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const usersStatAvgLevel = document.getElementById("users-stat-avg-level");
   const usersStatActiveToday = document.getElementById("users-stat-active-today");
   const usersTableBody = document.getElementById("users-table-body");
+
+  // Métricas (pestaña dentro del Panel de Administrador) — conteos
+  // rápidos vía api/admin-metrics.js (ver fetchAdminMetrics() más abajo).
+  const metricsRefreshBtn = document.getElementById("metrics-refresh-btn");
+  const metricsStatus = document.getElementById("metrics-status");
+  const metricsStatOperators = document.getElementById("metrics-stat-operators");
+  const metricsStatContacts = document.getElementById("metrics-stat-contacts");
+  const metricsStatRelationships = document.getElementById("metrics-stat-relationships");
+  const metricsStatMutual = document.getElementById("metrics-stat-mutual");
 
   const playerEditModal = document.getElementById("player-edit-modal");
   const playerEditModalClose = document.getElementById("player-edit-modal-close");
@@ -8505,6 +8542,7 @@ document.addEventListener("DOMContentLoaded", () => {
     adminPanelTabInspector.hidden = target !== "inspector";
     adminPanelTabAutomation.hidden = target !== "automation";
     adminPanelTabUsers.hidden = target !== "users";
+    if (adminPanelTabMetrics) adminPanelTabMetrics.hidden = target !== "metrics";
     if (adminPanelTabPhotos) adminPanelTabPhotos.hidden = target !== "photos";
     if (adminPanelTabDatabase) adminPanelTabDatabase.hidden = target !== "database";
     if (target === "inspector") fetchInspectorFeedback();
@@ -8516,6 +8554,7 @@ document.addEventListener("DOMContentLoaded", () => {
       fetchUsersAccounts();
       wireUsersRealtime();
     }
+    if (target === "metrics") fetchAdminMetrics();
     if (target === "photos") renderAdminPhotosTab();
     if (target === "database") checkDatabaseStatus();
   }
@@ -9184,6 +9223,59 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   usersRefreshBtn.addEventListener("click", fetchUsersAccounts);
+
+  // ---- Métricas rápidas del Panel de Administrador (api/admin-metrics.js) ----
+  // Mismo criterio que fetchUsersAccounts(): solo corre para el
+  // Super Admin, requiere un token Bearer de sesión real de Supabase
+  // Auth, y sea cual sea el fallo (tablas sin crear, red, token vencido)
+  // la pestaña siempre termina en un estado seguro con un aviso claro.
+  function setMetricsStatus(text) {
+    metricsStatus.textContent = text;
+  }
+
+  function renderMetricsStats(metrics) {
+    metricsStatOperators.textContent = metrics ? metrics.total_operators : 0;
+    metricsStatContacts.textContent = metrics ? metrics.total_contacts : 0;
+    metricsStatRelationships.textContent = metrics ? metrics.total_relationships : 0;
+    metricsStatMutual.textContent = metrics ? metrics.total_mutual_friendships : 0;
+  }
+
+  async function fetchAdminMetrics() {
+    if (!isSuperAdmin) return;
+    if (!supabaseClient) {
+      renderMetricsStats(null);
+      setMetricsStatus(t("metricsNoClient"));
+      return;
+    }
+    setMetricsStatus(t("metricsLoading"));
+    try {
+      const { data: sessionData } = await supabaseClient.auth.getSession();
+      const token = sessionData && sessionData.session && sessionData.session.access_token;
+      if (!token) {
+        renderMetricsStats(null);
+        setMetricsStatus(t("metricsNoClient"));
+        return;
+      }
+
+      const res = await fetch("/api/admin-metrics", { headers: { Authorization: `Bearer ${token}` } });
+      const data = await res.json();
+
+      if (!data.ok) {
+        renderMetricsStats(null);
+        setMetricsStatus(data.error === "table_missing" ? t("metricsTableMissingWarning") : t("metricsNetworkError"));
+        return;
+      }
+
+      renderMetricsStats(data.metrics);
+      setMetricsStatus("");
+    } catch (err) {
+      console.warn("Métricas: no se pudieron leer:", err);
+      renderMetricsStats(null);
+      setMetricsStatus(t("metricsNetworkError"));
+    }
+  }
+
+  if (metricsRefreshBtn) metricsRefreshBtn.addEventListener("click", fetchAdminMetrics);
 
   // ---------------- Modal de edición rápida de operador ----------------
 

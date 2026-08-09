@@ -2541,6 +2541,7 @@
         <button type="button" class="admin-panel-tab" data-admin-tab="inspector" data-i18n="adminPanelTabInspector">🕵️ Inspector de Bugs</button>
         <button type="button" class="admin-panel-tab" data-admin-tab="automation" data-i18n="adminPanelTabAutomation">🤖 Automatización (n8n)</button>
         <button type="button" class="admin-panel-tab" data-admin-tab="users" data-i18n="adminPanelTabUsers">👥 Usuarios</button>
+        <button type="button" class="admin-panel-tab" data-admin-tab="metrics" data-i18n="adminPanelTabMetrics">📊 Métricas</button>
         <button type="button" class="admin-panel-tab" data-admin-tab="photos" data-i18n="adminPanelTabPhotos">📸 Fotos</button>
         <button type="button" class="admin-panel-tab" data-admin-tab="database" data-i18n="adminPanelTabDatabase">🗄️ Base de Datos</button>
       </div>
@@ -2686,6 +2687,37 @@
             </thead>
             <tbody id="users-table-body"></tbody>
           </table>
+        </div>
+      </div>
+
+      <!-- Pestaña: Métricas — conteos rápidos de Operadores (public.users),
+           Contactos (app_contacts) y Relaciones de Seguir/Amigos mutuos
+           (app_friendships), vía api/admin-metrics.js (misma conexión
+           directa a Postgres que admin-list-users.js, porque public.users
+           no tiene política RLS para la anon key). -->
+      <div id="admin-panel-tab-metrics" hidden>
+        <div class="admin-panel__toolbar">
+          <button type="button" class="btn-scan" id="metrics-refresh-btn" data-i18n="adminPanelRefreshBtn">🔄 Actualizar</button>
+        </div>
+        <p class="admin-panel__status" id="metrics-status"></p>
+
+        <div class="inspector-stats" id="admin-metrics-stats">
+          <div class="inspector-stat">
+            <span class="inspector-stat__value" id="metrics-stat-operators">0</span>
+            <span class="inspector-stat__label" data-i18n="metricsStatOperators">Operadores</span>
+          </div>
+          <div class="inspector-stat">
+            <span class="inspector-stat__value" id="metrics-stat-contacts">0</span>
+            <span class="inspector-stat__label" data-i18n="metricsStatContacts">Contactos</span>
+          </div>
+          <div class="inspector-stat">
+            <span class="inspector-stat__value" id="metrics-stat-relationships">0</span>
+            <span class="inspector-stat__label" data-i18n="metricsStatRelationships">Relaciones (Siguiendo)</span>
+          </div>
+          <div class="inspector-stat inspector-stat--approved">
+            <span class="inspector-stat__value" id="metrics-stat-mutual">0</span>
+            <span class="inspector-stat__label" data-i18n="metricsStatMutual">Amigos Mutuos</span>
+          </div>
         </div>
       </div>
 
@@ -3004,7 +3036,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260809-6"></script>
+  <script src="app.js?v=20260810-1"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de
