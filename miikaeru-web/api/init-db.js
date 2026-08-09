@@ -33,6 +33,15 @@ const SCHEMA_STATEMENTS = [
     preferred_language text not null default 'es',
     updated_at timestamptz not null default now()
   )`,
+  // unique_id: ID corto autogenerado ("MKR-892471") además del teléfono
+  // y el nombre — pedido explícito para poder buscar/agregar amigos por
+  // cualquiera de los tres criterios. Se genera en el cliente
+  // (generateUniqueId() en app.js, ver ensureContactRegistered()) y se
+  // manda ya armado en el upsert; nullable + unique acá porque Postgres
+  // permite múltiples NULL en una columna unique (contactos viejos que
+  // todavía no pasaron por el nuevo ensureContactRegistered siguen
+  // funcionando sin romper la restricción).
+  `alter table public.app_contacts add column if not exists unique_id text unique`,
   `create table if not exists public.app_friendships (
     id uuid primary key default gen_random_uuid(),
     phone_a text not null references public.app_contacts(phone) on delete cascade,
@@ -85,11 +94,41 @@ const SCHEMA_STATEMENTS = [
     image_url text not null,
     updated_at timestamptz not null default now()
   )`,
+  // Escuadrones (Squads) — mismo criterio "quien conoce el código entra"
+  // que Amigos (identidad = phone de la Cuenta Principal, sin Supabase
+  // Auth de usuario final). `code` es el código corto compartible
+  // ("A7K2P9", ver generateSquadCode() en app.js) para unirse sin
+  // invitación previa. on delete cascade en members/messages: si un
+  // escuadrón se borra, sus filas dependientes se van con él.
+  `create table if not exists public.app_squads (
+    id uuid primary key default gen_random_uuid(),
+    code text not null unique,
+    name text not null,
+    owner_phone text not null,
+    created_at timestamptz not null default now()
+  )`,
+  `create table if not exists public.app_squad_members (
+    squad_id uuid not null references public.app_squads(id) on delete cascade,
+    phone text not null,
+    joined_at timestamptz not null default now(),
+    primary key (squad_id, phone)
+  )`,
+  `create table if not exists public.app_squad_messages (
+    id uuid primary key default gen_random_uuid(),
+    squad_id uuid not null references public.app_squads(id) on delete cascade,
+    phone_from text not null,
+    display_name text not null,
+    text text not null,
+    created_at timestamptz not null default now()
+  )`,
   `alter table public.app_contacts enable row level security`,
   `alter table public.app_friendships enable row level security`,
   `alter table public.app_friend_messages enable row level security`,
   `alter table public.player_progress enable row level security`,
   `alter table public.hero_avatars enable row level security`,
+  `alter table public.app_squads enable row level security`,
+  `alter table public.app_squad_members enable row level security`,
+  `alter table public.app_squad_messages enable row level security`,
   // DROP + CREATE en vez de "IF NOT EXISTS": CREATE POLICY no acepta esa
   // cláusula en Postgres, así que este es el patrón real para que el
   // statement sea repetible sin tirar "policy already exists" en la
@@ -115,6 +154,12 @@ const SCHEMA_STATEMENTS = [
   `create policy "anon full access player_progress" on public.player_progress for all using (true) with check (true)`,
   `drop policy if exists "anon full access hero_avatars" on public.hero_avatars`,
   `create policy "anon full access hero_avatars" on public.hero_avatars for all using (true) with check (true)`,
+  `drop policy if exists "anon full access squads" on public.app_squads`,
+  `create policy "anon full access squads" on public.app_squads for all using (true) with check (true)`,
+  `drop policy if exists "anon full access squad_members" on public.app_squad_members`,
+  `create policy "anon full access squad_members" on public.app_squad_members for all using (true) with check (true)`,
+  `drop policy if exists "anon full access squad_messages" on public.app_squad_messages`,
+  `create policy "anon full access squad_messages" on public.app_squad_messages for all using (true) with check (true)`,
 ];
 
 async function ensureRealtimeEnabled(client, tableName) {
@@ -190,9 +235,10 @@ module.exports = async function handler(req, res) {
       await client.query(statement);
     }
     await ensureRealtimeEnabled(client, "app_friend_messages");
+    await ensureRealtimeEnabled(client, "app_squad_messages");
     await ensureRealtimeEnabled(client, "player_progress");
     await ensureFeedbackAdminPolicies(client);
-    res.status(200).json({ ok: true, message: "Tablas de Amigos/Chat y políticas de Admin verificadas/creadas correctamente." });
+    res.status(200).json({ ok: true, message: "Tablas de Amigos/Chat/Escuadrones y políticas de Admin verificadas/creadas correctamente." });
   } catch (err) {
     console.error("init-db falló:", err);
     res.status(500).json({ ok: false, error: err.message });

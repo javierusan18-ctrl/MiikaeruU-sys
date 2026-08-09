@@ -775,16 +775,33 @@ const I18N = {
     chatTabSquad: "Escuadrón",
     chatTabFriends: "Amigos",
     chatSquadEmptyTitle: "Todavía no tienes un Escuadrón",
-    chatSquadEmptyDesc: "Cuando el modo multijugador esté disponible, tu equipo va a aparecer acá.",
+    chatSquadEmptyDesc: "Creá uno nuevo o unite con un código de invitación.",
     chatFriendsEmptyTitle: "Todavía no agregaste amigos",
     chatFriendsEmptyDesc: "Cuando exista un sistema de amigos, tus contactos van a aparecer en esta lista.",
-    chatFriendAddPlaceholder: "Número de teléfono del amigo",
+    chatFriendAddPlaceholder: "Nombre, teléfono o ID (MKR-XXXXXX)",
     chatFriendAddBtn: "+ Agregar",
     chatFriendAddSuccess: "¡Amigo agregado!",
-    chatFriendAddNotFound: "Ese número todavía no abrió la pestaña Amigos en Miikaeru.",
-    chatFriendAddSelf: "Ese es tu propio número.",
+    chatFriendAddNotFound: "No encontramos a nadie con ese nombre, teléfono o ID.",
+    chatFriendAddSelf: "Ese eres tú.",
     chatFriendAddNoSession: "Inicia sesión primero para agregar amigos.",
     chatFriendAddError: "No se pudo agregar — intenta de nuevo.",
+    chatMyIdLabel: "Tu ID:",
+    chatMyIdCopyBtn: "📋 Copiar",
+    chatMyIdCopied: "¡ID copiado!",
+    chatSquadNamePlaceholder: "Nombre del Escuadrón",
+    chatSquadCreateBtn: "+ Crear",
+    chatSquadCodePlaceholder: "Código de invitación",
+    chatSquadJoinBtn: "Unirse",
+    chatSquadLeaveBtn: "Salir",
+    chatSquadInputPlaceholder: "Escribe un mensaje al Escuadrón...",
+    chatSquadCodeLabel: "Código:",
+    chatSquadCreateSuccess: "¡Escuadrón creado!",
+    chatSquadJoinSuccess: "¡Te uniste al Escuadrón!",
+    chatSquadJoinNotFound: "Ese código no existe.",
+    chatSquadNoSession: "Inicia sesión primero.",
+    chatSquadError: "Algo falló — intenta de nuevo.",
+    chatSquadNameRequired: "Ponle un nombre a tu Escuadrón.",
+    chatSquadCodeRequired: "Ingresa un código.",
     chatFriendThreadBack: "← Amigos",
     chatFriendInputPlaceholder: "Escribe un mensaje...",
     chatFriendTranslating: "Traduciendo…",
@@ -1570,16 +1587,33 @@ const I18N = {
     chatTabSquad: "Squad",
     chatTabFriends: "Friends",
     chatSquadEmptyTitle: "You don't have a Squad yet",
-    chatSquadEmptyDesc: "Once multiplayer mode is available, your team will show up here.",
+    chatSquadEmptyDesc: "Create one or join with an invite code.",
     chatFriendsEmptyTitle: "You haven't added any friends yet",
     chatFriendsEmptyDesc: "Once a friends system exists, your contacts will show up in this list.",
-    chatFriendAddPlaceholder: "Friend's phone number",
+    chatFriendAddPlaceholder: "Name, phone or ID (MKR-XXXXXX)",
     chatFriendAddBtn: "+ Add",
     chatFriendAddSuccess: "Friend added!",
-    chatFriendAddNotFound: "That number hasn't opened the Friends tab in Miikaeru yet.",
-    chatFriendAddSelf: "That's your own number.",
+    chatFriendAddNotFound: "We couldn't find anyone with that name, phone or ID.",
+    chatFriendAddSelf: "That's you.",
     chatFriendAddNoSession: "Log in first to add friends.",
     chatFriendAddError: "Couldn't add friend — try again.",
+    chatMyIdLabel: "Your ID:",
+    chatMyIdCopyBtn: "📋 Copy",
+    chatMyIdCopied: "ID copied!",
+    chatSquadNamePlaceholder: "Squad name",
+    chatSquadCreateBtn: "+ Create",
+    chatSquadCodePlaceholder: "Invite code",
+    chatSquadJoinBtn: "Join",
+    chatSquadLeaveBtn: "Leave",
+    chatSquadInputPlaceholder: "Message your Squad...",
+    chatSquadCodeLabel: "Code:",
+    chatSquadCreateSuccess: "Squad created!",
+    chatSquadJoinSuccess: "Joined the Squad!",
+    chatSquadJoinNotFound: "That code doesn't exist.",
+    chatSquadNoSession: "Log in first.",
+    chatSquadError: "Something failed — try again.",
+    chatSquadNameRequired: "Give your Squad a name.",
+    chatSquadCodeRequired: "Enter a code.",
     chatFriendThreadBack: "← Friends",
     chatFriendInputPlaceholder: "Type a message...",
     chatFriendTranslating: "Translating…",
@@ -2365,16 +2399,33 @@ const I18N = {
     chatTabSquad: "スクワッド",
     chatTabFriends: "フレンド",
     chatSquadEmptyTitle: "まだスクワッドがありません",
-    chatSquadEmptyDesc: "マルチプレイヤーモードが利用可能になると、チームがここに表示されます。",
+    chatSquadEmptyDesc: "新しく作成するか、招待コードで参加しましょう。",
     chatFriendsEmptyTitle: "まだフレンドを追加していません",
     chatFriendsEmptyDesc: "フレンド機能が実装されると、連絡先がこのリストに表示されます。",
-    chatFriendAddPlaceholder: "フレンドの電話番号",
+    chatFriendAddPlaceholder: "名前、電話番号、またはID（MKR-XXXXXX）",
     chatFriendAddBtn: "+ 追加",
     chatFriendAddSuccess: "フレンドを追加しました！",
-    chatFriendAddNotFound: "その番号はまだMiikaeruのフレンドタブを開いていません。",
-    chatFriendAddSelf: "それはあなた自身の番号です。",
+    chatFriendAddNotFound: "その名前、電話番号、またはIDの相手が見つかりませんでした。",
+    chatFriendAddSelf: "それはあなた自身です。",
     chatFriendAddNoSession: "フレンドを追加するにはまずログインしてください。",
     chatFriendAddError: "追加できませんでした — もう一度試してください。",
+    chatMyIdLabel: "あなたのID:",
+    chatMyIdCopyBtn: "📋 コピー",
+    chatMyIdCopied: "IDをコピーしました！",
+    chatSquadNamePlaceholder: "スクワッド名",
+    chatSquadCreateBtn: "+ 作成",
+    chatSquadCodePlaceholder: "招待コード",
+    chatSquadJoinBtn: "参加",
+    chatSquadLeaveBtn: "退出",
+    chatSquadInputPlaceholder: "スクワッドにメッセージ...",
+    chatSquadCodeLabel: "コード:",
+    chatSquadCreateSuccess: "スクワッドを作成しました！",
+    chatSquadJoinSuccess: "スクワッドに参加しました！",
+    chatSquadJoinNotFound: "そのコードは存在しません。",
+    chatSquadNoSession: "まずログインしてください。",
+    chatSquadError: "エラーが発生しました — もう一度お試しください。",
+    chatSquadNameRequired: "スクワッドに名前を付けてください。",
+    chatSquadCodeRequired: "コードを入力してください。",
     chatFriendThreadBack: "← フレンド",
     chatFriendInputPlaceholder: "メッセージを入力...",
     chatFriendTranslating: "翻訳中…",
@@ -6584,7 +6635,12 @@ document.addEventListener("DOMContentLoaded", () => {
   // de funciones) /api/init-db no existe: el fetch falla, se atrapa en
   // el catch y la app sigue funcionando igual — mismo criterio "mejor
   // esfuerzo" que el resto de las integraciones con Supabase acá.
-  const DB_INIT_FLAG_KEY = "miikaeru_db_init_v20260806-1";
+  // Versión del flag subida (antes v20260806-1): el esquema cambió acá
+  // mismo (unique_id en app_contacts + tablas de Escuadrones) — sin este
+  // bump, los dispositivos que ya corrieron /api/init-db con el esquema
+  // viejo nunca volverían a llamarlo y se quedarían sin las tablas
+  // nuevas hasta limpiar su localStorage a mano.
+  const DB_INIT_FLAG_KEY = "miikaeru_db_init_v20260809-1";
   if (!localStorage.getItem(DB_INIT_FLAG_KEY)) {
     fetch("/api/init-db")
       .then((res) => res.json())
@@ -6629,6 +6685,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const chatFriendTestFallback = document.getElementById("chat-friend-test-fallback");
   const chatFriendTestLangSelect = document.getElementById("chat-friend-test-lang-select");
   const chatFriendTestCreateBtn = document.getElementById("chat-friend-test-create-btn");
+  const chatMyIdDisplay = document.getElementById("chat-my-id");
+  const chatMyIdValue = document.getElementById("chat-my-id-value");
+  const chatMyIdCopyBtn = document.getElementById("chat-my-id-copy");
+
+  // ---- Escuadrones (Squads) ----
+  const chatSquadNoSquad = document.getElementById("chat-squad-no-squad");
+  const chatSquadActive = document.getElementById("chat-squad-active");
+  const chatSquadCreateForm = document.getElementById("chat-squad-create-form");
+  const chatSquadNameInput = document.getElementById("chat-squad-name-input");
+  const chatSquadJoinForm = document.getElementById("chat-squad-join-form");
+  const chatSquadCodeInput = document.getElementById("chat-squad-code-input");
+  const chatSquadStatus = document.getElementById("chat-squad-status");
+  const chatSquadActiveName = document.getElementById("chat-squad-active-name");
+  const chatSquadActiveCode = document.getElementById("chat-squad-active-code");
+  const chatSquadLeaveBtn = document.getElementById("chat-squad-leave-btn");
+  const chatSquadFeed = document.getElementById("chat-squad-feed");
+  const chatSquadForm = document.getElementById("chat-squad-form");
+  const chatSquadInput = document.getElementById("chat-squad-input");
 
   // ---- Modo Conversación (traductor cara a cara) ----
   const conversationModeOpenBtn = document.getElementById("conversation-mode-open-btn");
@@ -6664,6 +6738,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   wireTextareaEnterEnvia(chatInput, chatForm);
   wireTextareaEnterEnvia(chatFriendInput, chatFriendForm);
+  wireTextareaEnterEnvia(chatSquadInput, chatSquadForm);
 
   const wishlistOpenBtn = document.getElementById("wishlist-open-btn");
   const wishlistModal = document.getElementById("wishlist-modal");
@@ -6746,7 +6821,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // pestaña o abrir el Dashboard modal solo para imprimir/exportar — ver
   // los .addEventListener() junto a buildDashboardReportHTML() más abajo.
   const finanzasQuickPrintDashboardBtn = document.getElementById("finanzas-quick-print-dashboard-btn");
-  const finanzasQuickPrintFormBtn = document.getElementById("finanzas-quick-print-form-btn");
   const finanzasQuickPdfBtn = document.getElementById("finanzas-quick-pdf-btn");
 
   // Pestaña "Servicios / Negocio": registro de transacciones (Tipo 1
@@ -9466,6 +9540,7 @@ document.addEventListener("DOMContentLoaded", () => {
           b.setAttribute("aria-selected", String(active));
         });
         closeFriendThread();
+        stopSquadRealtime();
         document.querySelectorAll(".chat-tab-panel").forEach((panel) => {
           panel.hidden = panel.dataset.chatPanel !== target;
         });
@@ -9473,6 +9548,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (target === "friends") {
           await ensureContactRegistered();
           renderChatFriendsList(await loadFriends());
+        }
+        if (target === "squad") {
+          await ensureContactRegistered();
+          await renderSquadTab();
         }
       });
     });
@@ -9577,6 +9656,48 @@ document.addEventListener("DOMContentLoaded", () => {
     return account && account.phone ? account.phone : null;
   }
 
+  // ---- ID único autogenerado ("MKR-892471") ----
+  // Además del teléfono y el nombre, cada usuario tiene un ID corto y
+  // compartible para buscarse/agregarse sin tener que dar el número —
+  // pedido explícito. Vive en app_contacts.unique_id (Supabase), se
+  // genera UNA sola vez por teléfono la primera vez que se registra el
+  // contacto (ver ensureContactRegistered() más abajo) y de ahí en
+  // adelante siempre se reutiliza el mismo, nunca se pisa.
+  let myUniqueId = null;
+
+  function generateUniqueId() {
+    const digits = Math.floor(100000 + Math.random() * 900000); // 6 dígitos, nunca arranca en 0
+    return `MKR-${digits}`;
+  }
+
+  function renderMyUniqueId() {
+    if (!chatMyIdDisplay || !chatMyIdValue) return;
+    if (myUniqueId) {
+      chatMyIdValue.textContent = myUniqueId;
+      chatMyIdDisplay.hidden = false;
+    } else {
+      chatMyIdDisplay.hidden = true;
+    }
+  }
+
+  if (chatMyIdCopyBtn) {
+    chatMyIdCopyBtn.addEventListener("click", async () => {
+      if (!myUniqueId) return;
+      try {
+        await navigator.clipboard.writeText(myUniqueId);
+      } catch (err) {
+        // Clipboard API puede fallar (sin permiso/HTTP sin TLS) — el ID
+        // ya está visible en pantalla como respaldo, así que no hace
+        // falta un segundo mecanismo de copiado manual acá.
+      }
+      const original = chatMyIdCopyBtn.textContent;
+      chatMyIdCopyBtn.textContent = t("chatMyIdCopied");
+      setTimeout(() => {
+        chatMyIdCopyBtn.textContent = original;
+      }, 1500);
+    });
+  }
+
   // Respaldo en la nube del progreso del operador (Nivel/XP/Oro/
   // Diamantes/Racha) — localStorage sigue siendo la ÚNICA fuente de
   // verdad real (mismo criterio que syncTransactionToSupabase()); esto
@@ -9625,12 +9746,36 @@ document.addEventListener("DOMContentLoaded", () => {
     const phone = myFriendPhone();
     if (!phone || !supabaseClient) return;
     try {
-      await supabaseClient.from("app_contacts").upsert({
+      // Reutiliza el unique_id ya asignado si el contacto ya existía —
+      // solo genera uno nuevo la primera vez. Reintenta una vez ante un
+      // choque de unique_id (dos dispositivos generando al mismo tiempo,
+      // altamente improbable con 900000 combinaciones, pero posible).
+      const { data: existing } = await supabaseClient
+        .from("app_contacts")
+        .select("unique_id")
+        .eq("phone", phone)
+        .maybeSingle();
+      let uniqueId = (existing && existing.unique_id) || generateUniqueId();
+
+      let { error } = await supabaseClient.from("app_contacts").upsert({
         phone,
         display_name: state.operatorName || "Operador",
         preferred_language: loadChatLanguage(),
+        unique_id: uniqueId,
         updated_at: new Date().toISOString(),
       });
+      if (error && !(existing && existing.unique_id)) {
+        uniqueId = generateUniqueId();
+        ({ error } = await supabaseClient.from("app_contacts").upsert({
+          phone,
+          display_name: state.operatorName || "Operador",
+          preferred_language: loadChatLanguage(),
+          unique_id: uniqueId,
+          updated_at: new Date().toISOString(),
+        }));
+      }
+      if (!error) myUniqueId = uniqueId;
+      renderMyUniqueId();
     } catch (err) {
       console.warn("No se pudo registrar el contacto en Supabase:", err);
     }
@@ -9707,28 +9852,73 @@ document.addEventListener("DOMContentLoaded", () => {
     return contacts[phone];
   }
 
-  async function addFriendByPhone(targetPhone) {
+  // Formato exacto del ID único generado por generateUniqueId() — se
+  // acepta con o sin mayúsculas al buscar (MKR-892471 / mkr-892471).
+  function isUniqueIdFormat(query) {
+    return /^mkr-\d{6}$/i.test(query.trim());
+  }
+
+  // Heurística de "esto parece un teléfono": dígitos con opcional +/
+  // espacios/guiones, al menos 6 dígitos — separa el caso de "buscar por
+  // nombre" (cualquier otra cosa) sin necesitar un formato estricto de
+  // teléfono internacional.
+  function isPhoneFormat(query) {
+    const q = query.trim();
+    return /^\+?[\d\s-]{6,}$/.test(q) && (q.match(/\d/g) || []).length >= 6;
+  }
+
+  // Resuelve una búsqueda de "Agregar amigo" (Nombre, Teléfono o ID
+  // único) a UN contacto de app_contacts, en ese orden de detección de
+  // formato — pedido explícito: buscar/agregar por cualquiera de los
+  // tres criterios. Mismo criterio que antes de distinguir "la consulta
+  // falló" (schema-missing) de "no hay fila" (not-found).
+  async function findContactByQuery(query) {
+    const q = query.trim();
+    if (!q) return null;
+
+    if (isUniqueIdFormat(q)) {
+      const { data, error } = await supabaseClient
+        .from("app_contacts")
+        .select("*")
+        .ilike("unique_id", q)
+        .maybeSingle();
+      if (error) throw new Error("schema-missing");
+      return data || null;
+    }
+
+    if (isPhoneFormat(q)) {
+      const { data, error } = await supabaseClient
+        .from("app_contacts")
+        .select("*")
+        .eq("phone", q)
+        .maybeSingle();
+      if (error) throw new Error("schema-missing");
+      return data || null;
+    }
+
+    // Búsqueda por nombre: parcial e insensible a mayúsculas, se queda
+    // con la primera coincidencia (misma app sin autenticación real de
+    // usuario final — mismo criterio ya documentado para Amigos).
+    const { data, error } = await supabaseClient
+      .from("app_contacts")
+      .select("*")
+      .ilike("display_name", `%${q}%`)
+      .limit(1);
+    if (error) throw new Error("schema-missing");
+    return (data && data[0]) || null;
+  }
+
+  async function addFriendByQuery(query) {
     const myPhone = myFriendPhone();
     if (!myPhone || !supabaseClient) throw new Error("no-session");
-    if (targetPhone === myPhone) throw new Error("self");
 
-    // Distingue explícitamente "la consulta falló" (tablas todavía no
-    // creadas, red caída, etc. — ver /api/init-db) de "la consulta
-    // funcionó pero no hay fila" (número real que no está registrado).
-    // Antes esto se trataba igual y ambos casos mostraban "no
-    // encontrado", lo cual era confuso cuando el problema real era que
-    // las tablas de Supabase no existían todavía.
-    const { data: contact, error: selectError } = await supabaseClient
-      .from("app_contacts")
-      .select("phone")
-      .eq("phone", targetPhone)
-      .maybeSingle();
-    if (selectError) throw new Error("schema-missing");
+    const contact = await findContactByQuery(query);
     if (!contact) throw new Error("not-found");
+    if (contact.phone === myPhone) throw new Error("self");
 
     const { error } = await supabaseClient
       .from("app_friendships")
-      .upsert({ phone_a: myPhone, phone_b: targetPhone }, { onConflict: "phone_a,phone_b" });
+      .upsert({ phone_a: myPhone, phone_b: contact.phone }, { onConflict: "phone_a,phone_b" });
     if (error) throw new Error("schema-missing");
   }
 
@@ -9798,10 +9988,23 @@ document.addEventListener("DOMContentLoaded", () => {
       avatar.textContent = "🦁";
       item.appendChild(avatar);
 
+      const nameWrap = document.createElement("span");
+      nameWrap.className = "chat-friend-item__name";
+
       const name = document.createElement("span");
-      name.className = "chat-friend-item__name";
       name.textContent = friend.display_name;
-      item.appendChild(name);
+      nameWrap.appendChild(name);
+
+      // Sub-etiqueta (ID único o teléfono) — ayuda a distinguir contactos
+      // con nombres repetidos cuando se agregó por búsqueda de nombre.
+      const subId = friend.unique_id || friend.phone;
+      if (subId) {
+        const sub = document.createElement("span");
+        sub.className = "chat-friend-item__sub";
+        sub.textContent = subId;
+        nameWrap.appendChild(sub);
+      }
+      item.appendChild(nameWrap);
 
       // Insignia de "contacto de prueba local" — nunca se confunde con
       // un amigo real (ver createLocalTestContact()).
@@ -9863,13 +10066,13 @@ document.addEventListener("DOMContentLoaded", () => {
   if (chatFriendAddForm) {
     chatFriendAddForm.addEventListener("submit", async (event) => {
       event.preventDefault();
-      const phone = chatFriendPhoneInput.value.trim();
-      if (!phone) return;
+      const query = chatFriendPhoneInput.value.trim();
+      if (!query) return;
 
       chatFriendAddStatus.hidden = true;
       hideTestFallback();
       try {
-        await addFriendByPhone(phone);
+        await addFriendByQuery(query);
         chatFriendPhoneInput.value = "";
         chatFriendAddStatus.textContent = t("chatFriendAddSuccess");
         chatFriendAddStatus.className = "chat-friends-add__status chat-friends-add__status--ok";
@@ -9880,8 +10083,8 @@ document.addEventListener("DOMContentLoaded", () => {
         // NO se muestra como alerta roja — es un detalle de infraestructura
         // ajeno al usuario, y ya existe el Modo Simulación Local para
         // seguir probando sin fricción. Sí se muestra "not-found": ahí el
-        // número real simplemente no está registrado todavía, información
-        // legítima para quien está agregando un amigo.
+        // nombre/número/ID real simplemente no está registrado todavía,
+        // información legítima para quien está agregando un amigo.
         if (err.message === "schema-missing") {
           chatFriendAddStatus.hidden = true;
         } else {
@@ -9894,12 +10097,14 @@ document.addEventListener("DOMContentLoaded", () => {
           chatFriendAddStatus.className = "chat-friends-add__status chat-friends-add__status--error";
           chatFriendAddStatus.hidden = false;
         }
-        // Fallback de prueba: cuando el número real no está registrado,
-        // o también cuando las tablas todavía no existen (pedido
-        // explícito — poder probar sin bloquearse con el mensaje
-        // restrictivo). NO se ofrece para "self"/"no-session": esos no
-        // tienen sentido resolverlos con un contacto de prueba.
-        if (err.message === "not-found" || err.message === "schema-missing") showTestFallback(phone);
+        // Fallback de prueba: los contactos de prueba locales se
+        // identifican por teléfono (ver createLocalTestContact()), así
+        // que solo tiene sentido ofrecerlo cuando la búsqueda PARECE un
+        // teléfono — buscar "Juan" que no existe no debería ofrecer
+        // crear un contacto de prueba con "Juan" como número.
+        if ((err.message === "not-found" || err.message === "schema-missing") && isPhoneFormat(query)) {
+          showTestFallback(query);
+        }
       }
     });
   }
@@ -10170,6 +10375,275 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!text) return;
       chatFriendInput.value = "";
       sendFriendMessage(text);
+    });
+  }
+
+  // ---- Escuadrones (Squads) ----
+  // Mismo criterio que Amigos: identidad = teléfono de la Cuenta
+  // Principal, "quien conoce el código entra" (sin Supabase Auth de
+  // usuario final) — pedido explícito de poder Crear (nombre + código
+  // único) o Unirse (por código) a un escuadrón, con chat en tiempo real
+  // exclusivo entre sus miembros.
+  let mySquad = null;
+  let squadMessagesChannel = null;
+
+  // Sin 0/O/1/I para evitar confusión al compartir el código a mano/voz.
+  const SQUAD_CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
+  function generateSquadCode() {
+    let code = "";
+    for (let i = 0; i < 6; i++) {
+      code += SQUAD_CODE_CHARS[Math.floor(Math.random() * SQUAD_CODE_CHARS.length)];
+    }
+    return code;
+  }
+
+  function showSquadStatus(key, ok) {
+    if (!chatSquadStatus) return;
+    chatSquadStatus.textContent = t(key);
+    chatSquadStatus.className = `chat-friends-add__status ${ok ? "chat-friends-add__status--ok" : "chat-friends-add__status--error"}`;
+    chatSquadStatus.hidden = false;
+  }
+
+  // Resuelve app_squad_members -> app_squads en dos pasos (PostgREST no
+  // deja hacer join con .select("*") sin una relación declarada en el
+  // schema cache) — mismo patrón de dos pasos que loadFriends() ya usa
+  // para friendships -> contacts. Un usuario pertenece a un escuadrón a
+  // la vez por simplicidad de producto.
+  async function loadMySquad() {
+    const myPhone = myFriendPhone();
+    if (!myPhone || !supabaseClient) return null;
+    const { data: membership, error } = await supabaseClient
+      .from("app_squad_members")
+      .select("squad_id")
+      .eq("phone", myPhone)
+      .maybeSingle();
+    if (error || !membership) return null;
+    const { data: squad } = await supabaseClient
+      .from("app_squads")
+      .select("*")
+      .eq("id", membership.squad_id)
+      .maybeSingle();
+    return squad || null;
+  }
+
+  async function createSquad(name) {
+    const myPhone = myFriendPhone();
+    if (!myPhone || !supabaseClient) throw new Error("no-session");
+
+    let squad = null;
+    // Reintenta ante choque de código (33^6 combinaciones, un choque es
+    // muy improbable, pero el código es la clave real que la gente
+    // comparte a mano, vale la pena no fallar duro por eso).
+    for (let attempt = 0; attempt < 5 && !squad; attempt++) {
+      const { data, error } = await supabaseClient
+        .from("app_squads")
+        .insert({ code: generateSquadCode(), name: name.trim(), owner_phone: myPhone })
+        .select()
+        .single();
+      if (!error) {
+        squad = data;
+      } else if (!/duplicate|unique/i.test(error.message || "")) {
+        break;
+      }
+    }
+    if (!squad) throw new Error("schema-missing");
+
+    const { error: memberError } = await supabaseClient
+      .from("app_squad_members")
+      .upsert({ squad_id: squad.id, phone: myPhone }, { onConflict: "squad_id,phone" });
+    if (memberError) throw new Error("schema-missing");
+    return squad;
+  }
+
+  async function joinSquadByCode(code) {
+    const myPhone = myFriendPhone();
+    if (!myPhone || !supabaseClient) throw new Error("no-session");
+
+    const { data: squad, error } = await supabaseClient
+      .from("app_squads")
+      .select("*")
+      .ilike("code", code.trim())
+      .maybeSingle();
+    if (error) throw new Error("schema-missing");
+    if (!squad) throw new Error("not-found");
+
+    const { error: memberError } = await supabaseClient
+      .from("app_squad_members")
+      .upsert({ squad_id: squad.id, phone: myPhone }, { onConflict: "squad_id,phone" });
+    if (memberError) throw new Error("schema-missing");
+    return squad;
+  }
+
+  async function leaveSquad() {
+    const myPhone = myFriendPhone();
+    if (!mySquad || !myPhone || !supabaseClient) return;
+    await supabaseClient.from("app_squad_members").delete().eq("squad_id", mySquad.id).eq("phone", myPhone);
+    stopSquadRealtime();
+    mySquad = null;
+  }
+
+  function buildSquadMessageElement(msg) {
+    const myPhone = myFriendPhone();
+    const isOwn = msg.phone_from === myPhone;
+
+    const el = document.createElement("div");
+    el.className = `message ${isOwn ? "message--user" : "message--friend"}`;
+    el.dataset.msgId = msg.id;
+
+    const author = document.createElement("span");
+    author.className = "message__author";
+    author.textContent = isOwn ? (state.operatorName || "TÚ") : msg.display_name;
+    el.appendChild(author);
+
+    const text = document.createElement("p");
+    text.className = "message__text";
+    text.textContent = msg.text;
+    el.appendChild(text);
+
+    const time = document.createElement("span");
+    time.className = "message__time";
+    time.textContent = formatTime(new Date(msg.created_at));
+    el.appendChild(time);
+
+    return el;
+  }
+
+  function appendSquadMessage(msg) {
+    if (!chatSquadFeed) return;
+    chatSquadFeed.appendChild(buildSquadMessageElement(msg));
+    chatSquadFeed.scrollTop = chatSquadFeed.scrollHeight;
+  }
+
+  async function loadSquadMessages() {
+    if (!chatSquadFeed || !mySquad || !supabaseClient) return;
+    chatSquadFeed.innerHTML = "";
+    const { data, error } = await supabaseClient
+      .from("app_squad_messages")
+      .select("*")
+      .eq("squad_id", mySquad.id)
+      .order("created_at", { ascending: true })
+      .limit(100);
+    if (!error && data) data.forEach((msg) => appendSquadMessage(msg));
+    chatSquadFeed.scrollTop = chatSquadFeed.scrollHeight;
+  }
+
+  function stopSquadRealtime() {
+    if (squadMessagesChannel && supabaseClient) {
+      supabaseClient.removeChannel(squadMessagesChannel);
+      squadMessagesChannel = null;
+    }
+  }
+
+  // Un solo canal por escuadrón, compartido por TODOS sus miembros — a
+  // diferencia de wireFriendRealtime() (que filtra en el cliente porque
+  // la conversación es "cualquiera de los dos lados"), acá sí hay una
+  // columna fija (squad_id) para filtrar server-side.
+  function wireSquadRealtime() {
+    stopSquadRealtime();
+    if (!supabaseClient || !mySquad) return;
+    squadMessagesChannel = supabaseClient
+      .channel(`squad-chat-${mySquad.id}`)
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "app_squad_messages", filter: `squad_id=eq.${mySquad.id}` },
+        (payload) => appendSquadMessage(payload.new)
+      )
+      .subscribe();
+  }
+
+  // Alterna entre el estado "sin Escuadrón" (crear/unirse) y "Escuadrón
+  // activo" (info + chat) — se llama al entrar a la pestaña y después de
+  // crear/unirse/salir con éxito.
+  async function renderSquadTab() {
+    mySquad = await loadMySquad();
+    if (mySquad) {
+      if (chatSquadNoSquad) chatSquadNoSquad.hidden = true;
+      if (chatSquadActive) chatSquadActive.hidden = false;
+      if (chatSquadActiveName) chatSquadActiveName.textContent = `🛡️ ${mySquad.name}`;
+      if (chatSquadActiveCode) chatSquadActiveCode.textContent = `${t("chatSquadCodeLabel")} ${mySquad.code}`;
+      await loadSquadMessages();
+      wireSquadRealtime();
+    } else {
+      stopSquadRealtime();
+      if (chatSquadActive) chatSquadActive.hidden = true;
+      if (chatSquadNoSquad) chatSquadNoSquad.hidden = false;
+      if (chatSquadStatus) chatSquadStatus.hidden = true;
+    }
+  }
+
+  if (chatSquadCreateForm) {
+    chatSquadCreateForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const name = chatSquadNameInput.value.trim();
+      if (chatSquadStatus) chatSquadStatus.hidden = true;
+      if (!name) {
+        showSquadStatus("chatSquadNameRequired", false);
+        return;
+      }
+      try {
+        await createSquad(name);
+        chatSquadNameInput.value = "";
+        showSquadStatus("chatSquadCreateSuccess", true);
+        await renderSquadTab();
+      } catch (err) {
+        showSquadStatus(err.message === "no-session" ? "chatSquadNoSession" : "chatSquadError", false);
+      }
+    });
+  }
+
+  if (chatSquadJoinForm) {
+    chatSquadJoinForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const code = chatSquadCodeInput.value.trim();
+      if (chatSquadStatus) chatSquadStatus.hidden = true;
+      if (!code) {
+        showSquadStatus("chatSquadCodeRequired", false);
+        return;
+      }
+      try {
+        await joinSquadByCode(code);
+        chatSquadCodeInput.value = "";
+        showSquadStatus("chatSquadJoinSuccess", true);
+        await renderSquadTab();
+      } catch (err) {
+        const key =
+          err.message === "not-found" ? "chatSquadJoinNotFound" :
+          err.message === "no-session" ? "chatSquadNoSession" :
+          "chatSquadError";
+        showSquadStatus(key, false);
+      }
+    });
+  }
+
+  if (chatSquadLeaveBtn) {
+    chatSquadLeaveBtn.addEventListener("click", async () => {
+      await leaveSquad();
+      await renderSquadTab();
+    });
+  }
+
+  async function sendSquadMessage(text) {
+    const myPhone = myFriendPhone();
+    if (!myPhone || !mySquad || !text.trim() || !supabaseClient) return;
+    await supabaseClient.from("app_squad_messages").insert({
+      squad_id: mySquad.id,
+      phone_from: myPhone,
+      display_name: state.operatorName || "Operador",
+      text: text.trim(),
+    });
+    // La propia inserción también vuelve por Realtime (INSERT event) —
+    // no se pinta acá para no duplicar la burbuja, mismo criterio que
+    // sendFriendMessage().
+  }
+
+  if (chatSquadForm) {
+    chatSquadForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const text = chatSquadInput.value.trim();
+      if (!text) return;
+      chatSquadInput.value = "";
+      sendSquadMessage(text);
     });
   }
 
@@ -11714,7 +12188,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // Acceso Rápido (arriba de las pestañas de Finanzas) — misma lógica
   // exacta que los botones de abajo, sin duplicar código de impresión.
   finanzasQuickPrintDashboardBtn.addEventListener("click", () => openPrintWindow(buildDashboardReportHTML()));
-  finanzasQuickPrintFormBtn.addEventListener("click", () => openPrintWindow(buildPrintableFormHTML()));
   finanzasQuickPdfBtn.addEventListener("click", () => openPrintWindow(buildDashboardReportHTML(), "pdf"));
 
   // Boleta de Pago / Comprobante de Liquidación de Servicios: usa

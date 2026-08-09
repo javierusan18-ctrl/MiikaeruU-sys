@@ -9440,6 +9440,168 @@ textarea,
   box-shadow: 0 0 12px rgba(255, 46, 154, 0.4);
 }
 
+/* "Tu ID" (#chat-my-id) — ID único autogenerado (MKR-XXXXXX), mismo
+   glass que .chat-friend-item para que se sienta parte del mismo grupo
+   de controles que el selector de idioma justo arriba. */
+.chat-my-id {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  margin-bottom: 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+}
+
+.chat-my-id__label {
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.chat-my-id__value {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--neon-cyan);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chat-my-id__copy {
+  flex-shrink: 0;
+  border: 1px solid var(--glass-border);
+  background: transparent;
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+  font-size: 0.66rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.chat-my-id__copy:hover {
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+}
+
+/* Estado "sin Escuadrón" (#chat-squad-no-squad) — a propósito NO usa la
+   clase .chat-tab-panel (a diferencia de .chat-tab-panel--empty en otros
+   lugares): ese div vive ANIDADO dentro de #chat-tab-squad, que sí es un
+   .chat-tab-panel de nivel superior, y la lógica de pestañas en app.js
+   hace document.querySelectorAll(".chat-tab-panel") para alternar
+   [hidden] por data-chat-panel — si este div compartiera la clase,
+   quedaría oculto a la fuerza en cada cambio de pestaña (no tiene
+   data-chat-panel propio). Mismas propiedades visuales que
+   .chat-tab-panel + .chat-tab-panel--empty combinadas, solo que con
+   nombre propio para no chocar con ese selector genérico. */
+.chat-squad-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 220px;
+  gap: 4px;
+}
+
+.chat-squad-empty .chat-friends-add {
+  width: 100%;
+  max-width: 320px;
+}
+
+.chat-squad-empty .chat-friends-add__status {
+  width: 100%;
+  max-width: 320px;
+  text-align: center;
+}
+
+/* Crear/Unirse a Escuadrón — reutiliza .chat-friends-add (input+botón en
+   fila) para no duplicar estilos; solo un pequeño respiro vertical entre
+   ambos formularios. */
+.chat-squad-create,
+.chat-squad-join {
+  margin-top: 4px;
+}
+
+.chat-squad-join input {
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Escuadrón activo (#chat-squad-active) — encabezado con nombre+código
+   compartible y botón de salir, mismo patrón visual que
+   .chat-friend-thread__header/__conversation-btn de arriba. */
+.chat-squad-active {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.chat-squad-active__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.chat-squad-active__info {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.chat-squad-active__name {
+  font-size: 0.88rem;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chat-squad-active__code {
+  display: block;
+  font-size: 0.68rem;
+  letter-spacing: 1px;
+  color: var(--neon-cyan);
+  font-weight: 700;
+}
+
+.chat-squad-active__leave {
+  flex-shrink: 0;
+  border: 1px solid var(--neon-magenta);
+  background: transparent;
+  color: var(--neon-magenta);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.chat-squad-active__leave:hover {
+  background: var(--neon-magenta);
+  color: #04121a;
+  box-shadow: 0 0 12px rgba(255, 46, 154, 0.4);
+}
+
+/* Etiqueta de identificación (teléfono/ID) bajo el nombre en la lista de
+   Amigos — ayuda a distinguir contactos con nombres repetidos cuando se
+   agregó por búsqueda de nombre en vez de teléfono/ID exacto. */
+.chat-friend-item__sub {
+  font-size: 0.62rem;
+  color: var(--text-secondary);
+  opacity: 0.8;
+}
+
 /* ===================== MODO CONVERSACIÓN =====================
    Traductor cara a cara estilo app de traductor móvil: pantalla
    dividida en 2 paneles grandes, uno por persona, cada uno con su
@@ -9730,9 +9892,19 @@ textarea,
 }
 
 .chat-friend-item__name {
+  display: flex;
+  flex-direction: column;
   flex: 1;
+  min-width: 0;
   font-size: 0.82rem;
   color: var(--text-primary);
+  overflow: hidden;
+}
+
+.chat-friend-item__name > span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .chat-friend-item__status {

@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260808-3" />
+  <link rel="stylesheet" href="style.css?v=20260809-1" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -436,16 +436,71 @@
             </form>
           </div>
 
-          <!-- Pestaña "Escuadrón": la app todavía no tiene ningún sistema
-               multijugador/de equipos real — mismo criterio "no prometer
-               lo que no existe" que el resto de la app (ver badges
-               "Próximamente" en Karaoke/N3-N1 de Idiomas) en vez de
-               simular compañeros de equipo falsos. -->
-          <div class="chat-tab-panel chat-tab-panel--empty" id="chat-tab-squad" data-chat-panel="squad" hidden>
-            <div class="chat-empty-state">
-              <span class="chat-empty-state__icon">🛡️</span>
-              <p class="chat-empty-state__title" data-i18n="chatSquadEmptyTitle">Todavía no tienes un Escuadrón</p>
-              <p class="chat-empty-state__desc" data-i18n="chatSquadEmptyDesc">Cuando el modo multijugador esté disponible, tu equipo va a aparecer acá.</p>
+          <!-- Pestaña "Escuadrón": sistema real vía Supabase
+               (app_squads/app_squad_members/app_squad_messages — ver
+               app.js). Dos estados posibles, alternados por
+               renderSquadTab() en app.js: sin escuadrón (crear/unirse) o
+               con escuadrón activo (info + chat en tiempo real, mismo
+               patrón de Realtime que "Amigos"). Misma identidad
+               (teléfono de la Cuenta Principal) y mismo criterio "quien
+               conoce el código entra" que Amigos. -->
+          <div class="chat-tab-panel" id="chat-tab-squad" data-chat-panel="squad" hidden>
+            <div class="chat-squad-empty" id="chat-squad-no-squad">
+              <div class="chat-empty-state">
+                <span class="chat-empty-state__icon">🛡️</span>
+                <p class="chat-empty-state__title" data-i18n="chatSquadEmptyTitle">Todavía no tienes un Escuadrón</p>
+                <p class="chat-empty-state__desc" data-i18n="chatSquadEmptyDesc">Creá uno nuevo o unite con un código de invitación.</p>
+              </div>
+
+              <form class="chat-friends-add chat-squad-create" id="chat-squad-create-form">
+                <input
+                  type="text"
+                  id="chat-squad-name-input"
+                  data-i18n-placeholder="chatSquadNamePlaceholder"
+                  placeholder="Nombre del Escuadrón"
+                  autocomplete="off"
+                  maxlength="30"
+                />
+                <button type="submit" id="chat-squad-create-btn" data-i18n="chatSquadCreateBtn">+ Crear</button>
+              </form>
+
+              <form class="chat-friends-add chat-squad-join" id="chat-squad-join-form">
+                <input
+                  type="text"
+                  id="chat-squad-code-input"
+                  data-i18n-placeholder="chatSquadCodePlaceholder"
+                  placeholder="Código de invitación"
+                  autocomplete="off"
+                  maxlength="6"
+                  style="text-transform: uppercase;"
+                />
+                <button type="submit" id="chat-squad-join-btn" data-i18n="chatSquadJoinBtn">Unirse</button>
+              </form>
+
+              <p class="chat-friends-add__status" id="chat-squad-status" hidden></p>
+            </div>
+
+            <div class="chat-squad-active" id="chat-squad-active" hidden>
+              <div class="chat-squad-active__header">
+                <div class="chat-squad-active__info">
+                  <h3 class="chat-squad-active__name" id="chat-squad-active-name"></h3>
+                  <span class="chat-squad-active__code" id="chat-squad-active-code" title="Código de invitación"></span>
+                </div>
+                <button type="button" class="chat-squad-active__leave" id="chat-squad-leave-btn" data-i18n="chatSquadLeaveBtn">Salir</button>
+              </div>
+              <div class="chat__feed" id="chat-squad-feed"></div>
+              <form class="chat__input" id="chat-squad-form">
+                <textarea
+                  id="chat-squad-input"
+                  rows="1"
+                  data-i18n-placeholder="chatSquadInputPlaceholder"
+                  placeholder="Escribe un mensaje al Escuadrón..."
+                  autocomplete="off"
+                ></textarea>
+                <button type="submit" class="btn-send" aria-label="Enviar mensaje">
+                  <span data-i18n="chatSend">Enviar</span>
+                </button>
+              </form>
             </div>
           </div>
 
@@ -474,12 +529,29 @@
               <div class="chat-lang-picker__grid" id="chat-lang-picker-grid"></div>
             </div>
 
+            <!-- ID único autogenerado ("MKR-892471") — pedido explícito:
+                 cada usuario tiene, además de teléfono y nombre, un ID
+                 corto para compartir/buscar sin exponer el número. Se
+                 genera y persiste en Supabase (app_contacts.unique_id,
+                 ver generateUniqueId()/ensureContactRegistered() en
+                 app.js) — acá solo se muestra + botón de copiar. -->
+            <div class="chat-my-id" id="chat-my-id" hidden>
+              <span class="chat-my-id__label" data-i18n="chatMyIdLabel">Tu ID:</span>
+              <span class="chat-my-id__value" id="chat-my-id-value">—</span>
+              <button type="button" class="chat-my-id__copy" id="chat-my-id-copy" data-i18n="chatMyIdCopyBtn" title="Copiar ID">📋 Copiar</button>
+            </div>
+
+            <!-- Buscar/agregar amigo por Nombre, Teléfono o ID único —
+                 findContactByQuery() en app.js detecta el formato
+                 (MKR-XXXXXX -> por ID, número -> por teléfono, cualquier
+                 otra cosa -> por nombre) y resuelve al mismo flujo de
+                 addFriendByQuery()/app_friendships de siempre. -->
             <form class="chat-friends-add" id="chat-friend-add-form">
               <input
-                type="tel"
+                type="text"
                 id="chat-friend-phone-input"
                 data-i18n-placeholder="chatFriendAddPlaceholder"
-                placeholder="Número de teléfono del amigo"
+                placeholder="Nombre, teléfono o ID (MKR-XXXXXX)"
                 autocomplete="off"
               />
               <button type="submit" id="chat-friend-add-btn" data-i18n="chatFriendAddBtn">+ Agregar</button>
@@ -692,18 +764,21 @@
           <button type="button" class="finanzas-tab" data-finanzas-tab="servicios" data-i18n="financeTabServicios">Servicios / Negocio</button>
         </div>
 
-        <!-- Acceso Rápido: Imprimir Dashboard / Imprimir Formulario Físico /
-             Descargar PDF — visible arriba de AMBAS pestañas (no solo
-             Servicios/Negocio) para no obligar a abrir el Dashboard modal
-             completo o cambiar de pestaña solo para imprimir/exportar.
-             Reutiliza EXACTAMENTE la misma lógica que dashboardPrintBtn/
-             negocioPrintBtn/dashboardPdfBtn de más abajo (ver
-             buildDashboardReportHTML()/buildPrintableFormHTML()/
-             openPrintWindow() en app.js) — cero código nuevo de impresión,
-             solo un atajo de un clic desde arriba. -->
+        <!-- Acceso Rápido: Imprimir Dashboard / Descargar PDF — visible
+             arriba de AMBAS pestañas (no solo Servicios/Negocio) para no
+             obligar a abrir el Dashboard modal completo o cambiar de
+             pestaña solo para imprimir/exportar. Reutiliza EXACTAMENTE la
+             misma lógica que dashboardPrintBtn/dashboardPdfBtn de más
+             abajo (ver buildDashboardReportHTML()/openPrintWindow() en
+             app.js) — cero código nuevo de impresión, solo un atajo de un
+             clic desde arriba. NOTA: el atajo "Imprimir Formulario Físico"
+             que vivía acá se quitó por ser un duplicado exacto de
+             #negocio-print-btn (misma pestaña Servicios/Negocio, mismo
+             botón visible al mismo tiempo, misma función
+             buildPrintableFormHTML()) — se dejó solo la versión
+             contextual de abajo, junto al resto de acciones del Negocio. -->
         <div class="finanzas-quick-actions" id="finanzas-quick-actions">
           <button type="button" class="btn-scan btn-scan--print" id="finanzas-quick-print-dashboard-btn" data-i18n="financeQuickPrintDashboard">🖨️ Imprimir Dashboard</button>
-          <button type="button" class="btn-scan btn-scan--print" id="finanzas-quick-print-form-btn" data-i18n="negocioPrintBtn">🖨️ Imprimir Formulario Físico</button>
           <button type="button" class="btn-scan btn-scan--pdf" id="finanzas-quick-pdf-btn" data-i18n="btnDownloadPdf">📥 Descargar PDF</button>
         </div>
 
@@ -2855,7 +2930,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260808-3"></script>
+  <script src="app.js?v=20260809-1"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de

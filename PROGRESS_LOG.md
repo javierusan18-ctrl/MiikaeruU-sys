@@ -1694,3 +1694,31 @@ Confirmado el pipeline de despliegue del Bloque 62 (la rama `production` sigue s
 - `BrowserSession.screenshot()`: confirmado que degrada a `null` en vez de crashear cuando Playwright se cuelga esperando fuentes.
 - `BrowserSession.readConsoleErrors()`: confirmado que devuelve un array (2 errores reales capturados durante las pruebas, sin investigar su contenido — fuera del alcance de este bloque).
 - `config.js`: confirmado que se niega a arrancar con el mensaje de error esperado cuando falta `ANTHROPIC_API_KEY` (no hay `.env` real todavía, solo `.env.example`).
+
+---
+
+## Bloque 64 — ID único (MKR-XXXXXX), búsqueda de Amigos por Nombre/Teléfono/ID, y Escuadrones reales
+
+Pedido: dar a cada usuario un ID corto autogenerado además de teléfono/nombre, ampliar "Agregar amigo" para buscar por cualquiera de los tres, y convertir la pestaña "Escuadrón" (placeholder honesto desde el Bloque de rediseño de navegación) en un sistema real de crear/unirse/chatear en equipo.
+
+**1. `api/init-db.js`** — `alter table app_contacts add column if not exists unique_id text unique` (nullable, así los contactos ya registrados no rompen la restricción hasta que vuelvan a pasar por `ensureContactRegistered()`), más 3 tablas nuevas `app_squads`/`app_squad_members`/`app_squad_messages` con el mismo criterio de RLS permisivo ya documentado para Amigos (sin Supabase Auth de usuario final en esta app). Realtime habilitado para `app_squad_messages` (mismo mecanismo que `app_friend_messages`).
+
+**2. ID único** — `generateUniqueId()` en `app.js` arma `MKR-XXXXXX` (6 dígitos); `ensureContactRegistered()` ahora consulta si el contacto ya tenía uno antes de generar (nunca lo pisa), con un reintento ante choque improbable. Se muestra en la pestaña Amigos (`#chat-my-id`, con botón de copiar al portapapeles).
+
+**3. Búsqueda de Amigos por Nombre/Teléfono/ID** — `findContactByQuery()` detecta el formato (regex `MKR-\d{6}` → por ID; dígitos/+/espacios ≥6 dígitos → por teléfono; cualquier otra cosa → `ilike` parcial por nombre) y resuelve al mismo flujo de `app_friendships` de siempre. El campo de "Agregar amigo" pasó de `type="tel"` a `type="text"`. El fallback de "contacto de prueba local" ahora solo se ofrece cuando la búsqueda tenía pinta de teléfono (no tiene sentido crear un contacto de prueba a partir de un nombre que no existe).
+
+**4. Escuadrones reales** — `createSquad(name)` genera un código de 6 caracteres (`SQUAD_CODE_CHARS`, sin 0/O/1/I para que se pueda compartir a mano sin ambigüedad) con reintento ante choque; `joinSquadByCode(code)` busca por código y hace upsert en `app_squad_members`. Un canal Realtime por escuadrón (`squad-chat-${id}`, filtrado server-side por `squad_id` — a diferencia del canal de Amigos, acá si se puede filtrar en el servidor porque hay una sola columna fija). La pestaña `#chat-tab-squad` alterna entre el estado "sin escuadrón" (crear/unirse) y "escuadrón activo" (nombre + código compartible + chat) vía `renderSquadTab()`.
+
+**Bug real encontrado y corregido durante la propia implementación:** el div interno del estado "sin escuadrón" (`#chat-squad-no-squad`) iba a reusar la clase `.chat-tab-panel` (igual que el placeholder viejo) — pero la lógica de pestañas hace `document.querySelectorAll(".chat-tab-panel")` para alternar `[hidden]` por `data-chat-panel`, y ese div anidado no tiene ese atributo, así que hubiera quedado oculto a la fuerza en cada cambio de pestaña sin importar lo que hiciera `renderSquadTab()`. Se resolvió dándole una clase propia (`.chat-squad-empty`, mismas propiedades visuales) que no choca con ese selector genérico.
+
+**Cache-busting:** subí `style.css`/`app.js` a `?v=20260809-1` (`index.html`) y `CACHE_NAME` en `sw.js` a la misma versión — y, más importante, subí `DB_INIT_FLAG_KEY` en `app.js` a `miikaeru_db_init_v20260809-1` (antes `v20260806-1`): sin ese bump, cualquier dispositivo que ya hubiera corrido `/api/init-db` con el esquema viejo nunca hubiera vuelto a llamarlo y se habría quedado sin `unique_id`/tablas de Escuadrones hasta limpiar su `localStorage` a mano.
+
+**Pruebas realizadas (servidor estático local, sin runtime de Serverless Functions — `/api/init-db` no existe ahí, mismo criterio "mejor esfuerzo" ya documentado):**
+- `node --check` en `app.js` e `init-db.js`: sin errores de sintaxis.
+- Flujo completo en navegador real (Playwright vía esta sesión): registro de cuenta nueva, selección de Héroe, apertura del chat, las 3 pestañas (Todos/Escuadrón/Amigos) alternan sin quedar pegadas ni superpuestas.
+- Búsqueda de amigo por nombre inexistente: sin alerta roja (schema-missing), sin fallback de prueba (correcto, no es un teléfono).
+- Búsqueda de amigo por teléfono inexistente: ofrece el fallback de prueba; crear el contacto de prueba funciona, aparece en la lista con el teléfono como sub-etiqueta bajo el nombre, y su hilo de conversación abre normalmente (sin regresión en Amigos).
+- Pestaña Escuadrón sin escuadrón: muestra crear/unirse correctamente; intentar crear uno (contra el Supabase real, que todavía no tiene las tablas nuevas hasta que `/api/init-db` corra en producción) falla con el mensaje genérico esperado, sin crashear la app ni la consola.
+- 0 errores de JavaScript nuevos en consola en todo el flujo — los únicos `warn`/`error` visibles son los 404 esperados de `/api/init-db` (no existe en este servidor de desarrollo local) y de tablas de Supabase que recién se crearán en el primer load de producción tras este deploy.
+
+**Pendiente, fuera del alcance de esta sesión:** las tablas nuevas (`unique_id`, `app_squads`, `app_squad_members`, `app_squad_messages`) recién se crean solas la primera vez que alguien cargue la app ya desplegada (mecanismo de auto-init ya explicado arriba) — hasta ese momento, Crear/Unirse a Escuadrón en producción va a mostrar el mensaje de error genérico, exactamente como en las pruebas locales de este bloque.
