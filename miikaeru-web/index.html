@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260809-3" />
+  <link rel="stylesheet" href="style.css?v=20260809-6" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -2761,6 +2761,34 @@
     </div>
   </div>
 
+  <!-- MODAL: RESTABLECER CONTRASEÑA — se abre desde el botón
+       "🔑 Restablecer" de la pestaña Usuarios. Manda la nueva contraseña
+       a api/admin-reset-password.js, que la hashea del lado del servidor
+       antes de guardarla en public.users — nunca pasa en texto plano por
+       ningún lado más que este request HTTPS. Protegido por el mismo
+       isSuperAdmin del resto del Panel; el endpoint además revalida la
+       sesión de Supabase Auth server-side (ver verifyAdminToken() en
+       api/_utils.js), así que no alcanza con falsear isSuperAdmin desde
+       la consola del navegador. -->
+  <div class="modal-overlay" id="reset-password-modal" hidden>
+    <div class="modal modal--player-edit glass">
+      <button type="button" class="btn-modal-close" id="reset-password-modal-close" aria-label="Cerrar">✕</button>
+      <h2 class="modal-app__title" data-i18n="resetPasswordTitle">🔑 Restablecer Contraseña</h2>
+      <p class="modal__subtitle" id="reset-password-subtitle"></p>
+
+      <form id="reset-password-form">
+        <label for="reset-password-new" data-i18n="resetPasswordNewLabel">Nueva Contraseña</label>
+        <input type="password" id="reset-password-new" minlength="4" autocomplete="new-password" required />
+
+        <label for="reset-password-confirm" data-i18n="resetPasswordConfirmLabel">Confirmar Contraseña</label>
+        <input type="password" id="reset-password-confirm" minlength="4" autocomplete="new-password" required />
+
+        <button type="submit" class="btn-register" data-i18n="resetPasswordSaveBtn">Restablecer</button>
+        <p class="admin-panel__error" id="reset-password-error" hidden></p>
+      </form>
+    </div>
+  </div>
+
   <!-- MODAL: LOGIN DE ADMINISTRADOR — único punto de entrada para
        obtener sesión SUPER_ADMIN (ver checkAdminSession()/ADMIN_EMAIL en
        app.js). Autenticación REAL vía supabaseClient.auth (no un
@@ -2976,7 +3004,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260809-3"></script>
+  <script src="app.js?v=20260809-6"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de

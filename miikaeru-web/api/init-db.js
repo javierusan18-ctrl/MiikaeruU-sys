@@ -27,6 +27,34 @@
 const { Client } = require("pg");
 
 const SCHEMA_STATEMENTS = [
+  // Cuentas de Operador (login real por teléfono+contraseña) — reemplaza
+  // el candado local-only anterior (localStorage de un solo dispositivo,
+  // ver MASTER_ACCOUNT_KEY en app.js). La contraseña NUNCA se guarda en
+  // texto plano acá: se hashea con scrypt del lado del servidor (ver
+  // api/_utils.js) antes de llegar a esta tabla.
+  //
+  // A propósito, esta es la ÚNICA tabla de todo el proyecto SIN política
+  // "anon full access" más abajo — RLS habilitado sin ninguna policy
+  // significa que la anon key pública (la que vive en app.js, visible en
+  // el navegador de cualquiera) no puede leer ni escribir NADA acá, ni
+  // siquiera el hash. Los únicos puntos de entrada son las Serverless
+  // Functions api/register-account.js, api/login-account.js,
+  // api/admin-list-users.js y api/admin-reset-password.js, que usan la
+  // conexión directa a Postgres (SUPABASE_DB_URL, ver comentario de
+  // cabecera del archivo) y por lo tanto ignoran RLS por completo —
+  // mismo mecanismo de privilegio elevado que ya usa el resto de este
+  // archivo, solo que acá es la ÚNICA puerta de entrada posible.
+  `create table if not exists public.users (
+    id uuid default gen_random_uuid() primary key,
+    phone text unique not null,
+    password text not null,
+    name text,
+    level integer default 1,
+    xp integer default 0,
+    streak integer default 0,
+    status text default 'active',
+    created_at timestamp with time zone default timezone('utc'::text, now()) not null
+  )`,
   `create table if not exists public.app_contacts (
     phone text primary key,
     display_name text not null,
@@ -49,6 +77,15 @@ const SCHEMA_STATEMENTS = [
     created_at timestamptz not null default now(),
     unique (phone_a, phone_b)
   )`,
+  // REPLICA IDENTITY FULL — app_friendships es en realidad "sigue a"
+  // dirigida (phone_a=quien sigue, phone_b=a quien sigue, ver
+  // loadFriends()/addFriendByQuery() en app.js: Siguiendo -> Amigos
+  // mutuos cuando existe la fila inversa). wireFriendshipsRealtime()
+  // filtra los eventos INSERT/DELETE por `phone_b=eq.<mi teléfono>` para
+  // detectar en vivo cuando alguien me sigue de vuelta — sin esto, un
+  // evento DELETE solo trae la primary key (id) en su payload, no
+  // phone_b, así que el filtro nunca podría machear nada.
+  `alter table public.app_friendships replica identity full`,
   `create table if not exists public.app_friend_messages (
     id uuid primary key default gen_random_uuid(),
     phone_from text not null,
@@ -131,6 +168,9 @@ const SCHEMA_STATEMENTS = [
     text text not null,
     created_at timestamptz not null default now()
   )`,
+  // Sin política "anon full access" para esta — ver el comentario junto
+  // al CREATE TABLE de public.users más arriba, es intencional.
+  `alter table public.users enable row level security`,
   `alter table public.app_contacts enable row level security`,
   `alter table public.app_friendships enable row level security`,
   `alter table public.app_friend_messages enable row level security`,
@@ -272,7 +312,7 @@ module.exports = async function handler(req, res) {
       }
     }
 
-    for (const table of ["app_friend_messages", "app_squad_messages", "player_progress"]) {
+    for (const table of ["app_friendships", "app_friend_messages", "app_squad_messages", "player_progress"]) {
       try {
         await ensureRealtimeEnabled(client, table);
       } catch (err) {

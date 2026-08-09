@@ -8708,20 +8708,26 @@ textarea,
   text-align: center;
 }
 
-#player-edit-subtitle {
+/* #reset-password-modal reutiliza esta misma clase .modal--player-edit
+   (ver index.html) — los selectores de abajo listan ambos ids a
+   propósito en vez de duplicar todo el bloque de estilos. */
+#player-edit-subtitle,
+#reset-password-subtitle {
   text-align: center;
   color: var(--text-secondary);
   font-size: 0.8rem;
   margin-bottom: 10px;
 }
 
-#player-edit-form {
+#player-edit-form,
+#reset-password-form {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-#player-edit-form label {
+#player-edit-form label,
+#reset-password-form label {
   font-size: 0.65rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -8729,7 +8735,8 @@ textarea,
   margin-bottom: -4px;
 }
 
-#player-edit-form input {
+#player-edit-form input,
+#reset-password-form input {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 46, 154, 0.3);
   border-radius: var(--radius-sm);
@@ -8739,12 +8746,14 @@ textarea,
   outline: none;
 }
 
-#player-edit-form input:focus {
+#player-edit-form input:focus,
+#reset-password-form input:focus {
   border-color: var(--neon-magenta);
   box-shadow: 0 0 10px rgba(255, 46, 154, 0.4);
 }
 
-#player-edit-form .btn-register {
+#player-edit-form .btn-register,
+#reset-password-form .btn-register {
   margin-top: 6px;
 }
 
@@ -8824,6 +8833,12 @@ textarea,
 
 .admin-panel__table tbody tr:hover {
   background: rgba(255, 46, 154, 0.05);
+}
+
+/* Fila "Acciones" de Usuarios con 2 botones (Editar + Restablecer
+   Contraseña) — separación mínima para que no queden pegados. */
+.admin-panel__table td button + button {
+  margin-left: 6px;
 }
 
 /* ===================== REDISEÑO HUD ESTILO JUEGO (Mobile Legends) =====================
@@ -9229,25 +9244,100 @@ textarea,
 
 /* Mismo criterio que .message más arriba: var(--glass-bg)/
    var(--glass-border) en vez de rgba() fijo, para que Mobile Lite pueda
-   retematizar esto también el día que haya datos reales que mostrar. */
+   retematizar esto también el día que haya datos reales que mostrar.
+   Ahora es un <div> contenedor (antes era el <button> en sí) — pedido
+   explícito de agregar un botón de eliminar al lado de cada amigo, y un
+   <button> no puede contener OTRO <button> anidado (HTML inválido, rompe
+   el manejo de clicks) — ver .chat-friend-item__open/__delete abajo,
+   los dos botones reales, hermanos dentro de este div. */
 .chat-friend-item {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
   width: 100%;
   padding: 9px 12px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--glass-border);
   background: var(--glass-bg);
-  color: inherit;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
   transition: border-color 0.2s ease;
 }
 
 .chat-friend-item:hover {
   border-color: var(--neon-cyan);
+}
+
+/* Botón real que abre el hilo (antes era el .chat-friend-item entero) —
+   ocupa todo el espacio salvo el de eliminar, sin su propio look de
+   botón (hereda el del contenedor) para que la fila se siga viendo
+   exactamente igual que antes. */
+.chat-friend-item__open {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* Botón de eliminar — pedido explícito: "icono de papelera... de forma
+   que el usuario pueda eliminar la relación... de manera inmediata".
+   Magenta (mismo acento de "acción destructiva" que el resto de la app,
+   ver .chat-squad-active__leave) para diferenciarlo del resto de la fila. */
+.chat-friend-item__delete {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.chat-friend-item__delete:hover {
+  border-color: var(--neon-magenta);
+  color: var(--neon-magenta);
+  background: rgba(255, 46, 154, 0.1);
+}
+
+/* Insignia de relación — "Siguiendo" (cian, todavía no recíproco) vs
+   "Amigo" (dorado, confirmado/mutuo) — pedido explícito: "cambio
+   dinámico del ícono/botón... de Siguiendo a Amigo con su respectivo
+   color". Reemplaza el viejo .chat-friend-item__status (un punto vacío
+   que nunca se conectó a ningún estado real). */
+.chat-friend-item__relation {
+  flex-shrink: 0;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  border: 1px solid;
+}
+
+.chat-friend-item__relation--following {
+  color: var(--neon-cyan);
+  border-color: var(--neon-cyan);
+  background: rgba(0, 240, 255, 0.08);
+}
+
+.chat-friend-item__relation--friend {
+  color: var(--neon-gold);
+  border-color: var(--neon-gold);
+  background: rgba(255, 183, 0, 0.1);
+  box-shadow: 0 0 8px rgba(255, 183, 0, 0.25);
 }
 
 /* Formulario "Agregar amigo por teléfono" (#chat-friend-add-form) —
@@ -9951,14 +10041,6 @@ textarea,
   white-space: nowrap;
 }
 
-.chat-friend-item__status {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--text-secondary);
-  flex-shrink: 0;
-}
-
 /* Contacto de prueba local (Modo Simulación Local) — insignia + borde
    magenta punteado, mismo acento que .chat-friend-test-fallback, para
    que nunca se confunda con un amigo real agregado vía Supabase. */
@@ -9970,11 +10052,6 @@ textarea,
 .chat-friend-item__local-badge {
   font-size: 0.8rem;
   flex-shrink: 0;
-}
-
-.chat-friend-item--online .chat-friend-item__status {
-  background: var(--neon-gold);
-  box-shadow: 0 0 6px rgba(255, 183, 0, 0.7);
 }
 
 .modal--wishlist .wishlist__grid {

@@ -401,15 +401,24 @@ const defaultMinigameAdapter = {
 // ---------------------------------------------------
 // Cuenta Principal (candado de acceso al dispositivo)
 // Capa MÁS ARRIBA que el sistema de Sub-Perfiles de abajo: una sola
-// cuenta por dispositivo (celular + contraseña), guardada en texto plano
-// en localStorage. IMPORTANTE — esto NO es autenticación segura de
-// verdad (localStorage es legible por cualquiera con acceso a devtools
-// en el mismo dispositivo/navegador); es un candado liviano tipo
-// "control parental de acceso casual", no una cuenta protegida contra un
-// atacante real. No hay backend: no podría serlo.
+// cuenta por dispositivo (celular + contraseña). Registro/login viven en
+// Supabase de verdad (tabla public.users, ver api/register-account.js/
+// api/login-account.js) — la contraseña se hashea con scrypt del lado
+// del servidor y NUNCA se guarda en texto plano ni acá ni en la base.
+// `MASTER_ACCOUNT_KEY` en localStorage ya NO guarda la contraseña, solo
+// `{ phone, name }` para recordar la sesión en este dispositivo sin
+// tener que volver a pedir credenciales en cada carga (mismo criterio
+// de "quedate logueado" que cualquier sitio, ver checkMasterAuthAndInit()
+// más abajo — no hay token de sesión real, es confianza de un solo
+// dispositivo una vez que ya se autenticó una vez).
 // ---------------------------------------------------
 const MASTER_ACCOUNT_KEY = "miikaeru_master_account";
 const MASTER_LOGGED_IN_KEY = "miikaeru_master_logged_in";
+// Marca que la cuenta local vieja (guardada antes de este cambio, con
+// password en texto plano) ya se subió a Supabase — ver
+// migrateLegacyMasterAccountIfNeeded() más abajo. Sin esto, cada carga
+// de página reintentaría la migración de nuevo innecesariamente.
+const MASTER_MIGRATED_KEY = "miikaeru_master_migrated";
 
 // ---------------------------------------------------
 // Sistema de Perfiles de Usuario
@@ -723,6 +732,8 @@ const I18N = {
     masterAuthPasswordMismatch: "Las contraseñas no coinciden.",
     masterAuthInvalidCredentials: "Celular o contraseña incorrectos.",
     masterAuthAccountExists: "Ya existe una cuenta en este dispositivo. Inicia sesión con tu celular y contraseña.",
+    masterAuthAccountSuspended: "Esta cuenta está suspendida. Contacta al administrador.",
+    masterAuthNetworkError: "⚠️ No se pudo conectar. Revisa tu conexión e intenta de nuevo.",
     masterAuthGoRegister: "¿No tienes cuenta? Crear una",
     masterAuthGoLogin: "¿Ya tienes cuenta? Iniciar sesión",
     profileSwitchBtnTitle: "Cambiar de perfil",
@@ -830,6 +841,9 @@ const I18N = {
     chatFriendTestCreateBtn: "🧪 Crear contacto de prueba",
     chatFriendTestContactPrefix: "Contacto de prueba",
     chatFriendTestSuccess: "¡Contacto de prueba creado y agregado!",
+    chatFriendRemoveBtn: "Eliminar",
+    chatFriendRelationFollowing: "Siguiendo",
+    chatFriendRelationFriend: "🌟 Amigo",
     chatFriendSchemaMissing: "Las tablas de Amigos todavía no existen en Supabase — revisá SUPABASE_DB_URL en Vercel.",
     pillarFinanzas: "Finanzas",
     pillarTemplo: "Templo",
@@ -994,6 +1008,8 @@ const I18N = {
     usersColStatus: "Estado",
     usersColActions: "Acciones",
     usersEditBtn: "✏️ Editar",
+    usersResetPasswordBtn: "🔑 Restablecer",
+    usersNoProfileYet: "Todavía no hay progreso registrado para esta cuenta.",
     usersUnnamedOperator: "Sin nombre",
     usersStatusToday: "Hoy",
     usersStatusDaysAgo: "Hace {n} días",
@@ -1008,6 +1024,11 @@ const I18N = {
     playerEditDiamondsLabel: "Diamantes 💎",
     playerEditStreakLabel: "Racha 🔥",
     playerEditSaveBtn: "Guardar Cambios",
+    resetPasswordTitle: "🔑 Restablecer Contraseña",
+    resetPasswordNewLabel: "Nueva Contraseña",
+    resetPasswordConfirmLabel: "Confirmar Contraseña",
+    resetPasswordSaveBtn: "Restablecer",
+    resetPasswordSuccessMessage: "Contraseña restablecida correctamente.",
     negocioCurrencyLabel: "Moneda del Negocio",
     negocioNombreLabel: "Nombre del Negocio",
     negocioColaboradorLabel: "Colaborador / Vendedor *",
@@ -1551,6 +1572,8 @@ const I18N = {
     masterAuthPasswordMismatch: "Passwords don't match.",
     masterAuthInvalidCredentials: "Incorrect phone number or password.",
     masterAuthAccountExists: "An account already exists on this device. Log in with your phone and password.",
+    masterAuthAccountSuspended: "This account is suspended. Contact the administrator.",
+    masterAuthNetworkError: "⚠️ Couldn't connect. Check your connection and try again.",
     masterAuthGoRegister: "Don't have an account? Create one",
     masterAuthGoLogin: "Already have an account? Log in",
     profileSwitchBtnTitle: "Switch profile",
@@ -1658,6 +1681,9 @@ const I18N = {
     chatFriendTestCreateBtn: "🧪 Create test contact",
     chatFriendTestContactPrefix: "Test contact",
     chatFriendTestSuccess: "Test contact created and added!",
+    chatFriendRemoveBtn: "Remove",
+    chatFriendRelationFollowing: "Following",
+    chatFriendRelationFriend: "🌟 Friend",
     chatFriendSchemaMissing: "The Friends tables don't exist in Supabase yet — check SUPABASE_DB_URL in Vercel.",
     pillarFinanzas: "Finance",
     pillarTemplo: "Temple",
@@ -1822,6 +1848,8 @@ const I18N = {
     usersColStatus: "Status",
     usersColActions: "Actions",
     usersEditBtn: "✏️ Edit",
+    usersResetPasswordBtn: "🔑 Reset",
+    usersNoProfileYet: "No progress recorded yet for this account.",
     usersUnnamedOperator: "Unnamed",
     usersStatusToday: "Today",
     usersStatusDaysAgo: "{n} days ago",
@@ -1836,6 +1864,11 @@ const I18N = {
     playerEditDiamondsLabel: "Diamonds 💎",
     playerEditStreakLabel: "Streak 🔥",
     playerEditSaveBtn: "Save Changes",
+    resetPasswordTitle: "🔑 Reset Password",
+    resetPasswordNewLabel: "New Password",
+    resetPasswordConfirmLabel: "Confirm Password",
+    resetPasswordSaveBtn: "Reset",
+    resetPasswordSuccessMessage: "Password reset successfully.",
     negocioCurrencyLabel: "Business Currency",
     negocioNombreLabel: "Business Name",
     negocioColaboradorLabel: "Collaborator / Seller *",
@@ -2379,6 +2412,8 @@ const I18N = {
     masterAuthPasswordMismatch: "パスワードが一致しません。",
     masterAuthInvalidCredentials: "電話番号またはパスワードが正しくありません。",
     masterAuthAccountExists: "この端末にはすでにアカウントがあります。電話番号とパスワードでログインしてください。",
+    masterAuthAccountSuspended: "このアカウントは停止されています。管理者に連絡してください。",
+    masterAuthNetworkError: "⚠️ 接続できませんでした。接続を確認してもう一度お試しください。",
     masterAuthGoRegister: "アカウントをお持ちでないですか？作成する",
     masterAuthGoLogin: "すでにアカウントをお持ちですか？ログイン",
     profileSwitchBtnTitle: "プロフィールを切り替える",
@@ -2486,6 +2521,9 @@ const I18N = {
     chatFriendTestCreateBtn: "🧪 テスト用連絡先を作成",
     chatFriendTestContactPrefix: "テスト連絡先",
     chatFriendTestSuccess: "テスト用連絡先を作成して追加しました！",
+    chatFriendRemoveBtn: "削除",
+    chatFriendRelationFollowing: "フォロー中",
+    chatFriendRelationFriend: "🌟 フレンド",
     chatFriendSchemaMissing: "Amigo用のテーブルがまだSupabaseに存在しません — VercelのSUPABASE_DB_URLを確認してください。",
     pillarFinanzas: "財務",
     pillarTemplo: "神殿",
@@ -2650,6 +2688,8 @@ const I18N = {
     usersColStatus: "状態",
     usersColActions: "操作",
     usersEditBtn: "✏️ 編集",
+    usersResetPasswordBtn: "🔑 再設定",
+    usersNoProfileYet: "このアカウントにはまだ進行状況の記録がありません。",
     usersUnnamedOperator: "名前未設定",
     usersStatusToday: "本日",
     usersStatusDaysAgo: "{n}日前",
@@ -2664,6 +2704,11 @@ const I18N = {
     playerEditDiamondsLabel: "ダイヤモンド 💎",
     playerEditStreakLabel: "連続記録 🔥",
     playerEditSaveBtn: "変更を保存",
+    resetPasswordTitle: "🔑 パスワードを再設定",
+    resetPasswordNewLabel: "新しいパスワード",
+    resetPasswordConfirmLabel: "パスワードを確認",
+    resetPasswordSaveBtn: "再設定",
+    resetPasswordSuccessMessage: "パスワードが正常に再設定されました。",
     negocioCurrencyLabel: "ビジネスの通貨",
     negocioNombreLabel: "ビジネス名",
     negocioColaboradorLabel: "協力者 / 販売員 *",
@@ -6688,13 +6733,13 @@ document.addEventListener("DOMContentLoaded", () => {
   // bump, los dispositivos que ya corrieron /api/init-db con el esquema
   // viejo nunca volverían a llamarlo y se quedarían sin las tablas
   // nuevas hasta limpiar su localStorage a mano.
-  // Subida de nuevo (antes v20260809-1): este bloque agregó `replica
-  // identity full` a app_friend_messages (necesario para que los
-  // eventos Realtime de UPDATE —la traducción que llega después del
-  // INSERT— traigan phone_from/phone_to, ver init-db.js) — sin este
-  // bump, un dispositivo que ya hubiera corrido /api/init-db con el
-  // esquema anterior no lo volvería a llamar y se quedaría sin ese ajuste.
-  const DB_INIT_FLAG_KEY = "miikaeru_db_init_v20260809-2";
+  // Subida de nuevo (antes v20260809-2): este bloque agregó `replica
+  // identity full` a app_friendships + la sumó a la publicación de
+  // Realtime (necesario para wireFriendshipsRealtime() — detectar en
+  // vivo cuando alguien te sigue de vuelta y pasar de "Siguiendo" a
+  // "Amigo") — sin este bump, un dispositivo que ya hubiera corrido
+  // /api/init-db con el esquema anterior no lo volvería a llamar.
+  const DB_INIT_FLAG_KEY = "miikaeru_db_init_v20260809-3";
   if (!localStorage.getItem(DB_INIT_FLAG_KEY)) {
     fetch("/api/init-db")
       .then((res) => res.json())
@@ -7017,6 +7062,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const playerEditDiamondsInput = document.getElementById("player-edit-diamonds");
   const playerEditStreakInput = document.getElementById("player-edit-streak");
   const playerEditError = document.getElementById("player-edit-error");
+
+  const resetPasswordModal = document.getElementById("reset-password-modal");
+  const resetPasswordModalClose = document.getElementById("reset-password-modal-close");
+  const resetPasswordSubtitle = document.getElementById("reset-password-subtitle");
+  const resetPasswordForm = document.getElementById("reset-password-form");
+  const resetPasswordNewInput = document.getElementById("reset-password-new");
+  const resetPasswordConfirmInput = document.getElementById("reset-password-confirm");
+  const resetPasswordError = document.getElementById("reset-password-error");
 
   // Login de Administrador (Supabase Auth real — ver ADMIN_EMAIL/
   // checkAdminSession() arriba del todo del archivo)
@@ -8460,8 +8513,8 @@ document.addEventListener("DOMContentLoaded", () => {
       wireAutomationRealtime();
     }
     if (target === "users") {
-      fetchPlayerProgress();
-      wirePlayerProgressRealtime();
+      fetchUsersAccounts();
+      wireUsersRealtime();
     }
     if (target === "photos") renderAdminPhotosTab();
     if (target === "database") checkDatabaseStatus();
@@ -8964,17 +9017,25 @@ document.addEventListener("DOMContentLoaded", () => {
   automationRefreshBtn.addEventListener("click", fetchAutomationTasks);
 
   // ---------------- Usuarios (Panel de Administrador) ----------------
-  // Lee/edita `player_progress` — respaldo en la nube del Nivel/XP/Oro/
-  // Diamantes/Racha de cada operador (ver syncPlayerProgressToSupabase()
-  // arriba). Mismo patrón visual/estructural que Transacciones (tabla +
-  // botón por fila), con estadísticas rápidas como Inspector/
-  // Automatización. La protección real es la misma de siempre en este
-  // Panel: isSuperAdmin (revalidado acá también, no solo en
-  // openAdminPanel()) — sin eso, ni el botón que abre el Panel es
-  // visible.
+  // Lee la lista real de Cuentas de Operador (public.users, ver
+  // api/admin-list-users.js) — reemplaza el registro/login local-only
+  // anterior. El Nivel/XP/Racha que se muestran vienen de un JOIN contra
+  // la fila más reciente de `player_progress` por teléfono (el propio
+  // juego ya sincroniza eso en vivo, ver syncPlayerProgressToSupabase()
+  // más abajo) — así se ve el progreso real sin duplicar esa lógica acá.
+  // El endpoint corre con la conexión directa a Postgres, así que ni
+  // siquiera pide la columna `password`: ver el resto del criterio en
+  // el comentario de cabecera de admin-list-users.js.
+  //
+  // Protección: isSuperAdmin en el cliente (revalidado acá también, no
+  // solo en openAdminPanel()) PLUS el endpoint server-side vuelve a
+  // verificar la sesión de Supabase Auth de quien llama (ver
+  // verifyAdminToken() en api/_utils.js) — no alcanza con falsear
+  // isSuperAdmin desde la consola del navegador.
   let usersRows = [];
   let usersRealtimeChannel = null;
   let editingPlayerRow = null;
+  let resettingPasswordPhone = null;
 
   function setUsersStatus(text) {
     usersStatus.textContent = text;
@@ -9023,65 +9084,74 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       const actionsTd = document.createElement("td");
+
+      // Solo editable si ya existe un player_progress real para ese
+      // teléfono (profile_id) — una cuenta recién registrada que
+      // todavía no abrió la app en ningún dispositivo no tiene fila de
+      // progreso a la que apuntar el UPDATE.
       const editBtn = document.createElement("button");
       editBtn.type = "button";
       editBtn.className = "btn-scan";
       editBtn.textContent = t("usersEditBtn");
-      editBtn.addEventListener("click", () => openPlayerEditModal(row));
+      if (row.profile_id) {
+        editBtn.addEventListener("click", () => openPlayerEditModal(row));
+      } else {
+        editBtn.disabled = true;
+        editBtn.title = t("usersNoProfileYet");
+      }
       actionsTd.appendChild(editBtn);
-      tr.appendChild(actionsTd);
 
+      const resetBtn = document.createElement("button");
+      resetBtn.type = "button";
+      resetBtn.className = "btn-scan";
+      resetBtn.textContent = t("usersResetPasswordBtn");
+      resetBtn.addEventListener("click", () => openResetPasswordModal(row));
+      actionsTd.appendChild(resetBtn);
+
+      tr.appendChild(actionsTd);
       usersTableBody.appendChild(tr);
     });
   }
 
-  // Postgres "undefined_table" (42P01) o el "no encontrada en el schema
-  // cache" que devuelve PostgREST (PGRST205) — ambos significan lo mismo
-  // acá: /api/init-db todavía no corrió, la tabla no existe todavía. Se
-  // distingue de cualquier OTRO error (red, permisos, RLS) para poder
-  // mostrar una advertencia limpia y específica en vez del mensaje crudo
-  // de Supabase.
-  function isMissingTableError(error) {
-    if (!error) return false;
-    if (error.code === "42P01" || error.code === "PGRST205") return true;
-    const msg = (error.message || "").toLowerCase();
-    return msg.includes("does not exist") || msg.includes("could not find the table");
-  }
-
-  async function fetchPlayerProgress() {
+  async function fetchUsersAccounts() {
     if (!isSuperAdmin) return;
     if (!supabaseClient) {
       setUsersStatus(t("adminPanelNoClient"));
       return;
     }
     setUsersStatus(t("adminPanelLoading"));
-    // try/catch explícito (además del .catch() de la promesa) para que,
-    // pase lo que pase leyendo `player_progress` (tabla todavía no
-    // creada, RLS, red), la pestaña Usuarios SIEMPRE termine en un
-    // estado seguro — listado vacío + advertencia clara — y nunca rompa
-    // el resto del Panel de Administrador.
+    // try/catch explícito para que, pase lo que pase (tabla todavía no
+    // creada, red, token vencido), la pestaña Usuarios SIEMPRE termine
+    // en un estado seguro — listado vacío + advertencia clara — y nunca
+    // rompa el resto del Panel de Administrador.
     try {
-      const { data, error } = await supabaseClient
-        .from("player_progress")
-        .select("*")
-        .order("updated_at", { ascending: false });
-
-      if (error) {
+      const { data: sessionData } = await supabaseClient.auth.getSession();
+      const token = sessionData && sessionData.session && sessionData.session.access_token;
+      if (!token) {
         usersRows = [];
         renderUsersStats([]);
         renderUsersTable([]);
-        setUsersStatus(
-          isMissingTableError(error) ? t("usersTableMissingWarning") : `${t("adminPanelError")} ${error.message}`
-        );
+        setUsersStatus(t("adminPanelNoClient"));
         return;
       }
 
-      usersRows = data || [];
+      const res = await fetch("/api/admin-list-users", { headers: { Authorization: `Bearer ${token}` } });
+      const data = await res.json();
+
+      if (!data.ok) {
+        usersRows = [];
+        renderUsersStats([]);
+        renderUsersTable([]);
+        setUsersStatus(data.error === "table_missing" ? t("usersTableMissingWarning") : t("adminPanelNetworkError"));
+        return;
+      }
+
+      usersRows = data.users || [];
       renderUsersStats(usersRows);
       renderUsersTable(usersRows);
       setUsersStatus(`${t("usersRowCount")} ${usersRows.length}`);
     } catch (err) {
-      console.warn("Usuarios: no se pudo leer player_progress:", err);
+      console.warn("Usuarios: no se pudo leer las cuentas:", err);
       usersRows = [];
       renderUsersStats([]);
       renderUsersTable([]);
@@ -9089,10 +9159,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Suscripción realtime: si otra sesión de admin (u otro dispositivo
-  // sincronizando) toca `player_progress`, esta pestaña se refresca sola
-  // mientras esté abierta — mismo patrón que wireAutomationRealtime().
-  function wirePlayerProgressRealtime() {
+  // Suscripción realtime: si el propio juego sincroniza Nivel/XP/Racha
+  // nuevos a `player_progress` mientras esta pestaña está abierta, se
+  // refresca sola (los datos que se ven acá vienen de ese JOIN, ver
+  // fetchUsersAccounts()) — mismo patrón que wireAutomationRealtime().
+  function wireUsersRealtime() {
     if (usersRealtimeChannel || !supabaseClient) return;
     try {
       usersRealtimeChannel = supabaseClient
@@ -9100,20 +9171,19 @@ document.addEventListener("DOMContentLoaded", () => {
         .on(
           "postgres_changes",
           { event: "*", schema: "public", table: "player_progress" },
-          () => fetchPlayerProgress()
+          () => fetchUsersAccounts()
         )
         .subscribe();
     } catch (err) {
-      // Mejor esfuerzo: si la tabla todavía no existe o la suscripción
-      // falla por cualquier motivo, la pestaña sigue funcionando con
-      // fetchPlayerProgress() manual (botón Refrescar) — no debe romper
-      // el resto del Panel de Administrador.
+      // Mejor esfuerzo: si la suscripción falla por cualquier motivo, la
+      // pestaña sigue funcionando con fetchUsersAccounts() manual (botón
+      // Refrescar) — no debe romper el resto del Panel de Administrador.
       console.warn("Usuarios: no se pudo suscribir a cambios en tiempo real de player_progress:", err);
       usersRealtimeChannel = null;
     }
   }
 
-  usersRefreshBtn.addEventListener("click", fetchPlayerProgress);
+  usersRefreshBtn.addEventListener("click", fetchUsersAccounts);
 
   // ---------------- Modal de edición rápida de operador ----------------
 
@@ -9170,12 +9240,88 @@ document.addEventListener("DOMContentLoaded", () => {
           return;
         }
         closePlayerEditModal();
-        fetchPlayerProgress();
+        fetchUsersAccounts();
       })
       .catch(() => {
         playerEditError.textContent = t("adminPanelNetworkError");
         playerEditError.hidden = false;
       });
+  });
+
+  // ---------------- Modal de restablecer contraseña ----------------
+  // Manda la contraseña nueva a api/admin-reset-password.js, que la
+  // hashea del lado del servidor antes de guardarla — ver comentario de
+  // cabecera de ese archivo. El Admin nunca ve ni escribe la contraseña
+  // ACTUAL del Operador (no existe forma de leerla, ver
+  // api/admin-list-users.js): solo puede fijar una nueva.
+
+  function openResetPasswordModal(row) {
+    if (!isSuperAdmin) return;
+    resettingPasswordPhone = row.phone;
+    resetPasswordError.hidden = true;
+    resetPasswordForm.reset();
+    resetPasswordSubtitle.textContent = `${row.operator_name || t("usersUnnamedOperator")} · ${row.phone || "—"}`;
+    resetPasswordModal.hidden = false;
+  }
+
+  function closeResetPasswordModal() {
+    resetPasswordModal.hidden = true;
+    resettingPasswordPhone = null;
+  }
+
+  resetPasswordModalClose.addEventListener("click", closeResetPasswordModal);
+  resetPasswordModal.addEventListener("click", (event) => {
+    if (event.target === resetPasswordModal) closeResetPasswordModal();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !resetPasswordModal.hidden) closeResetPasswordModal();
+  });
+
+  resetPasswordForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (!isSuperAdmin || !resettingPasswordPhone || !supabaseClient) return;
+    resetPasswordError.hidden = true;
+
+    const newPassword = resetPasswordNewInput.value;
+    const confirmPassword = resetPasswordConfirmInput.value;
+    if (newPassword !== confirmPassword) {
+      resetPasswordError.textContent = t("masterAuthPasswordMismatch");
+      resetPasswordError.hidden = false;
+      return;
+    }
+
+    const submitBtn = resetPasswordForm.querySelector('button[type="submit"]');
+    if (submitBtn) submitBtn.disabled = true;
+    try {
+      const { data: sessionData } = await supabaseClient.auth.getSession();
+      const token = sessionData && sessionData.session && sessionData.session.access_token;
+      if (!token) {
+        resetPasswordError.textContent = t("adminPanelNoClient");
+        resetPasswordError.hidden = false;
+        return;
+      }
+
+      const res = await fetch("/api/admin-reset-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ phone: resettingPasswordPhone, newPassword }),
+      });
+      const data = await res.json();
+
+      if (!data.ok) {
+        resetPasswordError.textContent = t("adminPanelNetworkError");
+        resetPasswordError.hidden = false;
+        return;
+      }
+
+      closeResetPasswordModal();
+      addMessage({ author: "SISTEMA", text: t("resetPasswordSuccessMessage"), variant: "system" });
+    } catch (err) {
+      resetPasswordError.textContent = t("adminPanelNetworkError");
+      resetPasswordError.hidden = false;
+    } finally {
+      if (submitBtn) submitBtn.disabled = false;
+    }
   });
 
   // ---------------- Chat ----------------
@@ -9687,6 +9833,11 @@ document.addEventListener("DOMContentLoaded", () => {
         // en segundo plano sin ningún indicio visible.
         stopConversationListening();
         if (window.speechSynthesis) window.speechSynthesis.cancel();
+        // Solo tiene sentido escuchar "alguien me siguió de vuelta"
+        // mientras la pestaña Amigos está al frente — se corta al salir
+        // de ella (igual que stopSquadRealtime()) y se vuelve a armar
+        // cada vez que se entra, más abajo.
+        stopFriendshipsRealtime();
         document.querySelectorAll(".chat-tab-panel").forEach((panel) => {
           panel.hidden = panel.dataset.chatPanel !== target;
         });
@@ -9694,6 +9845,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (target === "friends") {
           await ensureContactRegistered();
           renderChatFriendsList(await loadFriends());
+          wireFriendshipsRealtime();
         }
         if (target === "squad") {
           await ensureContactRegistered();
@@ -10057,6 +10209,14 @@ document.addEventListener("DOMContentLoaded", () => {
     return (data && data[0]) || null;
   }
 
+  // app_friendships es en realidad una tabla de "sigue a" DIRIGIDA:
+  // phone_a = quien agrega/sigue, phone_b = a quien sigue. Nunca hizo
+  // falta una migración de esquema para esto — ya se insertaba siempre
+  // con phone_a=miPhone (ver más abajo); lo único que cambia acá es que
+  // ahora se LEE con esa dirección en mente en vez de tratarla como
+  // simétrica. Pedido explícito: "Seguir" primero, "Amigos mutuos"
+  // cuando la otra persona también te sigue de vuelta — ver loadFriends()
+  // más abajo, que calcula el estado comparando ambas direcciones.
   async function addFriendByQuery(query) {
     const myPhone = myFriendPhone();
     if (!myPhone || !supabaseClient) throw new Error("no-session");
@@ -10071,26 +10231,100 @@ document.addEventListener("DOMContentLoaded", () => {
     if (error) throw new Error("schema-missing");
   }
 
+  // Deja de seguir/quita de MI lista — solo borra MI lado de la relación
+  // (phone_a=miPhone, phone_b=el otro). Si el otro me seguía a mí, esa
+  // fila es SUYA y sigue existiendo (podría volver a aparecerme si yo lo
+  // vuelvo a agregar) — "eliminar" acá es sobre mi propia lista, no una
+  // acción bilateral, mismo criterio que "dejar de seguir" en cualquier
+  // red social. Contactos de prueba locales: se borran 100% de
+  // localStorage (contacto + sus mensajes), sin tocar Supabase.
+  async function removeFriend(friend) {
+    if (friend.isLocal) {
+      const contacts = loadLocalTestContacts();
+      delete contacts[friend.phone];
+      saveLocalTestContacts(contacts);
+      let allMessages = {};
+      try {
+        allMessages = JSON.parse(localStorage.getItem(LOCAL_TEST_MESSAGES_KEY)) || {};
+      } catch (err) {
+        allMessages = {};
+      }
+      delete allMessages[friend.phone];
+      localStorage.setItem(LOCAL_TEST_MESSAGES_KEY, JSON.stringify(allMessages));
+      return;
+    }
+    const myPhone = myFriendPhone();
+    if (!myPhone || !supabaseClient) return;
+    await supabaseClient.from("app_friendships").delete().eq("phone_a", myPhone).eq("phone_b", friend.phone);
+  }
+
   // Amigos reales (Supabase) + contactos de prueba locales, combinados
   // en una sola lista — así ambos aparecen juntos en "Amigos" sin
   // necesitar dos secciones separadas en pantalla. Si Supabase no
   // responde (tablas sin crear, sin sesión, etc.) igual devuelve los
   // contactos de prueba locales: el Modo Simulación Local nunca depende
   // de que el backend esté arriba.
+  //
+  // Cada contacto real trae `relationship: "following" | "friend"` —
+  // "following" mientras solo exista MI fila (phone_a=miPhone,
+  // phone_b=ellos); pasa a "friend" en cuanto TAMBIÉN exista la fila
+  // inversa (ellos me agregaron a mí). Los contactos de prueba locales
+  // siempre son "friend": no hay nadie del otro lado que pueda
+  // reciprocar, así que no tiene sentido dejarlos eternamente en
+  // "Siguiendo".
   async function loadFriends() {
-    const localContacts = Object.values(loadLocalTestContacts());
+    const localContacts = Object.values(loadLocalTestContacts()).map((c) => ({ ...c, relationship: "friend" }));
     const myPhone = myFriendPhone();
     if (!myPhone || !supabaseClient) return localContacts;
 
-    const { data: friendships, error } = await supabaseClient
-      .from("app_friendships")
-      .select("phone_a, phone_b")
-      .or(`phone_a.eq.${myPhone},phone_b.eq.${myPhone}`);
-    if (error || !friendships || !friendships.length) return localContacts;
+    const [{ data: following, error: followingError }, { data: followers }] = await Promise.all([
+      supabaseClient.from("app_friendships").select("phone_b").eq("phone_a", myPhone),
+      supabaseClient.from("app_friendships").select("phone_a").eq("phone_b", myPhone),
+    ]);
+    if (followingError || !following || !following.length) return localContacts;
 
-    const friendPhones = friendships.map((f) => (f.phone_a === myPhone ? f.phone_b : f.phone_a));
-    const { data: contacts } = await supabaseClient.from("app_contacts").select("*").in("phone", friendPhones);
-    return [...(contacts || []), ...localContacts];
+    const followerSet = new Set((followers || []).map((f) => f.phone_a));
+    const followingPhones = following.map((f) => f.phone_b);
+    const { data: contacts } = await supabaseClient.from("app_contacts").select("*").in("phone", followingPhones);
+    const withStatus = (contacts || []).map((c) => ({
+      ...c,
+      relationship: followerSet.has(c.phone) ? "friend" : "following",
+    }));
+    return [...withStatus, ...localContacts];
+  }
+
+  // Canal Realtime que escucha CUANDO ALGUIEN ME SIGUE (o deja de
+  // seguirme) — pedido explícito de "cambio dinámico": si estoy con la
+  // pestaña Amigos abierta y la otra persona recién me agrega de vuelta,
+  // mi entrada para ella pasa sola de "Siguiendo" a "Amigo" sin que yo
+  // tenga que cerrar y volver a abrir la pestaña. Solo activo mientras
+  // la pestaña Amigos está al frente (ver wiring en chatTabButtons).
+  let friendshipsChannel = null;
+
+  function stopFriendshipsRealtime() {
+    if (friendshipsChannel && supabaseClient) {
+      supabaseClient.removeChannel(friendshipsChannel);
+      friendshipsChannel = null;
+    }
+  }
+
+  function wireFriendshipsRealtime() {
+    stopFriendshipsRealtime();
+    const myPhone = myFriendPhone();
+    if (!supabaseClient || !myPhone) return;
+    friendshipsChannel = supabaseClient
+      .channel(`friendships-${myPhone}`)
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "app_friendships", filter: `phone_b=eq.${myPhone}` },
+        async () => renderChatFriendsList(await loadFriends())
+      )
+      .on(
+        "postgres_changes",
+        { event: "DELETE", schema: "public", table: "app_friendships", filter: `phone_b=eq.${myPhone}` },
+        async () => renderChatFriendsList(await loadFriends())
+      )
+      .subscribe();
   }
 
   // Lista de "Amigos" — ahora con datos reales de Supabase. Si `friends`
@@ -10128,14 +10362,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     friends.forEach((friend) => {
-      const item = document.createElement("button");
-      item.type = "button";
+      // Contenedor NO interactivo (antes era el <button> en sí) — ahora
+      // contiene DOS botones hermanos: abrir el hilo y eliminar. Ver
+      // comentario de .chat-friend-item en style.css.
+      const item = document.createElement("div");
       item.className = `chat-friend-item${friend.isLocal ? " chat-friend-item--local" : ""}`;
+
+      const openBtn = document.createElement("button");
+      openBtn.type = "button";
+      openBtn.className = "chat-friend-item__open";
 
       const avatar = document.createElement("span");
       avatar.className = "chat-friend-item__avatar";
       avatar.textContent = "🦁";
-      item.appendChild(avatar);
+      openBtn.appendChild(avatar);
 
       const nameWrap = document.createElement("span");
       nameWrap.className = "chat-friend-item__name";
@@ -10153,23 +10393,48 @@ document.addEventListener("DOMContentLoaded", () => {
         sub.textContent = subId;
         nameWrap.appendChild(sub);
       }
-      item.appendChild(nameWrap);
+      openBtn.appendChild(nameWrap);
 
       // Insignia de "contacto de prueba local" — nunca se confunde con
       // un amigo real (ver createLocalTestContact()).
       if (friend.isLocal) {
-        const badge = document.createElement("span");
-        badge.className = "chat-friend-item__local-badge";
-        badge.textContent = "🧪";
-        badge.title = t("chatFriendLocalBadgeTitle");
-        item.appendChild(badge);
+        const localBadge = document.createElement("span");
+        localBadge.className = "chat-friend-item__local-badge";
+        localBadge.textContent = "🧪";
+        localBadge.title = t("chatFriendLocalBadgeTitle");
+        openBtn.appendChild(localBadge);
       }
 
-      const status = document.createElement("span");
-      status.className = "chat-friend-item__status";
-      item.appendChild(status);
+      // Insignia de relación — "Siguiendo" (cian) vs "Amigo" (dorado,
+      // mutuo) — pedido explícito de cambio dinámico de color/ícono al
+      // volverse recíproca (ver loadFriends()/wireFriendshipsRealtime()).
+      const isFriend = friend.relationship === "friend";
+      const relationBadge = document.createElement("span");
+      relationBadge.className = `chat-friend-item__relation chat-friend-item__relation--${isFriend ? "friend" : "following"}`;
+      relationBadge.textContent = isFriend ? t("chatFriendRelationFriend") : t("chatFriendRelationFollowing");
+      openBtn.appendChild(relationBadge);
 
-      item.addEventListener("click", () => openFriendThread(friend));
+      openBtn.addEventListener("click", () => openFriendThread(friend));
+      item.appendChild(openBtn);
+
+      // Botón de eliminar — pedido explícito: ícono de papelera, quita
+      // la relación de la lista de inmediato (sin confirmación, sin
+      // recargar la pestaña entera).
+      const deleteBtn = document.createElement("button");
+      deleteBtn.type = "button";
+      deleteBtn.className = "chat-friend-item__delete";
+      deleteBtn.textContent = "🗑️";
+      deleteBtn.title = t("chatFriendRemoveBtn");
+      deleteBtn.setAttribute("aria-label", t("chatFriendRemoveBtn"));
+      deleteBtn.addEventListener("click", async (event) => {
+        event.stopPropagation();
+        deleteBtn.disabled = true;
+        await removeFriend(friend);
+        if (activeFriend && activeFriend.phone === friend.phone) closeFriendThread();
+        renderChatFriendsList(await loadFriends());
+      });
+      item.appendChild(deleteBtn);
+
       chatFriendsList.appendChild(item);
     });
   }
@@ -17028,7 +17293,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  masterRegisterForm.addEventListener("submit", (event) => {
+  // Deshabilita el botón de submit mientras el fetch está en vuelo (evita
+  // doble-submit por doble-click/doble-tap) y lo devuelve a su estado
+  // normal en el finally, pase lo que pase.
+  function setFormBusy(form, busy) {
+    const btn = form.querySelector('button[type="submit"]');
+    if (btn) btn.disabled = busy;
+  }
+
+  masterRegisterForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     masterRegisterError.hidden = true;
 
@@ -17036,11 +17309,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const password = masterRegisterPassword.value;
     const confirmPassword = masterRegisterPasswordConfirm.value;
 
-    // Este sistema es de UNA sola cuenta por dispositivo (ver MASTER_ACCOUNT_KEY
-    // más arriba): si ya existe una cuenta guardada, un submit de registro
-    // NUNCA debe sobreescribirla en silencio (eso era el bug reportado: un
-    // número viejo dejaba de reconocerse porque el registro pisaba la cuenta).
-    // En vez de eso, se avisa y se manda directo a la vista de login.
+    // Este sistema es de UNA sola cuenta RECORDADA por dispositivo (ver
+    // MASTER_ACCOUNT_KEY más arriba): si ya hay una cuenta guardada acá,
+    // un submit de registro NUNCA debe sobreescribirla en silencio (eso
+    // era el bug reportado originalmente: un número viejo dejaba de
+    // reconocerse porque el registro pisaba la cuenta). En vez de eso,
+    // se avisa y se manda directo a la vista de login. La unicidad REAL
+    // del teléfono la garantiza la base (`users.phone unique`, ver
+    // api/register-account.js) — esto es solo la guarda de UX local.
     if (loadMasterAccount()) {
       showMasterAuthView("login");
       masterLoginPhone.value = phone;
@@ -17055,10 +17331,42 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    localStorage.setItem(MASTER_ACCOUNT_KEY, JSON.stringify({ phone, password }));
-    localStorage.setItem(MASTER_LOGGED_IN_KEY, "true");
-    masterAuthModal.hidden = true;
-    onMasterAuthSuccess();
+    setFormBusy(masterRegisterForm, true);
+    try {
+      const res = await fetch("/api/register-account", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone, password }),
+      });
+      const data = await res.json();
+
+      if (!data.ok) {
+        if (data.error === "account_exists") {
+          showMasterAuthView("login");
+          masterLoginPhone.value = phone;
+          masterLoginError.textContent = t("masterAuthAccountExists");
+          masterLoginError.hidden = false;
+        } else {
+          masterRegisterError.textContent = t("masterAuthNetworkError");
+          masterRegisterError.hidden = false;
+        }
+        return;
+      }
+
+      // Ya no se guarda la contraseña acá — solo lo necesario para
+      // recordar la sesión en este dispositivo (ver comentario de
+      // MASTER_ACCOUNT_KEY arriba).
+      localStorage.setItem(MASTER_ACCOUNT_KEY, JSON.stringify({ phone: data.user.phone, name: data.user.name }));
+      localStorage.setItem(MASTER_LOGGED_IN_KEY, "true");
+      localStorage.setItem(MASTER_MIGRATED_KEY, "true");
+      masterAuthModal.hidden = true;
+      onMasterAuthSuccess();
+    } catch (err) {
+      masterRegisterError.textContent = t("masterAuthNetworkError");
+      masterRegisterError.hidden = false;
+    } finally {
+      setFormBusy(masterRegisterForm, false);
+    }
   });
 
   masterAuthGoRegisterBtn.addEventListener("click", () => {
@@ -17071,28 +17379,81 @@ document.addEventListener("DOMContentLoaded", () => {
     showMasterAuthView("login");
   });
 
-  masterLoginForm.addEventListener("submit", (event) => {
+  masterLoginForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     masterLoginError.hidden = true;
 
     const phone = masterLoginPhone.value.trim();
     const password = masterLoginPassword.value;
-    const account = loadMasterAccount();
 
-    if (!account || account.phone !== phone || account.password !== password) {
-      masterLoginError.textContent = t("masterAuthInvalidCredentials");
+    setFormBusy(masterLoginForm, true);
+    try {
+      const res = await fetch("/api/login-account", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone, password }),
+      });
+      const data = await res.json();
+
+      if (!data.ok) {
+        masterLoginError.textContent =
+          data.error === "account_suspended" ? t("masterAuthAccountSuspended") : t("masterAuthInvalidCredentials");
+        masterLoginError.hidden = false;
+        return;
+      }
+
+      localStorage.setItem(MASTER_ACCOUNT_KEY, JSON.stringify({ phone: data.user.phone, name: data.user.name }));
+      localStorage.setItem(MASTER_LOGGED_IN_KEY, "true");
+      localStorage.setItem(MASTER_MIGRATED_KEY, "true");
+      masterAuthModal.hidden = true;
+      onMasterAuthSuccess();
+    } catch (err) {
+      masterLoginError.textContent = t("masterAuthNetworkError");
       masterLoginError.hidden = false;
+    } finally {
+      setFormBusy(masterLoginForm, false);
+    }
+  });
+
+  // Sube a Supabase (public.users) una cuenta que todavía solo existe en
+  // el localStorage de ESTE dispositivo, guardada ahí antes de que
+  // existiera este sistema (con password en texto plano bajo
+  // MASTER_ACCOUNT_KEY) — así el Operador puede seguir entrando con la
+  // misma cuenta desde cualquier dispositivo sin tener que registrarse
+  // de nuevo. Mejor esfuerzo, silencioso: no le pide nada al Operador,
+  // no bloquea el arranque de la app, y si falla por red simplemente se
+  // reintenta en la próxima carga (MASTER_MIGRATED_KEY solo se marca en
+  // éxito o cuando ya no hace falta seguir intentando).
+  async function migrateLegacyMasterAccountIfNeeded() {
+    if (localStorage.getItem(MASTER_MIGRATED_KEY) === "true") return;
+    const account = loadMasterAccount();
+    if (!account || !account.phone || !account.password) {
+      localStorage.setItem(MASTER_MIGRATED_KEY, "true");
       return;
     }
-
-    localStorage.setItem(MASTER_LOGGED_IN_KEY, "true");
-    masterAuthModal.hidden = true;
-    onMasterAuthSuccess();
-  });
+    try {
+      const res = await fetch("/api/register-account", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone: account.phone, password: account.password }),
+      });
+      const data = await res.json();
+      // ok:true (recién subida) o account_exists (ya estaba — subida
+      // antes desde este mismo teléfono en otro momento/dispositivo):
+      // ambos casos significan que ya no hace falta reintentar.
+      if (data.ok || data.error === "account_exists") {
+        localStorage.setItem(MASTER_ACCOUNT_KEY, JSON.stringify({ phone: account.phone, name: account.name }));
+        localStorage.setItem(MASTER_MIGRATED_KEY, "true");
+      }
+    } catch (err) {
+      console.warn("Migración de cuenta local a Supabase: no se pudo completar, se reintentará en la próxima carga:", err);
+    }
+  }
 
   function checkMasterAuthAndInit() {
     if (localStorage.getItem(MASTER_LOGGED_IN_KEY) === "true") {
       masterAuthModal.hidden = true;
+      migrateLegacyMasterAccountIfNeeded();
       onMasterAuthSuccess();
       return;
     }
