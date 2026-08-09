@@ -1760,3 +1760,31 @@ Pedido: (1) mover "Conversación" (traductor cara a cara) a una pestaña princip
 - 0 errores de JavaScript nuevos en consola en todo el flujo.
 
 **Pendiente, 100% de tu lado:** agregar `SUPABASE_DB_URL` en Vercel (ver instrucciones arriba). Sin ese paso, Escuadrones y la sincronización de mensajes de Amigos van a seguir mostrando los mensajes honestos de "todavía configurándose" — el código ya está listo para funcionar apenas esa variable exista.
+
+---
+
+## Bloque 66 — Eliminar amigo, y lógica real de Seguir → Amigos mutuos
+
+Pedido: (1) reforzar la búsqueda flexible de Amigos (ya existía desde el Bloque 64: nombre/teléfono/ID); (2) botón visible para eliminar un amigo de la lista; (3-4) que agregar a alguien registre "Siguiendo" primero, y pase a "Amigo" con cambio visual dinámico en cuanto la relación se vuelve recíproca; (5) sin romper el chat bilingüe existente.
+
+**Nota:** este bloque se desarrolló en paralelo a otra sesión que migró el candado de Cuenta Principal a `public.users`/Supabase Auth real (ver el commit `c502550` — "Migra registro/login de operadores a Supabase con contraseñas hasheadas"). Ambas sesiones comparten el mismo directorio de trabajo en disco, así que el código de este bloque terminó empaquetado dentro de ESE commit (su mensaje no lo menciona) en vez de tener uno propio — se documenta acá aparte para que quede claro qué se hizo y por qué.
+
+**1. `app_friendships` reinterpretada como tabla DIRIGIDA ("sigue a"), sin ninguna migración de esquema.** Ya se insertaba siempre con `phone_a = mi teléfono, phone_b = el otro` (ver `addFriendByQuery()`, sin cambios); lo único nuevo es que `loadFriends()` dejó de tratarla como simétrica (`.or(phone_a.eq.X, phone_b.eq.X)`) y ahora hace dos consultas — "a quién sigo" (`phone_a = miPhone`) y "quién me sigue" (`phone_b = miPhone`) — para calcular por contacto `relationship: "following" | "friend"` (mutuo si además existe la fila inversa). Los contactos de prueba locales son siempre `"friend"` (no hay nadie del otro lado que pueda reciprocar).
+
+**2. `removeFriend(friend)` — nueva.** Borra solo MI lado de la relación (`delete from app_friendships where phone_a=miPhone and phone_b=elOtro`) — dejar de seguir/quitar de mi lista, no una acción bilateral (si el otro me seguía a mí, esa fila es suya y sigue existiendo). Contactos de prueba: se borran 100% de `localStorage` (contacto + sus mensajes).
+
+**3. Bug evitado a propósito: `<button>` anidado dentro de `<button>`.** Agregar un botón de eliminar al lado de cada amigo mientras la fila entera ya era clickeable (`openFriendThread()`) hubiera significado anidar un `<button>` de eliminar DENTRO del `<button>` de la fila — HTML inválido que rompe el manejo de clicks en varios navegadores. Se restructuró `.chat-friend-item` de `<button>` a `<div>` contenedor con DOS `<button>` hermanos: `.chat-friend-item__open` (abre el hilo, mismo contenido de antes) y `.chat-friend-item__delete` (papelera 🗑️, con `event.stopPropagation()` para no disparar también el open). Mismo criterio visual (el div contenedor conserva el borde/glass/hover que antes tenía el botón).
+
+**4. Insignia de relación dinámica** (`.chat-friend-item__relation--following` cian / `--friend` dorado con glow) reemplaza el viejo `.chat-friend-item__status` — un punto de 8px que existía en el CSS desde hace varios bloques pero NUNCA se conectó a ningún estado real (`.chat-friend-item--online` no se togglea en ningún lado de `app.js`); se eliminó ese CSS muerto junto con el reemplazo.
+
+**5. `wireFriendshipsRealtime()` — "cambio dinámico" en vivo, no solo al reabrir la pestaña.** Canal de Supabase Realtime escuchando INSERT/DELETE en `app_friendships` filtrado por `phone_b=eq.<mi teléfono>` — si alguien me sigue de vuelta mientras tengo la pestaña Amigos abierta, mi entrada para esa persona pasa sola de "Siguiendo" a "Amigo" sin recargar. Se arma al entrar a la pestaña y se corta al salir (mismo patrón que `stopSquadRealtime()`). Requiere `app_friendships` en la publicación de Realtime + `replica identity full` (agregado a `init-db.js`, mismo motivo que el de `app_friend_messages` del Bloque 65: un evento DELETE sin esto no trae `phone_b` en el payload, y el filtro nunca podría machear nada) — bloqueado por el mismo `SUPABASE_DB_URL` faltante ya documentado en el Bloque 65.
+
+**Pruebas realizadas (navegador real, servidor estático local):**
+- `node --check` en `app.js` e `init-db.js`: sin errores de sintaxis.
+- Búsqueda por ID (`MKR-123456`), nombre (`Juan Perez`) y teléfono (`+51999000111`) contra el Supabase real (sin tablas todavía): las tres degradan con gracia, sin alerta roja, y el fallback de prueba solo se ofrece para la de formato teléfono — sin regresión del Bloque 64.
+- Crear un contacto de prueba: aparece en la lista con la insignia `🌟 Amigo` (dorada) — confirmado con `outerHTML` que la estructura es `<div class="chat-friend-item">` con dos `<button>` hermanos, sin anidamiento inválido.
+- Click en 🗑️: el contacto desaparece de la lista de inmediato (0 items después) y NO abre el hilo de conversación (confirmado que `event.stopPropagation()` funciona).
+- Insignia "Siguiendo" verificada con `getComputedStyle()`: color/borde cian (`rgb(0, 240, 255)`), texto correcto.
+- 0 errores de JavaScript nuevos en consola en todo el flujo.
+
+**Pendiente:** mismo bloqueo del Bloque 65 (`SUPABASE_DB_URL` en Vercel) — hasta que exista, "Siguiendo"/"Amigo mutuo" no tiene datos reales de dos cuentas distintas para probar en producción, solo el cálculo y el render (ya verificados acá con datos simulados).
