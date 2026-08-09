@@ -1818,14 +1818,15 @@
     </div>
   </div>
 
-  <!-- MODAL: SELECCIÓN DE IDIOMA — nueva puerta de entrada del módulo
-       "Idiomas" (antes "Japonés AI Coach"), pedido explícito de dejar
-       espacio para más idiomas a futuro. 日本語 es la única opción activa
-       hoy — elegirla encadena directo al flujo existente SIN TOCARLO
-       (#jp-config-modal → #japanese-modal, ver más abajo). Inglés/Chino/
-       Portugués quedan visibles pero inertes (`disabled`, mismo criterio
-       "visible pero inerte" que las tarjetas de Aprendizaje/los niveles
-       JLPT N4-N1 bloqueados) en vez de ocultarse. -->
+  <!-- MODAL: SELECCIÓN DE IDIOMA — puerta de entrada del módulo
+       "Idiomas". 日本語/English/Português son opciones activas reales,
+       cada una con su propio contenido y metodología (categorías de
+       vocabulario por nivel CEFR/JLPT, gramática con ejemplos,
+       conversaciones, quiz) — ver openLanguageSelectModal()/
+       openLangModule() en app.js. 中文 sigue como placeholder
+       `disabled` (mismo criterio "visible pero inerte" que las tarjetas
+       de Aprendizaje/los niveles JLPT N3-N1 bloqueados) hasta que tenga
+       contenido real. -->
   <div class="modal-overlay" id="language-select-modal" hidden>
     <div class="modal glass modal--language-select">
       <button type="button" class="btn-modal-close" id="language-select-modal-close" aria-label="Cerrar">✕</button>
@@ -1836,19 +1837,17 @@
           <span class="language-select-card__icon">🇯🇵</span>
           <span class="language-select-card__name">日本語 Nihongo</span>
         </button>
-        <button type="button" class="language-select-card" disabled>
+        <button type="button" class="language-select-card" id="language-select-en">
           <span class="language-select-card__icon">🇺🇸</span>
           <span class="language-select-card__name">English</span>
-          <span class="language-select-card__badge" data-i18n="courseComingSoonBadge">🚀 Próximamente — Gran Lanzamiento</span>
+        </button>
+        <button type="button" class="language-select-card" id="language-select-pt">
+          <span class="language-select-card__icon">🇧🇷</span>
+          <span class="language-select-card__name">Português</span>
         </button>
         <button type="button" class="language-select-card" disabled>
           <span class="language-select-card__icon">🇨🇳</span>
           <span class="language-select-card__name">中文 Chino</span>
-          <span class="language-select-card__badge" data-i18n="courseComingSoonBadge">🚀 Próximamente — Gran Lanzamiento</span>
-        </button>
-        <button type="button" class="language-select-card" disabled>
-          <span class="language-select-card__icon">🇵🇹</span>
-          <span class="language-select-card__name">Português</span>
           <span class="language-select-card__badge" data-i18n="courseComingSoonBadge">🚀 Próximamente — Gran Lanzamiento</span>
         </button>
       </div>
@@ -2248,6 +2247,113 @@
           <!-- opciones renderizadas por app.js -->
         </div>
         <p class="jp-quiz-feedback" id="jp-level-exam-feedback" hidden></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: IDIOMAS — English / Português. Un solo modal genérico
+       reutilizado por los dos (ver openLangModule()/showLangView() en
+       app.js, sección "Idiomas: English/Português (motor genérico)") en
+       vez de duplicar todo este árbol dos veces — el contenido (palabras/
+       gramática/conversaciones) cambia según LANGUAGE_MODULES[langKey],
+       la estructura de vistas es idéntica. Reutiliza a propósito las
+       MISMAS clases CSS que el módulo Japonés (.jp-vocab-cat-card,
+       .jp-vocab-card, .jp-grammar-card, .jp-quiz-option-btn,
+       .reader-line, etc.) — son genéricas en su diseño visual aunque el
+       prefijo de la clase diga "jp", así que reutilizarlas evita
+       duplicar ~150 líneas de CSS sin ningún costo visual (ver
+       comentario junto a LANGUAGE_MODULES en app.js). -->
+  <div class="modal-overlay" id="lang-modal" hidden>
+    <div class="modal modal--japanese glass">
+      <button type="button" class="btn-modal-close" id="lang-modal-close" aria-label="Cerrar">✕</button>
+      <h2 class="modal-app__title" id="lang-modal-title"></h2>
+
+      <!-- Métricas por idioma — pedido explícito de "estadísticas de
+           aciertos, rachas por idioma, XP específica y niveles de
+           dominio". Se recalculan cada vez que se abre el módulo (ver
+           renderLangStats() en app.js). -->
+      <div class="lang-stats-row" id="lang-stats-row">
+        <div class="lang-stat">
+          <span class="lang-stat__value" id="lang-stat-xp">0</span>
+          <span class="lang-stat__label" data-i18n="langStatXp">XP</span>
+        </div>
+        <div class="lang-stat">
+          <span class="lang-stat__value" id="lang-stat-streak">0</span>
+          <span class="lang-stat__label" data-i18n="langStatStreak">Racha</span>
+        </div>
+        <div class="lang-stat">
+          <span class="lang-stat__value" id="lang-stat-accuracy">0%</span>
+          <span class="lang-stat__label" data-i18n="langStatAccuracy">Precisión</span>
+        </div>
+      </div>
+
+      <!-- Sub-vista: Menú principal -->
+      <div class="jp-view" id="lang-view-menu">
+        <div class="lang-menu-grid">
+          <button type="button" class="lang-menu-card" id="lang-menu-vocab-btn">
+            <span class="lang-menu-card__icon">📚</span>
+            <span data-i18n="langMenuVocab">Vocabulario</span>
+          </button>
+          <button type="button" class="lang-menu-card" id="lang-menu-grammar-btn">
+            <span class="lang-menu-card__icon">📖</span>
+            <span data-i18n="langMenuGrammar">Gramática</span>
+          </button>
+          <button type="button" class="lang-menu-card" id="lang-menu-conversations-btn">
+            <span class="lang-menu-card__icon">💬</span>
+            <span data-i18n="langMenuConversations">Conversaciones</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Sub-vista: Categorías de Vocabulario (por nivel CEFR) -->
+      <div class="jp-view" id="lang-view-vocab-cats" hidden>
+        <button type="button" class="btn-jp-back" id="lang-vocab-cats-back-btn" data-i18n="jpBackToGrid">← Volver</button>
+        <div class="jp-vocab-cat-grid" id="lang-vocab-cats-grid"></div>
+      </div>
+
+      <!-- Sub-vista: Palabras de una categoría -->
+      <div class="jp-view" id="lang-view-vocab-words" hidden>
+        <button type="button" class="btn-jp-back" id="lang-vocab-words-back-btn" data-i18n="jpBackToGrid">← Volver</button>
+        <h3 id="lang-vocab-words-title"></h3>
+        <button type="button" class="btn-jp-quiz-start" id="lang-vocab-quiz-start-btn" data-i18n="jpVocabQuizStart">✏️ Practicar con Quiz</button>
+        <div class="jp-vocab-words-list" id="lang-vocab-words-list"></div>
+      </div>
+
+      <!-- Sub-vista: Gramática -->
+      <div class="jp-view" id="lang-view-grammar" hidden>
+        <button type="button" class="btn-jp-back" id="lang-grammar-back-btn" data-i18n="jpBackToGrid">← Volver</button>
+        <button type="button" class="btn-jp-quiz-start" id="lang-grammar-quiz-start-btn" data-i18n="jpGrammarQuizStart">✏️ Practicar con Quiz</button>
+        <div class="jp-grammar-list" id="lang-grammar-list"></div>
+      </div>
+
+      <!-- Sub-vista: Escenas de Conversación -->
+      <div class="jp-view" id="lang-view-conversations" hidden>
+        <button type="button" class="btn-jp-back" id="lang-conversations-back-btn" data-i18n="jpBackToGrid">← Volver</button>
+        <div class="jp-vocab-cat-grid" id="lang-conversations-grid"></div>
+      </div>
+
+      <!-- Sub-vista: Lector de una conversación -->
+      <div class="jp-view" id="lang-view-conversation-reader" hidden>
+        <button type="button" class="btn-jp-back" id="lang-conversation-reader-back-btn" data-i18n="jpBackToGrid">← Volver</button>
+        <h3 id="lang-conversation-reader-title"></h3>
+        <div class="reader-panel">
+          <div class="reader-panel__controls">
+            <button type="button" class="reader-panel__auto-btn" id="lang-conversation-auto-btn">▶ Lectura automática</button>
+          </div>
+          <div class="reader-lines" id="lang-conversation-lines"></div>
+        </div>
+      </div>
+
+      <!-- Sub-vista: Mini-Quiz genérico (propio, sin tocar el de Nihongo) -->
+      <div class="jp-view" id="lang-view-mini-quiz" hidden>
+        <button type="button" class="btn-jp-back" id="lang-mini-quiz-back-btn" data-i18n="jpBackToGrid">← Volver</button>
+        <p class="jp-quiz-prompt" id="lang-mini-quiz-prompt"></p>
+        <div class="jp-char-row jp-char-row--center">
+          <span class="jp-quiz-char" id="lang-mini-quiz-char"></span>
+        </div>
+        <div class="jp-quiz-options" id="lang-mini-quiz-options"></div>
+        <p class="jp-quiz-feedback" id="lang-mini-quiz-feedback" hidden></p>
+        <p class="jp-mini-quiz-score" id="lang-mini-quiz-score"></p>
       </div>
     </div>
   </div>
@@ -3036,7 +3142,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260810-2"></script>
+  <script src="app.js?v=20260810-3"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de

@@ -788,7 +788,7 @@ const I18N = {
     chatSquadEmptyTitle: "Todavía no tienes un Escuadrón",
     chatSquadEmptyDesc: "Creá uno nuevo o unite con un código de invitación.",
     chatFriendsEmptyTitle: "Todavía no agregaste amigos",
-    chatFriendsEmptyDesc: "Cuando exista un sistema de amigos, tus contactos van a aparecer en esta lista.",
+    chatFriendsEmptyDesc: "Usa \"+ Agregar\" arriba para buscar por nombre o ID y agregar a tus primeros amigos.",
     chatFriendAddPlaceholder: "Nombre, teléfono o ID (MKR-XXXXXX)",
     chatFriendAddBtn: "+ Agregar",
     chatFriendAddSuccess: "¡Amigo agregado!",
@@ -1466,6 +1466,49 @@ const I18N = {
     jpLevelExamNoProgress: "Tu nivel real está justo donde ya estabas — sigue practicando esta fila y vuelve a intentarlo.",
     jpMiniQuizDone: "🎉 ¡Quiz completo!",
     jpMiniQuizScore: "Puntaje:",
+    langNameEnglish: "English",
+    langNamePortuguese: "Português",
+    langStatXp: "XP",
+    langStatStreak: "Racha",
+    langStatAccuracy: "Precisión",
+    langMenuVocab: "Vocabulario",
+    langMenuGrammar: "Gramática",
+    langMenuConversations: "Conversaciones",
+    langGrammarQuizStart: "🎯 Quiz de Gramática",
+    langGrammarQuizPrompt: "¿Qué punto gramatical demuestra esta oración?",
+    enCatGreetings: "Saludos", enCatNumbers: "Números", enCatFamily: "Familia", enCatColors: "Colores",
+    enCatFood: "Comida", enCatTime: "Tiempo y Horas", enCatPlaces: "Lugares", enCatVerbs: "Verbos",
+    enCatAdjectives: "Adjetivos", enCatObjects: "Objetos", enCatWork: "Trabajo", enCatHealth: "Salud",
+    enCatWeather: "Clima", enCatClothing: "Ropa", enCatTransport: "Transporte", enCatShopping: "Compras",
+    enCatHobbies: "Pasatiempos", enCatEmotions: "Emociones", enCatTravel: "Viajes", enCatTechnology: "Tecnología",
+    enCatNature: "Naturaleza", enCatSociety: "Sociedad",
+    ptCatGreetings: "Saludos", ptCatNumbers: "Números", ptCatFamily: "Familia", ptCatColors: "Colores",
+    ptCatFood: "Comida", ptCatTime: "Tiempo y Horas", ptCatPlaces: "Lugares", ptCatVerbs: "Verbos",
+    ptCatAdjectives: "Adjetivos", ptCatObjects: "Objetos", ptCatWork: "Trabajo", ptCatHealth: "Salud",
+    ptCatWeather: "Clima", ptCatClothing: "Ropa", ptCatTransport: "Transporte", ptCatShopping: "Compras",
+    ptCatHobbies: "Pasatiempos", ptCatEmotions: "Emociones", ptCatTravel: "Viajes", ptCatTechnology: "Tecnología",
+    ptCatNature: "Naturaleza", ptCatSociety: "Sociedad",
+    enGramToBeTitle: "El verbo To Be", enGramPresentSimpleTitle: "Presente Simple",
+    enGramPresentContinuousTitle: "Presente Continuo", enGramPastSimpleTitle: "Pasado Simple",
+    enGramFutureTitle: "Futuro (will / going to)", enGramCanTitle: "Can — Habilidad",
+    enGramThereIsTitle: "Hay (There is / There are)", enGramComparativesTitle: "Comparativos",
+    enGramSuperlativesTitle: "Superlativos", enGramQuestionsTitle: "Preguntas",
+    enGramPrepositionsTitle: "Preposiciones", enGramModalsObligationTitle: "Verbos Modales de Obligación",
+    enGramPresentPerfectTitle: "Presente Perfecto", enGramConditional1Title: "Primer Condicional",
+    enGramPassiveTitle: "Voz Pasiva",
+    ptGramSerEstarTitle: "Ser vs Estar", ptGramPresentTitle: "Presente del Indicativo",
+    ptGramGerundioTitle: "Gerundio", ptGramPastTitle: "Pretérito Perfecto", ptGramFutureTitle: "Futuro",
+    ptGramPoderTitle: "El verbo Poder", ptGramHaverTitle: "Haver / Existir", ptGramComparativeTitle: "Comparativo",
+    ptGramSuperlativeTitle: "Superlativo", ptGramQuestionsTitle: "Preguntas",
+    ptGramPrepositionsTitle: "Preposiciones", ptGramObligationTitle: "Obligación (Ter que / Dever)",
+    ptGramPresentPerfectTitle: "Pretérito Perfecto Compuesto", ptGramConditionalTitle: "Condicional",
+    ptGramPassiveTitle: "Voz Pasiva",
+    enConvCafeTitle: "En el Café", enConvAirportTitle: "En el Aeropuerto", enConvDoctorTitle: "En el Médico",
+    enConvJobInterviewTitle: "Entrevista de Trabajo", enConvRestaurantTitle: "En el Restaurante",
+    enConvDirectionsTitle: "Pidiendo Direcciones",
+    ptConvCafeTitle: "En el Café", ptConvAirportTitle: "En el Aeropuerto", ptConvDoctorTitle: "En el Médico",
+    ptConvJobInterviewTitle: "Entrevista de Trabajo", ptConvRestaurantTitle: "En el Restaurante",
+    ptConvDirectionsTitle: "Pidiendo Direcciones",
     jpVictoryEyebrow: "AI COACH",
     jpVictoryContinue: "¡Continuar!",
     jpVictoryTitlePractice: "¡Sesión completada!",
@@ -1642,7 +1685,7 @@ const I18N = {
     chatSquadEmptyTitle: "You don't have a Squad yet",
     chatSquadEmptyDesc: "Create one or join with an invite code.",
     chatFriendsEmptyTitle: "You haven't added any friends yet",
-    chatFriendsEmptyDesc: "Once a friends system exists, your contacts will show up in this list.",
+    chatFriendsEmptyDesc: "Use \"+ Add\" above to search by name or ID and add your first friends.",
     chatFriendAddPlaceholder: "Name, phone or ID (MKR-XXXXXX)",
     chatFriendAddBtn: "+ Add",
     chatFriendAddSuccess: "Friend added!",
@@ -2320,6 +2363,49 @@ const I18N = {
     jpLevelExamNoProgress: "Your real level is exactly where you already were — keep practicing this row and try again.",
     jpMiniQuizDone: "🎉 Quiz complete!",
     jpMiniQuizScore: "Score:",
+    langNameEnglish: "English",
+    langNamePortuguese: "Português",
+    langStatXp: "XP",
+    langStatStreak: "Streak",
+    langStatAccuracy: "Accuracy",
+    langMenuVocab: "Vocabulary",
+    langMenuGrammar: "Grammar",
+    langMenuConversations: "Conversations",
+    langGrammarQuizStart: "🎯 Grammar Quiz",
+    langGrammarQuizPrompt: "Which grammar point does this sentence show?",
+    enCatGreetings: "Greetings", enCatNumbers: "Numbers", enCatFamily: "Family", enCatColors: "Colors",
+    enCatFood: "Food", enCatTime: "Time & Hours", enCatPlaces: "Places", enCatVerbs: "Verbs",
+    enCatAdjectives: "Adjectives", enCatObjects: "Objects", enCatWork: "Work", enCatHealth: "Health",
+    enCatWeather: "Weather", enCatClothing: "Clothing", enCatTransport: "Transport", enCatShopping: "Shopping",
+    enCatHobbies: "Hobbies", enCatEmotions: "Emotions", enCatTravel: "Travel", enCatTechnology: "Technology",
+    enCatNature: "Nature", enCatSociety: "Society",
+    ptCatGreetings: "Greetings", ptCatNumbers: "Numbers", ptCatFamily: "Family", ptCatColors: "Colors",
+    ptCatFood: "Food", ptCatTime: "Time & Hours", ptCatPlaces: "Places", ptCatVerbs: "Verbs",
+    ptCatAdjectives: "Adjectives", ptCatObjects: "Objects", ptCatWork: "Work", ptCatHealth: "Health",
+    ptCatWeather: "Weather", ptCatClothing: "Clothing", ptCatTransport: "Transport", ptCatShopping: "Shopping",
+    ptCatHobbies: "Hobbies", ptCatEmotions: "Emotions", ptCatTravel: "Travel", ptCatTechnology: "Technology",
+    ptCatNature: "Nature", ptCatSociety: "Society",
+    enGramToBeTitle: "The Verb To Be", enGramPresentSimpleTitle: "Present Simple",
+    enGramPresentContinuousTitle: "Present Continuous", enGramPastSimpleTitle: "Past Simple",
+    enGramFutureTitle: "Future (will / going to)", enGramCanTitle: "Can — Ability",
+    enGramThereIsTitle: "There is / There are", enGramComparativesTitle: "Comparatives",
+    enGramSuperlativesTitle: "Superlatives", enGramQuestionsTitle: "Questions",
+    enGramPrepositionsTitle: "Prepositions", enGramModalsObligationTitle: "Modals of Obligation",
+    enGramPresentPerfectTitle: "Present Perfect", enGramConditional1Title: "First Conditional",
+    enGramPassiveTitle: "Passive Voice",
+    ptGramSerEstarTitle: "Ser vs Estar", ptGramPresentTitle: "Present Indicative",
+    ptGramGerundioTitle: "Gerund", ptGramPastTitle: "Simple Past (Pretérito Perfeito)", ptGramFutureTitle: "Future Tense",
+    ptGramPoderTitle: "The Verb Poder", ptGramHaverTitle: "Haver / Existir", ptGramComparativeTitle: "Comparative",
+    ptGramSuperlativeTitle: "Superlative", ptGramQuestionsTitle: "Questions",
+    ptGramPrepositionsTitle: "Prepositions", ptGramObligationTitle: "Obligation (Ter que / Dever)",
+    ptGramPresentPerfectTitle: "Present Perfect (Pretérito Composto)", ptGramConditionalTitle: "Conditional",
+    ptGramPassiveTitle: "Passive Voice",
+    enConvCafeTitle: "At the Café", enConvAirportTitle: "At the Airport", enConvDoctorTitle: "At the Doctor's",
+    enConvJobInterviewTitle: "Job Interview", enConvRestaurantTitle: "At the Restaurant",
+    enConvDirectionsTitle: "Asking for Directions",
+    ptConvCafeTitle: "At the Café", ptConvAirportTitle: "At the Airport", ptConvDoctorTitle: "At the Doctor's",
+    ptConvJobInterviewTitle: "Job Interview", ptConvRestaurantTitle: "At the Restaurant",
+    ptConvDirectionsTitle: "Asking for Directions",
     jpVictoryEyebrow: "AI COACH",
     jpVictoryContinue: "Continue!",
     jpVictoryTitlePractice: "Session complete!",
@@ -2496,7 +2582,7 @@ const I18N = {
     chatSquadEmptyTitle: "まだスクワッドがありません",
     chatSquadEmptyDesc: "新しく作成するか、招待コードで参加しましょう。",
     chatFriendsEmptyTitle: "まだフレンドを追加していません",
-    chatFriendsEmptyDesc: "フレンド機能が実装されると、連絡先がこのリストに表示されます。",
+    chatFriendsEmptyDesc: "上の「＋ 追加」で名前やIDを検索して、最初のフレンドを追加しよう。",
     chatFriendAddPlaceholder: "名前、電話番号、またはID（MKR-XXXXXX）",
     chatFriendAddBtn: "+ 追加",
     chatFriendAddSuccess: "フレンドを追加しました！",
@@ -3174,6 +3260,44 @@ const I18N = {
     jpLevelExamNoProgress: "実際のレベルはすでにいた場所のままです — この行を練習してまた挑戦しよう。",
     jpMiniQuizDone: "🎉 クイズ完了！",
     jpMiniQuizScore: "スコア：",
+    langNameEnglish: "英語", langNamePortuguese: "ポルトガル語",
+    langStatXp: "XP", langStatStreak: "連続日数", langStatAccuracy: "正解率",
+    langMenuVocab: "語彙", langMenuGrammar: "文法", langMenuConversations: "会話",
+    langGrammarQuizStart: "🎯 文法クイズ",
+    langGrammarQuizPrompt: "この文はどの文法ポイントを示していますか？",
+    enCatGreetings: "挨拶", enCatNumbers: "数字", enCatFamily: "家族", enCatColors: "色",
+    enCatFood: "食べ物", enCatTime: "時間", enCatPlaces: "場所", enCatVerbs: "動詞",
+    enCatAdjectives: "形容詞", enCatObjects: "物", enCatWork: "仕事", enCatHealth: "健康",
+    enCatWeather: "天気", enCatClothing: "服", enCatTransport: "交通", enCatShopping: "買い物",
+    enCatHobbies: "趣味", enCatEmotions: "感情", enCatTravel: "旅行", enCatTechnology: "テクノロジー",
+    enCatNature: "自然", enCatSociety: "社会",
+    ptCatGreetings: "挨拶", ptCatNumbers: "数字", ptCatFamily: "家族", ptCatColors: "色",
+    ptCatFood: "食べ物", ptCatTime: "時間", ptCatPlaces: "場所", ptCatVerbs: "動詞",
+    ptCatAdjectives: "形容詞", ptCatObjects: "物", ptCatWork: "仕事", ptCatHealth: "健康",
+    ptCatWeather: "天気", ptCatClothing: "服", ptCatTransport: "交通", ptCatShopping: "買い物",
+    ptCatHobbies: "趣味", ptCatEmotions: "感情", ptCatTravel: "旅行", ptCatTechnology: "テクノロジー",
+    ptCatNature: "自然", ptCatSociety: "社会",
+    enGramToBeTitle: "Be動詞", enGramPresentSimpleTitle: "現在形",
+    enGramPresentContinuousTitle: "現在進行形", enGramPastSimpleTitle: "過去形",
+    enGramFutureTitle: "未来形（will / going to）", enGramCanTitle: "Can（能力）",
+    enGramThereIsTitle: "There is / There are", enGramComparativesTitle: "比較級",
+    enGramSuperlativesTitle: "最上級", enGramQuestionsTitle: "疑問文",
+    enGramPrepositionsTitle: "前置詞", enGramModalsObligationTitle: "義務の助動詞",
+    enGramPresentPerfectTitle: "現在完了形", enGramConditional1Title: "第一条件文",
+    enGramPassiveTitle: "受動態",
+    ptGramSerEstarTitle: "Ser と Estar", ptGramPresentTitle: "直説法現在形",
+    ptGramGerundioTitle: "現在分詞（ジェルンジオ）", ptGramPastTitle: "完全過去形", ptGramFutureTitle: "未来形",
+    ptGramPoderTitle: "動詞 Poder", ptGramHaverTitle: "Haver / Existir", ptGramComparativeTitle: "比較級",
+    ptGramSuperlativeTitle: "最上級", ptGramQuestionsTitle: "疑問文",
+    ptGramPrepositionsTitle: "前置詞", ptGramObligationTitle: "義務（Ter que / Dever）",
+    ptGramPresentPerfectTitle: "現在完了形", ptGramConditionalTitle: "条件法",
+    ptGramPassiveTitle: "受動態",
+    enConvCafeTitle: "カフェで", enConvAirportTitle: "空港で", enConvDoctorTitle: "病院で",
+    enConvJobInterviewTitle: "就職面接", enConvRestaurantTitle: "レストランで",
+    enConvDirectionsTitle: "道を尋ねる",
+    ptConvCafeTitle: "カフェで", ptConvAirportTitle: "空港で", ptConvDoctorTitle: "病院で",
+    ptConvJobInterviewTitle: "就職面接", ptConvRestaurantTitle: "レストランで",
+    ptConvDirectionsTitle: "道を尋ねる",
     jpVictoryEyebrow: "AIコーチ",
     jpVictoryContinue: "続ける！",
     jpVictoryTitlePractice: "セッション完了！",
@@ -5934,6 +6058,1503 @@ function isJpExamAudioAllowed(script) {
 // el módulo de Práctica de Trazos Reales (#hanzi-writer-modal) y la
 // vista de Fases del módulo Japonés — con caché en memoria para no pedir
 // dos veces el mismo carácter durante una sesión.
+// ---------------------------------------------------
+// Módulo de Idiomas: English / Português — misma metodología que
+// Nihongo (categorías de vocabulario por nivel, puntos gramaticales
+// con ejemplos, escenas de conversación, quiz genérico), generalizada
+// para dos idiomas nuevos con su propio contenido real. Niveles CEFR
+// (a1/a2 poblados con contenido real; b1-c2 quedan bloqueados como
+// "Próximamente", mismo patrón que N3-N1 en Nihongo — ver comentario
+// de LANGUAGE_MODULES más abajo, junto al motor genérico de
+// renderizado). English usa meaning:{es,ja} (nunca "en" — la interfaz
+// en inglés ya ES el contenido, ver resolveLangMeaning()); Português
+// usa meaning:{es,en,ja} siempre, porque ninguno de los 3 idiomas de
+// interfaz coincide con el contenido.
+// ---------------------------------------------------
+const ENGLISH_VOCAB_CATEGORIES = [
+  {
+    id: "en-greetings", icon: "👋", titleKey: "enCatGreetings", level: "a1",
+    words: [
+      { word: "hello", phonetic: "heh-LOH", meaning: { es: "hola", ja: "こんにちは" } },
+      { word: "hi", phonetic: "HY", meaning: { es: "hola (informal)", ja: "やあ" } },
+      { word: "good morning", phonetic: "good MOR-ning", meaning: { es: "buenos días", ja: "おはよう" } },
+      { word: "good afternoon", phonetic: "good af-ter-NOON", meaning: { es: "buenas tardes", ja: "こんにちは" } },
+      { word: "good evening", phonetic: "good EEV-ning", meaning: { es: "buenas noches (saludo)", ja: "こんばんは" } },
+      { word: "good night", phonetic: "good NYT", meaning: { es: "buenas noches (despedida)", ja: "おやすみなさい" } },
+      { word: "goodbye", phonetic: "good-BY", meaning: { es: "adiós", ja: "さようなら" } },
+      { word: "see you later", phonetic: "SEE yoo LAY-ter", meaning: { es: "hasta luego", ja: "またね" } },
+      { word: "please", phonetic: "PLEEZ", meaning: { es: "por favor", ja: "お願いします" } },
+      { word: "thank you", phonetic: "THANK yoo", meaning: { es: "gracias", ja: "ありがとう" } },
+      { word: "you're welcome", phonetic: "yor WEL-cum", meaning: { es: "de nada", ja: "どういたしまして" } },
+      { word: "sorry", phonetic: "SOR-ee", meaning: { es: "perdón / lo siento", ja: "ごめんなさい" } },
+      { word: "excuse me", phonetic: "ex-SKYOOZ mee", meaning: { es: "disculpe", ja: "すみません" } },
+      { word: "yes", phonetic: "YES", meaning: { es: "sí", ja: "はい" } },
+      { word: "no", phonetic: "NOH", meaning: { es: "no", ja: "いいえ" } },
+      { word: "how are you?", phonetic: "how ar YOO", meaning: { es: "¿cómo estás?", ja: "元気ですか" } },
+      { word: "I'm fine", phonetic: "I'm FYN", meaning: { es: "estoy bien", ja: "元気です" } },
+      { word: "nice to meet you", phonetic: "nys too MEET yoo", meaning: { es: "mucho gusto", ja: "はじめまして" } },
+      { word: "what's your name?", phonetic: "wots yor NAYM", meaning: { es: "¿cómo te llamas?", ja: "お名前は何ですか" } },
+      { word: "my name is", phonetic: "my naym iz", meaning: { es: "mi nombre es", ja: "私の名前は" } },
+      { word: "welcome", phonetic: "WEL-cum", meaning: { es: "bienvenido", ja: "ようこそ" } },
+      { word: "take care", phonetic: "tayk KAIR", meaning: { es: "cuídate", ja: "お大事に" } },
+    ],
+  },
+  {
+    id: "en-numbers", icon: "🔢", titleKey: "enCatNumbers", level: "a1",
+    words: [
+      { word: "zero", phonetic: "ZEE-roh", meaning: { es: "cero", ja: "ゼロ" } },
+      { word: "one", phonetic: "WUN", meaning: { es: "uno", ja: "一" } },
+      { word: "two", phonetic: "TOO", meaning: { es: "dos", ja: "二" } },
+      { word: "three", phonetic: "THREE", meaning: { es: "tres", ja: "三" } },
+      { word: "four", phonetic: "FOR", meaning: { es: "cuatro", ja: "四" } },
+      { word: "five", phonetic: "FYV", meaning: { es: "cinco", ja: "五" } },
+      { word: "six", phonetic: "SIKS", meaning: { es: "seis", ja: "六" } },
+      { word: "seven", phonetic: "SEV-en", meaning: { es: "siete", ja: "七" } },
+      { word: "eight", phonetic: "AYT", meaning: { es: "ocho", ja: "八" } },
+      { word: "nine", phonetic: "NYN", meaning: { es: "nueve", ja: "九" } },
+      { word: "ten", phonetic: "TEN", meaning: { es: "diez", ja: "十" } },
+      { word: "eleven", phonetic: "ee-LEV-en", meaning: { es: "once", ja: "十一" } },
+      { word: "twelve", phonetic: "TWELV", meaning: { es: "doce", ja: "十二" } },
+      { word: "twenty", phonetic: "TWEN-tee", meaning: { es: "veinte", ja: "二十" } },
+      { word: "thirty", phonetic: "THUR-tee", meaning: { es: "treinta", ja: "三十" } },
+      { word: "forty", phonetic: "FOR-tee", meaning: { es: "cuarenta", ja: "四十" } },
+      { word: "fifty", phonetic: "FIF-tee", meaning: { es: "cincuenta", ja: "五十" } },
+      { word: "one hundred", phonetic: "wun HUN-dred", meaning: { es: "cien", ja: "百" } },
+      { word: "one thousand", phonetic: "wun THOW-zand", meaning: { es: "mil", ja: "千" } },
+      { word: "first", phonetic: "FURST", meaning: { es: "primero", ja: "一番目" } },
+      { word: "second", phonetic: "SEK-ond", meaning: { es: "segundo", ja: "二番目" } },
+      { word: "third", phonetic: "THURD", meaning: { es: "tercero", ja: "三番目" } },
+    ],
+  },
+  {
+    id: "en-family", icon: "👨‍👩‍👧", titleKey: "enCatFamily", level: "a1",
+    words: [
+      { word: "family", phonetic: "FAM-ih-lee", meaning: { es: "familia", ja: "家族" } },
+      { word: "mother", phonetic: "MUH-ther", meaning: { es: "madre", ja: "母" } },
+      { word: "father", phonetic: "FAH-ther", meaning: { es: "padre", ja: "父" } },
+      { word: "parents", phonetic: "PAIR-ents", meaning: { es: "padres", ja: "両親" } },
+      { word: "son", phonetic: "SUN", meaning: { es: "hijo", ja: "息子" } },
+      { word: "daughter", phonetic: "DAW-ter", meaning: { es: "hija", ja: "娘" } },
+      { word: "brother", phonetic: "BRUH-ther", meaning: { es: "hermano", ja: "兄弟" } },
+      { word: "sister", phonetic: "SIS-ter", meaning: { es: "hermana", ja: "姉妹" } },
+      { word: "grandmother", phonetic: "GRAND-muh-ther", meaning: { es: "abuela", ja: "祖母" } },
+      { word: "grandfather", phonetic: "GRAND-fah-ther", meaning: { es: "abuelo", ja: "祖父" } },
+      { word: "husband", phonetic: "HUZ-band", meaning: { es: "esposo", ja: "夫" } },
+      { word: "wife", phonetic: "WYF", meaning: { es: "esposa", ja: "妻" } },
+      { word: "uncle", phonetic: "UNK-ol", meaning: { es: "tío", ja: "おじ" } },
+      { word: "aunt", phonetic: "ANT", meaning: { es: "tía", ja: "おば" } },
+      { word: "cousin", phonetic: "KUZ-in", meaning: { es: "primo/prima", ja: "いとこ" } },
+      { word: "nephew", phonetic: "NEF-yoo", meaning: { es: "sobrino", ja: "甥" } },
+      { word: "niece", phonetic: "NEES", meaning: { es: "sobrina", ja: "姪" } },
+      { word: "baby", phonetic: "BAY-bee", meaning: { es: "bebé", ja: "赤ちゃん" } },
+      { word: "friend", phonetic: "FREND", meaning: { es: "amigo", ja: "友達" } },
+      { word: "neighbor", phonetic: "NAY-ber", meaning: { es: "vecino", ja: "隣人" } },
+    ],
+  },
+  {
+    id: "en-colors", icon: "🎨", titleKey: "enCatColors", level: "a1",
+    words: [
+      { word: "red", phonetic: "RED", meaning: { es: "rojo", ja: "赤" } },
+      { word: "blue", phonetic: "BLOO", meaning: { es: "azul", ja: "青" } },
+      { word: "green", phonetic: "GREEN", meaning: { es: "verde", ja: "緑" } },
+      { word: "yellow", phonetic: "YEL-oh", meaning: { es: "amarillo", ja: "黄色" } },
+      { word: "orange", phonetic: "OR-inj", meaning: { es: "naranja", ja: "オレンジ色" } },
+      { word: "purple", phonetic: "PUR-pol", meaning: { es: "morado", ja: "紫" } },
+      { word: "pink", phonetic: "PINK", meaning: { es: "rosa", ja: "ピンク" } },
+      { word: "black", phonetic: "BLAK", meaning: { es: "negro", ja: "黒" } },
+      { word: "white", phonetic: "WYT", meaning: { es: "blanco", ja: "白" } },
+      { word: "gray", phonetic: "GRAY", meaning: { es: "gris", ja: "灰色" } },
+      { word: "brown", phonetic: "BROWN", meaning: { es: "marrón", ja: "茶色" } },
+      { word: "gold", phonetic: "GOHLD", meaning: { es: "dorado", ja: "金色" } },
+      { word: "silver", phonetic: "SIL-ver", meaning: { es: "plateado", ja: "銀色" } },
+      { word: "light blue", phonetic: "lyt BLOO", meaning: { es: "celeste", ja: "水色" } },
+      { word: "dark", phonetic: "DARK", meaning: { es: "oscuro", ja: "暗い" } },
+      { word: "bright", phonetic: "BRYT", meaning: { es: "claro/brillante", ja: "明るい" } },
+    ],
+  },
+  {
+    id: "en-food", icon: "🍎", titleKey: "enCatFood", level: "a1",
+    words: [
+      { word: "water", phonetic: "WAH-ter", meaning: { es: "agua", ja: "水" } },
+      { word: "bread", phonetic: "BRED", meaning: { es: "pan", ja: "パン" } },
+      { word: "rice", phonetic: "RYS", meaning: { es: "arroz", ja: "米" } },
+      { word: "meat", phonetic: "MEET", meaning: { es: "carne", ja: "肉" } },
+      { word: "chicken", phonetic: "CHIK-en", meaning: { es: "pollo", ja: "鶏肉" } },
+      { word: "fish", phonetic: "FISH", meaning: { es: "pescado", ja: "魚" } },
+      { word: "egg", phonetic: "EG", meaning: { es: "huevo", ja: "卵" } },
+      { word: "milk", phonetic: "MILK", meaning: { es: "leche", ja: "牛乳" } },
+      { word: "cheese", phonetic: "CHEEZ", meaning: { es: "queso", ja: "チーズ" } },
+      { word: "fruit", phonetic: "FROOT", meaning: { es: "fruta", ja: "果物" } },
+      { word: "apple", phonetic: "AP-ol", meaning: { es: "manzana", ja: "りんご" } },
+      { word: "banana", phonetic: "buh-NAN-uh", meaning: { es: "plátano", ja: "バナナ" } },
+      { word: "vegetable", phonetic: "VEJ-tuh-bol", meaning: { es: "verdura", ja: "野菜" } },
+      { word: "soup", phonetic: "SOOP", meaning: { es: "sopa", ja: "スープ" } },
+      { word: "salad", phonetic: "SAL-ad", meaning: { es: "ensalada", ja: "サラダ" } },
+      { word: "coffee", phonetic: "KAW-fee", meaning: { es: "café", ja: "コーヒー" } },
+      { word: "tea", phonetic: "TEE", meaning: { es: "té", ja: "お茶" } },
+      { word: "juice", phonetic: "JOOS", meaning: { es: "jugo", ja: "ジュース" } },
+      { word: "sugar", phonetic: "SHOOG-ar", meaning: { es: "azúcar", ja: "砂糖" } },
+      { word: "salt", phonetic: "SAWLT", meaning: { es: "sal", ja: "塩" } },
+      { word: "breakfast", phonetic: "BREK-fast", meaning: { es: "desayuno", ja: "朝食" } },
+      { word: "lunch", phonetic: "LUNCH", meaning: { es: "almuerzo", ja: "昼食" } },
+      { word: "dinner", phonetic: "DIN-ner", meaning: { es: "cena", ja: "夕食" } },
+    ],
+  },
+  {
+    id: "en-time", icon: "🕒", titleKey: "enCatTime", level: "a1",
+    words: [
+      { word: "today", phonetic: "too-DAY", meaning: { es: "hoy", ja: "今日" } },
+      { word: "tomorrow", phonetic: "too-MOR-oh", meaning: { es: "mañana", ja: "明日" } },
+      { word: "yesterday", phonetic: "YES-ter-day", meaning: { es: "ayer", ja: "昨日" } },
+      { word: "now", phonetic: "NOW", meaning: { es: "ahora", ja: "今" } },
+      { word: "later", phonetic: "LAY-ter", meaning: { es: "más tarde", ja: "後で" } },
+      { word: "morning", phonetic: "MOR-ning", meaning: { es: "mañana (parte del día)", ja: "朝" } },
+      { word: "afternoon", phonetic: "af-ter-NOON", meaning: { es: "tarde", ja: "午後" } },
+      { word: "night", phonetic: "NYT", meaning: { es: "noche", ja: "夜" } },
+      { word: "week", phonetic: "WEEK", meaning: { es: "semana", ja: "週" } },
+      { word: "month", phonetic: "MUNTH", meaning: { es: "mes", ja: "月" } },
+      { word: "year", phonetic: "YEER", meaning: { es: "año", ja: "年" } },
+      { word: "hour", phonetic: "OW-er", meaning: { es: "hora", ja: "時間" } },
+      { word: "minute", phonetic: "MIN-it", meaning: { es: "minuto", ja: "分" } },
+      { word: "Monday", phonetic: "MUN-day", meaning: { es: "lunes", ja: "月曜日" } },
+      { word: "Tuesday", phonetic: "TOOZ-day", meaning: { es: "martes", ja: "火曜日" } },
+      { word: "Wednesday", phonetic: "WENZ-day", meaning: { es: "miércoles", ja: "水曜日" } },
+      { word: "Thursday", phonetic: "THURZ-day", meaning: { es: "jueves", ja: "木曜日" } },
+      { word: "Friday", phonetic: "FRY-day", meaning: { es: "viernes", ja: "金曜日" } },
+      { word: "Saturday", phonetic: "SAT-er-day", meaning: { es: "sábado", ja: "土曜日" } },
+      { word: "Sunday", phonetic: "SUN-day", meaning: { es: "domingo", ja: "日曜日" } },
+    ],
+  },
+  {
+    id: "en-places", icon: "🏙️", titleKey: "enCatPlaces", level: "a1",
+    words: [
+      { word: "house", phonetic: "HOWS", meaning: { es: "casa", ja: "家" } },
+      { word: "school", phonetic: "SKOOL", meaning: { es: "escuela", ja: "学校" } },
+      { word: "hospital", phonetic: "HOS-pi-tal", meaning: { es: "hospital", ja: "病院" } },
+      { word: "restaurant", phonetic: "RES-ter-ont", meaning: { es: "restaurante", ja: "レストラン" } },
+      { word: "store", phonetic: "STOR", meaning: { es: "tienda", ja: "店" } },
+      { word: "market", phonetic: "MAR-ket", meaning: { es: "mercado", ja: "市場" } },
+      { word: "bank", phonetic: "BANK", meaning: { es: "banco", ja: "銀行" } },
+      { word: "park", phonetic: "PARK", meaning: { es: "parque", ja: "公園" } },
+      { word: "street", phonetic: "STREET", meaning: { es: "calle", ja: "通り" } },
+      { word: "city", phonetic: "SIT-ee", meaning: { es: "ciudad", ja: "都市" } },
+      { word: "country", phonetic: "KUN-tree", meaning: { es: "país", ja: "国" } },
+      { word: "airport", phonetic: "AIR-port", meaning: { es: "aeropuerto", ja: "空港" } },
+      { word: "station", phonetic: "STAY-shun", meaning: { es: "estación", ja: "駅" } },
+      { word: "office", phonetic: "AW-fis", meaning: { es: "oficina", ja: "オフィス" } },
+      { word: "church", phonetic: "CHURCH", meaning: { es: "iglesia", ja: "教会" } },
+      { word: "library", phonetic: "LY-brer-ee", meaning: { es: "biblioteca", ja: "図書館" } },
+      { word: "beach", phonetic: "BEECH", meaning: { es: "playa", ja: "ビーチ" } },
+      { word: "mountain", phonetic: "MOWN-tin", meaning: { es: "montaña", ja: "山" } },
+    ],
+  },
+  {
+    id: "en-verbs", icon: "🏃", titleKey: "enCatVerbs", level: "a1",
+    words: [
+      { word: "to be", phonetic: "too BEE", meaning: { es: "ser/estar", ja: "である" } },
+      { word: "to have", phonetic: "too HAV", meaning: { es: "tener", ja: "持つ" } },
+      { word: "to go", phonetic: "too GOH", meaning: { es: "ir", ja: "行く" } },
+      { word: "to come", phonetic: "too KUM", meaning: { es: "venir", ja: "来る" } },
+      { word: "to eat", phonetic: "too EET", meaning: { es: "comer", ja: "食べる" } },
+      { word: "to drink", phonetic: "too DRINK", meaning: { es: "beber", ja: "飲む" } },
+      { word: "to sleep", phonetic: "too SLEEP", meaning: { es: "dormir", ja: "寝る" } },
+      { word: "to wake up", phonetic: "too wayk UP", meaning: { es: "despertarse", ja: "起きる" } },
+      { word: "to work", phonetic: "too WURK", meaning: { es: "trabajar", ja: "働く" } },
+      { word: "to study", phonetic: "too STUD-ee", meaning: { es: "estudiar", ja: "勉強する" } },
+      { word: "to read", phonetic: "too REED", meaning: { es: "leer", ja: "読む" } },
+      { word: "to write", phonetic: "too RYT", meaning: { es: "escribir", ja: "書く" } },
+      { word: "to speak", phonetic: "too SPEEK", meaning: { es: "hablar", ja: "話す" } },
+      { word: "to listen", phonetic: "too LIS-en", meaning: { es: "escuchar", ja: "聞く" } },
+      { word: "to see", phonetic: "too SEE", meaning: { es: "ver", ja: "見る" } },
+      { word: "to want", phonetic: "too WONT", meaning: { es: "querer", ja: "欲しい" } },
+      { word: "to need", phonetic: "too NEED", meaning: { es: "necesitar", ja: "必要とする" } },
+      { word: "to like", phonetic: "too LYK", meaning: { es: "gustar", ja: "好き" } },
+      { word: "to make", phonetic: "too MAYK", meaning: { es: "hacer/fabricar", ja: "作る" } },
+      { word: "to buy", phonetic: "too BY", meaning: { es: "comprar", ja: "買う" } },
+      { word: "to live", phonetic: "too LIV", meaning: { es: "vivir", ja: "住む" } },
+      { word: "to help", phonetic: "too HELP", meaning: { es: "ayudar", ja: "手伝う" } },
+    ],
+  },
+  {
+    id: "en-adjectives", icon: "✨", titleKey: "enCatAdjectives", level: "a1",
+    words: [
+      { word: "big", phonetic: "BIG", meaning: { es: "grande", ja: "大きい" } },
+      { word: "small", phonetic: "SMAWL", meaning: { es: "pequeño", ja: "小さい" } },
+      { word: "good", phonetic: "GOOD", meaning: { es: "bueno", ja: "良い" } },
+      { word: "bad", phonetic: "BAD", meaning: { es: "malo", ja: "悪い" } },
+      { word: "new", phonetic: "NOO", meaning: { es: "nuevo", ja: "新しい" } },
+      { word: "old", phonetic: "OHLD", meaning: { es: "viejo", ja: "古い" } },
+      { word: "happy", phonetic: "HAP-ee", meaning: { es: "feliz", ja: "幸せ" } },
+      { word: "sad", phonetic: "SAD", meaning: { es: "triste", ja: "悲しい" } },
+      { word: "hot", phonetic: "HOT", meaning: { es: "caliente", ja: "熱い" } },
+      { word: "cold", phonetic: "KOHLD", meaning: { es: "frío", ja: "寒い" } },
+      { word: "fast", phonetic: "FAST", meaning: { es: "rápido", ja: "速い" } },
+      { word: "slow", phonetic: "SLOH", meaning: { es: "lento", ja: "遅い" } },
+      { word: "easy", phonetic: "EE-zee", meaning: { es: "fácil", ja: "簡単" } },
+      { word: "difficult", phonetic: "DIF-i-kult", meaning: { es: "difícil", ja: "難しい" } },
+      { word: "beautiful", phonetic: "BYOO-ti-ful", meaning: { es: "hermoso", ja: "美しい" } },
+      { word: "tall", phonetic: "TAWL", meaning: { es: "alto", ja: "背が高い" } },
+      { word: "short", phonetic: "SHORT", meaning: { es: "bajo/corto", ja: "短い" } },
+      { word: "strong", phonetic: "STRONG", meaning: { es: "fuerte", ja: "強い" } },
+      { word: "weak", phonetic: "WEEK", meaning: { es: "débil", ja: "弱い" } },
+      { word: "expensive", phonetic: "ex-PEN-siv", meaning: { es: "caro", ja: "高い" } },
+      { word: "cheap", phonetic: "CHEEP", meaning: { es: "barato", ja: "安い" } },
+    ],
+  },
+  {
+    id: "en-objects", icon: "🎒", titleKey: "enCatObjects", level: "a1",
+    words: [
+      { word: "book", phonetic: "BOOK", meaning: { es: "libro", ja: "本" } },
+      { word: "pen", phonetic: "PEN", meaning: { es: "bolígrafo", ja: "ペン" } },
+      { word: "phone", phonetic: "FOHN", meaning: { es: "teléfono", ja: "電話" } },
+      { word: "computer", phonetic: "kum-PYOO-ter", meaning: { es: "computadora", ja: "コンピューター" } },
+      { word: "table", phonetic: "TAY-bol", meaning: { es: "mesa", ja: "テーブル" } },
+      { word: "chair", phonetic: "CHAIR", meaning: { es: "silla", ja: "椅子" } },
+      { word: "door", phonetic: "DOR", meaning: { es: "puerta", ja: "ドア" } },
+      { word: "window", phonetic: "WIN-doh", meaning: { es: "ventana", ja: "窓" } },
+      { word: "bag", phonetic: "BAG", meaning: { es: "bolsa", ja: "かばん" } },
+      { word: "key", phonetic: "KEE", meaning: { es: "llave", ja: "鍵" } },
+      { word: "money", phonetic: "MUN-ee", meaning: { es: "dinero", ja: "お金" } },
+      { word: "clock", phonetic: "KLOK", meaning: { es: "reloj (de pared)", ja: "時計" } },
+      { word: "car", phonetic: "KAR", meaning: { es: "auto", ja: "車" } },
+      { word: "bicycle", phonetic: "BY-si-kol", meaning: { es: "bicicleta", ja: "自転車" } },
+      { word: "umbrella", phonetic: "um-BREL-uh", meaning: { es: "paraguas", ja: "傘" } },
+      { word: "glasses", phonetic: "GLAS-iz", meaning: { es: "gafas", ja: "眼鏡" } },
+      { word: "watch", phonetic: "WOTCH", meaning: { es: "reloj (de pulsera)", ja: "腕時計" } },
+      { word: "wallet", phonetic: "WOL-et", meaning: { es: "billetera", ja: "財布" } },
+    ],
+  },
+  // ------------------ A2 ------------------
+  {
+    id: "en-work", icon: "💼", titleKey: "enCatWork", level: "a2",
+    words: [
+      { word: "job", phonetic: "JOB", meaning: { es: "trabajo/empleo", ja: "仕事" } },
+      { word: "company", phonetic: "KUM-puh-nee", meaning: { es: "empresa", ja: "会社" } },
+      { word: "boss", phonetic: "BOSS", meaning: { es: "jefe", ja: "上司" } },
+      { word: "colleague", phonetic: "KOL-eeg", meaning: { es: "colega", ja: "同僚" } },
+      { word: "salary", phonetic: "SAL-uh-ree", meaning: { es: "salario", ja: "給料" } },
+      { word: "meeting", phonetic: "MEE-ting", meaning: { es: "reunión", ja: "会議" } },
+      { word: "deadline", phonetic: "DED-lyn", meaning: { es: "fecha límite", ja: "締め切り" } },
+      { word: "resume", phonetic: "REZ-oo-may", meaning: { es: "currículum", ja: "履歴書" } },
+      { word: "interview", phonetic: "IN-ter-vyoo", meaning: { es: "entrevista", ja: "面接" } },
+      { word: "contract", phonetic: "KON-trakt", meaning: { es: "contrato", ja: "契約" } },
+      { word: "to hire", phonetic: "too HYR", meaning: { es: "contratar", ja: "雇う" } },
+      { word: "to quit", phonetic: "too KWIT", meaning: { es: "renunciar", ja: "辞める" } },
+      { word: "to retire", phonetic: "too ri-TYR", meaning: { es: "jubilarse", ja: "引退する" } },
+      { word: "schedule", phonetic: "SKEJ-ool", meaning: { es: "horario", ja: "スケジュール" } },
+      { word: "task", phonetic: "TASK", meaning: { es: "tarea", ja: "タスク" } },
+      { word: "project", phonetic: "PROJ-ekt", meaning: { es: "proyecto", ja: "プロジェクト" } },
+      { word: "promotion", phonetic: "pruh-MOH-shun", meaning: { es: "ascenso", ja: "昇進" } },
+      { word: "overtime", phonetic: "OH-ver-tym", meaning: { es: "horas extra", ja: "残業" } },
+      { word: "vacation", phonetic: "vay-KAY-shun", meaning: { es: "vacaciones", ja: "休暇" } },
+      { word: "team", phonetic: "TEEM", meaning: { es: "equipo", ja: "チーム" } },
+    ],
+  },
+  {
+    id: "en-health", icon: "🏥", titleKey: "enCatHealth", level: "a2",
+    words: [
+      { word: "doctor", phonetic: "DOK-ter", meaning: { es: "médico", ja: "医者" } },
+      { word: "nurse", phonetic: "NURS", meaning: { es: "enfermero/a", ja: "看護師" } },
+      { word: "medicine", phonetic: "MED-i-sin", meaning: { es: "medicina", ja: "薬" } },
+      { word: "pain", phonetic: "PAYN", meaning: { es: "dolor", ja: "痛み" } },
+      { word: "fever", phonetic: "FEE-ver", meaning: { es: "fiebre", ja: "熱" } },
+      { word: "headache", phonetic: "HED-ayk", meaning: { es: "dolor de cabeza", ja: "頭痛" } },
+      { word: "stomachache", phonetic: "STUM-ok-ayk", meaning: { es: "dolor de estómago", ja: "腹痛" } },
+      { word: "cough", phonetic: "KOFF", meaning: { es: "tos", ja: "咳" } },
+      { word: "cold (illness)", phonetic: "KOHLD", meaning: { es: "resfriado", ja: "風邪" } },
+      { word: "injury", phonetic: "IN-juh-ree", meaning: { es: "lesión", ja: "けが" } },
+      { word: "allergy", phonetic: "AL-er-jee", meaning: { es: "alergia", ja: "アレルギー" } },
+      { word: "prescription", phonetic: "pri-SKRIP-shun", meaning: { es: "receta médica", ja: "処方箋" } },
+      { word: "appointment", phonetic: "uh-POYNT-ment", meaning: { es: "cita", ja: "予約" } },
+      { word: "healthy", phonetic: "HEL-thee", meaning: { es: "saludable", ja: "健康な" } },
+      { word: "sick", phonetic: "SIK", meaning: { es: "enfermo", ja: "病気の" } },
+      { word: "to hurt", phonetic: "too HURT", meaning: { es: "doler", ja: "痛む" } },
+      { word: "to recover", phonetic: "too ri-KUV-er", meaning: { es: "recuperarse", ja: "回復する" } },
+      { word: "emergency", phonetic: "ee-MUR-jen-see", meaning: { es: "emergencia", ja: "緊急" } },
+    ],
+  },
+  {
+    id: "en-weather", icon: "🌦️", titleKey: "enCatWeather", level: "a2",
+    words: [
+      { word: "weather", phonetic: "WETH-er", meaning: { es: "clima", ja: "天気" } },
+      { word: "sunny", phonetic: "SUN-ee", meaning: { es: "soleado", ja: "晴れ" } },
+      { word: "rainy", phonetic: "RAY-nee", meaning: { es: "lluvioso", ja: "雨" } },
+      { word: "cloudy", phonetic: "KLOW-dee", meaning: { es: "nublado", ja: "曇り" } },
+      { word: "windy", phonetic: "WIN-dee", meaning: { es: "ventoso", ja: "風が強い" } },
+      { word: "snow", phonetic: "SNOH", meaning: { es: "nieve", ja: "雪" } },
+      { word: "storm", phonetic: "STORM", meaning: { es: "tormenta", ja: "嵐" } },
+      { word: "temperature", phonetic: "TEM-per-uh-cher", meaning: { es: "temperatura", ja: "気温" } },
+      { word: "humid", phonetic: "HYOO-mid", meaning: { es: "húmedo", ja: "湿気の多い" } },
+      { word: "season", phonetic: "SEE-zon", meaning: { es: "estación (del año)", ja: "季節" } },
+      { word: "spring", phonetic: "SPRING", meaning: { es: "primavera", ja: "春" } },
+      { word: "summer", phonetic: "SUM-mer", meaning: { es: "verano", ja: "夏" } },
+      { word: "autumn / fall", phonetic: "AW-tum / FAWL", meaning: { es: "otoño", ja: "秋" } },
+      { word: "winter", phonetic: "WIN-ter", meaning: { es: "invierno", ja: "冬" } },
+      { word: "rainbow", phonetic: "RAYN-boh", meaning: { es: "arcoíris", ja: "虹" } },
+      { word: "forecast", phonetic: "FOR-kast", meaning: { es: "pronóstico", ja: "予報" } },
+    ],
+  },
+  {
+    id: "en-clothing", icon: "👕", titleKey: "enCatClothing", level: "a2",
+    words: [
+      { word: "clothes", phonetic: "KLOHZ", meaning: { es: "ropa", ja: "服" } },
+      { word: "shirt", phonetic: "SHURT", meaning: { es: "camisa", ja: "シャツ" } },
+      { word: "t-shirt", phonetic: "TEE-shurt", meaning: { es: "camiseta", ja: "Tシャツ" } },
+      { word: "pants", phonetic: "PANTS", meaning: { es: "pantalones", ja: "ズボン" } },
+      { word: "dress", phonetic: "DRES", meaning: { es: "vestido", ja: "ドレス" } },
+      { word: "skirt", phonetic: "SKURT", meaning: { es: "falda", ja: "スカート" } },
+      { word: "shoes", phonetic: "SHOOZ", meaning: { es: "zapatos", ja: "靴" } },
+      { word: "socks", phonetic: "SOKS", meaning: { es: "calcetines", ja: "靴下" } },
+      { word: "jacket", phonetic: "JAK-et", meaning: { es: "chaqueta", ja: "ジャケット" } },
+      { word: "coat", phonetic: "KOHT", meaning: { es: "abrigo", ja: "コート" } },
+      { word: "hat", phonetic: "HAT", meaning: { es: "sombrero", ja: "帽子" } },
+      { word: "scarf", phonetic: "SKARF", meaning: { es: "bufanda", ja: "マフラー" } },
+      { word: "gloves", phonetic: "GLUVZ", meaning: { es: "guantes", ja: "手袋" } },
+      { word: "belt", phonetic: "BELT", meaning: { es: "cinturón", ja: "ベルト" } },
+      { word: "to wear", phonetic: "too WAIR", meaning: { es: "usar/llevar puesto", ja: "着る" } },
+      { word: "size", phonetic: "SYZ", meaning: { es: "talla", ja: "サイズ" } },
+    ],
+  },
+  {
+    id: "en-transport", icon: "🚌", titleKey: "enCatTransport", level: "a2",
+    words: [
+      { word: "bus", phonetic: "BUS", meaning: { es: "autobús", ja: "バス" } },
+      { word: "train", phonetic: "TRAYN", meaning: { es: "tren", ja: "電車" } },
+      { word: "subway", phonetic: "SUB-way", meaning: { es: "metro", ja: "地下鉄" } },
+      { word: "taxi", phonetic: "TAK-see", meaning: { es: "taxi", ja: "タクシー" } },
+      { word: "airplane", phonetic: "AIR-playn", meaning: { es: "avión", ja: "飛行機" } },
+      { word: "ship", phonetic: "SHIP", meaning: { es: "barco", ja: "船" } },
+      { word: "ticket", phonetic: "TIK-et", meaning: { es: "boleto", ja: "切符" } },
+      { word: "platform", phonetic: "PLAT-form", meaning: { es: "andén", ja: "プラットフォーム" } },
+      { word: "traffic", phonetic: "TRAF-ik", meaning: { es: "tráfico", ja: "交通" } },
+      { word: "traffic light", phonetic: "TRAF-ik lyt", meaning: { es: "semáforo", ja: "信号機" } },
+      { word: "to drive", phonetic: "too DRYV", meaning: { es: "conducir", ja: "運転する" } },
+      { word: "to fly", phonetic: "too FLY", meaning: { es: "volar", ja: "飛ぶ" } },
+      { word: "route", phonetic: "ROOT", meaning: { es: "ruta", ja: "ルート" } },
+      { word: "destination", phonetic: "des-tin-AY-shun", meaning: { es: "destino", ja: "目的地" } },
+      { word: "luggage", phonetic: "LUG-ij", meaning: { es: "equipaje", ja: "荷物" } },
+      { word: "passport", phonetic: "PAS-port", meaning: { es: "pasaporte", ja: "パスポート" } },
+    ],
+  },
+  {
+    id: "en-shopping", icon: "🛍️", titleKey: "enCatShopping", level: "a2",
+    words: [
+      { word: "price", phonetic: "PRYS", meaning: { es: "precio", ja: "値段" } },
+      { word: "discount", phonetic: "DIS-kownt", meaning: { es: "descuento", ja: "割引" } },
+      { word: "receipt", phonetic: "ri-SEET", meaning: { es: "recibo", ja: "領収書" } },
+      { word: "cash", phonetic: "KASH", meaning: { es: "efectivo", ja: "現金" } },
+      { word: "credit card", phonetic: "KRED-it kard", meaning: { es: "tarjeta de crédito", ja: "クレジットカード" } },
+      { word: "cashier", phonetic: "ka-SHEER", meaning: { es: "cajero", ja: "レジ係" } },
+      { word: "customer", phonetic: "KUS-tuh-mer", meaning: { es: "cliente", ja: "顧客" } },
+      { word: "to pay", phonetic: "too PAY", meaning: { es: "pagar", ja: "払う" } },
+      { word: "to sell", phonetic: "too SEL", meaning: { es: "vender", ja: "売る" } },
+      { word: "refund", phonetic: "REE-fund", meaning: { es: "reembolso", ja: "返金" } },
+      { word: "shopping cart", phonetic: "SHOP-ing kart", meaning: { es: "carrito de compras", ja: "ショッピングカート" } },
+      { word: "sale", phonetic: "SAYL", meaning: { es: "oferta/liquidación", ja: "セール" } },
+      { word: "brand", phonetic: "BRAND", meaning: { es: "marca", ja: "ブランド" } },
+      { word: "quality", phonetic: "KWOL-i-tee", meaning: { es: "calidad", ja: "品質" } },
+    ],
+  },
+  {
+    id: "en-hobbies", icon: "🎸", titleKey: "enCatHobbies", level: "a2",
+    words: [
+      { word: "hobby", phonetic: "HOB-ee", meaning: { es: "pasatiempo", ja: "趣味" } },
+      { word: "music", phonetic: "MYOO-zik", meaning: { es: "música", ja: "音楽" } },
+      { word: "movie", phonetic: "MOO-vee", meaning: { es: "película", ja: "映画" } },
+      { word: "game", phonetic: "GAYM", meaning: { es: "juego", ja: "ゲーム" } },
+      { word: "sport", phonetic: "SPORT", meaning: { es: "deporte", ja: "スポーツ" } },
+      { word: "to paint", phonetic: "too PAYNT", meaning: { es: "pintar", ja: "絵を描く" } },
+      { word: "to sing", phonetic: "too SING", meaning: { es: "cantar", ja: "歌う" } },
+      { word: "to dance", phonetic: "too DANS", meaning: { es: "bailar", ja: "踊る" } },
+      { word: "to swim", phonetic: "too SWIM", meaning: { es: "nadar", ja: "泳ぐ" } },
+      { word: "to cook", phonetic: "too KOOK", meaning: { es: "cocinar", ja: "料理する" } },
+      { word: "to travel", phonetic: "too TRAV-el", meaning: { es: "viajar", ja: "旅行する" } },
+      { word: "to camp", phonetic: "too KAMP", meaning: { es: "acampar", ja: "キャンプする" } },
+      { word: "photography", phonetic: "fuh-TOG-ruh-fee", meaning: { es: "fotografía", ja: "写真撮影" } },
+      { word: "collection", phonetic: "kuh-LEK-shun", meaning: { es: "colección", ja: "コレクション" } },
+    ],
+  },
+  {
+    id: "en-emotions", icon: "😊", titleKey: "enCatEmotions", level: "a2",
+    words: [
+      { word: "excited", phonetic: "ek-SY-ted", meaning: { es: "emocionado", ja: "興奮した" } },
+      { word: "nervous", phonetic: "NUR-vus", meaning: { es: "nervioso", ja: "緊張した" } },
+      { word: "worried", phonetic: "WUR-eed", meaning: { es: "preocupado", ja: "心配した" } },
+      { word: "angry", phonetic: "ANG-gree", meaning: { es: "enojado", ja: "怒った" } },
+      { word: "scared", phonetic: "SKAIRD", meaning: { es: "asustado", ja: "怖い" } },
+      { word: "surprised", phonetic: "sur-PRYZD", meaning: { es: "sorprendido", ja: "驚いた" } },
+      { word: "bored", phonetic: "BORD", meaning: { es: "aburrido", ja: "退屈な" } },
+      { word: "tired", phonetic: "TY-erd", meaning: { es: "cansado", ja: "疲れた" } },
+      { word: "confident", phonetic: "KON-fi-dent", meaning: { es: "seguro de sí mismo", ja: "自信のある" } },
+      { word: "proud", phonetic: "PROWD", meaning: { es: "orgulloso", ja: "誇りに思う" } },
+      { word: "jealous", phonetic: "JEL-us", meaning: { es: "celoso", ja: "嫉妬した" } },
+      { word: "grateful", phonetic: "GRAYT-ful", meaning: { es: "agradecido", ja: "感謝している" } },
+      { word: "lonely", phonetic: "LOHN-lee", meaning: { es: "solitario", ja: "孤独な" } },
+      { word: "calm", phonetic: "KAHM", meaning: { es: "tranquilo", ja: "落ち着いた" } },
+    ],
+  },
+  {
+    id: "en-travel", icon: "✈️", titleKey: "enCatTravel", level: "a2",
+    words: [
+      { word: "trip", phonetic: "TRIP", meaning: { es: "viaje", ja: "旅行" } },
+      { word: "hotel", phonetic: "hoh-TEL", meaning: { es: "hotel", ja: "ホテル" } },
+      { word: "reservation", phonetic: "rez-er-VAY-shun", meaning: { es: "reserva", ja: "予約" } },
+      { word: "tourist", phonetic: "TOOR-ist", meaning: { es: "turista", ja: "観光客" } },
+      { word: "guide", phonetic: "GYD", meaning: { es: "guía", ja: "ガイド" } },
+      { word: "map", phonetic: "MAP", meaning: { es: "mapa", ja: "地図" } },
+      { word: "souvenir", phonetic: "soo-ven-EER", meaning: { es: "recuerdo (objeto)", ja: "お土産" } },
+      { word: "abroad", phonetic: "uh-BRAWD", meaning: { es: "en el extranjero", ja: "海外" } },
+      { word: "border", phonetic: "BOR-der", meaning: { es: "frontera", ja: "国境" } },
+      { word: "currency", phonetic: "KUR-en-see", meaning: { es: "moneda/divisa", ja: "通貨" } },
+      { word: "landmark", phonetic: "LAND-mark", meaning: { es: "punto de referencia", ja: "ランドマーク" } },
+      { word: "adventure", phonetic: "ad-VEN-cher", meaning: { es: "aventura", ja: "冒険" } },
+    ],
+  },
+  {
+    id: "en-technology", icon: "💻", titleKey: "enCatTechnology", level: "a2",
+    words: [
+      { word: "internet", phonetic: "IN-ter-net", meaning: { es: "internet", ja: "インターネット" } },
+      { word: "email", phonetic: "EE-mayl", meaning: { es: "correo electrónico", ja: "メール" } },
+      { word: "password", phonetic: "PAS-wurd", meaning: { es: "contraseña", ja: "パスワード" } },
+      { word: "app", phonetic: "AP", meaning: { es: "aplicación", ja: "アプリ" } },
+      { word: "screen", phonetic: "SKREEN", meaning: { es: "pantalla", ja: "画面" } },
+      { word: "battery", phonetic: "BAT-uh-ree", meaning: { es: "batería", ja: "バッテリー" } },
+      { word: "charger", phonetic: "CHAR-jer", meaning: { es: "cargador", ja: "充電器" } },
+      { word: "website", phonetic: "WEB-syt", meaning: { es: "sitio web", ja: "ウェブサイト" } },
+      { word: "download", phonetic: "DOWN-lohd", meaning: { es: "descargar", ja: "ダウンロードする" } },
+      { word: "upload", phonetic: "UP-lohd", meaning: { es: "subir (archivo)", ja: "アップロードする" } },
+      { word: "file", phonetic: "FYL", meaning: { es: "archivo", ja: "ファイル" } },
+      { word: "software", phonetic: "SOFT-wair", meaning: { es: "software", ja: "ソフトウェア" } },
+      { word: "device", phonetic: "di-VYS", meaning: { es: "dispositivo", ja: "デバイス" } },
+      { word: "network", phonetic: "NET-wurk", meaning: { es: "red", ja: "ネットワーク" } },
+    ],
+  },
+  {
+    id: "en-nature", icon: "🌳", titleKey: "enCatNature", level: "a2",
+    words: [
+      { word: "tree", phonetic: "TREE", meaning: { es: "árbol", ja: "木" } },
+      { word: "flower", phonetic: "FLOW-er", meaning: { es: "flor", ja: "花" } },
+      { word: "river", phonetic: "RIV-er", meaning: { es: "río", ja: "川" } },
+      { word: "lake", phonetic: "LAYK", meaning: { es: "lago", ja: "湖" } },
+      { word: "ocean", phonetic: "OH-shun", meaning: { es: "océano", ja: "海" } },
+      { word: "forest", phonetic: "FOR-est", meaning: { es: "bosque", ja: "森" } },
+      { word: "sky", phonetic: "SKY", meaning: { es: "cielo", ja: "空" } },
+      { word: "sun", phonetic: "SUN", meaning: { es: "sol", ja: "太陽" } },
+      { word: "moon", phonetic: "MOON", meaning: { es: "luna", ja: "月" } },
+      { word: "star", phonetic: "STAR", meaning: { es: "estrella", ja: "星" } },
+      { word: "animal", phonetic: "AN-i-mol", meaning: { es: "animal", ja: "動物" } },
+      { word: "plant", phonetic: "PLANT", meaning: { es: "planta", ja: "植物" } },
+      { word: "environment", phonetic: "en-VY-ron-ment", meaning: { es: "medio ambiente", ja: "環境" } },
+      { word: "earth", phonetic: "URTH", meaning: { es: "tierra (planeta)", ja: "地球" } },
+    ],
+  },
+  {
+    id: "en-society", icon: "🏛️", titleKey: "enCatSociety", level: "a2",
+    words: [
+      { word: "government", phonetic: "GUV-ern-ment", meaning: { es: "gobierno", ja: "政府" } },
+      { word: "law", phonetic: "LAW", meaning: { es: "ley", ja: "法律" } },
+      { word: "citizen", phonetic: "SIT-i-zen", meaning: { es: "ciudadano", ja: "市民" } },
+      { word: "community", phonetic: "kuh-MYOO-ni-tee", meaning: { es: "comunidad", ja: "コミュニティ" } },
+      { word: "culture", phonetic: "KUL-cher", meaning: { es: "cultura", ja: "文化" } },
+      { word: "tradition", phonetic: "truh-DISH-un", meaning: { es: "tradición", ja: "伝統" } },
+      { word: "education", phonetic: "ej-oo-KAY-shun", meaning: { es: "educación", ja: "教育" } },
+      { word: "economy", phonetic: "ee-KON-uh-mee", meaning: { es: "economía", ja: "経済" } },
+      { word: "vote", phonetic: "VOHT", meaning: { es: "voto", ja: "投票" } },
+      { word: "freedom", phonetic: "FREE-dum", meaning: { es: "libertad", ja: "自由" } },
+      { word: "news", phonetic: "NOOZ", meaning: { es: "noticias", ja: "ニュース" } },
+      { word: "population", phonetic: "pop-yoo-LAY-shun", meaning: { es: "población", ja: "人口" } },
+    ],
+  },
+];
+
+const ENGLISH_GRAMMAR_POINTS = [
+  {
+    id: "en-tobe", titleKey: "enGramToBeTitle",
+    pattern: { es: "Sujeto + am/is/are", ja: "主語 + am/is/are" },
+    explanation: { es: "El verbo 'to be' (ser/estar) cambia según el sujeto: I am, you/we/they are, he/she/it is. Es la base de casi toda oración descriptiva en inglés.", ja: "動詞 to be は主語によって変わります：I am, you/we/they are, he/she/it is。" },
+    examples: [
+      { sentence: "I am a student.", translation: { es: "Yo soy estudiante.", ja: "私は学生です。" } },
+      { sentence: "She is tired today.", translation: { es: "Ella está cansada hoy.", ja: "彼女は今日疲れています。" } },
+      { sentence: "They are my friends.", translation: { es: "Ellos son mis amigos.", ja: "彼らは私の友達です。" } },
+    ],
+  },
+  {
+    id: "en-presentsimple", titleKey: "enGramPresentSimpleTitle",
+    pattern: { es: "Sujeto + verbo (+s en 3ª persona singular)", ja: "主語 + 動詞（三人称単数は+s）" },
+    explanation: { es: "Se usa para hábitos, rutinas y hechos generales. En 3ª persona singular (he/she/it) se agrega -s al verbo.", ja: "習慣、日課、一般的な事実に使います。三人称単数（he/she/it）では動詞に-sを付けます。" },
+    examples: [
+      { sentence: "She works at a hospital.", translation: { es: "Ella trabaja en un hospital.", ja: "彼女は病院で働いています。" } },
+      { sentence: "I drink coffee every morning.", translation: { es: "Bebo café todas las mañanas.", ja: "私は毎朝コーヒーを飲みます。" } },
+    ],
+  },
+  {
+    id: "en-presentcontinuous", titleKey: "enGramPresentContinuousTitle",
+    pattern: { es: "Sujeto + am/is/are + verbo-ing", ja: "主語 + am/is/are + 動詞-ing" },
+    explanation: { es: "Describe algo que está ocurriendo AHORA MISMO o una situación temporal.", ja: "今まさに起きていること、または一時的な状況を表します。" },
+    examples: [
+      { sentence: "I am reading a book right now.", translation: { es: "Estoy leyendo un libro ahora mismo.", ja: "私は今、本を読んでいます。" } },
+      { sentence: "They are watching a movie.", translation: { es: "Ellos están viendo una película.", ja: "彼らは映画を見ています。" } },
+    ],
+  },
+  {
+    id: "en-pastsimple", titleKey: "enGramPastSimpleTitle",
+    pattern: { es: "Sujeto + verbo-ed (o forma irregular)", ja: "主語 + 動詞-ed（または不規則形）" },
+    explanation: { es: "Habla de acciones completadas en el pasado. Los verbos regulares agregan -ed; muchos verbos comunes son irregulares (go→went, eat→ate).", ja: "過去に完了した行動を表します。規則動詞は-edを付け、多くの一般的な動詞は不規則です（go→went, eat→ate）。" },
+    examples: [
+      { sentence: "I visited my grandmother last weekend.", translation: { es: "Visité a mi abuela el fin de semana pasado.", ja: "先週末、祖母を訪ねました。" } },
+      { sentence: "She went to Japan in 2023.", translation: { es: "Ella fue a Japón en 2023.", ja: "彼女は2023年に日本に行きました。" } },
+    ],
+  },
+  {
+    id: "en-future", titleKey: "enGramFutureTitle",
+    pattern: { es: "Sujeto + will + verbo / am/is/are + going to + verbo", ja: "主語 + will + 動詞 / am/is/are + going to + 動詞" },
+    explanation: { es: "'Will' se usa para decisiones espontáneas y predicciones; 'going to' para planes ya decididos.", ja: "willはその場の決定や予測に、going toはすでに決めた計画に使います。" },
+    examples: [
+      { sentence: "I will call you tomorrow.", translation: { es: "Te llamaré mañana.", ja: "明日電話します。" } },
+      { sentence: "We are going to travel to Brazil next month.", translation: { es: "Vamos a viajar a Brasil el próximo mes.", ja: "来月ブラジルに旅行する予定です。" } },
+    ],
+  },
+  {
+    id: "en-canability", titleKey: "enGramCanTitle",
+    pattern: { es: "Sujeto + can/can't + verbo", ja: "主語 + can/can't + 動詞" },
+    explanation: { es: "'Can' expresa habilidad, posibilidad o permiso. Su forma pasada es 'could'.", ja: "canは能力、可能性、許可を表します。過去形はcouldです。" },
+    examples: [
+      { sentence: "I can swim very well.", translation: { es: "Puedo nadar muy bien.", ja: "私はとても上手に泳げます。" } },
+      { sentence: "She can't come to the party.", translation: { es: "Ella no puede venir a la fiesta.", ja: "彼女はパーティーに来られません。" } },
+    ],
+  },
+  {
+    id: "en-thereis", titleKey: "enGramThereIsTitle",
+    pattern: { es: "There is + singular / There are + plural", ja: "There is + 単数 / There are + 複数" },
+    explanation: { es: "Se usa para decir que algo existe en un lugar.", ja: "ある場所に何かが存在することを言うときに使います。" },
+    examples: [
+      { sentence: "There is a cat on the roof.", translation: { es: "Hay un gato en el techo.", ja: "屋根に猫がいます。" } },
+      { sentence: "There are three books on the table.", translation: { es: "Hay tres libros en la mesa.", ja: "テーブルの上に本が三冊あります。" } },
+    ],
+  },
+  {
+    id: "en-comparatives", titleKey: "enGramComparativesTitle",
+    pattern: { es: "adjetivo+er / more + adjetivo + than", ja: "形容詞+er / more + 形容詞 + than" },
+    explanation: { es: "Se usa para comparar dos cosas. Adjetivos cortos agregan -er; los largos usan 'more'.", ja: "二つのものを比較するときに使います。短い形容詞は-er、長い形容詞はmoreを使います。" },
+    examples: [
+      { sentence: "This car is faster than that one.", translation: { es: "Este auto es más rápido que ese.", ja: "この車はあの車より速いです。" } },
+      { sentence: "This book is more interesting than the movie.", translation: { es: "Este libro es más interesante que la película.", ja: "この本は映画より面白いです。" } },
+    ],
+  },
+  {
+    id: "en-superlatives", titleKey: "enGramSuperlativesTitle",
+    pattern: { es: "the + adjetivo+est / the most + adjetivo", ja: "the + 形容詞+est / the most + 形容詞" },
+    explanation: { es: "Se usa para expresar el grado máximo entre tres o más elementos.", ja: "三つ以上の中で最も程度が高いことを表します。" },
+    examples: [
+      { sentence: "This is the tallest building in the city.", translation: { es: "Este es el edificio más alto de la ciudad.", ja: "これは街で一番高い建物です。" } },
+      { sentence: "She is the most talented singer in the group.", translation: { es: "Ella es la cantante más talentosa del grupo.", ja: "彼女はグループで最も才能のある歌手です。" } },
+    ],
+  },
+  {
+    id: "en-questions", titleKey: "enGramQuestionsTitle",
+    pattern: { es: "Do/Does/Did + sujeto + verbo?", ja: "Do/Does/Did + 主語 + 動詞？" },
+    explanation: { es: "Para hacer preguntas de sí/no en presente y pasado se usa el auxiliar do/does/did antes del sujeto.", ja: "現在形・過去形のはい/いいえの質問には、主語の前にdo/does/didを使います。" },
+    examples: [
+      { sentence: "Do you like coffee?", translation: { es: "¿Te gusta el café?", ja: "コーヒーは好きですか？" } },
+      { sentence: "Does she speak Portuguese?", translation: { es: "¿Ella habla portugués?", ja: "彼女はポルトガル語を話しますか？" } },
+    ],
+  },
+  {
+    id: "en-prepositions", titleKey: "enGramPrepositionsTitle",
+    pattern: { es: "in / on / at (lugar y tiempo)", ja: "in / on / at（場所と時間）" },
+    explanation: { es: "'In' para meses/años/lugares grandes, 'on' para días/fechas/superficies, 'at' para horas exactas/lugares específicos.", ja: "inは月・年・大きな場所、onは曜日・日付・面、atは正確な時刻・特定の場所に使います。" },
+    examples: [
+      { sentence: "The meeting is at 3 PM on Friday.", translation: { es: "La reunión es a las 3 PM el viernes.", ja: "会議は金曜日の午後3時です。" } },
+      { sentence: "I was born in 1998.", translation: { es: "Nací en 1998.", ja: "私は1998年に生まれました。" } },
+    ],
+  },
+  {
+    id: "en-modalsobligation", titleKey: "enGramModalsObligationTitle",
+    pattern: { es: "must / have to / should", ja: "must / have to / should" },
+    explanation: { es: "'Must'/'have to' expresan obligación fuerte; 'should' expresa un consejo o recomendación.", ja: "must/have toは強い義務を、shouldはアドバイスや推奨を表します。" },
+    examples: [
+      { sentence: "You must wear a seatbelt.", translation: { es: "Debes usar cinturón de seguridad.", ja: "シートベルトを着用しなければなりません。" } },
+      { sentence: "You should drink more water.", translation: { es: "Deberías beber más agua.", ja: "もっと水を飲んだ方がいいですよ。" } },
+    ],
+  },
+  {
+    id: "en-presentperfect", titleKey: "enGramPresentPerfectTitle",
+    pattern: { es: "Sujeto + have/has + participio pasado", ja: "主語 + have/has + 過去分詞" },
+    explanation: { es: "Conecta el pasado con el presente: experiencias de vida, acciones recientes sin momento específico, o que continúan hasta ahora.", ja: "過去と現在をつなぎます：人生経験、特定の時期のない最近の行動、今まで続いていること。" },
+    examples: [
+      { sentence: "I have visited Japan three times.", translation: { es: "He visitado Japón tres veces.", ja: "私は日本を三回訪れたことがあります。" } },
+      { sentence: "She has already finished her homework.", translation: { es: "Ella ya terminó su tarea.", ja: "彼女はもう宿題を終えました。" } },
+    ],
+  },
+  {
+    id: "en-conditional1", titleKey: "enGramConditional1Title",
+    pattern: { es: "If + presente simple, ... will + verbo", ja: "If + 現在形, ... will + 動詞" },
+    explanation: { es: "El primer condicional habla de situaciones reales y posibles en el futuro.", ja: "第一条件文は、未来における現実的で可能性のある状況について話します。" },
+    examples: [
+      { sentence: "If it rains, we will stay home.", translation: { es: "Si llueve, nos quedaremos en casa.", ja: "雨が降ったら、家にいます。" } },
+      { sentence: "If you study hard, you will pass the exam.", translation: { es: "Si estudias mucho, aprobarás el examen.", ja: "一生懸命勉強すれば、試験に合格します。" } },
+    ],
+  },
+  {
+    id: "en-passive", titleKey: "enGramPassiveTitle",
+    pattern: { es: "Sujeto + be + participio pasado (+ by)", ja: "主語 + be + 過去分詞（+ by）" },
+    explanation: { es: "La voz pasiva se usa cuando la acción es más importante que quién la hace.", ja: "受動態は、行動が誰がするかより重要なときに使います。" },
+    examples: [
+      { sentence: "The book was written by a famous author.", translation: { es: "El libro fue escrito por un autor famoso.", ja: "その本は有名な作家によって書かれました。" } },
+      { sentence: "This bridge was built in 1930.", translation: { es: "Este puente fue construido en 1930.", ja: "この橋は1930年に建てられました。" } },
+    ],
+  },
+];
+
+const ENGLISH_CONVERSATION_SCENES = [
+  {
+    id: "en-cafe", icon: "☕", titleKey: "enConvCafeTitle",
+    lines: [
+      { speaker: "A", text: "Hi! What can I get for you today?", translation: { es: "¡Hola! ¿Qué te puedo servir hoy?", ja: "こんにちは！ 何になさいますか？" } },
+      { speaker: "B", text: "I'd like a large coffee, please.", translation: { es: "Quisiera un café grande, por favor.", ja: "コーヒーのラージサイズをお願いします。" } },
+      { speaker: "A", text: "Would you like anything to eat with that?", translation: { es: "¿Le gustaría algo de comer con eso?", ja: "何かお召し上がりになりますか？" } },
+      { speaker: "B", text: "Yes, a chocolate muffin, please.", translation: { es: "Sí, un muffin de chocolate, por favor.", ja: "はい、チョコレートマフィンをお願いします。" } },
+      { speaker: "A", text: "That will be six dollars.", translation: { es: "Serán seis dólares.", ja: "6ドルになります。" } },
+      { speaker: "B", text: "Here you go. Thank you!", translation: { es: "Aquí tiene. ¡Gracias!", ja: "どうぞ。ありがとうございます！" } },
+      { speaker: "A", text: "Thank you! Have a great day.", translation: { es: "¡Gracias! Que tenga un buen día.", ja: "ありがとうございます！ 良い一日を。" } },
+    ],
+  },
+  {
+    id: "en-airport", icon: "🛫", titleKey: "enConvAirportTitle",
+    lines: [
+      { speaker: "A", text: "Good morning. Can I see your passport, please?", translation: { es: "Buenos días. ¿Puedo ver su pasaporte, por favor?", ja: "おはようございます。パスポートを見せていただけますか？" } },
+      { speaker: "B", text: "Sure, here it is.", translation: { es: "Claro, aquí está.", ja: "はい、どうぞ。" } },
+      { speaker: "A", text: "How many bags are you checking in?", translation: { es: "¿Cuántas maletas va a facturar?", ja: "お預けの荷物はいくつですか？" } },
+      { speaker: "B", text: "Just one, please.", translation: { es: "Solo una, por favor.", ja: "一つだけです。" } },
+      { speaker: "A", text: "Do you prefer a window or aisle seat?", translation: { es: "¿Prefiere ventanilla o pasillo?", ja: "窓側と通路側、どちらがよろしいですか？" } },
+      { speaker: "B", text: "Window seat, please.", translation: { es: "Ventanilla, por favor.", ja: "窓側でお願いします。" } },
+      { speaker: "A", text: "Here's your boarding pass. Boarding starts at gate 12 in one hour.", translation: { es: "Aquí tiene su pase de abordar. El embarque comienza en la puerta 12 en una hora.", ja: "こちらが搭乗券です。1時間後に12番ゲートで搭乗開始です。" } },
+    ],
+  },
+  {
+    id: "en-doctor", icon: "🩺", titleKey: "enConvDoctorTitle",
+    lines: [
+      { speaker: "A", text: "What seems to be the problem today?", translation: { es: "¿Cuál es el problema hoy?", ja: "今日はどうされましたか？" } },
+      { speaker: "B", text: "I have a fever and a headache since yesterday.", translation: { es: "Tengo fiebre y dolor de cabeza desde ayer.", ja: "昨日から熱と頭痛があります。" } },
+      { speaker: "A", text: "Do you have a cough or sore throat?", translation: { es: "¿Tiene tos o dolor de garganta?", ja: "咳や喉の痛みはありますか？" } },
+      { speaker: "B", text: "A little cough, yes.", translation: { es: "Un poco de tos, sí.", ja: "少し咳があります。" } },
+      { speaker: "A", text: "I'll prescribe some medicine. Rest and drink plenty of water.", translation: { es: "Le recetaré medicina. Descanse y beba mucha agua.", ja: "薬を処方します。休んで、水をたくさん飲んでください。" } },
+      { speaker: "B", text: "Thank you, doctor.", translation: { es: "Gracias, doctor.", ja: "ありがとうございます、先生。" } },
+    ],
+  },
+  {
+    id: "en-jobinterview", icon: "💼", titleKey: "enConvJobInterviewTitle",
+    lines: [
+      { speaker: "A", text: "Tell me a little about yourself.", translation: { es: "Cuénteme un poco sobre usted.", ja: "自己紹介をしていただけますか？" } },
+      { speaker: "B", text: "I have three years of experience in marketing and I love working in a team.", translation: { es: "Tengo tres años de experiencia en marketing y me encanta trabajar en equipo.", ja: "マーケティングで3年の経験があり、チームで働くのが大好きです。" } },
+      { speaker: "A", text: "Why do you want to work here?", translation: { es: "¿Por qué quiere trabajar aquí?", ja: "なぜここで働きたいのですか？" } },
+      { speaker: "B", text: "I admire your company's innovation and I want to grow professionally.", translation: { es: "Admiro la innovación de su empresa y quiero crecer profesionalmente.", ja: "御社の革新性を尊敬しており、専門的に成長したいと思っています。" } },
+      { speaker: "A", text: "What are your strengths?", translation: { es: "¿Cuáles son sus fortalezas?", ja: "あなたの強みは何ですか？" } },
+      { speaker: "B", text: "I'm organized, and I always meet deadlines.", translation: { es: "Soy organizado y siempre cumplo con los plazos.", ja: "私は几帳面で、いつも締め切りを守ります。" } },
+    ],
+  },
+  {
+    id: "en-restaurant", icon: "🍽️", titleKey: "enConvRestaurantTitle",
+    lines: [
+      { speaker: "A", text: "Good evening! Table for how many?", translation: { es: "¡Buenas noches! ¿Mesa para cuántos?", ja: "こんばんは！ 何名様ですか？" } },
+      { speaker: "B", text: "Table for two, please.", translation: { es: "Mesa para dos, por favor.", ja: "二名でお願いします。" } },
+      { speaker: "A", text: "Right this way. Here are your menus.", translation: { es: "Por aquí, por favor. Aquí tienen sus menús.", ja: "こちらへどうぞ。メニューです。" } },
+      { speaker: "B", text: "Thank you. We're ready to order.", translation: { es: "Gracias. Ya podemos ordenar.", ja: "ありがとう。注文できます。" } },
+      { speaker: "A", text: "Great, what would you like?", translation: { es: "Perfecto, ¿qué desean?", ja: "かしこまりました、ご注文は？" } },
+      { speaker: "B", text: "I'll have the grilled chicken with vegetables.", translation: { es: "Quiero el pollo a la parrilla con vegetales.", ja: "野菜添えのグリルチキンをお願いします。" } },
+      { speaker: "A", text: "Excellent choice. Anything to drink?", translation: { es: "Excelente elección. ¿Algo para beber?", ja: "良い選択ですね。お飲み物は？" } },
+      { speaker: "B", text: "Just water, thank you.", translation: { es: "Solo agua, gracias.", ja: "お水だけで結構です。" } },
+    ],
+  },
+  {
+    id: "en-directions", icon: "🗺️", titleKey: "enConvDirectionsTitle",
+    lines: [
+      { speaker: "A", text: "Excuse me, how do I get to the train station?", translation: { es: "Disculpe, ¿cómo llego a la estación de tren?", ja: "すみません、駅にはどう行けばいいですか？" } },
+      { speaker: "B", text: "Go straight ahead for two blocks, then turn left.", translation: { es: "Siga derecho dos cuadras, luego doble a la izquierda.", ja: "二ブロックまっすぐ行って、それから左に曲がってください。" } },
+      { speaker: "A", text: "Is it far from here?", translation: { es: "¿Está lejos de aquí?", ja: "ここから遠いですか？" } },
+      { speaker: "B", text: "No, it's about a ten-minute walk.", translation: { es: "No, son unos diez minutos caminando.", ja: "いいえ、歩いて約10分です。" } },
+      { speaker: "A", text: "Thank you so much for your help!", translation: { es: "¡Muchas gracias por su ayuda!", ja: "本当にありがとうございました！" } },
+      { speaker: "B", text: "You're welcome. Have a safe trip!", translation: { es: "De nada. ¡Buen viaje!", ja: "どういたしまして。良い旅を！" } },
+    ],
+  },
+];
+
+const PORTUGUESE_VOCAB_CATEGORIES = [
+  {
+    id: "pt-greetings", icon: "👋", titleKey: "ptCatGreetings", level: "a1",
+    words: [
+      { word: "olá", phonetic: "oh-LAH", meaning: { es: "hola", en: "hello", ja: "こんにちは" } },
+      { word: "oi", phonetic: "OY", meaning: { es: "hola (informal)", en: "hi", ja: "やあ" } },
+      { word: "bom dia", phonetic: "bom DEE-ah", meaning: { es: "buenos días", en: "good morning", ja: "おはよう" } },
+      { word: "boa tarde", phonetic: "BOH-ah TAR-jee", meaning: { es: "buenas tardes", en: "good afternoon", ja: "こんにちは" } },
+      { word: "boa noite", phonetic: "BOH-ah NOY-chee", meaning: { es: "buenas noches", en: "good evening/night", ja: "こんばんは" } },
+      { word: "tchau", phonetic: "CHOW", meaning: { es: "chau", en: "bye", ja: "バイバイ" } },
+      { word: "até logo", phonetic: "ah-TEH LOH-goo", meaning: { es: "hasta luego", en: "see you later", ja: "またね" } },
+      { word: "por favor", phonetic: "por fah-VOR", meaning: { es: "por favor", en: "please", ja: "お願いします" } },
+      { word: "obrigado/a", phonetic: "oh-bree-GAH-doo", meaning: { es: "gracias", en: "thank you", ja: "ありがとう" } },
+      { word: "de nada", phonetic: "jee NAH-dah", meaning: { es: "de nada", en: "you're welcome", ja: "どういたしまして" } },
+      { word: "desculpa", phonetic: "des-KOOL-pah", meaning: { es: "perdón", en: "sorry", ja: "ごめんなさい" } },
+      { word: "com licença", phonetic: "kom lee-SEN-sah", meaning: { es: "con permiso", en: "excuse me", ja: "すみません" } },
+      { word: "sim", phonetic: "SEEM", meaning: { es: "sí", en: "yes", ja: "はい" } },
+      { word: "não", phonetic: "NOW(ng)", meaning: { es: "no", en: "no", ja: "いいえ" } },
+      { word: "como você está?", phonetic: "KOH-moo voh-SEH es-TAH", meaning: { es: "¿cómo estás?", en: "how are you?", ja: "元気ですか" } },
+      { word: "estou bem", phonetic: "es-TOH beng", meaning: { es: "estoy bien", en: "I'm fine", ja: "元気です" } },
+      { word: "prazer em conhecê-lo", phonetic: "prah-ZER eng kon-yeh-SEH-loo", meaning: { es: "mucho gusto", en: "nice to meet you", ja: "はじめまして" } },
+      { word: "qual é o seu nome?", phonetic: "kwahl eh oo SEH-oo NOH-mee", meaning: { es: "¿cómo te llamas?", en: "what's your name?", ja: "お名前は何ですか" } },
+      { word: "meu nome é", phonetic: "MEH-oo NOH-mee eh", meaning: { es: "mi nombre es", en: "my name is", ja: "私の名前は" } },
+      { word: "bem-vindo", phonetic: "beng-VEEN-doo", meaning: { es: "bienvenido", en: "welcome", ja: "ようこそ" } },
+    ],
+  },
+  {
+    id: "pt-numbers", icon: "🔢", titleKey: "ptCatNumbers", level: "a1",
+    words: [
+      { word: "zero", phonetic: "ZEH-roo", meaning: { es: "cero", en: "zero", ja: "ゼロ" } },
+      { word: "um", phonetic: "OOM", meaning: { es: "uno", en: "one", ja: "一" } },
+      { word: "dois", phonetic: "DOYS", meaning: { es: "dos", en: "two", ja: "二" } },
+      { word: "três", phonetic: "TRAYS", meaning: { es: "tres", en: "three", ja: "三" } },
+      { word: "quatro", phonetic: "KWAH-troo", meaning: { es: "cuatro", en: "four", ja: "四" } },
+      { word: "cinco", phonetic: "SEEN-koo", meaning: { es: "cinco", en: "five", ja: "五" } },
+      { word: "seis", phonetic: "SAYS", meaning: { es: "seis", en: "six", ja: "六" } },
+      { word: "sete", phonetic: "SEH-chee", meaning: { es: "siete", en: "seven", ja: "七" } },
+      { word: "oito", phonetic: "OY-too", meaning: { es: "ocho", en: "eight", ja: "八" } },
+      { word: "nove", phonetic: "NAW-vee", meaning: { es: "nueve", en: "nine", ja: "九" } },
+      { word: "dez", phonetic: "DEZ", meaning: { es: "diez", en: "ten", ja: "十" } },
+      { word: "onze", phonetic: "ON-zee", meaning: { es: "once", en: "eleven", ja: "十一" } },
+      { word: "doze", phonetic: "DOH-zee", meaning: { es: "doce", en: "twelve", ja: "十二" } },
+      { word: "vinte", phonetic: "VEEN-chee", meaning: { es: "veinte", en: "twenty", ja: "二十" } },
+      { word: "trinta", phonetic: "TREEN-tah", meaning: { es: "treinta", en: "thirty", ja: "三十" } },
+      { word: "quarenta", phonetic: "kwah-REN-tah", meaning: { es: "cuarenta", en: "forty", ja: "四十" } },
+      { word: "cinquenta", phonetic: "seen-KWEN-tah", meaning: { es: "cincuenta", en: "fifty", ja: "五十" } },
+      { word: "cem", phonetic: "SENG", meaning: { es: "cien", en: "one hundred", ja: "百" } },
+      { word: "mil", phonetic: "MEEO", meaning: { es: "mil", en: "one thousand", ja: "千" } },
+      { word: "primeiro", phonetic: "pree-MAY-roo", meaning: { es: "primero", en: "first", ja: "一番目" } },
+      { word: "segundo", phonetic: "seh-GOON-doo", meaning: { es: "segundo", en: "second", ja: "二番目" } },
+    ],
+  },
+  {
+    id: "pt-family", icon: "👨‍👩‍👧", titleKey: "ptCatFamily", level: "a1",
+    words: [
+      { word: "família", phonetic: "fah-MEE-lyah", meaning: { es: "familia", en: "family", ja: "家族" } },
+      { word: "mãe", phonetic: "MY(ng)", meaning: { es: "madre", en: "mother", ja: "母" } },
+      { word: "pai", phonetic: "PY", meaning: { es: "padre", en: "father", ja: "父" } },
+      { word: "pais", phonetic: "PYS", meaning: { es: "padres", en: "parents", ja: "両親" } },
+      { word: "filho", phonetic: "FEEL-yoo", meaning: { es: "hijo", en: "son", ja: "息子" } },
+      { word: "filha", phonetic: "FEEL-yah", meaning: { es: "hija", en: "daughter", ja: "娘" } },
+      { word: "irmão", phonetic: "eer-MOW(ng)", meaning: { es: "hermano", en: "brother", ja: "兄弟" } },
+      { word: "irmã", phonetic: "eer-MA(ng)", meaning: { es: "hermana", en: "sister", ja: "姉妹" } },
+      { word: "avó", phonetic: "ah-VAW", meaning: { es: "abuela", en: "grandmother", ja: "祖母" } },
+      { word: "avô", phonetic: "ah-VOH", meaning: { es: "abuelo", en: "grandfather", ja: "祖父" } },
+      { word: "marido", phonetic: "mah-REE-doo", meaning: { es: "esposo", en: "husband", ja: "夫" } },
+      { word: "esposa", phonetic: "es-POH-zah", meaning: { es: "esposa", en: "wife", ja: "妻" } },
+      { word: "tio", phonetic: "CHEE-oo", meaning: { es: "tío", en: "uncle", ja: "おじ" } },
+      { word: "tia", phonetic: "CHEE-ah", meaning: { es: "tía", en: "aunt", ja: "おば" } },
+      { word: "primo/a", phonetic: "PREE-moo", meaning: { es: "primo/prima", en: "cousin", ja: "いとこ" } },
+      { word: "sobrinho", phonetic: "soh-BREEN-yoo", meaning: { es: "sobrino", en: "nephew", ja: "甥" } },
+      { word: "sobrinha", phonetic: "soh-BREEN-yah", meaning: { es: "sobrina", en: "niece", ja: "姪" } },
+      { word: "bebê", phonetic: "beh-BEH", meaning: { es: "bebé", en: "baby", ja: "赤ちゃん" } },
+      { word: "amigo", phonetic: "ah-MEE-goo", meaning: { es: "amigo", en: "friend", ja: "友達" } },
+      { word: "vizinho", phonetic: "vee-ZEEN-yoo", meaning: { es: "vecino", en: "neighbor", ja: "隣人" } },
+    ],
+  },
+  {
+    id: "pt-colors", icon: "🎨", titleKey: "ptCatColors", level: "a1",
+    words: [
+      { word: "vermelho", phonetic: "ver-MEL-yoo", meaning: { es: "rojo", en: "red", ja: "赤" } },
+      { word: "azul", phonetic: "ah-ZOOL", meaning: { es: "azul", en: "blue", ja: "青" } },
+      { word: "verde", phonetic: "VER-jee", meaning: { es: "verde", en: "green", ja: "緑" } },
+      { word: "amarelo", phonetic: "ah-mah-REH-loo", meaning: { es: "amarillo", en: "yellow", ja: "黄色" } },
+      { word: "laranja", phonetic: "lah-RAN-jah", meaning: { es: "naranja", en: "orange", ja: "オレンジ色" } },
+      { word: "roxo", phonetic: "ROH-shoo", meaning: { es: "morado", en: "purple", ja: "紫" } },
+      { word: "rosa", phonetic: "HOH-zah", meaning: { es: "rosa", en: "pink", ja: "ピンク" } },
+      { word: "preto", phonetic: "PREH-too", meaning: { es: "negro", en: "black", ja: "黒" } },
+      { word: "branco", phonetic: "BRAN-koo", meaning: { es: "blanco", en: "white", ja: "白" } },
+      { word: "cinza", phonetic: "SEEN-zah", meaning: { es: "gris", en: "gray", ja: "灰色" } },
+      { word: "marrom", phonetic: "mah-HOM", meaning: { es: "marrón", en: "brown", ja: "茶色" } },
+      { word: "dourado", phonetic: "doh-RAH-doo", meaning: { es: "dorado", en: "gold", ja: "金色" } },
+      { word: "prateado", phonetic: "prah-chee-AH-doo", meaning: { es: "plateado", en: "silver", ja: "銀色" } },
+      { word: "escuro", phonetic: "es-KOO-roo", meaning: { es: "oscuro", en: "dark", ja: "暗い" } },
+      { word: "claro", phonetic: "KLAH-roo", meaning: { es: "claro", en: "bright/light", ja: "明るい" } },
+    ],
+  },
+  {
+    id: "pt-food", icon: "🍎", titleKey: "ptCatFood", level: "a1",
+    words: [
+      { word: "água", phonetic: "AH-gwah", meaning: { es: "agua", en: "water", ja: "水" } },
+      { word: "pão", phonetic: "POW(ng)", meaning: { es: "pan", en: "bread", ja: "パン" } },
+      { word: "arroz", phonetic: "ah-HOZ", meaning: { es: "arroz", en: "rice", ja: "米" } },
+      { word: "carne", phonetic: "KAR-nee", meaning: { es: "carne", en: "meat", ja: "肉" } },
+      { word: "frango", phonetic: "FRAN-goo", meaning: { es: "pollo", en: "chicken", ja: "鶏肉" } },
+      { word: "peixe", phonetic: "PAY-shee", meaning: { es: "pescado", en: "fish", ja: "魚" } },
+      { word: "ovo", phonetic: "OH-voo", meaning: { es: "huevo", en: "egg", ja: "卵" } },
+      { word: "leite", phonetic: "LAY-chee", meaning: { es: "leche", en: "milk", ja: "牛乳" } },
+      { word: "queijo", phonetic: "KAY-joo", meaning: { es: "queso", en: "cheese", ja: "チーズ" } },
+      { word: "fruta", phonetic: "FROO-tah", meaning: { es: "fruta", en: "fruit", ja: "果物" } },
+      { word: "maçã", phonetic: "mah-SA(ng)", meaning: { es: "manzana", en: "apple", ja: "りんご" } },
+      { word: "banana", phonetic: "bah-NAH-nah", meaning: { es: "plátano", en: "banana", ja: "バナナ" } },
+      { word: "legume", phonetic: "leh-GOO-mee", meaning: { es: "verdura", en: "vegetable", ja: "野菜" } },
+      { word: "sopa", phonetic: "SOH-pah", meaning: { es: "sopa", en: "soup", ja: "スープ" } },
+      { word: "salada", phonetic: "sah-LAH-dah", meaning: { es: "ensalada", en: "salad", ja: "サラダ" } },
+      { word: "café", phonetic: "kah-FEH", meaning: { es: "café", en: "coffee", ja: "コーヒー" } },
+      { word: "chá", phonetic: "SHAH", meaning: { es: "té", en: "tea", ja: "お茶" } },
+      { word: "suco", phonetic: "SOO-koo", meaning: { es: "jugo", en: "juice", ja: "ジュース" } },
+      { word: "açúcar", phonetic: "ah-SOO-kar", meaning: { es: "azúcar", en: "sugar", ja: "砂糖" } },
+      { word: "sal", phonetic: "SAHL", meaning: { es: "sal", en: "salt", ja: "塩" } },
+      { word: "café da manhã", phonetic: "kah-FEH dah man-YA(ng)", meaning: { es: "desayuno", en: "breakfast", ja: "朝食" } },
+      { word: "almoço", phonetic: "ahl-MOH-soo", meaning: { es: "almuerzo", en: "lunch", ja: "昼食" } },
+      { word: "jantar", phonetic: "jan-TAR", meaning: { es: "cena", en: "dinner", ja: "夕食" } },
+    ],
+  },
+  {
+    id: "pt-time", icon: "🕒", titleKey: "ptCatTime", level: "a1",
+    words: [
+      { word: "hoje", phonetic: "OH-jee", meaning: { es: "hoy", en: "today", ja: "今日" } },
+      { word: "amanhã", phonetic: "ah-man-YA(ng)", meaning: { es: "mañana", en: "tomorrow", ja: "明日" } },
+      { word: "ontem", phonetic: "ON-teng", meaning: { es: "ayer", en: "yesterday", ja: "昨日" } },
+      { word: "agora", phonetic: "ah-GAW-rah", meaning: { es: "ahora", en: "now", ja: "今" } },
+      { word: "depois", phonetic: "deh-POYS", meaning: { es: "después", en: "later", ja: "後で" } },
+      { word: "manhã", phonetic: "man-YA(ng)", meaning: { es: "mañana (parte del día)", en: "morning", ja: "朝" } },
+      { word: "tarde", phonetic: "TAR-jee", meaning: { es: "tarde", en: "afternoon", ja: "午後" } },
+      { word: "noite", phonetic: "NOY-chee", meaning: { es: "noche", en: "night", ja: "夜" } },
+      { word: "semana", phonetic: "seh-MAH-nah", meaning: { es: "semana", en: "week", ja: "週" } },
+      { word: "mês", phonetic: "MAYS", meaning: { es: "mes", en: "month", ja: "月" } },
+      { word: "ano", phonetic: "AH-noo", meaning: { es: "año", en: "year", ja: "年" } },
+      { word: "hora", phonetic: "AW-rah", meaning: { es: "hora", en: "hour", ja: "時間" } },
+      { word: "minuto", phonetic: "mee-NOO-too", meaning: { es: "minuto", en: "minute", ja: "分" } },
+      { word: "segunda-feira", phonetic: "seh-GOON-dah FAY-rah", meaning: { es: "lunes", en: "Monday", ja: "月曜日" } },
+      { word: "terça-feira", phonetic: "TER-sah FAY-rah", meaning: { es: "martes", en: "Tuesday", ja: "火曜日" } },
+      { word: "quarta-feira", phonetic: "KWAR-tah FAY-rah", meaning: { es: "miércoles", en: "Wednesday", ja: "水曜日" } },
+      { word: "quinta-feira", phonetic: "KEEN-tah FAY-rah", meaning: { es: "jueves", en: "Thursday", ja: "木曜日" } },
+      { word: "sexta-feira", phonetic: "SES-tah FAY-rah", meaning: { es: "viernes", en: "Friday", ja: "金曜日" } },
+      { word: "sábado", phonetic: "SAH-bah-doo", meaning: { es: "sábado", en: "Saturday", ja: "土曜日" } },
+      { word: "domingo", phonetic: "doo-MEEN-goo", meaning: { es: "domingo", en: "Sunday", ja: "日曜日" } },
+    ],
+  },
+  {
+    id: "pt-places", icon: "🏙️", titleKey: "ptCatPlaces", level: "a1",
+    words: [
+      { word: "casa", phonetic: "KAH-zah", meaning: { es: "casa", en: "house", ja: "家" } },
+      { word: "escola", phonetic: "es-KOH-lah", meaning: { es: "escuela", en: "school", ja: "学校" } },
+      { word: "hospital", phonetic: "os-pee-TAHL", meaning: { es: "hospital", en: "hospital", ja: "病院" } },
+      { word: "restaurante", phonetic: "hes-tow-RAN-chee", meaning: { es: "restaurante", en: "restaurant", ja: "レストラン" } },
+      { word: "loja", phonetic: "LOH-jah", meaning: { es: "tienda", en: "store", ja: "店" } },
+      { word: "mercado", phonetic: "mer-KAH-doo", meaning: { es: "mercado", en: "market", ja: "市場" } },
+      { word: "banco", phonetic: "BAN-koo", meaning: { es: "banco", en: "bank", ja: "銀行" } },
+      { word: "parque", phonetic: "PAR-kee", meaning: { es: "parque", en: "park", ja: "公園" } },
+      { word: "rua", phonetic: "HOO-ah", meaning: { es: "calle", en: "street", ja: "通り" } },
+      { word: "cidade", phonetic: "see-DAH-jee", meaning: { es: "ciudad", en: "city", ja: "都市" } },
+      { word: "país", phonetic: "pah-EES", meaning: { es: "país", en: "country", ja: "国" } },
+      { word: "aeroporto", phonetic: "ah-eh-roh-POR-too", meaning: { es: "aeropuerto", en: "airport", ja: "空港" } },
+      { word: "estação", phonetic: "es-tah-SOW(ng)", meaning: { es: "estación", en: "station", ja: "駅" } },
+      { word: "escritório", phonetic: "es-kree-TOH-ryoo", meaning: { es: "oficina", en: "office", ja: "オフィス" } },
+      { word: "igreja", phonetic: "ee-GRAY-jah", meaning: { es: "iglesia", en: "church", ja: "教会" } },
+      { word: "biblioteca", phonetic: "bee-blee-oh-TEH-kah", meaning: { es: "biblioteca", en: "library", ja: "図書館" } },
+      { word: "praia", phonetic: "PRAH-yah", meaning: { es: "playa", en: "beach", ja: "ビーチ" } },
+      { word: "montanha", phonetic: "mon-TAN-yah", meaning: { es: "montaña", en: "mountain", ja: "山" } },
+    ],
+  },
+  {
+    id: "pt-verbs", icon: "🏃", titleKey: "ptCatVerbs", level: "a1",
+    words: [
+      { word: "ser/estar", phonetic: "SEHR / es-TAR", meaning: { es: "ser/estar", en: "to be", ja: "である" } },
+      { word: "ter", phonetic: "TEHR", meaning: { es: "tener", en: "to have", ja: "持つ" } },
+      { word: "ir", phonetic: "EER", meaning: { es: "ir", en: "to go", ja: "行く" } },
+      { word: "vir", phonetic: "VEER", meaning: { es: "venir", en: "to come", ja: "来る" } },
+      { word: "comer", phonetic: "koh-MEHR", meaning: { es: "comer", en: "to eat", ja: "食べる" } },
+      { word: "beber", phonetic: "beh-BEHR", meaning: { es: "beber", en: "to drink", ja: "飲む" } },
+      { word: "dormir", phonetic: "dor-MEER", meaning: { es: "dormir", en: "to sleep", ja: "寝る" } },
+      { word: "acordar", phonetic: "ah-kor-DAR", meaning: { es: "despertarse", en: "to wake up", ja: "起きる" } },
+      { word: "trabalhar", phonetic: "trah-bahl-YAR", meaning: { es: "trabajar", en: "to work", ja: "働く" } },
+      { word: "estudar", phonetic: "es-too-DAR", meaning: { es: "estudiar", en: "to study", ja: "勉強する" } },
+      { word: "ler", phonetic: "LEHR", meaning: { es: "leer", en: "to read", ja: "読む" } },
+      { word: "escrever", phonetic: "es-kreh-VEHR", meaning: { es: "escribir", en: "to write", ja: "書く" } },
+      { word: "falar", phonetic: "fah-LAR", meaning: { es: "hablar", en: "to speak", ja: "話す" } },
+      { word: "ouvir", phonetic: "oh-VEER", meaning: { es: "escuchar/oír", en: "to listen/hear", ja: "聞く" } },
+      { word: "ver", phonetic: "VEHR", meaning: { es: "ver", en: "to see", ja: "見る" } },
+      { word: "querer", phonetic: "keh-REHR", meaning: { es: "querer", en: "to want", ja: "欲しい" } },
+      { word: "precisar", phonetic: "preh-see-ZAR", meaning: { es: "necesitar", en: "to need", ja: "必要とする" } },
+      { word: "gostar", phonetic: "gos-TAR", meaning: { es: "gustar", en: "to like", ja: "好き" } },
+      { word: "fazer", phonetic: "fah-ZEHR", meaning: { es: "hacer", en: "to make/do", ja: "作る" } },
+      { word: "comprar", phonetic: "kom-PRAR", meaning: { es: "comprar", en: "to buy", ja: "買う" } },
+      { word: "morar", phonetic: "moh-RAR", meaning: { es: "vivir", en: "to live", ja: "住む" } },
+      { word: "ajudar", phonetic: "ah-joo-DAR", meaning: { es: "ayudar", en: "to help", ja: "手伝う" } },
+    ],
+  },
+  {
+    id: "pt-adjectives", icon: "✨", titleKey: "ptCatAdjectives", level: "a1",
+    words: [
+      { word: "grande", phonetic: "GRAN-jee", meaning: { es: "grande", en: "big", ja: "大きい" } },
+      { word: "pequeno", phonetic: "peh-KEH-noo", meaning: { es: "pequeño", en: "small", ja: "小さい" } },
+      { word: "bom", phonetic: "BOM", meaning: { es: "bueno", en: "good", ja: "良い" } },
+      { word: "ruim", phonetic: "hoo-EENG", meaning: { es: "malo", en: "bad", ja: "悪い" } },
+      { word: "novo", phonetic: "NOH-voo", meaning: { es: "nuevo", en: "new", ja: "新しい" } },
+      { word: "velho", phonetic: "VEL-yoo", meaning: { es: "viejo", en: "old", ja: "古い" } },
+      { word: "feliz", phonetic: "feh-LEEZ", meaning: { es: "feliz", en: "happy", ja: "幸せ" } },
+      { word: "triste", phonetic: "TREES-chee", meaning: { es: "triste", en: "sad", ja: "悲しい" } },
+      { word: "quente", phonetic: "KEN-chee", meaning: { es: "caliente", en: "hot", ja: "熱い" } },
+      { word: "frio", phonetic: "FREE-oo", meaning: { es: "frío", en: "cold", ja: "寒い" } },
+      { word: "rápido", phonetic: "HAH-pee-doo", meaning: { es: "rápido", en: "fast", ja: "速い" } },
+      { word: "lento", phonetic: "LEN-too", meaning: { es: "lento", en: "slow", ja: "遅い" } },
+      { word: "fácil", phonetic: "FAH-seel", meaning: { es: "fácil", en: "easy", ja: "簡単" } },
+      { word: "difícil", phonetic: "jee-FEE-seel", meaning: { es: "difícil", en: "difficult", ja: "難しい" } },
+      { word: "bonito", phonetic: "boh-NEE-too", meaning: { es: "hermoso", en: "beautiful", ja: "美しい" } },
+      { word: "alto", phonetic: "AHL-too", meaning: { es: "alto", en: "tall", ja: "背が高い" } },
+      { word: "baixo", phonetic: "BY-shoo", meaning: { es: "bajo/corto", en: "short", ja: "短い" } },
+      { word: "forte", phonetic: "FOR-chee", meaning: { es: "fuerte", en: "strong", ja: "強い" } },
+      { word: "fraco", phonetic: "FRAH-koo", meaning: { es: "débil", en: "weak", ja: "弱い" } },
+      { word: "caro", phonetic: "KAH-roo", meaning: { es: "caro", en: "expensive", ja: "高い" } },
+      { word: "barato", phonetic: "bah-RAH-too", meaning: { es: "barato", en: "cheap", ja: "安い" } },
+    ],
+  },
+  {
+    id: "pt-objects", icon: "🎒", titleKey: "ptCatObjects", level: "a1",
+    words: [
+      { word: "livro", phonetic: "LEE-vroo", meaning: { es: "libro", en: "book", ja: "本" } },
+      { word: "caneta", phonetic: "kah-NEH-tah", meaning: { es: "bolígrafo", en: "pen", ja: "ペン" } },
+      { word: "telefone", phonetic: "teh-leh-FOH-nee", meaning: { es: "teléfono", en: "phone", ja: "電話" } },
+      { word: "computador", phonetic: "kom-poo-tah-DOR", meaning: { es: "computadora", en: "computer", ja: "コンピューター" } },
+      { word: "mesa", phonetic: "MEH-zah", meaning: { es: "mesa", en: "table", ja: "テーブル" } },
+      { word: "cadeira", phonetic: "kah-DAY-rah", meaning: { es: "silla", en: "chair", ja: "椅子" } },
+      { word: "porta", phonetic: "POR-tah", meaning: { es: "puerta", en: "door", ja: "ドア" } },
+      { word: "janela", phonetic: "jah-NEH-lah", meaning: { es: "ventana", en: "window", ja: "窓" } },
+      { word: "bolsa", phonetic: "BOL-sah", meaning: { es: "bolsa", en: "bag", ja: "かばん" } },
+      { word: "chave", phonetic: "SHAH-vee", meaning: { es: "llave", en: "key", ja: "鍵" } },
+      { word: "dinheiro", phonetic: "jeen-YAY-roo", meaning: { es: "dinero", en: "money", ja: "お金" } },
+      { word: "relógio", phonetic: "heh-LAW-jyoo", meaning: { es: "reloj", en: "clock/watch", ja: "時計" } },
+      { word: "carro", phonetic: "KAH-hoo", meaning: { es: "auto", en: "car", ja: "車" } },
+      { word: "bicicleta", phonetic: "bee-see-KLEH-tah", meaning: { es: "bicicleta", en: "bicycle", ja: "自転車" } },
+      { word: "guarda-chuva", phonetic: "GWAR-dah SHOO-vah", meaning: { es: "paraguas", en: "umbrella", ja: "傘" } },
+      { word: "óculos", phonetic: "AW-koo-loos", meaning: { es: "gafas", en: "glasses", ja: "眼鏡" } },
+      { word: "carteira", phonetic: "kar-TAY-rah", meaning: { es: "billetera", en: "wallet", ja: "財布" } },
+    ],
+  },
+  // ------------------ A2 ------------------
+  {
+    id: "pt-work", icon: "💼", titleKey: "ptCatWork", level: "a2",
+    words: [
+      { word: "trabalho", phonetic: "trah-BAHL-yoo", meaning: { es: "trabajo", en: "job/work", ja: "仕事" } },
+      { word: "empresa", phonetic: "eng-PREH-zah", meaning: { es: "empresa", en: "company", ja: "会社" } },
+      { word: "chefe", phonetic: "SHEH-fee", meaning: { es: "jefe", en: "boss", ja: "上司" } },
+      { word: "colega", phonetic: "koh-LEH-gah", meaning: { es: "colega", en: "colleague", ja: "同僚" } },
+      { word: "salário", phonetic: "sah-LAH-ryoo", meaning: { es: "salario", en: "salary", ja: "給料" } },
+      { word: "reunião", phonetic: "heh-oo-nee-OW(ng)", meaning: { es: "reunión", en: "meeting", ja: "会議" } },
+      { word: "prazo", phonetic: "PRAH-zoo", meaning: { es: "fecha límite", en: "deadline", ja: "締め切り" } },
+      { word: "currículo", phonetic: "koo-HEE-koo-loo", meaning: { es: "currículum", en: "resume", ja: "履歴書" } },
+      { word: "entrevista", phonetic: "en-treh-VEES-tah", meaning: { es: "entrevista", en: "interview", ja: "面接" } },
+      { word: "contrato", phonetic: "kon-TRAH-too", meaning: { es: "contrato", en: "contract", ja: "契約" } },
+      { word: "contratar", phonetic: "kon-trah-TAR", meaning: { es: "contratar", en: "to hire", ja: "雇う" } },
+      { word: "demitir-se", phonetic: "deh-mee-CHEER-see", meaning: { es: "renunciar", en: "to quit", ja: "辞める" } },
+      { word: "aposentar-se", phonetic: "ah-poh-zen-TAR-see", meaning: { es: "jubilarse", en: "to retire", ja: "引退する" } },
+      { word: "horário", phonetic: "oh-RAH-ryoo", meaning: { es: "horario", en: "schedule", ja: "スケジュール" } },
+      { word: "tarefa", phonetic: "tah-REH-fah", meaning: { es: "tarea", en: "task", ja: "タスク" } },
+      { word: "projeto", phonetic: "proh-JEH-too", meaning: { es: "proyecto", en: "project", ja: "プロジェクト" } },
+      { word: "promoção", phonetic: "proh-moh-SOW(ng)", meaning: { es: "ascenso", en: "promotion", ja: "昇進" } },
+      { word: "hora extra", phonetic: "AW-rah ES-trah", meaning: { es: "horas extra", en: "overtime", ja: "残業" } },
+      { word: "férias", phonetic: "FEH-ryahs", meaning: { es: "vacaciones", en: "vacation", ja: "休暇" } },
+      { word: "equipe", phonetic: "eh-KEE-pee", meaning: { es: "equipo", en: "team", ja: "チーム" } },
+    ],
+  },
+  {
+    id: "pt-health", icon: "🏥", titleKey: "ptCatHealth", level: "a2",
+    words: [
+      { word: "médico", phonetic: "MEH-jee-koo", meaning: { es: "médico", en: "doctor", ja: "医者" } },
+      { word: "enfermeiro", phonetic: "en-fer-MAY-roo", meaning: { es: "enfermero", en: "nurse", ja: "看護師" } },
+      { word: "remédio", phonetic: "heh-MEH-jyoo", meaning: { es: "medicina", en: "medicine", ja: "薬" } },
+      { word: "dor", phonetic: "DOR", meaning: { es: "dolor", en: "pain", ja: "痛み" } },
+      { word: "febre", phonetic: "FEH-bree", meaning: { es: "fiebre", en: "fever", ja: "熱" } },
+      { word: "dor de cabeça", phonetic: "dor jee kah-BEH-sah", meaning: { es: "dolor de cabeza", en: "headache", ja: "頭痛" } },
+      { word: "dor de barriga", phonetic: "dor jee bah-HEE-gah", meaning: { es: "dolor de estómago", en: "stomachache", ja: "腹痛" } },
+      { word: "tosse", phonetic: "TAW-see", meaning: { es: "tos", en: "cough", ja: "咳" } },
+      { word: "resfriado", phonetic: "hes-free-AH-doo", meaning: { es: "resfriado", en: "cold (illness)", ja: "風邪" } },
+      { word: "ferimento", phonetic: "feh-ree-MEN-too", meaning: { es: "lesión", en: "injury", ja: "けが" } },
+      { word: "alergia", phonetic: "ah-ler-JEE-ah", meaning: { es: "alergia", en: "allergy", ja: "アレルギー" } },
+      { word: "receita", phonetic: "heh-SAY-tah", meaning: { es: "receta médica", en: "prescription", ja: "処方箋" } },
+      { word: "consulta", phonetic: "kon-SOOL-tah", meaning: { es: "cita", en: "appointment", ja: "予約" } },
+      { word: "saudável", phonetic: "sow-DAH-vel", meaning: { es: "saludable", en: "healthy", ja: "健康な" } },
+      { word: "doente", phonetic: "doo-EN-chee", meaning: { es: "enfermo", en: "sick", ja: "病気の" } },
+      { word: "doer", phonetic: "doo-EHR", meaning: { es: "doler", en: "to hurt", ja: "痛む" } },
+      { word: "recuperar-se", phonetic: "heh-koo-peh-RAR-see", meaning: { es: "recuperarse", en: "to recover", ja: "回復する" } },
+      { word: "emergência", phonetic: "eh-mer-JEN-syah", meaning: { es: "emergencia", en: "emergency", ja: "緊急" } },
+    ],
+  },
+  {
+    id: "pt-weather", icon: "🌦️", titleKey: "ptCatWeather", level: "a2",
+    words: [
+      { word: "tempo", phonetic: "TEM-poo", meaning: { es: "clima", en: "weather", ja: "天気" } },
+      { word: "ensolarado", phonetic: "en-soh-lah-RAH-doo", meaning: { es: "soleado", en: "sunny", ja: "晴れ" } },
+      { word: "chuvoso", phonetic: "shoo-VOH-zoo", meaning: { es: "lluvioso", en: "rainy", ja: "雨" } },
+      { word: "nublado", phonetic: "noo-BLAH-doo", meaning: { es: "nublado", en: "cloudy", ja: "曇り" } },
+      { word: "ventoso", phonetic: "ven-TOH-zoo", meaning: { es: "ventoso", en: "windy", ja: "風が強い" } },
+      { word: "neve", phonetic: "NEH-vee", meaning: { es: "nieve", en: "snow", ja: "雪" } },
+      { word: "tempestade", phonetic: "tem-pes-TAH-jee", meaning: { es: "tormenta", en: "storm", ja: "嵐" } },
+      { word: "temperatura", phonetic: "tem-peh-rah-TOO-rah", meaning: { es: "temperatura", en: "temperature", ja: "気温" } },
+      { word: "úmido", phonetic: "OO-mee-doo", meaning: { es: "húmedo", en: "humid", ja: "湿気の多い" } },
+      { word: "estação", phonetic: "es-tah-SOW(ng)", meaning: { es: "estación (del año)", en: "season", ja: "季節" } },
+      { word: "primavera", phonetic: "pree-mah-VEH-rah", meaning: { es: "primavera", en: "spring", ja: "春" } },
+      { word: "verão", phonetic: "veh-ROW(ng)", meaning: { es: "verano", en: "summer", ja: "夏" } },
+      { word: "outono", phonetic: "oh-TOH-noo", meaning: { es: "otoño", en: "autumn/fall", ja: "秋" } },
+      { word: "inverno", phonetic: "een-VER-noo", meaning: { es: "invierno", en: "winter", ja: "冬" } },
+      { word: "arco-íris", phonetic: "AR-koo EE-rees", meaning: { es: "arcoíris", en: "rainbow", ja: "虹" } },
+      { word: "previsão", phonetic: "preh-vee-ZOW(ng)", meaning: { es: "pronóstico", en: "forecast", ja: "予報" } },
+    ],
+  },
+  {
+    id: "pt-clothing", icon: "👕", titleKey: "ptCatClothing", level: "a2",
+    words: [
+      { word: "roupa", phonetic: "HOH-pah", meaning: { es: "ropa", en: "clothes", ja: "服" } },
+      { word: "camisa", phonetic: "kah-MEE-zah", meaning: { es: "camisa", en: "shirt", ja: "シャツ" } },
+      { word: "camiseta", phonetic: "kah-mee-ZEH-tah", meaning: { es: "camiseta", en: "t-shirt", ja: "Tシャツ" } },
+      { word: "calça", phonetic: "KAHL-sah", meaning: { es: "pantalones", en: "pants", ja: "ズボン" } },
+      { word: "vestido", phonetic: "ves-CHEE-doo", meaning: { es: "vestido", en: "dress", ja: "ドレス" } },
+      { word: "saia", phonetic: "SY-ah", meaning: { es: "falda", en: "skirt", ja: "スカート" } },
+      { word: "sapato", phonetic: "sah-PAH-too", meaning: { es: "zapato", en: "shoe", ja: "靴" } },
+      { word: "meia", phonetic: "MAY-ah", meaning: { es: "calcetín", en: "sock", ja: "靴下" } },
+      { word: "jaqueta", phonetic: "jah-KEH-tah", meaning: { es: "chaqueta", en: "jacket", ja: "ジャケット" } },
+      { word: "casaco", phonetic: "kah-ZAH-koo", meaning: { es: "abrigo", en: "coat", ja: "コート" } },
+      { word: "chapéu", phonetic: "shah-PEH-oo", meaning: { es: "sombrero", en: "hat", ja: "帽子" } },
+      { word: "cachecol", phonetic: "kah-sheh-KOL", meaning: { es: "bufanda", en: "scarf", ja: "マフラー" } },
+      { word: "luvas", phonetic: "LOO-vahs", meaning: { es: "guantes", en: "gloves", ja: "手袋" } },
+      { word: "cinto", phonetic: "SEEN-too", meaning: { es: "cinturón", en: "belt", ja: "ベルト" } },
+      { word: "vestir", phonetic: "ves-CHEER", meaning: { es: "usar/vestir", en: "to wear", ja: "着る" } },
+      { word: "tamanho", phonetic: "tah-MAN-yoo", meaning: { es: "talla", en: "size", ja: "サイズ" } },
+    ],
+  },
+  {
+    id: "pt-transport", icon: "🚌", titleKey: "ptCatTransport", level: "a2",
+    words: [
+      { word: "ônibus", phonetic: "OH-nee-boos", meaning: { es: "autobús", en: "bus", ja: "バス" } },
+      { word: "trem", phonetic: "TRENG", meaning: { es: "tren", en: "train", ja: "電車" } },
+      { word: "metrô", phonetic: "meh-TROH", meaning: { es: "metro", en: "subway", ja: "地下鉄" } },
+      { word: "táxi", phonetic: "TAHK-see", meaning: { es: "taxi", en: "taxi", ja: "タクシー" } },
+      { word: "avião", phonetic: "ah-vee-OW(ng)", meaning: { es: "avión", en: "airplane", ja: "飛行機" } },
+      { word: "navio", phonetic: "nah-VEE-oo", meaning: { es: "barco", en: "ship", ja: "船" } },
+      { word: "passagem", phonetic: "pah-SAH-jeng", meaning: { es: "boleto", en: "ticket", ja: "切符" } },
+      { word: "plataforma", phonetic: "plah-tah-FOR-mah", meaning: { es: "andén", en: "platform", ja: "プラットフォーム" } },
+      { word: "trânsito", phonetic: "TRAN-see-too", meaning: { es: "tráfico", en: "traffic", ja: "交通" } },
+      { word: "semáforo", phonetic: "seh-MAH-foh-roo", meaning: { es: "semáforo", en: "traffic light", ja: "信号機" } },
+      { word: "dirigir", phonetic: "jee-ree-JEER", meaning: { es: "conducir", en: "to drive", ja: "運転する" } },
+      { word: "voar", phonetic: "voh-AR", meaning: { es: "volar", en: "to fly", ja: "飛ぶ" } },
+      { word: "rota", phonetic: "HAW-tah", meaning: { es: "ruta", en: "route", ja: "ルート" } },
+      { word: "destino", phonetic: "des-CHEE-noo", meaning: { es: "destino", en: "destination", ja: "目的地" } },
+      { word: "bagagem", phonetic: "bah-GAH-jeng", meaning: { es: "equipaje", en: "luggage", ja: "荷物" } },
+      { word: "passaporte", phonetic: "pah-sah-POR-chee", meaning: { es: "pasaporte", en: "passport", ja: "パスポート" } },
+    ],
+  },
+  {
+    id: "pt-shopping", icon: "🛍️", titleKey: "ptCatShopping", level: "a2",
+    words: [
+      { word: "preço", phonetic: "PREH-soo", meaning: { es: "precio", en: "price", ja: "値段" } },
+      { word: "desconto", phonetic: "des-KON-too", meaning: { es: "descuento", en: "discount", ja: "割引" } },
+      { word: "recibo", phonetic: "heh-SEE-boo", meaning: { es: "recibo", en: "receipt", ja: "領収書" } },
+      { word: "dinheiro vivo", phonetic: "jeen-YAY-roo VEE-voo", meaning: { es: "efectivo", en: "cash", ja: "現金" } },
+      { word: "cartão de crédito", phonetic: "kar-TOW(ng) jee KREH-jee-too", meaning: { es: "tarjeta de crédito", en: "credit card", ja: "クレジットカード" } },
+      { word: "caixa", phonetic: "KY-shah", meaning: { es: "cajero", en: "cashier", ja: "レジ係" } },
+      { word: "cliente", phonetic: "klee-EN-chee", meaning: { es: "cliente", en: "customer", ja: "顧客" } },
+      { word: "pagar", phonetic: "pah-GAR", meaning: { es: "pagar", en: "to pay", ja: "払う" } },
+      { word: "vender", phonetic: "ven-DEHR", meaning: { es: "vender", en: "to sell", ja: "売る" } },
+      { word: "reembolso", phonetic: "heh-eng-BOL-soo", meaning: { es: "reembolso", en: "refund", ja: "返金" } },
+      { word: "carrinho", phonetic: "kah-HEEN-yoo", meaning: { es: "carrito", en: "shopping cart", ja: "ショッピングカート" } },
+      { word: "promoção", phonetic: "proh-moh-SOW(ng)", meaning: { es: "oferta", en: "sale", ja: "セール" } },
+      { word: "marca", phonetic: "MAR-kah", meaning: { es: "marca", en: "brand", ja: "ブランド" } },
+      { word: "qualidade", phonetic: "kwah-lee-DAH-jee", meaning: { es: "calidad", en: "quality", ja: "品質" } },
+    ],
+  },
+  {
+    id: "pt-hobbies", icon: "🎸", titleKey: "ptCatHobbies", level: "a2",
+    words: [
+      { word: "hobby", phonetic: "AW-bee", meaning: { es: "pasatiempo", en: "hobby", ja: "趣味" } },
+      { word: "música", phonetic: "MOO-zee-kah", meaning: { es: "música", en: "music", ja: "音楽" } },
+      { word: "filme", phonetic: "FEEL-mee", meaning: { es: "película", en: "movie", ja: "映画" } },
+      { word: "jogo", phonetic: "JOH-goo", meaning: { es: "juego", en: "game", ja: "ゲーム" } },
+      { word: "esporte", phonetic: "es-POR-chee", meaning: { es: "deporte", en: "sport", ja: "スポーツ" } },
+      { word: "pintar", phonetic: "peen-TAR", meaning: { es: "pintar", en: "to paint", ja: "絵を描く" } },
+      { word: "cantar", phonetic: "kan-TAR", meaning: { es: "cantar", en: "to sing", ja: "歌う" } },
+      { word: "dançar", phonetic: "dan-SAR", meaning: { es: "bailar", en: "to dance", ja: "踊る" } },
+      { word: "nadar", phonetic: "nah-DAR", meaning: { es: "nadar", en: "to swim", ja: "泳ぐ" } },
+      { word: "cozinhar", phonetic: "koh-zeen-YAR", meaning: { es: "cocinar", en: "to cook", ja: "料理する" } },
+      { word: "viajar", phonetic: "vee-ah-JAR", meaning: { es: "viajar", en: "to travel", ja: "旅行する" } },
+      { word: "acampar", phonetic: "ah-kam-PAR", meaning: { es: "acampar", en: "to camp", ja: "キャンプする" } },
+      { word: "fotografia", phonetic: "foh-toh-grah-FEE-ah", meaning: { es: "fotografía", en: "photography", ja: "写真撮影" } },
+      { word: "coleção", phonetic: "koh-leh-SOW(ng)", meaning: { es: "colección", en: "collection", ja: "コレクション" } },
+    ],
+  },
+  {
+    id: "pt-emotions", icon: "😊", titleKey: "ptCatEmotions", level: "a2",
+    words: [
+      { word: "animado", phonetic: "ah-nee-MAH-doo", meaning: { es: "emocionado", en: "excited", ja: "興奮した" } },
+      { word: "nervoso", phonetic: "ner-VOH-zoo", meaning: { es: "nervioso", en: "nervous", ja: "緊張した" } },
+      { word: "preocupado", phonetic: "preh-oh-koo-PAH-doo", meaning: { es: "preocupado", en: "worried", ja: "心配した" } },
+      { word: "bravo", phonetic: "BRAH-voo", meaning: { es: "enojado", en: "angry", ja: "怒った" } },
+      { word: "assustado", phonetic: "ah-soos-TAH-doo", meaning: { es: "asustado", en: "scared", ja: "怖い" } },
+      { word: "surpreso", phonetic: "soor-PREH-zoo", meaning: { es: "sorprendido", en: "surprised", ja: "驚いた" } },
+      { word: "entediado", phonetic: "en-teh-jee-AH-doo", meaning: { es: "aburrido", en: "bored", ja: "退屈な" } },
+      { word: "cansado", phonetic: "kan-SAH-doo", meaning: { es: "cansado", en: "tired", ja: "疲れた" } },
+      { word: "confiante", phonetic: "kon-fee-AN-chee", meaning: { es: "seguro de sí mismo", en: "confident", ja: "自信のある" } },
+      { word: "orgulhoso", phonetic: "or-gool-YOH-zoo", meaning: { es: "orgulloso", en: "proud", ja: "誇りに思う" } },
+      { word: "com ciúmes", phonetic: "kom see-OO-mees", meaning: { es: "celoso", en: "jealous", ja: "嫉妬した" } },
+      { word: "grato", phonetic: "GRAH-too", meaning: { es: "agradecido", en: "grateful", ja: "感謝している" } },
+      { word: "sozinho", phonetic: "soh-ZEEN-yoo", meaning: { es: "solitario", en: "lonely", ja: "孤独な" } },
+      { word: "calmo", phonetic: "KAHL-moo", meaning: { es: "tranquilo", en: "calm", ja: "落ち着いた" } },
+    ],
+  },
+  {
+    id: "pt-travel", icon: "✈️", titleKey: "ptCatTravel", level: "a2",
+    words: [
+      { word: "viagem", phonetic: "vee-AH-jeng", meaning: { es: "viaje", en: "trip", ja: "旅行" } },
+      { word: "hotel", phonetic: "oh-TEL", meaning: { es: "hotel", en: "hotel", ja: "ホテル" } },
+      { word: "reserva", phonetic: "heh-ZER-vah", meaning: { es: "reserva", en: "reservation", ja: "予約" } },
+      { word: "turista", phonetic: "too-REES-tah", meaning: { es: "turista", en: "tourist", ja: "観光客" } },
+      { word: "guia", phonetic: "GEE-ah", meaning: { es: "guía", en: "guide", ja: "ガイド" } },
+      { word: "mapa", phonetic: "MAH-pah", meaning: { es: "mapa", en: "map", ja: "地図" } },
+      { word: "lembrança", phonetic: "lem-BRAN-sah", meaning: { es: "recuerdo (objeto)", en: "souvenir", ja: "お土産" } },
+      { word: "exterior", phonetic: "es-teh-ryOR", meaning: { es: "en el extranjero", en: "abroad", ja: "海外" } },
+      { word: "fronteira", phonetic: "fron-TAY-rah", meaning: { es: "frontera", en: "border", ja: "国境" } },
+      { word: "moeda", phonetic: "moo-EH-dah", meaning: { es: "moneda", en: "currency", ja: "通貨" } },
+      { word: "ponto turístico", phonetic: "PON-too too-REES-tee-koo", meaning: { es: "punto de referencia", en: "landmark", ja: "ランドマーク" } },
+      { word: "aventura", phonetic: "ah-ven-TOO-rah", meaning: { es: "aventura", en: "adventure", ja: "冒険" } },
+    ],
+  },
+  {
+    id: "pt-technology", icon: "💻", titleKey: "ptCatTechnology", level: "a2",
+    words: [
+      { word: "internet", phonetic: "een-ter-NEH-chee", meaning: { es: "internet", en: "internet", ja: "インターネット" } },
+      { word: "e-mail", phonetic: "EE-mayl", meaning: { es: "correo electrónico", en: "email", ja: "メール" } },
+      { word: "senha", phonetic: "SEN-yah", meaning: { es: "contraseña", en: "password", ja: "パスワード" } },
+      { word: "aplicativo", phonetic: "ah-plee-kah-CHEE-voo", meaning: { es: "aplicación", en: "app", ja: "アプリ" } },
+      { word: "tela", phonetic: "TEH-lah", meaning: { es: "pantalla", en: "screen", ja: "画面" } },
+      { word: "bateria", phonetic: "bah-teh-REE-ah", meaning: { es: "batería", en: "battery", ja: "バッテリー" } },
+      { word: "carregador", phonetic: "kah-heh-gah-DOR", meaning: { es: "cargador", en: "charger", ja: "充電器" } },
+      { word: "site", phonetic: "SY-chee", meaning: { es: "sitio web", en: "website", ja: "ウェブサイト" } },
+      { word: "baixar", phonetic: "by-SHAR", meaning: { es: "descargar", en: "to download", ja: "ダウンロードする" } },
+      { word: "enviar", phonetic: "en-vee-AR", meaning: { es: "subir/enviar", en: "to upload/send", ja: "アップロードする" } },
+      { word: "arquivo", phonetic: "ar-KEE-voo", meaning: { es: "archivo", en: "file", ja: "ファイル" } },
+      { word: "programa", phonetic: "proh-GRAH-mah", meaning: { es: "software", en: "software", ja: "ソフトウェア" } },
+      { word: "dispositivo", phonetic: "dees-poh-zee-CHEE-voo", meaning: { es: "dispositivo", en: "device", ja: "デバイス" } },
+      { word: "rede", phonetic: "HEH-jee", meaning: { es: "red", en: "network", ja: "ネットワーク" } },
+    ],
+  },
+  {
+    id: "pt-nature", icon: "🌳", titleKey: "ptCatNature", level: "a2",
+    words: [
+      { word: "árvore", phonetic: "AR-voh-ree", meaning: { es: "árbol", en: "tree", ja: "木" } },
+      { word: "flor", phonetic: "FLOR", meaning: { es: "flor", en: "flower", ja: "花" } },
+      { word: "rio", phonetic: "HEE-oo", meaning: { es: "río", en: "river", ja: "川" } },
+      { word: "lago", phonetic: "LAH-goo", meaning: { es: "lago", en: "lake", ja: "湖" } },
+      { word: "oceano", phonetic: "oh-see-AH-noo", meaning: { es: "océano", en: "ocean", ja: "海" } },
+      { word: "floresta", phonetic: "floh-RES-tah", meaning: { es: "bosque", en: "forest", ja: "森" } },
+      { word: "céu", phonetic: "SEH-oo", meaning: { es: "cielo", en: "sky", ja: "空" } },
+      { word: "sol", phonetic: "SOL", meaning: { es: "sol", en: "sun", ja: "太陽" } },
+      { word: "lua", phonetic: "LOO-ah", meaning: { es: "luna", en: "moon", ja: "月" } },
+      { word: "estrela", phonetic: "es-TREH-lah", meaning: { es: "estrella", en: "star", ja: "星" } },
+      { word: "animal", phonetic: "ah-nee-MAHL", meaning: { es: "animal", en: "animal", ja: "動物" } },
+      { word: "planta", phonetic: "PLAN-tah", meaning: { es: "planta", en: "plant", ja: "植物" } },
+      { word: "meio ambiente", phonetic: "MAY-oo am-bee-EN-chee", meaning: { es: "medio ambiente", en: "environment", ja: "環境" } },
+      { word: "terra", phonetic: "TEH-hah", meaning: { es: "tierra (planeta)", en: "earth", ja: "地球" } },
+    ],
+  },
+  {
+    id: "pt-society", icon: "🏛️", titleKey: "ptCatSociety", level: "a2",
+    words: [
+      { word: "governo", phonetic: "goh-VER-noo", meaning: { es: "gobierno", en: "government", ja: "政府" } },
+      { word: "lei", phonetic: "LAY", meaning: { es: "ley", en: "law", ja: "法律" } },
+      { word: "cidadão", phonetic: "see-dah-DOW(ng)", meaning: { es: "ciudadano", en: "citizen", ja: "市民" } },
+      { word: "comunidade", phonetic: "koh-moo-nee-DAH-jee", meaning: { es: "comunidad", en: "community", ja: "コミュニティ" } },
+      { word: "cultura", phonetic: "kool-TOO-rah", meaning: { es: "cultura", en: "culture", ja: "文化" } },
+      { word: "tradição", phonetic: "trah-jee-SOW(ng)", meaning: { es: "tradición", en: "tradition", ja: "伝統" } },
+      { word: "educação", phonetic: "eh-doo-kah-SOW(ng)", meaning: { es: "educación", en: "education", ja: "教育" } },
+      { word: "economia", phonetic: "eh-koh-noh-MEE-ah", meaning: { es: "economía", en: "economy", ja: "経済" } },
+      { word: "voto", phonetic: "VOH-too", meaning: { es: "voto", en: "vote", ja: "投票" } },
+      { word: "liberdade", phonetic: "lee-ber-DAH-jee", meaning: { es: "libertad", en: "freedom", ja: "自由" } },
+      { word: "notícia", phonetic: "noh-CHEE-syah", meaning: { es: "noticia", en: "news", ja: "ニュース" } },
+      { word: "população", phonetic: "poh-poo-lah-SOW(ng)", meaning: { es: "población", en: "population", ja: "人口" } },
+    ],
+  },
+];
+
+const PORTUGUESE_GRAMMAR_POINTS = [
+  {
+    id: "pt-ser-estar", titleKey: "ptGramSerEstarTitle",
+    pattern: { es: "ser (permanente) vs. estar (temporal)", en: "ser (permanent) vs. estar (temporary)", ja: "ser（恒久的）と estar（一時的）" },
+    explanation: { es: "'Ser' se usa para características permanentes (identidad, origen); 'estar' para estados temporales (emociones, ubicación).", en: "'Ser' is for permanent characteristics (identity, origin); 'estar' is for temporary states (emotions, location).", ja: "serは永続的な特徴（アイデンティティ、出身）、estarは一時的な状態（感情、場所）に使います。" },
+    examples: [
+      { sentence: "Eu sou brasileiro.", translation: { es: "Yo soy brasileño.", en: "I am Brazilian.", ja: "私はブラジル人です。" } },
+      { sentence: "Ela está cansada hoje.", translation: { es: "Ella está cansada hoy.", en: "She is tired today.", ja: "彼女は今日疲れています。" } },
+    ],
+  },
+  {
+    id: "pt-presente", titleKey: "ptGramPresentTitle",
+    pattern: { es: "Sujeto + verbo (-ar/-er/-ir conjugado)", en: "Subject + verb (-ar/-er/-ir conjugated)", ja: "主語 + 動詞（-ar/-er/-ir活用）" },
+    explanation: { es: "El presente se usa para hábitos y hechos generales. Los verbos regulares terminan en -ar, -er o -ir y se conjugan según el sujeto.", en: "The present tense is used for habits and general facts. Regular verbs end in -ar, -er, or -ir and conjugate based on the subject.", ja: "現在形は習慣や一般的な事実に使います。規則動詞は-ar、-er、-irで終わり、主語によって活用します。" },
+    examples: [
+      { sentence: "Ela trabalha em um hospital.", translation: { es: "Ella trabaja en un hospital.", en: "She works at a hospital.", ja: "彼女は病院で働いています。" } },
+      { sentence: "Nós moramos em São Paulo.", translation: { es: "Nosotros vivimos en São Paulo.", en: "We live in São Paulo.", ja: "私たちはサンパウロに住んでいます。" } },
+    ],
+  },
+  {
+    id: "pt-gerundio", titleKey: "ptGramGerundioTitle",
+    pattern: { es: "estar + gerúndio (-ando/-endo/-indo)", en: "estar + gerund (-ando/-endo/-indo)", ja: "estar + 現在分詞（-ando/-endo/-indo）" },
+    explanation: { es: "Describe una acción en progreso, ocurriendo ahora mismo.", en: "Describes an action in progress, happening right now.", ja: "今まさに進行中の動作を表します。" },
+    examples: [
+      { sentence: "Eu estou lendo um livro.", translation: { es: "Estoy leyendo un libro.", en: "I am reading a book.", ja: "私は本を読んでいます。" } },
+      { sentence: "Eles estão assistindo a um filme.", translation: { es: "Ellos están viendo una película.", en: "They are watching a movie.", ja: "彼らは映画を見ています。" } },
+    ],
+  },
+  {
+    id: "pt-passado", titleKey: "ptGramPastTitle",
+    pattern: { es: "Pretérito perfeito simples (-ei/-ou/-i)", en: "Simple past tense (-ei/-ou/-i)", ja: "点過去（-ei/-ou/-i）" },
+    explanation: { es: "Habla de acciones completadas en el pasado, con un momento definido.", en: "Talks about completed actions in the past, at a definite time.", ja: "特定の時点で完了した過去の行動について話します。" },
+    examples: [
+      { sentence: "Eu visitei minha avó no fim de semana passado.", translation: { es: "Visité a mi abuela el fin de semana pasado.", en: "I visited my grandmother last weekend.", ja: "先週末、祖母を訪ねました。" } },
+      { sentence: "Ela foi ao Japão em 2023.", translation: { es: "Ella fue a Japón en 2023.", en: "She went to Japan in 2023.", ja: "彼女は2023年に日本に行きました。" } },
+    ],
+  },
+  {
+    id: "pt-futuro", titleKey: "ptGramFutureTitle",
+    pattern: { es: "ir + infinitivo (futuro próximo)", en: "ir + infinitive (near future)", ja: "ir + 不定詞（近未来）" },
+    explanation: { es: "El futuro próximo se forma con el verbo 'ir' conjugado + infinitivo, muy usado en el habla cotidiana.", en: "The near future is formed with the conjugated verb 'ir' + infinitive, very common in everyday speech.", ja: "近未来は活用したirと不定詞で作られ、日常会話でよく使われます。" },
+    examples: [
+      { sentence: "Eu vou te ligar amanhã.", translation: { es: "Te llamaré mañana.", en: "I will call you tomorrow.", ja: "明日電話します。" } },
+      { sentence: "Nós vamos viajar para o Brasil no mês que vem.", translation: { es: "Vamos a viajar a Brasil el próximo mes.", en: "We are going to travel to Brazil next month.", ja: "来月ブラジルに旅行する予定です。" } },
+    ],
+  },
+  {
+    id: "pt-poder", titleKey: "ptGramPoderTitle",
+    pattern: { es: "poder + infinitivo", en: "poder + infinitive", ja: "poder + 不定詞" },
+    explanation: { es: "'Poder' expresa habilidad, posibilidad o permiso, igual que 'can' en inglés.", en: "'Poder' expresses ability, possibility, or permission, just like 'can' in English.", ja: "poderは能力、可能性、許可を表します。" },
+    examples: [
+      { sentence: "Eu posso nadar muito bem.", translation: { es: "Puedo nadar muy bien.", en: "I can swim very well.", ja: "私はとても上手に泳げます。" } },
+      { sentence: "Ela não pode vir à festa.", translation: { es: "Ella no puede venir a la fiesta.", en: "She can't come to the party.", ja: "彼女はパーティーに来られません。" } },
+    ],
+  },
+  {
+    id: "pt-haver-existir", titleKey: "ptGramHaverTitle",
+    pattern: { es: "tem / há + sustantivo", en: "tem / há + noun", ja: "tem / há + 名詞" },
+    explanation: { es: "'Tem' (coloquial) o 'há' (formal) se usan para decir que algo existe en un lugar — no cambian con el número.", en: "'Tem' (colloquial) or 'há' (formal) are used to say something exists somewhere — they don't change with number.", ja: "tem（口語）またはhá（正式）は、何かがある場所に存在することを表し、数によって変化しません。" },
+    examples: [
+      { sentence: "Tem um gato no telhado.", translation: { es: "Hay un gato en el techo.", en: "There is a cat on the roof.", ja: "屋根に猫がいます。" } },
+      { sentence: "Há três livros na mesa.", translation: { es: "Hay tres libros en la mesa.", en: "There are three books on the table.", ja: "テーブルの上に本が三冊あります。" } },
+    ],
+  },
+  {
+    id: "pt-comparativo", titleKey: "ptGramComparativeTitle",
+    pattern: { es: "mais + adjetivo + (do) que", en: "mais + adjective + (do) que", ja: "mais + 形容詞 + (do) que" },
+    explanation: { es: "Se usa 'mais...(do) que' para comparar dos cosas, y 'menos...(do) que' para el contrario.", en: "'Mais...(do) que' is used to compare two things, and 'menos...(do) que' for the opposite.", ja: "mais...(do) queで二つを比較し、反対はmenos...(do) queを使います。" },
+    examples: [
+      { sentence: "Este carro é mais rápido que aquele.", translation: { es: "Este auto es más rápido que ese.", en: "This car is faster than that one.", ja: "この車はあの車より速いです。" } },
+      { sentence: "Este livro é mais interessante do que o filme.", translation: { es: "Este libro es más interesante que la película.", en: "This book is more interesting than the movie.", ja: "この本は映画より面白いです。" } },
+    ],
+  },
+  {
+    id: "pt-superlativo", titleKey: "ptGramSuperlativeTitle",
+    pattern: { es: "o/a mais + adjetivo (de todos)", en: "o/a mais + adjective (de todos)", ja: "o/a mais + 形容詞（de todos）" },
+    explanation: { es: "Expresa el grado máximo entre tres o más elementos, con artículo definido antes de 'mais'.", en: "Expresses the maximum degree among three or more elements, with a definite article before 'mais'.", ja: "定冠詞をmaisの前に付けて、三つ以上の中で最大の程度を表します。" },
+    examples: [
+      { sentence: "Este é o prédio mais alto da cidade.", translation: { es: "Este es el edificio más alto de la ciudad.", en: "This is the tallest building in the city.", ja: "これは街で一番高い建物です。" } },
+      { sentence: "Ela é a cantora mais talentosa do grupo.", translation: { es: "Ella es la cantante más talentosa del grupo.", en: "She is the most talented singer in the group.", ja: "彼女はグループで最も才能のある歌手です。" } },
+    ],
+  },
+  {
+    id: "pt-perguntas", titleKey: "ptGramQuestionsTitle",
+    pattern: { es: "Entonación ascendente (sin inversión)", en: "Rising intonation (no inversion)", ja: "上昇イントネーション（倒置なし）" },
+    explanation: { es: "En portugués, muchas preguntas de sí/no se forman con la MISMA estructura de la oración afirmativa, solo cambia la entonación (sube al final) o se agrega un signo de interrogación.", en: "In Portuguese, many yes/no questions use the SAME structure as the statement — only the intonation rises at the end, or a question mark is added.", ja: "ポルトガル語では、多くのはい/いいえの質問は肯定文と同じ構造で、語尾のイントネーションが上がるだけです。" },
+    examples: [
+      { sentence: "Você gosta de café?", translation: { es: "¿Te gusta el café?", en: "Do you like coffee?", ja: "コーヒーは好きですか？" } },
+      { sentence: "Ela fala português?", translation: { es: "¿Ella habla portugués?", en: "Does she speak Portuguese?", ja: "彼女はポルトガル語を話しますか？" } },
+    ],
+  },
+  {
+    id: "pt-preposicoes", titleKey: "ptGramPrepositionsTitle",
+    pattern: { es: "em / no / na (lugar y tiempo)", en: "em / no / na (place and time)", ja: "em / no / na（場所と時間）" },
+    explanation: { es: "'Em' se contrae con artículos: 'em + o' = 'no', 'em + a' = 'na'. Se usa para lugares y momentos en el tiempo.", en: "'Em' contracts with articles: 'em + o' = 'no', 'em + a' = 'na'. Used for places and points in time.", ja: "emは冠詞と縮約します：em+o=no、em+a=na。場所や時点に使います。" },
+    examples: [
+      { sentence: "A reunião é às 15h na sexta-feira.", translation: { es: "La reunión es a las 3 PM el viernes.", en: "The meeting is at 3 PM on Friday.", ja: "会議は金曜日の午後3時です。" } },
+      { sentence: "Eu nasci em 1998.", translation: { es: "Nací en 1998.", en: "I was born in 1998.", ja: "私は1998年に生まれました。" } },
+    ],
+  },
+  {
+    id: "pt-obrigacao", titleKey: "ptGramObligationTitle",
+    pattern: { es: "precisar / dever + infinitivo", en: "precisar / dever + infinitive", ja: "precisar / dever + 不定詞" },
+    explanation: { es: "'Precisar' expresa necesidad/obligación; 'dever' expresa un consejo o algo que se debería hacer.", en: "'Precisar' expresses need/obligation; 'dever' expresses advice or something one should do.", ja: "precisarは必要性・義務を、deverはアドバイスやすべきことを表します。" },
+    examples: [
+      { sentence: "Você precisa usar o cinto de segurança.", translation: { es: "Debes usar cinturón de seguridad.", en: "You must wear a seatbelt.", ja: "シートベルトを着用しなければなりません。" } },
+      { sentence: "Você deveria beber mais água.", translation: { es: "Deberías beber más agua.", en: "You should drink more water.", ja: "もっと水を飲んだ方がいいですよ。" } },
+    ],
+  },
+  {
+    id: "pt-preteritocomposto", titleKey: "ptGramPresentPerfectTitle",
+    pattern: { es: "já / ainda não + pretérito perfeito", en: "já / ainda não + simple past", ja: "já / ainda não + 点過去" },
+    explanation: { es: "A diferencia del inglés, el portugués usa el pretérito perfeito simple (no un tiempo compuesto) con 'já' (ya) o 'ainda não' (todavía no) para experiencias/acciones recientes.", en: "Unlike English, Portuguese uses the simple past (not a compound tense) with 'já' (already) or 'ainda não' (not yet) for recent actions/experiences.", ja: "英語と違い、ポルトガル語では最近の経験・行動に「já（もう）」や「ainda não（まだ）」を添えた点過去を使います。" },
+    examples: [
+      { sentence: "Eu já visitei o Japão três vezes.", translation: { es: "He visitado Japón tres veces.", en: "I have visited Japan three times.", ja: "私は日本を三回訪れたことがあります。" } },
+      { sentence: "Ela já terminou a lição de casa.", translation: { es: "Ella ya terminó su tarea.", en: "She has already finished her homework.", ja: "彼女はもう宿題を終えました。" } },
+    ],
+  },
+  {
+    id: "pt-condicional", titleKey: "ptGramConditionalTitle",
+    pattern: { es: "Se + presente do indicativo, ... futuro", en: "Se + present indicative, ... future", ja: "Se + 直説法現在, ... 未来" },
+    explanation: { es: "Habla de situaciones reales y posibles en el futuro, similar al primer condicional del inglés.", en: "Talks about real, possible situations in the future, similar to the English first conditional.", ja: "未来における現実的で可能性のある状況について話します。" },
+    examples: [
+      { sentence: "Se chover, ficaremos em casa.", translation: { es: "Si llueve, nos quedaremos en casa.", en: "If it rains, we will stay home.", ja: "雨が降ったら、家にいます。" } },
+      { sentence: "Se você estudar bastante, vai passar na prova.", translation: { es: "Si estudias mucho, aprobarás el examen.", en: "If you study hard, you will pass the exam.", ja: "一生懸命勉強すれば、試験に合格します。" } },
+    ],
+  },
+  {
+    id: "pt-passiva", titleKey: "ptGramPassiveTitle",
+    pattern: { es: "ser + particípio (+ por)", en: "ser + participle (+ por)", ja: "ser + 過去分詞（+ por）" },
+    explanation: { es: "La voz pasiva se forma con 'ser' + participio, usada cuando la acción es más importante que quién la hace.", en: "The passive voice is formed with 'ser' + participle, used when the action matters more than who does it.", ja: "受動態はser+過去分詞で作られ、誰がするかより行動の方が重要なときに使います。" },
+    examples: [
+      { sentence: "O livro foi escrito por um autor famoso.", translation: { es: "El libro fue escrito por un autor famoso.", en: "The book was written by a famous author.", ja: "その本は有名な作家によって書かれました。" } },
+      { sentence: "Esta ponte foi construída em 1930.", translation: { es: "Este puente fue construido en 1930.", en: "This bridge was built in 1930.", ja: "この橋は1930年に建てられました。" } },
+    ],
+  },
+];
+
+const PORTUGUESE_CONVERSATION_SCENES = [
+  {
+    id: "pt-cafe", icon: "☕", titleKey: "ptConvCafeTitle",
+    lines: [
+      { speaker: "A", text: "Oi! O que você vai querer hoje?", translation: { es: "¡Hola! ¿Qué vas a querer hoy?", en: "Hi! What can I get for you today?", ja: "こんにちは！ 何になさいますか？" } },
+      { speaker: "B", text: "Eu queria um café grande, por favor.", translation: { es: "Quisiera un café grande, por favor.", en: "I'd like a large coffee, please.", ja: "コーヒーのラージサイズをお願いします。" } },
+      { speaker: "A", text: "Vai querer alguma coisa para comer também?", translation: { es: "¿Vas a querer algo de comer también?", en: "Would you like anything to eat with that?", ja: "何かお召し上がりになりますか？" } },
+      { speaker: "B", text: "Sim, um muffin de chocolate, por favor.", translation: { es: "Sí, un muffin de chocolate, por favor.", en: "Yes, a chocolate muffin, please.", ja: "はい、チョコレートマフィンをお願いします。" } },
+      { speaker: "A", text: "Vai dar seis reais.", translation: { es: "Serán seis reales.", en: "That will be six reais.", ja: "6レアルになります。" } },
+      { speaker: "B", text: "Aqui está. Obrigado!", translation: { es: "Aquí tiene. ¡Gracias!", en: "Here you go. Thank you!", ja: "どうぞ。ありがとうございます！" } },
+      { speaker: "A", text: "Obrigada! Tenha um ótimo dia.", translation: { es: "¡Gracias! Que tengas un buen día.", en: "Thank you! Have a great day.", ja: "ありがとうございます！ 良い一日を。" } },
+    ],
+  },
+  {
+    id: "pt-airport", icon: "🛫", titleKey: "ptConvAirportTitle",
+    lines: [
+      { speaker: "A", text: "Bom dia. Posso ver o seu passaporte, por favor?", translation: { es: "Buenos días. ¿Puedo ver su pasaporte, por favor?", en: "Good morning. Can I see your passport, please?", ja: "おはようございます。パスポートを見せていただけますか？" } },
+      { speaker: "B", text: "Claro, aqui está.", translation: { es: "Claro, aquí está.", en: "Sure, here it is.", ja: "はい、どうぞ。" } },
+      { speaker: "A", text: "Quantas malas você vai despachar?", translation: { es: "¿Cuántas maletas va a facturar?", en: "How many bags are you checking in?", ja: "お預けの荷物はいくつですか？" } },
+      { speaker: "B", text: "Só uma, por favor.", translation: { es: "Solo una, por favor.", en: "Just one, please.", ja: "一つだけです。" } },
+      { speaker: "A", text: "Prefere janela ou corredor?", translation: { es: "¿Prefiere ventanilla o pasillo?", en: "Do you prefer a window or aisle seat?", ja: "窓側と通路側、どちらがよろしいですか？" } },
+      { speaker: "B", text: "Janela, por favor.", translation: { es: "Ventanilla, por favor.", en: "Window seat, please.", ja: "窓側でお願いします。" } },
+      { speaker: "A", text: "Aqui está o seu cartão de embarque. O embarque começa no portão 12 em uma hora.", translation: { es: "Aquí tiene su pase de abordar. El embarque comienza en la puerta 12 en una hora.", en: "Here's your boarding pass. Boarding starts at gate 12 in one hour.", ja: "こちらが搭乗券です。1時間後に12番ゲートで搭乗開始です。" } },
+    ],
+  },
+  {
+    id: "pt-doctor", icon: "🩺", titleKey: "ptConvDoctorTitle",
+    lines: [
+      { speaker: "A", text: "Qual é o problema hoje?", translation: { es: "¿Cuál es el problema hoy?", en: "What seems to be the problem today?", ja: "今日はどうされましたか？" } },
+      { speaker: "B", text: "Estou com febre e dor de cabeça desde ontem.", translation: { es: "Tengo fiebre y dolor de cabeza desde ayer.", en: "I have a fever and a headache since yesterday.", ja: "昨日から熱と頭痛があります。" } },
+      { speaker: "A", text: "Você tem tosse ou dor de garganta?", translation: { es: "¿Tiene tos o dolor de garganta?", en: "Do you have a cough or sore throat?", ja: "咳や喉の痛みはありますか？" } },
+      { speaker: "B", text: "Um pouco de tosse, sim.", translation: { es: "Un poco de tos, sí.", en: "A little cough, yes.", ja: "少し咳があります。" } },
+      { speaker: "A", text: "Vou receitar um remédio. Descanse e beba bastante água.", translation: { es: "Le recetaré medicina. Descanse y beba mucha agua.", en: "I'll prescribe some medicine. Rest and drink plenty of water.", ja: "薬を処方します。休んで、水をたくさん飲んでください。" } },
+      { speaker: "B", text: "Obrigado, doutor.", translation: { es: "Gracias, doctor.", en: "Thank you, doctor.", ja: "ありがとうございます、先生。" } },
+    ],
+  },
+  {
+    id: "pt-jobinterview", icon: "💼", titleKey: "ptConvJobInterviewTitle",
+    lines: [
+      { speaker: "A", text: "Me fale um pouco sobre você.", translation: { es: "Cuénteme un poco sobre usted.", en: "Tell me a little about yourself.", ja: "自己紹介をしていただけますか？" } },
+      { speaker: "B", text: "Tenho três anos de experiência em marketing e adoro trabalhar em equipe.", translation: { es: "Tengo tres años de experiencia en marketing y me encanta trabajar en equipo.", en: "I have three years of experience in marketing and I love working in a team.", ja: "マーケティングで3年の経験があり、チームで働くのが大好きです。" } },
+      { speaker: "A", text: "Por que você quer trabalhar aqui?", translation: { es: "¿Por qué quiere trabajar aquí?", en: "Why do you want to work here?", ja: "なぜここで働きたいのですか？" } },
+      { speaker: "B", text: "Admiro a inovação da empresa e quero crescer profissionalmente.", translation: { es: "Admiro la innovación de su empresa y quiero crecer profesionalmente.", en: "I admire your company's innovation and I want to grow professionally.", ja: "御社の革新性を尊敬しており、専門的に成長したいと思っています。" } },
+      { speaker: "A", text: "Quais são seus pontos fortes?", translation: { es: "¿Cuáles son sus fortalezas?", en: "What are your strengths?", ja: "あなたの強みは何ですか？" } },
+      { speaker: "B", text: "Sou organizado e sempre cumpro os prazos.", translation: { es: "Soy organizado y siempre cumplo con los plazos.", en: "I'm organized, and I always meet deadlines.", ja: "私は几帳面で、いつも締め切りを守ります。" } },
+    ],
+  },
+  {
+    id: "pt-restaurant", icon: "🍽️", titleKey: "ptConvRestaurantTitle",
+    lines: [
+      { speaker: "A", text: "Boa noite! Mesa para quantos?", translation: { es: "¡Buenas noches! ¿Mesa para cuántos?", en: "Good evening! Table for how many?", ja: "こんばんは！ 何名様ですか？" } },
+      { speaker: "B", text: "Mesa para dois, por favor.", translation: { es: "Mesa para dos, por favor.", en: "Table for two, please.", ja: "二名でお願いします。" } },
+      { speaker: "A", text: "Por aqui, por favor. Aqui estão os cardápios.", translation: { es: "Por aquí, por favor. Aquí tienen sus menús.", en: "Right this way. Here are your menus.", ja: "こちらへどうぞ。メニューです。" } },
+      { speaker: "B", text: "Obrigado. Já podemos pedir.", translation: { es: "Gracias. Ya podemos ordenar.", en: "Thank you. We're ready to order.", ja: "ありがとう。注文できます。" } },
+      { speaker: "A", text: "Ótimo, o que vocês vão querer?", translation: { es: "Perfecto, ¿qué desean?", en: "Great, what would you like?", ja: "かしこまりました、ご注文は？" } },
+      { speaker: "B", text: "Vou querer o frango grelhado com legumes.", translation: { es: "Quiero el pollo a la parrilla con vegetales.", en: "I'll have the grilled chicken with vegetables.", ja: "野菜添えのグリルチキンをお願いします。" } },
+      { speaker: "A", text: "Ótima escolha. Algo para beber?", translation: { es: "Excelente elección. ¿Algo para beber?", en: "Excellent choice. Anything to drink?", ja: "良い選択ですね。お飲み物は？" } },
+      { speaker: "B", text: "Só água, obrigado.", translation: { es: "Solo agua, gracias.", en: "Just water, thank you.", ja: "お水だけで結構です。" } },
+    ],
+  },
+  {
+    id: "pt-directions", icon: "🗺️", titleKey: "ptConvDirectionsTitle",
+    lines: [
+      { speaker: "A", text: "Com licença, como eu chego na estação de trem?", translation: { es: "Disculpe, ¿cómo llego a la estación de tren?", en: "Excuse me, how do I get to the train station?", ja: "すみません、駅にはどう行けばいいですか？" } },
+      { speaker: "B", text: "Siga reto por duas quadras, depois vire à esquerda.", translation: { es: "Siga derecho dos cuadras, luego doble a la izquierda.", en: "Go straight ahead for two blocks, then turn left.", ja: "二ブロックまっすぐ行って、それから左に曲がってください。" } },
+      { speaker: "A", text: "É longe daqui?", translation: { es: "¿Está lejos de aquí?", en: "Is it far from here?", ja: "ここから遠いですか？" } },
+      { speaker: "B", text: "Não, são uns dez minutos a pé.", translation: { es: "No, son unos diez minutos caminando.", en: "No, it's about a ten-minute walk.", ja: "いいえ、歩いて約10分です。" } },
+      { speaker: "A", text: "Muito obrigado pela ajuda!", translation: { es: "¡Muchas gracias por su ayuda!", en: "Thank you so much for your help!", ja: "本当にありがとうございました！" } },
+      { speaker: "B", text: "De nada. Boa viagem!", translation: { es: "De nada. ¡Buen viaje!", en: "You're welcome. Have a safe trip!", ja: "どういたしまして。良い旅を！" } },
+    ],
+  },
+];
+
+// Registro central de los módulos de Idiomas nuevos — un solo motor de
+// renderizado genérico (más abajo, dentro del closure principal: ver
+// openLangModule()/showLangView()/buildLangVocabQuizItems() etc.) sirve
+// a cualquiera de estos dos, en vez de duplicar toda la lógica de UI dos
+// veces. `ttsLang` alimenta speakLangText() (Web Speech API). `levels`
+// declara TODOS los niveles CEFR posibles para el selector — solo los
+// que tienen contenido real en `vocabCategories`/`grammarPoints` quedan
+// clickeables, el resto se pinta bloqueado ("Próximamente"), mismo
+// patrón que N3-N1 en Nihongo (ver jp-level-toggle).
+const LANGUAGE_MODULES = {
+  english: {
+    id: "english",
+    icon: "🇺🇸",
+    nameKey: "langNameEnglish",
+    ttsLang: "en-US",
+    levels: ["a1", "a2", "b1", "b2", "c1", "c2"],
+    vocabCategories: ENGLISH_VOCAB_CATEGORIES,
+    grammarPoints: ENGLISH_GRAMMAR_POINTS,
+    conversationScenes: ENGLISH_CONVERSATION_SCENES,
+  },
+  portuguese: {
+    id: "portuguese",
+    icon: "🇧🇷",
+    nameKey: "langNamePortuguese",
+    ttsLang: "pt-BR",
+    levels: ["a1", "a2", "b1", "b2", "c1", "c2"],
+    vocabCategories: PORTUGUESE_VOCAB_CATEGORIES,
+    grammarPoints: PORTUGUESE_GRAMMAR_POINTS,
+    conversationScenes: PORTUGUESE_CONVERSATION_SCENES,
+  },
+};
+
+// Reproduce texto en inglés/portugués con la Web Speech API nativa —
+// misma técnica que speakKana()/readerEngine.js (partir en oraciones
+// cortas para esquivar el bug de Chrome con utterances largas), pero
+// parametrizada por idioma en vez de fijada a "ja-JP". Selección de voz
+// cacheada POR idioma (a diferencia de elegirVozJaponesaAppJs(), acá
+// puede haber más de un idioma activo en la misma sesión).
+const langVoiceCache = new Map();
+const langVoiceListenerAttached = new Set();
+function elegirVozLang(langCode) {
+  if (langVoiceCache.has(langCode) || !("speechSynthesis" in window)) return langVoiceCache.get(langCode) || null;
+  const voces = window.speechSynthesis.getVoices();
+  const prefix = langCode.split("-")[0];
+  const voz = voces.find((v) => v.lang === langCode) || voces.find((v) => v.lang && v.lang.startsWith(prefix)) || null;
+  if (voz) {
+    langVoiceCache.set(langCode, voz);
+  } else if (!langVoiceListenerAttached.has(langCode) && voces.length === 0) {
+    langVoiceListenerAttached.add(langCode);
+    window.speechSynthesis.addEventListener("voiceschanged", () => elegirVozLang(langCode), { once: true });
+  }
+  return voz;
+}
+
+async function speakLangText(text, langCode) {
+  if (!("speechSynthesis" in window) || !text) return;
+  window.speechSynthesis.cancel();
+  const oraciones = text.split(/(?<=[.!?])\s+/).map((s) => s.trim()).filter(Boolean);
+  const partes = oraciones.length ? oraciones : [text];
+  for (let i = 0; i < partes.length; i++) {
+    await new Promise((resolve) => {
+      const utterance = new SpeechSynthesisUtterance(partes[i]);
+      utterance.lang = langCode;
+      utterance.rate = 0.85;
+      const voz = elegirVozLang(langCode);
+      if (voz) utterance.voice = voz;
+      utterance.onend = resolve;
+      utterance.onerror = resolve;
+      window.speechSynthesis.speak(utterance);
+    });
+    if (i < partes.length - 1) await new Promise((resolve) => setTimeout(resolve, 200));
+  }
+}
+
 const HANZI_STROKE_DATA_URL = "https://cdn.jsdelivr.net/npm/@k1low/hanzi-writer-data-jp@0.8.0";
 const hanziStrokeDataCache = new Map();
 
@@ -5986,6 +7607,19 @@ function defaultState() {
     // galería. El resto de las fotos empieza bloqueada y se desbloquea
     // por Nivel, igual que MIIKAERU_SKINS.
     avatarPhotoId: null,
+    // Métricas por idioma del módulo de Idiomas — Nihongo sigue usando su
+    // propio sistema ya existente (state.pillars.aprendizaje.mastery +
+    // state.level general), separado a propósito porque predata esto y
+    // ya tiene su propia progresión de nivel/desbloqueo por Nivel. Los
+    // módulos NUEVOS (english/portuguese) usan esto en cambio: XP y
+    // racha PROPIAS por idioma (no la Racha general de la app), más
+    // aciertos/total acumulados para la métrica de precisión pedida
+    // explícitamente. Se actualiza en updateLanguageProgress() cada vez
+    // que se termina un Mini-Quiz (ver startLangMiniQuiz()).
+    languageProgress: {
+      english: { xp: 0, streak: 0, lastActiveDate: null, quizzesTaken: 0, correctAnswers: 0, totalAnswers: 0 },
+      portuguese: { xp: 0, streak: 0, lastActiveDate: null, quizzesTaken: 0, correctAnswers: 0, totalAnswers: 0 },
+    },
     // Mock temporal: % de misiones completadas esta semana. Reemplazar por
     // un cálculo real (historial de pilares) cuando exista esa lógica.
     weeklyMissions: { completed: 3, total: 5 },
@@ -7321,6 +8955,49 @@ document.addEventListener("DOMContentLoaded", () => {
   const languageSelectModal = document.getElementById("language-select-modal");
   const languageSelectModalClose = document.getElementById("language-select-modal-close");
   const languageSelectJaBtn = document.getElementById("language-select-ja");
+  const languageSelectEnBtn = document.getElementById("language-select-en");
+  const languageSelectPtBtn = document.getElementById("language-select-pt");
+
+  // Módulo de Idiomas (English/Português) — un solo #lang-modal
+  // reutilizado por los dos, ver openLangModule()/showLangView() más
+  // abajo junto a LANGUAGE_MODULES (definido fuera del closure).
+  const langModal = document.getElementById("lang-modal");
+  const langModalClose = document.getElementById("lang-modal-close");
+  const langModalTitle = document.getElementById("lang-modal-title");
+  const langStatXp = document.getElementById("lang-stat-xp");
+  const langStatStreak = document.getElementById("lang-stat-streak");
+  const langStatAccuracy = document.getElementById("lang-stat-accuracy");
+  const langViewMenu = document.getElementById("lang-view-menu");
+  const langViewVocabCats = document.getElementById("lang-view-vocab-cats");
+  const langViewVocabWords = document.getElementById("lang-view-vocab-words");
+  const langViewGrammar = document.getElementById("lang-view-grammar");
+  const langViewConversations = document.getElementById("lang-view-conversations");
+  const langViewConversationReader = document.getElementById("lang-view-conversation-reader");
+  const langViewMiniQuiz = document.getElementById("lang-view-mini-quiz");
+  const langMenuVocabBtn = document.getElementById("lang-menu-vocab-btn");
+  const langMenuGrammarBtn = document.getElementById("lang-menu-grammar-btn");
+  const langMenuConversationsBtn = document.getElementById("lang-menu-conversations-btn");
+  const langVocabCatsBackBtn = document.getElementById("lang-vocab-cats-back-btn");
+  const langVocabCatsGrid = document.getElementById("lang-vocab-cats-grid");
+  const langVocabWordsBackBtn = document.getElementById("lang-vocab-words-back-btn");
+  const langVocabWordsTitle = document.getElementById("lang-vocab-words-title");
+  const langVocabWordsList = document.getElementById("lang-vocab-words-list");
+  const langVocabQuizStartBtn = document.getElementById("lang-vocab-quiz-start-btn");
+  const langGrammarBackBtn = document.getElementById("lang-grammar-back-btn");
+  const langGrammarList = document.getElementById("lang-grammar-list");
+  const langGrammarQuizStartBtn = document.getElementById("lang-grammar-quiz-start-btn");
+  const langConversationsBackBtn = document.getElementById("lang-conversations-back-btn");
+  const langConversationsGrid = document.getElementById("lang-conversations-grid");
+  const langConversationReaderBackBtn = document.getElementById("lang-conversation-reader-back-btn");
+  const langConversationReaderTitle = document.getElementById("lang-conversation-reader-title");
+  const langConversationAutoBtn = document.getElementById("lang-conversation-auto-btn");
+  const langConversationLines = document.getElementById("lang-conversation-lines");
+  const langMiniQuizBackBtn = document.getElementById("lang-mini-quiz-back-btn");
+  const langMiniQuizPrompt = document.getElementById("lang-mini-quiz-prompt");
+  const langMiniQuizChar = document.getElementById("lang-mini-quiz-char");
+  const langMiniQuizOptions = document.getElementById("lang-mini-quiz-options");
+  const langMiniQuizFeedback = document.getElementById("lang-mini-quiz-feedback");
+  const langMiniQuizScore = document.getElementById("lang-mini-quiz-score");
 
   const jpConfigModal = document.getElementById("jp-config-modal");
   const jpConfigModalClose = document.getElementById("jp-config-modal-close");
@@ -13795,6 +15472,18 @@ document.addEventListener("DOMContentLoaded", () => {
         showJpView("grid");
       },
     },
+    // English/Português comparten el MISMO modal (#lang-modal) — cuál de
+    // los dos se ve depende de activeLangModuleKey, fijada por
+    // openLangModule() justo antes de llamar selectApp(langKey) (ver esa
+    // función más abajo, junto al resto del motor de Idiomas).
+    english: {
+      modal: () => langModal,
+      onOpen: () => openLangModuleView(),
+    },
+    portuguese: {
+      modal: () => langModal,
+      onOpen: () => openLangModuleView(),
+    },
     habits: {
       modal: () => habitsModal,
       onOpen: () => {
@@ -13824,7 +15513,7 @@ document.addEventListener("DOMContentLoaded", () => {
     },
   };
 
-  const ALL_APP_MODALS = [bossfightModal, japaneseModal, calendarModal, habitsModal, appPlaceholderModal, miikaPassModal];
+  const ALL_APP_MODALS = [bossfightModal, japaneseModal, langModal, calendarModal, habitsModal, appPlaceholderModal, miikaPassModal];
 
   let activeApp = loadActiveApp();
 
@@ -13858,10 +15547,11 @@ document.addEventListener("DOMContentLoaded", () => {
   function selectApp(appKey) {
     if (!APP_MODULES[appKey]) return;
 
-    // Japonés no se recuerda como "módulo activo" persistente (es un
-    // modal de consulta puntual, no tendría sentido auto-resaltar su
-    // tarjeta como la última usada al recargar la página).
-    if (appKey !== "japanese") {
+    // Japonés/English/Português no se recuerdan como "módulo activo"
+    // persistente (son modales de consulta puntual detrás de
+    // #language-select-modal, no tendría sentido auto-resaltar la
+    // tarjeta "Idiomas" como la última usada al recargar la página).
+    if (appKey !== "japanese" && appKey !== "english" && appKey !== "portuguese") {
       activeApp = appKey;
       persistActiveApp(appKey);
     }
@@ -13913,7 +15603,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // todas las ventanas, ya que closeAllAppModals() es idempotente (cerrar
   // "todas" cuando solo una está abierta es seguro y más simple que una
   // función de cierre casi idéntica por cada una).
-  [bossfightModal, calendarModal, habitsModal, appPlaceholderModal, japaneseModal, miikaPassModal].forEach((modal) => {
+  [bossfightModal, calendarModal, habitsModal, appPlaceholderModal, japaneseModal, langModal, miikaPassModal].forEach((modal) => {
     modal.addEventListener("click", (event) => {
       if (event.target === modal) closeAllAppModals();
     });
@@ -13924,6 +15614,7 @@ document.addEventListener("DOMContentLoaded", () => {
     [habitsModalClose, habitsModal],
     [appPlaceholderModalClose, appPlaceholderModal],
     [japaneseModalClose, japaneseModal],
+    [langModalClose, langModal],
     [miikaPassModalClose, miikaPassModal],
   ].forEach(([btn]) => btn.addEventListener("click", closeAllAppModals));
 
@@ -16910,6 +18601,14 @@ document.addEventListener("DOMContentLoaded", () => {
     closeLanguageSelectModal();
     openJpConfigModal();
   });
+  languageSelectEnBtn.addEventListener("click", () => {
+    closeLanguageSelectModal();
+    openLangModule("english");
+  });
+  languageSelectPtBtn.addEventListener("click", () => {
+    closeLanguageSelectModal();
+    openLangModule("portuguese");
+  });
   languageSelectModalClose.addEventListener("click", closeLanguageSelectModal);
   languageSelectModal.addEventListener("click", (event) => {
     if (event.target === languageSelectModal) closeLanguageSelectModal();
@@ -16960,6 +18659,498 @@ document.addEventListener("DOMContentLoaded", () => {
     closeAllAppModals();
     openJpConfigModal();
   });
+
+  // ---------------- Módulo de Idiomas: English / Português (motor genérico) ----------------
+  // Un solo motor de renderizado para los dos idiomas nuevos, parametrizado
+  // por LANGUAGE_MODULES (definido fuera del closure, junto a
+  // ENGLISH_/PORTUGUESE_VOCAB_CATEGORIES etc. — ver comentario largo ahí
+  // sobre el criterio "misma metodología, contenido propio"). Reutiliza a
+  // propósito clases CSS con prefijo "jp-" (.jp-vocab-cat-card,
+  // .jp-vocab-card, .jp-grammar-card, .jp-quiz-option-btn, .jp-quiz-feedback,
+  // .reader-line*) porque esas reglas son genéricas pese al nombre — cero
+  // CSS nuevo hace falta salvo el header de stats (.lang-stats-row, ver
+  // style.css). El módulo Japonés (arriba, sin tocar) sigue con su propio
+  // motor completo, cero código compartido a nivel de función.
+  let activeLangModuleKey = null;
+  let activeLangCategory = null;
+  let activeLangConversationScene = null;
+  let activeLangConversationReader = null; // {cancelado} — ver stopActiveLangConversationReader()
+
+  function currentLangModule() {
+    return LANGUAGE_MODULES[activeLangModuleKey];
+  }
+
+  // Igual que resolveJpMeaning(), pero además oculta la traducción por
+  // completo cuando el idioma de interfaz coincide con el idioma que se
+  // está enseñando — solo puede pasar con English (su meaning nunca trae
+  // "en", ver ENGLISH_VOCAB_CATEGORIES), mismo criterio "cero texto en
+  // español rezagado" que el módulo Japonés aplica con currentLanguage
+  // === "ja". Português SIEMPRE muestra traducción (su meaning trae
+  // es/en/ja siempre, ningún idioma de interfaz coincide con el contenido).
+  function resolveLangMeaning(field) {
+    if (activeLangModuleKey === "english" && currentLanguage === "en") return null;
+    return field[currentLanguage] || field.es;
+  }
+
+  // Punto de entrada desde #language-select-modal (ver
+  // languageSelectEnBtn/languageSelectPtBtn más arriba) — selectApp()
+  // dispara APP_MODULES[langKey].onOpen(), que llama a
+  // openLangModuleView() de abajo.
+  function openLangModule(langKey) {
+    activeLangModuleKey = langKey;
+    selectApp(langKey);
+  }
+
+  function openLangModuleView() {
+    const mod = currentLangModule();
+    langModalTitle.textContent = `${mod.icon} ${t(mod.nameKey)}`;
+    renderLangStats();
+    showLangView("menu");
+  }
+
+  function renderLangStats() {
+    const progress = state.languageProgress[currentLangModule().id];
+    langStatXp.textContent = progress.xp;
+    langStatStreak.textContent = progress.streak;
+    const accuracy = progress.totalAnswers > 0 ? Math.round((progress.correctAnswers / progress.totalAnswers) * 100) : 0;
+    langStatAccuracy.textContent = `${accuracy}%`;
+  }
+
+  function showLangView(view) {
+    langViewMenu.hidden = view !== "menu";
+    langViewVocabCats.hidden = view !== "vocab-cats";
+    langViewVocabWords.hidden = view !== "vocab-words";
+    langViewGrammar.hidden = view !== "grammar";
+    langViewConversations.hidden = view !== "conversations";
+    langViewConversationReader.hidden = view !== "conversation-reader";
+    langViewMiniQuiz.hidden = view !== "mini-quiz";
+    if (view === "vocab-cats") renderLangVocabCats();
+    if (view === "grammar") renderLangGrammarList();
+    if (view === "conversations") renderLangConversations();
+  }
+
+  langMenuVocabBtn.addEventListener("click", () => showLangView("vocab-cats"));
+  langMenuGrammarBtn.addEventListener("click", () => showLangView("grammar"));
+  langMenuConversationsBtn.addEventListener("click", () => showLangView("conversations"));
+  langVocabCatsBackBtn.addEventListener("click", () => showLangView("menu"));
+  langVocabWordsBackBtn.addEventListener("click", () => showLangView("vocab-cats"));
+  langGrammarBackBtn.addEventListener("click", () => showLangView("menu"));
+  langConversationsBackBtn.addEventListener("click", () => showLangView("menu"));
+
+  function renderLangVocabCats() {
+    const mod = currentLangModule();
+    langVocabCatsGrid.innerHTML = "";
+    mod.vocabCategories.forEach((cat) => {
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className = "jp-vocab-cat-card";
+
+      const icon = document.createElement("span");
+      icon.className = "jp-vocab-cat-card__icon";
+      icon.textContent = cat.icon;
+
+      const title = document.createElement("span");
+      title.className = "jp-vocab-cat-card__title";
+      title.textContent = t(cat.titleKey);
+
+      const count = document.createElement("span");
+      count.className = "jp-vocab-cat-card__count";
+      count.textContent = `${cat.words.length} ${t("jpVocabWordsCount")}`;
+
+      card.append(icon, title, count);
+      card.addEventListener("click", () => openLangVocabWords(cat));
+      langVocabCatsGrid.appendChild(card);
+    });
+
+    // Niveles B1-C2: bloqueados con badge "Próximamente" — mismo criterio
+    // visual que N3-N1 en Nihongo (grayscale + opacity vía
+    // .jp-vocab-cat-card--locked, ya definida en style.css). Se muestran a
+    // propósito (no se ocultan) para que quede claro que el currículum va
+    // a seguir creciendo.
+    ["b1", "b2", "c1", "c2"].forEach((level) => {
+      const card = document.createElement("div");
+      card.className = "jp-vocab-cat-card jp-vocab-cat-card--locked";
+
+      const icon = document.createElement("span");
+      icon.className = "jp-vocab-cat-card__icon";
+      icon.textContent = "🔒";
+
+      const title = document.createElement("span");
+      title.className = "jp-vocab-cat-card__title";
+      title.textContent = level.toUpperCase();
+
+      const badge = document.createElement("span");
+      badge.className = "jp-vocab-cat-card__badge";
+      badge.textContent = t("courseComingSoonBadge");
+
+      card.append(icon, title, badge);
+      langVocabCatsGrid.appendChild(card);
+    });
+  }
+
+  function openLangVocabWords(cat) {
+    activeLangCategory = cat;
+    langVocabWordsTitle.textContent = `${cat.icon} ${t(cat.titleKey)}`;
+    langVocabWordsList.innerHTML = "";
+    cat.words.forEach((word) => {
+      const card = document.createElement("div");
+      card.className = "jp-vocab-card";
+
+      const wordEl = document.createElement("span");
+      wordEl.className = "jp-vocab-card__kana";
+      wordEl.textContent = word.word;
+      card.appendChild(wordEl);
+
+      const phonetic = document.createElement("span");
+      phonetic.className = "jp-vocab-card__romaji";
+      phonetic.textContent = word.phonetic;
+      card.appendChild(phonetic);
+
+      const meaning = resolveLangMeaning(word.meaning);
+      if (meaning) {
+        const meaningEl = document.createElement("span");
+        meaningEl.className = "jp-vocab-card__meaning";
+        meaningEl.textContent = meaning;
+        card.appendChild(meaningEl);
+      }
+
+      const audioBtn = document.createElement("button");
+      audioBtn.type = "button";
+      audioBtn.className = "jp-vocab-card__example-audio";
+      audioBtn.setAttribute("aria-label", t("jpListen"));
+      audioBtn.textContent = "🔊";
+      audioBtn.addEventListener("click", () => speakLangText(word.word, currentLangModule().ttsLang));
+      card.appendChild(audioBtn);
+
+      langVocabWordsList.appendChild(card);
+    });
+    // Ver comentario en jpVocabQuizStartBtn (patrón original): sin
+    // traducción real en modo mismo-idioma (English + interfaz "en"), el
+    // quiz de "¿qué significa...?" no tiene forma de funcionar, así que el
+    // botón se oculta en vez de arriesgar una fuga sin sentido.
+    langVocabQuizStartBtn.hidden = activeLangModuleKey === "english" && currentLanguage === "en";
+    showLangView("vocab-words");
+  }
+
+  // ---------------- Gramática (English / Português) ----------------
+
+  function renderLangGrammarList() {
+    const mod = currentLangModule();
+    langGrammarList.innerHTML = "";
+    langGrammarQuizStartBtn.hidden = activeLangModuleKey === "english" && currentLanguage === "en";
+
+    mod.grammarPoints.forEach((point) => {
+      const card = document.createElement("div");
+      card.className = "jp-grammar-card";
+
+      const header = document.createElement("div");
+      header.className = "jp-grammar-card__header";
+      const label = document.createElement("span");
+      label.className = "jp-grammar-card__label";
+      label.textContent = t(point.titleKey);
+      header.appendChild(label);
+
+      const patternText = resolveLangMeaning(point.pattern);
+      if (patternText) {
+        const pattern = document.createElement("span");
+        pattern.className = "jp-grammar-card__pattern";
+        pattern.textContent = patternText;
+        header.appendChild(pattern);
+      }
+      card.appendChild(header);
+
+      const body = document.createElement("div");
+      body.className = "jp-grammar-card__body";
+      body.hidden = true;
+
+      const explanationText = resolveLangMeaning(point.explanation);
+      if (explanationText) {
+        const explanation = document.createElement("p");
+        explanation.className = "jp-grammar-card__explanation";
+        explanation.textContent = explanationText;
+        body.appendChild(explanation);
+      }
+
+      point.examples.forEach((ex) => {
+        const exEl = document.createElement("div");
+        exEl.className = "jp-grammar-card__example";
+        const sentenceRow = document.createElement("div");
+        sentenceRow.className = "jp-grammar-card__example-jp-row";
+        const sentence = document.createElement("p");
+        sentence.className = "jp-grammar-card__example-jp";
+        sentence.textContent = ex.sentence;
+        const audioBtn = document.createElement("button");
+        audioBtn.type = "button";
+        audioBtn.className = "jp-grammar-card__example-audio";
+        audioBtn.setAttribute("aria-label", t("jpListen"));
+        audioBtn.textContent = "🔊";
+        audioBtn.addEventListener("click", (event) => {
+          event.stopPropagation();
+          speakLangText(ex.sentence, mod.ttsLang);
+        });
+        sentenceRow.append(sentence, audioBtn);
+        exEl.appendChild(sentenceRow);
+
+        const translationText = resolveLangMeaning(ex.translation);
+        if (translationText) {
+          const translation = document.createElement("p");
+          translation.className = "jp-grammar-card__example-translation";
+          translation.textContent = translationText;
+          exEl.appendChild(translation);
+        }
+        body.appendChild(exEl);
+      });
+
+      card.appendChild(body);
+      card.addEventListener("click", () => {
+        body.hidden = !body.hidden;
+        card.classList.toggle("jp-grammar-card--open", !body.hidden);
+      });
+      langGrammarList.appendChild(card);
+    });
+  }
+
+  // ---------------- Conversaciones Situacionales (English / Português) ----------------
+  // A diferencia de Nihongo (furigana por segmento, vía MiikaeruReader), acá
+  // las líneas son texto plano — se arma un lector simple propio, mismas
+  // clases .reader-* (genéricas) que el lector japonés.
+  function stopActiveLangConversationReader() {
+    if (activeLangConversationReader) {
+      activeLangConversationReader.cancelado = true;
+      activeLangConversationReader = null;
+    }
+    window.speechSynthesis && window.speechSynthesis.cancel();
+  }
+
+  langConversationReaderBackBtn.addEventListener("click", () => {
+    stopActiveLangConversationReader();
+    showLangView("conversations");
+  });
+
+  function renderLangConversations() {
+    const mod = currentLangModule();
+    langConversationsGrid.innerHTML = "";
+    mod.conversationScenes.forEach((scene) => {
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className = "jp-vocab-cat-card";
+
+      const icon = document.createElement("span");
+      icon.className = "jp-vocab-cat-card__icon";
+      icon.textContent = scene.icon;
+
+      const title = document.createElement("span");
+      title.className = "jp-vocab-cat-card__title";
+      title.textContent = t(scene.titleKey);
+
+      const meta = document.createElement("span");
+      meta.className = "jp-vocab-cat-card__count";
+      meta.textContent = `${scene.lines.length} ${t("jpConvLinesLabel")}`;
+
+      card.append(icon, title, meta);
+      card.addEventListener("click", () => openLangConversationScene(scene));
+      langConversationsGrid.appendChild(card);
+    });
+  }
+
+  function openLangConversationScene(scene) {
+    const mod = currentLangModule();
+    stopActiveLangConversationReader();
+    activeLangConversationScene = scene;
+    langConversationReaderTitle.textContent = `${scene.icon} ${t(scene.titleKey)}`;
+    langConversationLines.innerHTML = "";
+
+    scene.lines.forEach((line) => {
+      const row = document.createElement("div");
+      row.className = "reader-line";
+
+      const audioBtn = document.createElement("button");
+      audioBtn.type = "button";
+      audioBtn.className = "reader-line__audio";
+      audioBtn.setAttribute("aria-label", t("jpListen"));
+      audioBtn.textContent = "🔊";
+      audioBtn.addEventListener("click", () => speakLangText(line.text, mod.ttsLang));
+      row.appendChild(audioBtn);
+
+      const textCol = document.createElement("div");
+      const textEl = document.createElement("p");
+      textEl.className = "reader-line__jp";
+      textEl.textContent = `${line.speaker}: ${line.text}`;
+      textCol.appendChild(textEl);
+
+      const translationText = resolveLangMeaning(line.translation);
+      if (translationText) {
+        const translationEl = document.createElement("p");
+        translationEl.className = "reader-line__es";
+        translationEl.textContent = translationText;
+        textCol.appendChild(translationEl);
+      }
+      row.appendChild(textCol);
+      langConversationLines.appendChild(row);
+    });
+
+    showLangView("conversation-reader");
+  }
+
+  langConversationAutoBtn.addEventListener("click", () => {
+    if (!activeLangConversationScene) return;
+    stopActiveLangConversationReader();
+    const mod = currentLangModule();
+    const scene = activeLangConversationScene;
+    const handle = { cancelado: false };
+    activeLangConversationReader = handle;
+    const rows = Array.from(langConversationLines.children);
+    (async () => {
+      for (let i = 0; i < scene.lines.length; i++) {
+        if (handle.cancelado) return;
+        rows.forEach((r, idx) => r.classList.toggle("reader-line--active", idx === i));
+        await speakLangText(scene.lines[i].text, mod.ttsLang);
+      }
+      if (!handle.cancelado) rows.forEach((r) => r.classList.remove("reader-line--active"));
+      if (activeLangConversationReader === handle) activeLangConversationReader = null;
+    })();
+  });
+
+  // ---------------- Mini-Quiz genérico (English / Português) ----------------
+
+  function shuffleArrayLocalLang(arr) {
+    const copy = [...arr];
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  }
+
+  function buildLangVocabQuizItems(cat) {
+    const pool = cat.words;
+    return shuffleArrayLocalLang(pool).map((word) => {
+      const answer = resolveLangMeaning(word.meaning);
+      const distractors = shuffleArrayLocalLang(pool.filter((w) => w !== word)).slice(0, 3).map((w) => resolveLangMeaning(w.meaning));
+      return {
+        char: word.word,
+        prompt: t("jpMiniQuizVocabPrompt"),
+        answer,
+        options: shuffleArrayLocalLang([answer, ...distractors]),
+      };
+    });
+  }
+
+  // Formato distinto al quiz de Gramática N5 (que "blanquea" una partícula
+  // dentro de una oración): acá se muestra una oración de ejemplo completa
+  // y se pregunta qué punto gramatical demuestra (ver langGrammarQuizPrompt)
+  // — encaja mejor con patrones de varias palabras (Presente Continuo,
+  // Voz Pasiva, etc.) que no tienen una única partícula que blanquear.
+  function buildLangGrammarQuizItems(mod) {
+    return shuffleArrayLocalLang(mod.grammarPoints).map((point) => {
+      const example = point.examples[Math.floor(Math.random() * point.examples.length)];
+      const answer = t(point.titleKey);
+      const distractors = shuffleArrayLocalLang(mod.grammarPoints.filter((p) => p !== point)).slice(0, 3).map((p) => t(p.titleKey));
+      return {
+        char: example.sentence,
+        prompt: t("langGrammarQuizPrompt"),
+        answer,
+        options: shuffleArrayLocalLang([answer, ...distractors]),
+      };
+    });
+  }
+
+  let langMiniQuizItems = [];
+  let langMiniQuizIndex = 0;
+  let langMiniQuizScoreCount = 0;
+  let langMiniQuizReturnView = "menu";
+
+  function startLangMiniQuiz(items, returnView) {
+    langMiniQuizItems = items;
+    langMiniQuizIndex = 0;
+    langMiniQuizScoreCount = 0;
+    langMiniQuizReturnView = returnView;
+    showLangView("mini-quiz");
+    renderLangMiniQuizItem();
+  }
+
+  function renderLangMiniQuizItem() {
+    if (langMiniQuizIndex >= langMiniQuizItems.length) {
+      langMiniQuizPrompt.textContent = t("jpMiniQuizDone");
+      langMiniQuizChar.textContent = "🎉";
+      langMiniQuizOptions.innerHTML = "";
+      langMiniQuizFeedback.hidden = true;
+      langMiniQuizScore.textContent = `${t("jpMiniQuizScore")} ${langMiniQuizScoreCount}/${langMiniQuizItems.length}`;
+      addGold(5);
+      grantXP(30);
+      showJpVictoryModal({
+        title: t("jpVictoryTitleMiniQuiz"),
+        subtitle: `${t("jpMiniQuizScore")} ${langMiniQuizScoreCount}/${langMiniQuizItems.length}`,
+        xp: 30,
+        gold: 5,
+      });
+      updateLanguageProgress(langMiniQuizScoreCount, langMiniQuizItems.length);
+      return;
+    }
+    const item = langMiniQuizItems[langMiniQuizIndex];
+    langMiniQuizPrompt.textContent = item.prompt;
+    langMiniQuizChar.textContent = item.char;
+    langMiniQuizFeedback.hidden = true;
+    langMiniQuizScore.textContent = `${langMiniQuizIndex + 1} / ${langMiniQuizItems.length}`;
+
+    langMiniQuizOptions.innerHTML = "";
+    item.options.forEach((option) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "jp-quiz-option-btn";
+      btn.textContent = option;
+      btn.addEventListener("click", () => handleLangMiniQuizAnswer(option, item, btn));
+      langMiniQuizOptions.appendChild(btn);
+    });
+  }
+
+  function handleLangMiniQuizAnswer(selected, item, btn) {
+    const correct = selected === item.answer;
+    if (correct) langMiniQuizScoreCount += 1;
+    langMiniQuizFeedback.hidden = false;
+    langMiniQuizFeedback.textContent = correct ? t("jpQuizCorrect") : `${t("jpQuizIncorrect")} ${item.answer}`;
+    langMiniQuizFeedback.className = `jp-quiz-feedback ${correct ? "jp-quiz-feedback--correct" : "jp-quiz-feedback--incorrect"}`;
+    Array.from(langMiniQuizOptions.children).forEach((b) => { b.disabled = true; });
+    btn.style.borderColor = correct ? "var(--neon-green)" : "var(--neon-magenta)";
+    langMiniQuizIndex += 1;
+    setTimeout(renderLangMiniQuizItem, 900);
+  }
+
+  langVocabQuizStartBtn.addEventListener("click", () => {
+    if (!activeLangCategory) return;
+    startLangMiniQuiz(buildLangVocabQuizItems(activeLangCategory), "vocab-words");
+  });
+  langGrammarQuizStartBtn.addEventListener("click", () => {
+    startLangMiniQuiz(buildLangGrammarQuizItems(currentLangModule()), "grammar");
+  });
+  langMiniQuizBackBtn.addEventListener("click", () => showLangView(langMiniQuizReturnView));
+
+  // Métricas por idioma (state.languageProgress.{english,portuguese}, ver
+  // defaultState()) — XP/racha/precisión independientes de state.xp/streak
+  // generales y del state.pillars.aprendizaje.mastery de Nihongo. Misma
+  // lógica de racha por diferencia de días que updateActivityStreak()
+  // (más abajo), pero aplicada por idioma.
+  function updateLanguageProgress(score, total) {
+    const progress = state.languageProgress[currentLangModule().id];
+    progress.quizzesTaken += 1;
+    progress.correctAnswers += score;
+    progress.totalAnswers += total;
+    progress.xp += 30;
+
+    const today = new Date().toISOString().slice(0, 10);
+    if (progress.lastActiveDate !== today) {
+      if (progress.lastActiveDate) {
+        const prev = new Date(progress.lastActiveDate);
+        const diffDays = Math.round((new Date(today) - prev) / 86400000);
+        progress.streak = diffDays === 1 ? progress.streak + 1 : 1;
+      } else {
+        progress.streak = 1;
+      }
+      progress.lastActiveDate = today;
+    }
+    persist();
+    renderLangStats();
+  }
 
   // ---------------- Módulo: Práctica de Trazos Reales (Hanzi Writer) ----------------
   // Separado del módulo Japonés de arriba (cuadrícula Gojuon + Fases/
