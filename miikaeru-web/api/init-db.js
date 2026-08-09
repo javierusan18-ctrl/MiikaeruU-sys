@@ -60,6 +60,16 @@ const SCHEMA_STATEMENTS = [
     translation_status text not null default 'pending',
     created_at timestamptz not null default now()
   )`,
+  // REPLICA IDENTITY FULL — sin esto, un evento Realtime de UPDATE (ver
+  // sendFriendMessage(): inserta el mensaje y después hace un UPDATE
+  // para sumarle translated_text/translation_status) solo trae en
+  // `payload.new` la primary key + las columnas que cambiaron, NO
+  // phone_from/phone_to. wireFriendRealtime() en app.js filtra cada
+  // evento comparando esos dos campos (friendConversationMatches) — sin
+  // ellos, la traducción que llega por UPDATE nunca hace match y el
+  // destinatario se queda viendo el mensaje sin traducir hasta refrescar
+  // a mano. Idempotente: fijar el modo dos veces no rompe nada.
+  `alter table public.app_friend_messages replica identity full`,
   // player_progress: respaldo en la nube del Nivel/XP/Oro/Diamantes/
   // Racha de cada operador (antes solo vivían en localStorage, ver
   // state en app.js) — necesario para que el nuevo Panel de
@@ -217,31 +227,79 @@ async function ensureFeedbackAdminPolicies(client) {
   );
 }
 
+// Corre UN statement aislado del resto — a propósito, en vez del
+// for-loop original que hacía `await client.query(statement)` directo:
+// ahí, un solo statement que fallara (choque de nombre, permiso, lo que
+// sea) abortaba el `try` entero y ninguno de los statements SIGUIENTES
+// llegaba a correr — ni siquiera los de tablas totalmente independientes
+// (ej.: si `app_squads` fallaba por lo que sea, ni sus políticas ni las
+// de Amigos que venían después se volvían a aplicar). Aislar cada
+// statement es lo que de verdad soluciona "la creación de squads debe
+// registrarse correctamente": ahora un problema puntual en una tabla no
+// puede dejar a las demás sin sus políticas/columnas.
+async function runStatement(client, statement) {
+  try {
+    await client.query(statement);
+    return { ok: true };
+  } catch (err) {
+    return { ok: false, error: err.message };
+  }
+}
+
 module.exports = async function handler(req, res) {
   const connectionString = process.env.SUPABASE_DB_URL;
   if (!connectionString) {
     res.status(500).json({
       ok: false,
       error: "Falta SUPABASE_DB_URL en las variables de entorno de Vercel (Project Settings → Environment Variables).",
+      howToFix:
+        "Supabase → Settings → Database → Connection string (modo 'Transaction pooler', puerto 6543) → copiar → Vercel → Project Settings → Environment Variables → agregar SUPABASE_DB_URL → redeploy.",
     });
     return;
   }
 
   const client = new Client({ connectionString, ssl: { rejectUnauthorized: false } });
+  const failedStatements = [];
+  const realtimeErrors = [];
 
   try {
     await client.connect();
+
     for (const statement of SCHEMA_STATEMENTS) {
-      await client.query(statement);
+      const result = await runStatement(client, statement);
+      if (!result.ok) {
+        failedStatements.push({ statement: statement.trim().replace(/\s+/g, " ").slice(0, 100), error: result.error });
+      }
     }
-    await ensureRealtimeEnabled(client, "app_friend_messages");
-    await ensureRealtimeEnabled(client, "app_squad_messages");
-    await ensureRealtimeEnabled(client, "player_progress");
-    await ensureFeedbackAdminPolicies(client);
-    res.status(200).json({ ok: true, message: "Tablas de Amigos/Chat/Escuadrones y políticas de Admin verificadas/creadas correctamente." });
+
+    for (const table of ["app_friend_messages", "app_squad_messages", "player_progress"]) {
+      try {
+        await ensureRealtimeEnabled(client, table);
+      } catch (err) {
+        realtimeErrors.push({ table, error: err.message });
+      }
+    }
+
+    try {
+      await ensureFeedbackAdminPolicies(client);
+    } catch (err) {
+      failedStatements.push({ statement: "ensureFeedbackAdminPolicies", error: err.message });
+    }
+
+    const ok = failedStatements.length === 0 && realtimeErrors.length === 0;
+    res.status(ok ? 200 : 207).json({
+      ok,
+      message: ok
+        ? "Tablas de Amigos/Chat/Escuadrones y políticas de Admin verificadas/creadas correctamente."
+        : `Se aplicó lo que se pudo — ${failedStatements.length} statement(s) y ${realtimeErrors.length} tabla(s) de Realtime fallaron, ver detalle.`,
+      failedStatements,
+      realtimeErrors,
+    });
   } catch (err) {
-    console.error("init-db falló:", err);
-    res.status(500).json({ ok: false, error: err.message });
+    // Solo llega acá un fallo de conexión (credencial mala, red, etc.) —
+    // los fallos de statements individuales ya no burbujean hasta acá.
+    console.error("init-db falló al conectar:", err);
+    res.status(500).json({ ok: false, error: err.message, failedStatements });
   } finally {
     await client.end().catch(() => {});
   }

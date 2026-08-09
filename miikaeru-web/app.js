@@ -799,6 +799,7 @@ const I18N = {
     chatSquadJoinSuccess: "¡Te uniste al Escuadrón!",
     chatSquadJoinNotFound: "Ese código no existe.",
     chatSquadNoSession: "Inicia sesión primero.",
+    chatSquadSchemaMissing: "El sistema de Escuadrones todavía se está configurando en el servidor — probá de nuevo en unos minutos.",
     chatSquadError: "Algo falló — intenta de nuevo.",
     chatSquadNameRequired: "Ponle un nombre a tu Escuadrón.",
     chatSquadCodeRequired: "Ingresa un código.",
@@ -806,16 +807,23 @@ const I18N = {
     chatFriendInputPlaceholder: "Escribe un mensaje...",
     chatFriendTranslating: "Traduciendo…",
     chatFriendTranslateFailed: "No se pudo traducir — mostrando solo el original.",
+    chatTabConversation: "🎙️ Conversación",
     conversationModeOpenBtn: "🎙️ Modo Conversación",
     conversationModeBack: "← Volver al chat",
     conversationModeYou: "Tú",
+    conversationInterlocutorLabel: "Interlocutor",
+    conversationMyLangLabel: "Tú hablas:",
+    conversationTheirLangLabel: "Interlocutor habla:",
     conversationModeAutoSpeak: "🔊 Leer traducciones en voz alta",
     conversationModeSpeakerMe: "Hablas tú",
-    conversationModeSpeakerFriend: "Habla tu amigo",
+    conversationModeSpeakerFriend: "Habla el interlocutor",
     conversationModeTextPlaceholder: "O escribe aquí...",
     conversationModeEmptyHint: "Toca un micrófono o escribe abajo para traducir en tiempo real.",
     conversationModeNoSpeechSupport: "Tu navegador no soporta dictado por voz — escribe tu mensaje abajo.",
     conversationTranslateFailed: "No se pudo traducir",
+    conversationMicDenied: "Permiso de micrófono denegado — habilítalo en tu navegador para dictar por voz.",
+    conversationMicNoSpeech: "No se detectó voz — intenta de nuevo más cerca del micrófono.",
+    conversationMicError: "No se pudo escuchar el micrófono — intenta de nuevo o escribe abajo.",
     chatMyLanguageLabel: "Tu idioma:",
     chatFriendTestHint: "Podés crear un contacto de prueba local para probar el chat.",
     chatFriendLocalBadgeTitle: "Contacto de prueba local",
@@ -968,6 +976,13 @@ const I18N = {
     adminPhotosHint: "Pega la URL de una imagen para cada personaje y guarda — se refleja al instante en la pantalla de elección de Héroe.",
     adminPhotosUrlPlaceholder: "https://...",
     adminPhotosSaveBtn: "Guardar",
+    adminPanelTabDatabase: "🗄️ Base de Datos",
+    adminDbHint: "Verifica y crea (si hacen falta) las tablas de Supabase de Amigos/Escuadrones/Progreso. Si falta la variable SUPABASE_DB_URL en Vercel, el error exacto aparece acá.",
+    adminDbCheckBtn: "🔄 Verificar / Reintentar",
+    adminDbChecking: "Verificando...",
+    adminDbOk: "✅ Todo en orden — las tablas existen y están al día.",
+    adminDbPartial: "⚠️ Se aplicó lo que se pudo, pero algo falló — revisa el detalle abajo.",
+    adminDbError: "❌ No se pudo verificar la base de datos.",
     usersStatTotal: "Operadores",
     usersStatAvgLevel: "Nivel Promedio",
     usersStatActiveToday: "Activos Hoy",
@@ -1612,6 +1627,7 @@ const I18N = {
     chatSquadJoinSuccess: "Joined the Squad!",
     chatSquadJoinNotFound: "That code doesn't exist.",
     chatSquadNoSession: "Log in first.",
+    chatSquadSchemaMissing: "The Squads system is still being set up on the server — try again in a few minutes.",
     chatSquadError: "Something failed — try again.",
     chatSquadNameRequired: "Give your Squad a name.",
     chatSquadCodeRequired: "Enter a code.",
@@ -1619,16 +1635,23 @@ const I18N = {
     chatFriendInputPlaceholder: "Type a message...",
     chatFriendTranslating: "Translating…",
     chatFriendTranslateFailed: "Couldn't translate — showing original only.",
+    chatTabConversation: "🎙️ Conversation",
     conversationModeOpenBtn: "🎙️ Conversation Mode",
     conversationModeBack: "← Back to chat",
     conversationModeYou: "You",
+    conversationInterlocutorLabel: "Interlocutor",
+    conversationMyLangLabel: "You speak:",
+    conversationTheirLangLabel: "Interlocutor speaks:",
     conversationModeAutoSpeak: "🔊 Read translations aloud",
     conversationModeSpeakerMe: "You speak",
-    conversationModeSpeakerFriend: "Your friend speaks",
+    conversationModeSpeakerFriend: "The interlocutor speaks",
     conversationModeTextPlaceholder: "Or type here...",
     conversationModeEmptyHint: "Tap a microphone or type below to translate in real time.",
     conversationModeNoSpeechSupport: "Your browser doesn't support voice dictation — type your message below.",
     conversationTranslateFailed: "Couldn't translate",
+    conversationMicDenied: "Microphone permission denied — enable it in your browser to dictate by voice.",
+    conversationMicNoSpeech: "No speech detected — try again closer to the microphone.",
+    conversationMicError: "Couldn't listen to the microphone — try again or type below.",
     chatMyLanguageLabel: "Your language:",
     chatFriendTestHint: "You can create a local test contact to try out the chat.",
     chatFriendLocalBadgeTitle: "Local test contact",
@@ -1781,6 +1804,13 @@ const I18N = {
     adminPhotosHint: "Paste an image URL for each character and save — reflected instantly on the Hero selection screen.",
     adminPhotosUrlPlaceholder: "https://...",
     adminPhotosSaveBtn: "Save",
+    adminPanelTabDatabase: "🗄️ Database",
+    adminDbHint: "Checks and creates (if missing) the Supabase tables for Friends/Squads/Progress. If the SUPABASE_DB_URL variable is missing in Vercel, the exact error shows up here.",
+    adminDbCheckBtn: "🔄 Check / Retry",
+    adminDbChecking: "Checking...",
+    adminDbOk: "✅ Everything's in order — the tables exist and are up to date.",
+    adminDbPartial: "⚠️ Applied what it could, but something failed — see the detail below.",
+    adminDbError: "❌ Couldn't check the database.",
     usersStatTotal: "Operators",
     usersStatAvgLevel: "Average Level",
     usersStatActiveToday: "Active Today",
@@ -2425,6 +2455,7 @@ const I18N = {
     chatSquadJoinSuccess: "スクワッドに参加しました！",
     chatSquadJoinNotFound: "そのコードは存在しません。",
     chatSquadNoSession: "まずログインしてください。",
+    chatSquadSchemaMissing: "スクワッド機能はまだサーバー側で準備中です — 数分後にもう一度お試しください。",
     chatSquadError: "エラーが発生しました — もう一度お試しください。",
     chatSquadNameRequired: "スクワッドに名前を付けてください。",
     chatSquadCodeRequired: "コードを入力してください。",
@@ -2432,16 +2463,23 @@ const I18N = {
     chatFriendInputPlaceholder: "メッセージを入力...",
     chatFriendTranslating: "翻訳中…",
     chatFriendTranslateFailed: "翻訳できませんでした — 原文のみ表示します。",
+    chatTabConversation: "🎙️ 会話",
     conversationModeOpenBtn: "🎙️ 会話モード",
     conversationModeBack: "← チャットに戻る",
     conversationModeYou: "あなた",
+    conversationInterlocutorLabel: "相手",
+    conversationMyLangLabel: "あなたの言語:",
+    conversationTheirLangLabel: "相手の言語:",
     conversationModeAutoSpeak: "🔊 翻訳を音声で読み上げる",
     conversationModeSpeakerMe: "あなたが話す",
-    conversationModeSpeakerFriend: "友達が話す",
+    conversationModeSpeakerFriend: "相手が話す",
     conversationModeTextPlaceholder: "またはここに入力...",
     conversationModeEmptyHint: "マイクをタップするか、下に入力してリアルタイム翻訳を始めましょう。",
     conversationModeNoSpeechSupport: "お使いのブラウザは音声入力に対応していません — 下にメッセージを入力してください。",
     conversationTranslateFailed: "翻訳できませんでした",
+    conversationMicDenied: "マイクの権限が拒否されました — ブラウザの設定で音声入力を有効にしてください。",
+    conversationMicNoSpeech: "音声が検出されませんでした — マイクに近づいてもう一度試してください。",
+    conversationMicError: "マイクを聞き取れませんでした — もう一度試すか、下に入力してください。",
     chatMyLanguageLabel: "あなたの言語:",
     chatFriendTestHint: "ローカルのテスト用連絡先を作成してチャットを試せます。",
     chatFriendLocalBadgeTitle: "ローカルのテスト用連絡先",
@@ -2594,6 +2632,13 @@ const I18N = {
     adminPhotosHint: "各キャラクターの画像URLを貼り付けて保存してください — ヒーロー選択画面に即反映されます。",
     adminPhotosUrlPlaceholder: "https://...",
     adminPhotosSaveBtn: "保存",
+    adminPanelTabDatabase: "🗄️ データベース",
+    adminDbHint: "Amigos/Escuadrones/Progreso用のSupabaseテーブルを確認し、なければ作成します。VercelにSUPABASE_DB_URLが設定されていない場合、正確なエラーがここに表示されます。",
+    adminDbCheckBtn: "🔄 確認・再試行",
+    adminDbChecking: "確認中...",
+    adminDbOk: "✅ 問題ありません — テーブルは存在し、最新の状態です。",
+    adminDbPartial: "⚠️ できる範囲は適用しましたが、一部失敗しました — 下の詳細を確認してください。",
+    adminDbError: "❌ データベースを確認できませんでした。",
     usersStatTotal: "オペレーター数",
     usersStatAvgLevel: "平均レベル",
     usersStatActiveToday: "本日アクティブ",
@@ -6643,7 +6688,13 @@ document.addEventListener("DOMContentLoaded", () => {
   // bump, los dispositivos que ya corrieron /api/init-db con el esquema
   // viejo nunca volverían a llamarlo y se quedarían sin las tablas
   // nuevas hasta limpiar su localStorage a mano.
-  const DB_INIT_FLAG_KEY = "miikaeru_db_init_v20260809-1";
+  // Subida de nuevo (antes v20260809-1): este bloque agregó `replica
+  // identity full` a app_friend_messages (necesario para que los
+  // eventos Realtime de UPDATE —la traducción que llega después del
+  // INSERT— traigan phone_from/phone_to, ver init-db.js) — sin este
+  // bump, un dispositivo que ya hubiera corrido /api/init-db con el
+  // esquema anterior no lo volvería a llamar y se quedaría sin ese ajuste.
+  const DB_INIT_FLAG_KEY = "miikaeru_db_init_v20260809-2";
   if (!localStorage.getItem(DB_INIT_FLAG_KEY)) {
     fetch("/api/init-db")
       .then((res) => res.json())
@@ -6708,13 +6759,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const chatSquadInput = document.getElementById("chat-squad-input");
 
   // ---- Modo Conversación (traductor cara a cara) ----
-  const conversationModeOpenBtn = document.getElementById("conversation-mode-open-btn");
+  // Pestaña principal propia (#chat-tabs, data-chat-tab="conversation")
+  // — ya no vive anidada dentro de un hilo de Amigos, así que no hay
+  // botón de abrir/cerrar dedicado: el propio sistema de pestañas
+  // (chatTabButtons más abajo) muestra/oculta este panel igual que
+  // Todos/Escuadrón/Amigos.
   const conversationModePanel = document.getElementById("chat-conversation-mode");
-  const conversationModeClose = document.getElementById("conversation-mode-close");
   const conversationPanelFriend = document.getElementById("conversation-panel-friend");
   const conversationFriendTranscript = document.getElementById("conversation-friend-transcript");
   const conversationFriendFlag = document.getElementById("conversation-friend-flag");
-  const conversationFriendName = document.getElementById("conversation-friend-name");
   const conversationFriendMicBtn = document.getElementById("conversation-friend-mic");
   const conversationMeTranscript = document.getElementById("conversation-me-transcript");
   const conversationMeFlag = document.getElementById("conversation-me-flag");
@@ -6724,6 +6777,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const conversationTextSpeaker = document.getElementById("conversation-text-speaker");
   const conversationTextInput = document.getElementById("conversation-text-input");
   const conversationNoSpeechHint = document.getElementById("conversation-no-speech-hint");
+  const conversationMyLangGrid = document.getElementById("conversation-my-lang-grid");
+  const conversationTheirLangGrid = document.getElementById("conversation-their-lang-grid");
+  const conversationMicStatus = document.getElementById("conversation-mic-status");
 
   // #chat-input/#chat-friend-input pasaron de <input type="text"> a
   // <textarea rows="1"> para poder redimensionarse (resize:vertical, ver
@@ -6910,6 +6966,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const adminPanelExportBtn = document.getElementById("admin-panel-export-btn");
   const adminPanelStatus = document.getElementById("admin-panel-status");
   const adminPanelTableBody = document.getElementById("admin-panel-table-body");
+
+  // Pestaña "Base de Datos" (diagnóstico visible de /api/init-db) — ver
+  // checkDatabaseStatus() más abajo.
+  const adminPanelTabDatabase = document.getElementById("admin-panel-tab-database");
+  const adminDbCheckBtn = document.getElementById("admin-db-check-btn");
+  const adminDbStatus = document.getElementById("admin-db-status");
+  const adminDbReport = document.getElementById("admin-db-report");
 
   // Agente Inspector (pestaña dentro del Panel de Administrador)
   const inspectorRefreshBtn = document.getElementById("inspector-refresh-btn");
@@ -8390,6 +8453,7 @@ document.addEventListener("DOMContentLoaded", () => {
     adminPanelTabAutomation.hidden = target !== "automation";
     adminPanelTabUsers.hidden = target !== "users";
     if (adminPanelTabPhotos) adminPanelTabPhotos.hidden = target !== "photos";
+    if (adminPanelTabDatabase) adminPanelTabDatabase.hidden = target !== "database";
     if (target === "inspector") fetchInspectorFeedback();
     if (target === "automation") {
       fetchAutomationTasks();
@@ -8400,7 +8464,50 @@ document.addEventListener("DOMContentLoaded", () => {
       wirePlayerProgressRealtime();
     }
     if (target === "photos") renderAdminPhotosTab();
+    if (target === "database") checkDatabaseStatus();
   }
+
+  // Diagnóstico visible de /api/init-db — antes un fallo de
+  // aprovisionamiento (ej.: falta SUPABASE_DB_URL en Vercel, o una tabla
+  // puntual que no se pudo crear) solo dejaba un console.warn, invisible
+  // para el Admin salvo que abriera las devtools. Se llama sola al abrir
+  // la pestaña y también a mano con el botón "Verificar / Reintentar"
+  // (útil porque el auto-init de más abajo en este archivo solo corre
+  // una vez por versión — ver DB_INIT_FLAG_KEY — así que reintentar acá
+  // no depende de subir una versión nueva del sitio).
+  async function checkDatabaseStatus() {
+    if (!adminDbStatus) return;
+    adminDbStatus.textContent = t("adminDbChecking");
+    adminDbStatus.className = "admin-panel__status";
+    if (adminDbReport) adminDbReport.hidden = true;
+
+    try {
+      const res = await fetch("/api/init-db");
+      const data = await res.json();
+      const failedCount = (data.failedStatements || []).length + (data.realtimeErrors || []).length;
+
+      if (data.ok) {
+        adminDbStatus.textContent = t("adminDbOk");
+        adminDbStatus.className = "admin-panel__status admin-panel__status--ok";
+      } else if (failedCount > 0) {
+        adminDbStatus.textContent = t("adminDbPartial");
+        adminDbStatus.className = "admin-panel__status admin-panel__status--error";
+      } else {
+        adminDbStatus.textContent = `${t("adminDbError")} ${data.error || ""}`;
+        adminDbStatus.className = "admin-panel__status admin-panel__status--error";
+      }
+
+      if (adminDbReport) {
+        adminDbReport.textContent = JSON.stringify(data, null, 2);
+        adminDbReport.hidden = false;
+      }
+    } catch (err) {
+      adminDbStatus.textContent = `${t("adminDbError")} ${err.message}`;
+      adminDbStatus.className = "admin-panel__status admin-panel__status--error";
+    }
+  }
+
+  if (adminDbCheckBtn) adminDbCheckBtn.addEventListener("click", checkDatabaseStatus);
 
   adminPanelTabs.addEventListener("click", (event) => {
     const tabBtn = event.target.closest(".admin-panel-tab");
@@ -9574,6 +9681,12 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         closeFriendThread();
         stopSquadRealtime();
+        // Corta cualquier micrófono/lectura en voz alta del Modo
+        // Conversación al salir de esa pestaña — sin esto, cambiar a
+        // "Todos" con el micrófono todavía escuchando lo dejaba grabando
+        // en segundo plano sin ningún indicio visible.
+        stopConversationListening();
+        if (window.speechSynthesis) window.speechSynthesis.cancel();
         document.querySelectorAll(".chat-tab-panel").forEach((panel) => {
           panel.hidden = panel.dataset.chatPanel !== target;
         });
@@ -9585,6 +9698,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (target === "squad") {
           await ensureContactRegistered();
           await renderSquadTab();
+        }
+        if (target === "conversation") {
+          openConversationMode();
         }
       });
     });
@@ -10318,9 +10434,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!activeFriend) return;
     activeFriend = null;
     stopFriendRealtime();
-    stopConversationListening(); // por si quedó un micrófono de Modo Conversación abierto
-    if (window.speechSynthesis) window.speechSynthesis.cancel();
-    if (conversationModePanel) conversationModePanel.hidden = true;
     chatFriendThreadPanel.hidden = true;
     chatTabFriendsPanel.hidden = false;
   }
@@ -10620,7 +10733,15 @@ document.addEventListener("DOMContentLoaded", () => {
         showSquadStatus("chatSquadCreateSuccess", true);
         await renderSquadTab();
       } catch (err) {
-        showSquadStatus(err.message === "no-session" ? "chatSquadNoSession" : "chatSquadError", false);
+        // "schema-missing" (tablas de Escuadrones todavía no creadas en
+        // Supabase — ver Panel de Administrador → 🗄️ Base de Datos) tiene
+        // su propio mensaje honesto, en vez del genérico "Algo falló" que
+        // sonaba a que reintentar alcanzaba para arreglarlo.
+        const key =
+          err.message === "no-session" ? "chatSquadNoSession" :
+          err.message === "schema-missing" ? "chatSquadSchemaMissing" :
+          "chatSquadError";
+        showSquadStatus(key, false);
       }
     });
   }
@@ -10643,6 +10764,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const key =
           err.message === "not-found" ? "chatSquadJoinNotFound" :
           err.message === "no-session" ? "chatSquadNoSession" :
+          err.message === "schema-missing" ? "chatSquadSchemaMissing" :
           "chatSquadError";
         showSquadStatus(key, false);
       }
@@ -10681,11 +10803,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ---- Modo Conversación (traductor cara a cara) ----
-  // Vista aparte del hilo async de Amigos, estilo "Conversation mode" de
-  // Google/Microsoft Translator: pantalla dividida en 2 paneles grandes
-  // (uno por persona) con micrófono propio, pensada para cuando las dos
-  // personas están JUNTAS y se van turnando el mismo celular — no un
-  // chat a distancia. Por eso a propósito NO escribe en
+  // Pestaña principal propia (#chat-tabs, data-chat-tab="conversation") —
+  // pedido explícito: no depende de tener un amigo agregado en Supabase
+  // ni vive anidada dentro de un hilo individual. Estilo "Conversation
+  // mode" de Google/Microsoft Translator: pantalla dividida en 2 paneles
+  // grandes (uno por persona) con micrófono propio, pensada para cuando
+  // las dos personas están JUNTAS y se van turnando el mismo celular —
+  // no un chat a distancia. Por eso a propósito NO escribe en
   // app_friend_messages/mensajes de prueba locales (ver el comentario
   // de #chat-conversation-mode en index.html): ese historial representa
   // una conversación asíncrona entre DOS cuentas/dispositivos distintos,
@@ -10700,6 +10824,50 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   function conversationLangMeta(langCode) {
     return CHAT_LANGUAGES.find((l) => l.code === langCode) || CHAT_LANGUAGES[0];
+  }
+
+  // Idioma del interlocutor — separado de "Tu idioma" (loadChatLanguage(),
+  // compartido con la pestaña Amigos: una sola identidad de idioma por
+  // usuario). Antes esto se heredaba de `activeFriend.preferred_language`;
+  // ahora que Conversación es su propia pestaña sin depender de tener
+  // amigos agregados, se elige y persiste acá mismo.
+  const CONVERSATION_THEIR_LANG_KEY = scopedKey("miikaeru_conversation_their_language", activeProfileId);
+
+  function loadConversationTheirLanguage() {
+    const saved = localStorage.getItem(CONVERSATION_THEIR_LANG_KEY);
+    if (saved && CHAT_LANGUAGES.some((l) => l.code === saved)) return saved;
+    // Por defecto, el primer idioma que no sea el propio — para que la
+    // traducción sea visible de entrada sin tener que configurar nada.
+    const mine = loadChatLanguage();
+    return (CHAT_LANGUAGES.find((l) => l.code !== mine) || CHAT_LANGUAGES[0]).code;
+  }
+
+  function saveConversationTheirLanguage(code) {
+    localStorage.setItem(CONVERSATION_THEIR_LANG_KEY, code);
+  }
+
+  // Repinta banderas de ambos paneles según los idiomas actuales — se
+  // llama cada vez que cualquiera de los dos selectores cambia.
+  function refreshConversationLangUI() {
+    const myMeta = conversationLangMeta(loadChatLanguage());
+    const theirMeta = conversationLangMeta(loadConversationTheirLanguage());
+    if (conversationMeFlag) conversationMeFlag.textContent = myMeta.flag;
+    if (conversationFriendFlag) conversationFriendFlag.textContent = theirMeta.flag;
+  }
+
+  function onConversationMyLangSelected(code) {
+    // Reutiliza onOwnLangSelected() (definida más arriba, junto a "Tu
+    // idioma" de Amigos): mismo idioma "propio" en toda la app, un solo
+    // lugar que lo persiste y registra el contacto.
+    onOwnLangSelected(code);
+    renderLangPickerGrid(conversationMyLangGrid, code, onConversationMyLangSelected);
+    refreshConversationLangUI();
+  }
+
+  function onConversationTheirLangSelected(code) {
+    saveConversationTheirLanguage(code);
+    renderLangPickerGrid(conversationTheirLangGrid, code, onConversationTheirLangSelected);
+    refreshConversationLangUI();
   }
 
   // SpeechRecognition (dictado) solo existe de verdad en navegadores
@@ -10782,12 +10950,22 @@ document.addEventListener("DOMContentLoaded", () => {
     listenerListEl.scrollTop = listenerListEl.scrollHeight;
   }
 
+  function showConversationMicStatus(key) {
+    if (!conversationMicStatus) return;
+    conversationMicStatus.textContent = t(key);
+    conversationMicStatus.hidden = false;
+    clearTimeout(showConversationMicStatus._timer);
+    showConversationMicStatus._timer = setTimeout(() => {
+      conversationMicStatus.hidden = true;
+    }, 4000);
+  }
+
   async function handleConversationUtterance(side, text) {
-    if (!text || !text.trim() || !activeFriend) return;
+    if (!text || !text.trim()) return;
     const myLang = loadChatLanguage();
-    const friendLang = activeFriend.preferred_language || "es";
-    const speakerLang = side === "me" ? myLang : friendLang;
-    const targetLang = side === "me" ? friendLang : myLang;
+    const theirLang = loadConversationTheirLanguage();
+    const speakerLang = side === "me" ? myLang : theirLang;
+    const targetLang = side === "me" ? theirLang : myLang;
 
     let translated = text;
     let failed = false;
@@ -10801,7 +10979,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function startConversationListening(side) {
-    if (!SpeechRecognitionCtor || !activeFriend) return;
+    if (!SpeechRecognitionCtor) return;
     // Un solo reconocimiento activo a la vez — tocar el otro micrófono
     // corta el actual en vez de superponer dos capturas de audio.
     if (conversationListeningSide === side) {
@@ -10809,10 +10987,11 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
     stopConversationListening();
+    if (conversationMicStatus) conversationMicStatus.hidden = true;
 
     const myLang = loadChatLanguage();
-    const friendLang = activeFriend.preferred_language || "es";
-    const langCode = side === "me" ? myLang : friendLang;
+    const theirLang = loadConversationTheirLanguage();
+    const langCode = side === "me" ? myLang : theirLang;
 
     const recognition = new SpeechRecognitionCtor();
     recognition.lang = conversationLocale(langCode);
@@ -10825,8 +11004,21 @@ document.addEventListener("DOMContentLoaded", () => {
         event.results && event.results[0] && event.results[0][0] ? event.results[0][0].transcript : "";
       handleConversationUtterance(side, transcript);
     };
-    recognition.onerror = () => {
+    // Antes esto tragaba CUALQUIER error en silencio (permiso de
+    // micrófono denegado, timeout sin voz detectada, falla de red del
+    // motor de reconocimiento) — quien tocaba el micrófono y no pasaba
+    // nada no tenía forma de saber por qué. Ahora se distingue el caso
+    // más común (permiso denegado) del resto y se avisa en pantalla.
+    recognition.onerror = (event) => {
       stopConversationListening();
+      const code = event && event.error;
+      showConversationMicStatus(
+        code === "not-allowed" || code === "permission-denied"
+          ? "conversationMicDenied"
+          : code === "no-speech"
+          ? "conversationMicNoSpeech"
+          : "conversationMicError"
+      );
     };
     recognition.onend = () => {
       if (conversationListeningSide === side) stopConversationListening();
@@ -10840,6 +11032,7 @@ document.addEventListener("DOMContentLoaded", () => {
       recognition.start();
     } catch (err) {
       stopConversationListening();
+      showConversationMicStatus("conversationMicError");
     }
   }
 
@@ -10865,19 +11058,20 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Se llama al entrar a la pestaña "Conversación" (ver chatTabButtons
+  // más abajo) — ya NO toca `.hidden` del panel (eso lo maneja el mismo
+  // mecanismo genérico de #chat-tabs que Todos/Escuadrón/Amigos), solo
+  // prepara los selectores de idioma y limpia las transcripciones de la
+  // sesión anterior.
   function openConversationMode() {
-    if (!activeFriend || !conversationModePanel) return;
+    if (!conversationModePanel) return;
     stopConversationListening();
     if (window.speechSynthesis) window.speechSynthesis.cancel();
+    if (conversationMicStatus) conversationMicStatus.hidden = true;
 
-    const myLang = loadChatLanguage();
-    const friendLang = activeFriend.preferred_language || "es";
-    const myMeta = conversationLangMeta(myLang);
-    const friendMeta = conversationLangMeta(friendLang);
-
-    if (conversationMeFlag) conversationMeFlag.textContent = myMeta.flag;
-    if (conversationFriendFlag) conversationFriendFlag.textContent = friendMeta.flag;
-    if (conversationFriendName) conversationFriendName.textContent = activeFriend.display_name;
+    renderLangPickerGrid(conversationMyLangGrid, loadChatLanguage(), onConversationMyLangSelected);
+    renderLangPickerGrid(conversationTheirLangGrid, loadConversationTheirLanguage(), onConversationTheirLangSelected);
+    refreshConversationLangUI();
 
     if (conversationMeTranscript) conversationMeTranscript.innerHTML = "";
     if (conversationFriendTranscript) {
@@ -10887,20 +11081,7 @@ document.addEventListener("DOMContentLoaded", () => {
       hint.textContent = t("conversationModeEmptyHint");
       conversationFriendTranscript.appendChild(hint);
     }
-
-    chatFriendThreadPanel.hidden = true;
-    conversationModePanel.hidden = false;
   }
-
-  function closeConversationMode() {
-    stopConversationListening();
-    if (window.speechSynthesis) window.speechSynthesis.cancel();
-    if (conversationModePanel) conversationModePanel.hidden = true;
-    if (chatFriendThreadPanel) chatFriendThreadPanel.hidden = false;
-  }
-
-  if (conversationModeOpenBtn) conversationModeOpenBtn.addEventListener("click", openConversationMode);
-  if (conversationModeClose) conversationModeClose.addEventListener("click", closeConversationMode);
 
   // Chat Guía: resalta con un parpadeo neón el ícono del dock al que la
   // respuesta hace referencia (ver CHAT_GUIDE_INTENTS/matchChatGuideIntent

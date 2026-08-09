@@ -8762,6 +8762,32 @@ textarea,
   min-height: 1.2em;
 }
 
+.admin-panel__status--ok {
+  color: var(--neon-gold);
+}
+
+.admin-panel__status--error {
+  color: var(--neon-magenta);
+}
+
+/* Reporte crudo de /api/init-db (pestaña "Base de Datos") — monoespaciado
+   y con scroll propio porque el JSON puede traer varias filas de
+   statements fallidos; mismo glass que el resto de los paneles internos
+   del Admin. */
+.admin-db-report {
+  max-height: 280px;
+  overflow: auto;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  color: var(--text-secondary);
+  font-size: 0.68rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
 .admin-panel__table-wrap {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
@@ -9098,14 +9124,26 @@ textarea,
 
 .chat-tabs {
   display: flex;
-  gap: 8px;
+  gap: 5px;
   margin-bottom: 14px;
 }
 
 .chat-tab {
   flex: 1;
-  padding: 9px 8px;
-  font-size: 0.68rem;
+  /* min-width:0 — sin esto, un flex item nunca se encoge por debajo del
+     ancho de su contenido (default min-width:auto), y con 4 pestañas
+     (Todos/Escuadrón/Amigos/Conversación) la última terminaba
+     desbordando por fuera del modal en pantallas angostas en vez de
+     compartir el espacio disponible (bug real, encontrado al agregar la
+     4ta pestaña y verificar en mobile). overflow+ellipsis como red de
+     seguridad: si igual no entra, trunca con "…" en vez de romper el
+     layout o forzar scroll horizontal. */
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 9px 6px;
+  font-size: 0.64rem;
   letter-spacing: 0.5px;
   text-transform: uppercase;
   text-align: center;
@@ -9420,26 +9458,6 @@ textarea,
   white-space: nowrap;
 }
 
-.chat-friend-thread__conversation-btn {
-  flex-shrink: 0;
-  padding: 6px 10px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--neon-magenta);
-  background: rgba(255, 46, 154, 0.08);
-  color: var(--neon-magenta);
-  font-size: 0.68rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-}
-
-.chat-friend-thread__conversation-btn:hover {
-  background: var(--neon-magenta);
-  color: #04121a;
-  box-shadow: 0 0 12px rgba(255, 46, 154, 0.4);
-}
-
 /* "Tu ID" (#chat-my-id) — ID único autogenerado (MKR-XXXXXX), mismo
    glass que .chat-friend-item para que se sienta parte del mismo grupo
    de controles que el selector de idioma justo arriba. */
@@ -9728,10 +9746,10 @@ textarea,
 
 .conversation-mode__center {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 6px 2px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  padding: 8px 2px;
   flex-shrink: 0;
 }
 
@@ -9744,14 +9762,40 @@ textarea,
   padding: 4px 0;
 }
 
+/* Selectores "Tú hablas" / "Interlocutor habla" — pedido explícito:
+   Conversación es su propia pestaña, sin depender de tener un amigo
+   agregado, así que el idioma de ambos lados se elige acá mismo con la
+   MISMA plantilla de chips (.chat-lang-picker/.chat-lang-card) que "Tu
+   idioma" en Amigos — un solo componente reutilizado en los dos
+   lugares. Columna en vez de fila: dos filas de chips ya ocupan bastante
+   ancho por sí solas, apilarlas evita que se aprieten en pantallas
+   angostas. */
+.conversation-lang-setup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
 .conversation-mode__auto-speak {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   font-size: 0.64rem;
   color: var(--text-secondary);
   cursor: pointer;
-  text-align: right;
+  text-align: center;
+}
+
+/* Aviso transitorio de error del micrófono (permiso denegado, sin voz
+   detectada, fallo del motor de reconocimiento) — antes estos errores se
+   tragaban en silencio (ver recognition.onerror en app.js), dejando al
+   usuario sin ninguna pista de por qué tocar el micrófono no hacía nada. */
+.conversation-mode__mic-status {
+  margin: 0;
+  font-size: 0.66rem;
+  color: var(--neon-magenta);
+  text-align: center;
 }
 
 .conversation-bubble {

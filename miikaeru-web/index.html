@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260809-2" />
+  <link rel="stylesheet" href="style.css?v=20260809-3" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -404,6 +404,7 @@
             <button type="button" class="chat-tab chat-tab--active" data-chat-tab="all" role="tab" aria-selected="true" data-i18n="chatTabAll">Todos</button>
             <button type="button" class="chat-tab" data-chat-tab="squad" role="tab" aria-selected="false" data-i18n="chatTabSquad">Escuadrón</button>
             <button type="button" class="chat-tab" data-chat-tab="friends" role="tab" aria-selected="false" data-i18n="chatTabFriends">Amigos</button>
+            <button type="button" class="chat-tab" data-chat-tab="conversation" role="tab" aria-selected="false" data-i18n="chatTabConversation">🎙️ Conversación</button>
           </div>
 
           <!-- Pestaña "Todos": el feed real de Miikaeru/sistema — mismos
@@ -590,12 +591,14 @@
                reemplaza la lista mientras está abierta (openFriendThread()/
                closeFriendThread() en app.js), reutiliza el mismo
                .chat__feed/.chat__input y las mismas burbujas .message de
-               la pestaña "Todos". -->
+               la pestaña "Todos". El acceso al Modo Conversación (traductor
+               cara a cara) YA NO vive acá anidado — pedido explícito: es
+               su propia pestaña principal (#chat-tabs), ver
+               data-chat-tab="conversation" más arriba. -->
           <div class="chat-tab-panel" id="chat-friend-thread" data-chat-panel="friend-thread" hidden>
             <div class="chat-friend-thread__header">
               <button type="button" class="chat-friend-thread__back" id="chat-friend-thread-back" data-i18n="chatFriendThreadBack">← Amigos</button>
               <h3 class="chat-friend-thread__name" id="chat-friend-thread-name"></h3>
-              <button type="button" class="chat-friend-thread__conversation-btn" id="conversation-mode-open-btn" data-i18n="conversationModeOpenBtn">🎙️ Modo Conversación</button>
             </div>
             <div class="chat__feed" id="chat-friend-feed"></div>
             <form class="chat__input" id="chat-friend-form">
@@ -612,23 +615,27 @@
             </form>
           </div>
 
-          <!-- Modo Conversación: traductor cara a cara estilo app de
-               traductor móvil (Google/Microsoft Translator "Conversation
-               mode") — pantalla dividida en 2 paneles grandes, uno para
-               cada persona, con micrófono propio (Web Speech API,
-               SpeechRecognition) y traducción cruzada instantánea vía la
-               MISMA translateViaMyMemory() que ya usa el chat async de
-               Amigos (ver app.js). Es una herramienta EFÍMERA de "hablar
+          <!-- Pestaña principal "Conversación": traductor cara a cara
+               estilo app de traductor móvil (Google/Microsoft Translator
+               "Conversation mode") — pantalla dividida en 2 paneles
+               grandes, uno para cada persona, con micrófono propio (Web
+               Speech API, SpeechRecognition) y traducción cruzada
+               instantánea vía la MISMA translateViaMyMemory() que ya usa
+               el chat async de Amigos (ver app.js). Pedido explícito:
+               pestaña principal propia, independiente de tener un amigo
+               agregado — por eso el idioma del interlocutor se elige acá
+               mismo (#conversation-their-lang-grid) en vez de heredarse
+               de un contacto de Supabase. Herramienta EFÍMERA de "hablar
                en persona con el celular en la mano" — a propósito NO
                escribe en app_friend_messages/localStorage de mensajes:
                ese historial representa una conversación asíncrona entre
                DOS dispositivos/cuentas distintas, y acá ambos lados se
                turnan el MISMO dispositivo, así que mezclar ambos
-               modelos de datos sería engañoso. El panel del amigo va
+               modelos de datos sería engañoso. El panel de arriba va
                rotado 180° (ver .conversation-panel--friend en style.css)
                para que, al darlo vuelta sobre la mesa, la otra persona
                lo lea de frente. -->
-          <div class="chat-tab-panel chat-conversation-mode" id="chat-conversation-mode" data-chat-panel="conversation-mode" hidden>
+          <div class="chat-tab-panel chat-conversation-mode" id="chat-conversation-mode" data-chat-panel="conversation" hidden>
             <div class="conversation-panel conversation-panel--friend" id="conversation-panel-friend">
               <div class="conversation-panel__transcript" id="conversation-friend-transcript">
                 <p class="conversation-panel__empty-hint" data-i18n="conversationModeEmptyHint">Toca un micrófono o escribe abajo para traducir en tiempo real.</p>
@@ -636,18 +643,37 @@
               <div class="conversation-panel__footer">
                 <div class="conversation-panel__lang">
                   <span class="conversation-panel__flag" id="conversation-friend-flag">🇪🇸</span>
-                  <span class="conversation-panel__name" id="conversation-friend-name">—</span>
+                  <span class="conversation-panel__name" data-i18n="conversationInterlocutorLabel">Interlocutor</span>
                 </div>
-                <button type="button" class="conversation-mic-btn" id="conversation-friend-mic" aria-label="Hablar en el idioma del amigo">🎤</button>
+                <button type="button" class="conversation-mic-btn" id="conversation-friend-mic" aria-label="Hablar en el idioma del interlocutor">🎤</button>
               </div>
             </div>
 
             <div class="conversation-mode__center">
-              <button type="button" class="conversation-mode__close" id="conversation-mode-close" data-i18n="conversationModeBack">← Volver al chat</button>
+              <!-- Elegí tu idioma y el del interlocutor — ANTES esto se
+                   heredaba de un amigo de Supabase (activeFriend); ahora
+                   que Conversación es su propia pestaña, sin depender de
+                   tener amigos agregados, se elige acá mismo con la
+                   MISMA plantilla de chips que "Tu idioma" en Amigos
+                   (renderLangPickerGrid() en app.js, un solo componente
+                   reutilizado en los dos lugares). "Tú" comparte el
+                   mismo idioma guardado que la pestaña Amigos (una sola
+                   identidad de idioma por usuario, ver loadChatLanguage()). -->
+              <div class="conversation-lang-setup">
+                <div class="chat-lang-picker">
+                  <span class="chat-lang-picker__label" data-i18n="conversationMyLangLabel">Tú hablas:</span>
+                  <div class="chat-lang-picker__grid" id="conversation-my-lang-grid"></div>
+                </div>
+                <div class="chat-lang-picker">
+                  <span class="chat-lang-picker__label" data-i18n="conversationTheirLangLabel">Interlocutor habla:</span>
+                  <div class="chat-lang-picker__grid" id="conversation-their-lang-grid"></div>
+                </div>
+              </div>
               <label class="conversation-mode__auto-speak">
                 <input type="checkbox" id="conversation-auto-speak-toggle" checked />
                 <span data-i18n="conversationModeAutoSpeak">🔊 Leer traducciones en voz alta</span>
               </label>
+              <p class="conversation-mode__mic-status" id="conversation-mic-status" hidden></p>
             </div>
 
             <div class="conversation-panel conversation-panel--me" id="conversation-panel-me">
@@ -664,7 +690,7 @@
             <form class="conversation-mode__text-fallback" id="conversation-text-form">
               <select id="conversation-text-speaker" aria-label="Quién escribe">
                 <option value="me" data-i18n="conversationModeSpeakerMe">Hablas tú</option>
-                <option value="friend" data-i18n="conversationModeSpeakerFriend">Habla tu amigo</option>
+                <option value="friend" data-i18n="conversationModeSpeakerFriend">Habla el interlocutor</option>
               </select>
               <input type="text" id="conversation-text-input" data-i18n-placeholder="conversationModeTextPlaceholder" placeholder="O escribe aquí..." autocomplete="off" />
               <button type="submit" class="btn-send" aria-label="Enviar">➤</button>
@@ -2516,6 +2542,7 @@
         <button type="button" class="admin-panel-tab" data-admin-tab="automation" data-i18n="adminPanelTabAutomation">🤖 Automatización (n8n)</button>
         <button type="button" class="admin-panel-tab" data-admin-tab="users" data-i18n="adminPanelTabUsers">👥 Usuarios</button>
         <button type="button" class="admin-panel-tab" data-admin-tab="photos" data-i18n="adminPanelTabPhotos">📸 Fotos</button>
+        <button type="button" class="admin-panel-tab" data-admin-tab="database" data-i18n="adminPanelTabDatabase">🗄️ Base de Datos</button>
       </div>
 
       <!-- Pestaña: Transacciones (contenido original, sin cambios de lógica) -->
@@ -2673,6 +2700,25 @@
           Pega la URL de una imagen para cada personaje y guarda — se refleja al instante en la pantalla de elección de Héroe.
         </p>
         <div class="admin-photos-rows" id="admin-photos-rows"></div>
+      </div>
+
+      <!-- Pestaña: Base de Datos — diagnóstico visible de /api/init-db
+           (ver checkDatabaseStatus() en app.js). Sin esto, un fallo de
+           aprovisionamiento (ej.: falta SUPABASE_DB_URL en Vercel) solo
+           se veía como un warning en la consola del navegador — invisible
+           para el Admin. Botón manual porque el auto-init de app.js solo
+           corre una vez por versión (ver DB_INIT_FLAG_KEY): reintentar
+           acá no depende de subir una versión nueva ni de limpiar
+           localStorage a mano. -->
+      <div id="admin-panel-tab-database" hidden>
+        <p class="admin-panel__status admin-panel__status--hint" data-i18n="adminDbHint">
+          Verifica y crea (si hacen falta) las tablas de Supabase de Amigos/Escuadrones/Progreso. Si falta la variable SUPABASE_DB_URL en Vercel, el error exacto aparece acá.
+        </p>
+        <div class="admin-panel__toolbar">
+          <button type="button" class="btn-scan" id="admin-db-check-btn" data-i18n="adminDbCheckBtn">🔄 Verificar / Reintentar</button>
+        </div>
+        <p class="admin-panel__status" id="admin-db-status"></p>
+        <pre class="admin-db-report" id="admin-db-report" hidden></pre>
       </div>
     </div>
   </div>
@@ -2930,7 +2976,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260809-2"></script>
+  <script src="app.js?v=20260809-3"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de
