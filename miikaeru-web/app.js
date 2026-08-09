@@ -994,6 +994,11 @@ const I18N = {
     metricsNoClient: "⚠️ No se pudo conectar con Supabase.",
     metricsLoading: "Cargando métricas...",
     metricsTableMissingWarning: "⚠️ Las tablas todavía no existen — corré /api/init-db desde la pestaña Base de Datos.",
+    metricsNotAuthorized: "⚠️ Tu sesión no es de Admin (o venció) — volvé a iniciar sesión.",
+    metricsMissingEnv: "⚠️ Falta SUPABASE_DB_URL en las variables de entorno de Vercel.",
+    metricsDbAuthFailed: "⚠️ SUPABASE_DB_URL tiene usuario/contraseña incorrectos.",
+    metricsDbNotFound: "⚠️ SUPABASE_DB_URL apunta a una base de datos que no existe.",
+    metricsConnectionFailed: "⚠️ No se pudo conectar al host de la base de datos — revisá que SUPABASE_DB_URL sea la cadena de conexión correcta (pooler).",
     metricsNetworkError: "⚠️ Error de red al conectar con Supabase.",
     adminPanelTabPhotos: "📸 Fotos",
     adminPhotosHint: "Pega la URL de una imagen para cada personaje y guarda — se refleja al instante en la pantalla de elección de Héroe.",
@@ -1843,6 +1848,11 @@ const I18N = {
     metricsNoClient: "⚠️ Couldn't connect to Supabase.",
     metricsLoading: "Loading metrics...",
     metricsTableMissingWarning: "⚠️ The tables don't exist yet — run /api/init-db from the Database tab.",
+    metricsNotAuthorized: "⚠️ Your session isn't an Admin session (or expired) — sign in again.",
+    metricsMissingEnv: "⚠️ SUPABASE_DB_URL is missing from Vercel's environment variables.",
+    metricsDbAuthFailed: "⚠️ SUPABASE_DB_URL has the wrong username/password.",
+    metricsDbNotFound: "⚠️ SUPABASE_DB_URL points to a database that doesn't exist.",
+    metricsConnectionFailed: "⚠️ Couldn't connect to the database host — check that SUPABASE_DB_URL is the correct (pooler) connection string.",
     metricsNetworkError: "⚠️ Network error connecting to Supabase.",
     adminPanelTabPhotos: "📸 Photos",
     adminPhotosHint: "Paste an image URL for each character and save — reflected instantly on the Hero selection screen.",
@@ -2692,6 +2702,11 @@ const I18N = {
     metricsNoClient: "⚠️ Supabaseに接続できませんでした。",
     metricsLoading: "メトリクスを読み込み中...",
     metricsTableMissingWarning: "⚠️ テーブルがまだ存在しません — 「データベース」タブから /api/init-db を実行してください。",
+    metricsNotAuthorized: "⚠️ セッションが管理者ではありません（または期限切れです）— 再度ログインしてください。",
+    metricsMissingEnv: "⚠️ VercelにSUPABASE_DB_URLが設定されていません。",
+    metricsDbAuthFailed: "⚠️ SUPABASE_DB_URLのユーザー名またはパスワードが間違っています。",
+    metricsDbNotFound: "⚠️ SUPABASE_DB_URLが存在しないデータベースを指しています。",
+    metricsConnectionFailed: "⚠️ データベースホストに接続できませんでした — SUPABASE_DB_URLが正しい接続文字列（プーラー）か確認してください。",
     metricsNetworkError: "⚠️ Supabaseへの接続でネットワークエラーが発生しました。",
     adminPanelTabPhotos: "📸 写真",
     adminPhotosHint: "各キャラクターの画像URLを貼り付けて保存してください — ヒーロー選択画面に即反映されます。",
@@ -9261,18 +9276,39 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await res.json();
 
       if (!data.ok) {
+        console.warn("Métricas: api/admin-metrics respondió con error —", data.error, data.detail || "");
         renderMetricsStats(null);
-        setMetricsStatus(data.error === "table_missing" ? t("metricsTableMissingWarning") : t("metricsNetworkError"));
+        setMetricsStatus(metricsErrorMessage(data.error, data.detail));
         return;
       }
 
       renderMetricsStats(data.metrics);
       setMetricsStatus("");
     } catch (err) {
-      console.warn("Métricas: no se pudieron leer:", err);
+      console.warn("Métricas: no se pudo llamar a api/admin-metrics:", err);
       renderMetricsStats(null);
       setMetricsStatus(t("metricsNetworkError"));
     }
+  }
+
+  // Traduce el `error` que devuelve api/admin-metrics a un mensaje
+  // específico en vez de un genérico "Error de red" para todo — eso
+  // escondía si el problema era falta de autorización, SUPABASE_DB_URL
+  // mal configurada, o un fallo real de conexión. `detail` es el mensaje
+  // crudo de Postgres/Node: se muestra entre paréntesis porque esta
+  // pestaña ya está detrás del gate de Super Admin, no hay nada sensible
+  // que un usuario final pueda ver acá.
+  function metricsErrorMessage(error, detail) {
+    const key = {
+      table_missing: "metricsTableMissingWarning",
+      not_authorized: "metricsNotAuthorized",
+      missing_env: "metricsMissingEnv",
+      auth_failed: "metricsDbAuthFailed",
+      db_not_found: "metricsDbNotFound",
+      connection_failed: "metricsConnectionFailed",
+    }[error] || "metricsNetworkError";
+    const base = t(key);
+    return detail ? `${base} (${detail})` : base;
   }
 
   if (metricsRefreshBtn) metricsRefreshBtn.addEventListener("click", fetchAdminMetrics);

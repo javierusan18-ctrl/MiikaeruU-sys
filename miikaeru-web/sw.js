@@ -22,7 +22,7 @@
 // index.html (ver ese archivo) — subirlo a mano en cada deploy real
 // hace que `activate` borre el caché viejo y todo se vuelva a guardar
 // fresco, evitando que un celular se quede pegado en una versión vieja.
-const CACHE_NAME = "miikaeru-cache-v20260810-1";
+const CACHE_NAME = "miikaeru-cache-v20260810-2";
 
 const STATIC_ASSETS = [
   "./",

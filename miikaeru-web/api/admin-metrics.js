@@ -16,9 +16,13 @@ module.exports = async function handler(req, res) {
     return;
   }
 
-  const connectionString = process.env.SUPABASE_DB_URL;
+  // .trim() defensivo: si la variable se pegó en Vercel con un salto de
+  // línea o espacio colgando (copy-paste desde terminal/archivo), pg
+  // puede fallar al parsear la connection string con un error críptico
+  // en vez de decir claramente "está vacía" o "está mal formada".
+  const connectionString = (process.env.SUPABASE_DB_URL || "").trim();
   if (!connectionString) {
-    res.status(500).json({ ok: false, error: "Falta SUPABASE_DB_URL en las variables de entorno de Vercel." });
+    res.status(500).json({ ok: false, error: "missing_env", detail: "Falta SUPABASE_DB_URL en las variables de entorno de Vercel." });
     return;
   }
 
@@ -43,14 +47,31 @@ module.exports = async function handler(req, res) {
     res.status(200).json({ ok: true, metrics: rows[0] });
   } catch (err) {
     console.error("admin-metrics falló:", err);
-    // 42P01 = "undefined_table" en Postgres — alguna tabla todavía no
-    // existe (falta correr /api/init-db) — mismo criterio de diagnóstico
-    // que admin-list-users.js.
+    // Clasificación de errores de Postgres/red — el endpoint solo
+    // responde a un Admin ya verificado (ver verifyAdminToken() arriba),
+    // así que es seguro devolver err.message como `detail`: ayuda a
+    // diagnosticar SUPABASE_DB_URL mal configurada sin tener que ir a
+    // buscar los logs de Vercel.
+    let error = "server_error";
     if (err.code === "42P01") {
-      res.status(200).json({ ok: false, error: "table_missing" });
-      return;
+      // undefined_table — alguna tabla todavía no existe (falta correr
+      // /api/init-db desde la pestaña Base de Datos).
+      error = "table_missing";
+    } else if (err.code === "28P01" || err.code === "28000") {
+      // invalid_password / invalid_authorization_specification — el
+      // usuario/contraseña de la connection string está mal.
+      error = "auth_failed";
+    } else if (err.code === "3D000") {
+      // invalid_catalog_name — el nombre de la base en la connection
+      // string no existe en ese proyecto de Supabase.
+      error = "db_not_found";
+    } else if (["ENOTFOUND", "ECONNREFUSED", "ETIMEDOUT", "EHOSTUNREACH", "ENETUNREACH"].includes(err.code)) {
+      // Fallo de red/DNS llegando al host — típicamente SUPABASE_DB_URL
+      // apunta a un host/puerto incorrecto (ej.: usar la conexión directa
+      // en vez del connection pooler que Vercel necesita).
+      error = "connection_failed";
     }
-    res.status(500).json({ ok: false, error: "server_error" });
+    res.status(error === "table_missing" ? 200 : 500).json({ ok: false, error, detail: err.message });
   } finally {
     await client.end().catch(() => {});
   }
