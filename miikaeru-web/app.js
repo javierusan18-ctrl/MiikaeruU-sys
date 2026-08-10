@@ -884,6 +884,10 @@ const I18N = {
     profileCreateBtn: "+ Crear Perfil",
     profileActiveBadge: "Activo",
     profileSwitchTo: "Cambiar",
+    settingsBtnTitle: "Ajustes",
+    settingsTitle: "Ajustes",
+    settingsAnimationsLabel: "Animaciones",
+    settingsAnimationsHint: "Si la desactivás, el León y los Avatares se quedan en su versión compacta, sin el efecto de despliegue.",
     negocioScanBtn: "📷 Subir Foto de Registro / Boleta",
     negocioPrintBtn: "🖨️ Imprimir Formulario Físico",
     negocioFechaLabel: "Fecha",
@@ -1788,6 +1792,10 @@ const I18N = {
     profileCreateBtn: "+ Create Profile",
     profileActiveBadge: "Active",
     profileSwitchTo: "Switch",
+    settingsBtnTitle: "Settings",
+    settingsTitle: "Settings",
+    settingsAnimationsLabel: "Animations",
+    settingsAnimationsHint: "Turning this off keeps the Lion and Avatars in their compact form, without the deploy effect.",
     negocioScanBtn: "📷 Upload Receipt / Form Photo",
     negocioPrintBtn: "🖨️ Print Physical Form",
     negocioFechaLabel: "Date",
@@ -2692,6 +2700,10 @@ const I18N = {
     profileCreateBtn: "+ プロフィールを作成",
     profileActiveBadge: "アクティブ",
     profileSwitchTo: "切り替える",
+    settingsBtnTitle: "設定",
+    settingsTitle: "設定",
+    settingsAnimationsLabel: "アニメーション",
+    settingsAnimationsHint: "オフにすると、獅子とアバターは展開エフェクトなしのコンパクト表示のままになります。",
     negocioScanBtn: "📷 レシート/伝票の写真をアップロード",
     negocioPrintBtn: "🖨️ 記入用紙を印刷",
     negocioFechaLabel: "日付",
@@ -7753,6 +7765,13 @@ function defaultState() {
     // galería. El resto de las fotos empieza bloqueada y se desbloquea
     // por Nivel, igual que MIIKAERU_SKINS.
     avatarPhotoId: null,
+    // Preferencias de interfaz del Operador (modal de Ajustes) — hoy
+    // solo "animations", con espacio para crecer. `true` por default
+    // para que el comportamiento actual (con animaciones) no cambie
+    // para nadie hasta que alguien apague el checkbox a propósito.
+    settings: {
+      animations: true,
+    },
     // Métricas por idioma del módulo de Idiomas — Nihongo sigue usando su
     // propio sistema ya existente (state.pillars.aprendizaje.mastery +
     // state.level general), separado a propósito porque predata esto y
@@ -9368,6 +9387,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const profileListEl = document.getElementById("profile-list");
   const profileCreateForm = document.getElementById("profile-create-form");
   const profileCreateInput = document.getElementById("profile-create-input");
+
+  // Ajustes (modal de Operador) — hoy solo el toggle de Animaciones.
+  const settingsOpenBtn = document.getElementById("settings-open-btn");
+  const settingsModal = document.getElementById("settings-modal");
+  const settingsModalClose = document.getElementById("settings-modal-close");
+  const settingsAnimationsToggle = document.getElementById("settings-animations-toggle");
 
   let activeMinigame = null;
   let pendingEvidenceImage = null;
@@ -19847,6 +19872,43 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && !profileModal.hidden) closeProfileModal();
   });
+
+  // Ajustes → Animaciones: body.miikaeru-anim-off (ver style.css, mismo
+  // set de selectores que @media(prefers-reduced-motion:reduce)) apaga
+  // el glow respirando + el fade de despliegue del León/Avatares,
+  // dejándolos en su versión estática/compacta.
+  function applyAnimationsSetting() {
+    const enabled = !state.settings || state.settings.animations !== false;
+    document.body.classList.toggle("miikaeru-anim-off", !enabled);
+    settingsAnimationsToggle.checked = enabled;
+  }
+
+  function openSettingsModal() {
+    settingsAnimationsToggle.checked = !state.settings || state.settings.animations !== false;
+    settingsModal.hidden = false;
+  }
+
+  function closeSettingsModal() {
+    settingsModal.hidden = true;
+  }
+
+  settingsOpenBtn.addEventListener("click", openSettingsModal);
+  settingsModalClose.addEventListener("click", closeSettingsModal);
+  settingsModal.addEventListener("click", (event) => {
+    if (event.target === settingsModal) closeSettingsModal();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !settingsModal.hidden) closeSettingsModal();
+  });
+
+  settingsAnimationsToggle.addEventListener("change", () => {
+    if (!state.settings) state.settings = { animations: true };
+    state.settings.animations = settingsAnimationsToggle.checked;
+    persist();
+    applyAnimationsSetting();
+  });
+
+  applyAnimationsSetting();
 
   profileCreateForm.addEventListener("submit", (event) => {
     event.preventDefault();

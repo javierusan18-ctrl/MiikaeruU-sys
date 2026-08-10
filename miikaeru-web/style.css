@@ -504,6 +504,52 @@ body::before {
   50% { box-shadow: 0 0 14px rgba(0, 240, 255, 0.6); }
 }
 
+/* Zona Admin del header — reubicada acá desde el Cuadro de Finanzas
+   (pedido explícito). Mismo lenguaje visual que .btn-logout (magenta,
+   ícono circular compacto) para que se lea como "acción sensible", más
+   una etiqueta pequeña arriba que la identifica sin ambigüedad. Oculta
+   por completo (no solo el botón) cuando no hay sesión de Admin — ver
+   [hidden] de #admin-panel-open-btn, controlado por
+   applySuperAdminVisibility() en app.js. */
+.hud__admin-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.hud__admin-zone-label {
+  font-size: 0.55rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--neon-magenta);
+  opacity: 0.75;
+}
+
+.hud__admin-zone-btn {
+  border: 1px solid rgba(255, 46, 154, 0.4);
+  background: rgba(255, 46, 154, 0.08);
+  color: var(--neon-magenta);
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  font-size: 0.85rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.2s ease, filter 0.2s ease;
+}
+
+.hud__admin-zone-btn:hover {
+  background: var(--neon-magenta);
+  color: #04121a;
+  box-shadow: 0 0 12px rgba(255, 46, 154, 0.5);
+  filter: drop-shadow(0 0 8px rgba(255, 46, 154, 0.85));
+}
+
+.hud__admin-zone-btn[hidden] {
+  display: none;
+}
+
 .btn-profile-switch {
   display: flex;
   align-items: center;
@@ -524,6 +570,26 @@ body::before {
   color: #04121a;
   box-shadow: 0 0 12px rgba(255, 183, 0, 0.5);
   filter: drop-shadow(0 0 8px rgba(255, 183, 0, 0.85));
+}
+
+.btn-settings {
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  background: rgba(0, 240, 255, 0.06);
+  color: var(--neon-cyan);
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  font-size: 0.85rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.2s ease, filter 0.2s ease;
+}
+
+.btn-settings:hover {
+  background: var(--neon-cyan);
+  color: #04121a;
+  box-shadow: var(--shadow-neon-cyan);
+  filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.85));
 }
 
 /* Botón unificado de instalación PWA — mismo criterio visual de "acción
@@ -1950,26 +2016,6 @@ textarea,
   box-shadow: 0 0 12px rgba(255, 183, 0, 0.5);
 }
 
-.finanzas-global-summary__admin-btn {
-  grid-column: 1 / -1;
-  margin-top: 4px;
-  border: 1px solid rgba(255, 46, 154, 0.4);
-  background: rgba(255, 46, 154, 0.06);
-  color: var(--neon-magenta);
-  border-radius: var(--radius-sm);
-  padding: 7px 10px;
-  font-size: 0.68rem;
-  letter-spacing: 0.5px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.finanzas-global-summary__admin-btn:hover {
-  background: var(--neon-magenta);
-  color: #1a0410;
-  box-shadow: 0 0 12px rgba(255, 46, 154, 0.5);
-}
-
 @media (max-width: 480px) {
   .finanzas-global-summary {
     grid-template-columns: 1fr;
@@ -3080,6 +3126,27 @@ textarea,
   .layer-lion {
     transition: none;
   }
+}
+
+/* Ajustes → "Animaciones" desactivado (ver settings-animations-toggle
+   en app.js) — mismo set de selectores que prefers-reduced-motion de
+   arriba, pero como preferencia manual explícita del Operador en vez
+   de una preferencia de sistema operativo. El León y los Avatares
+   quedan en su versión "compacta" (estática, sin glow respirando ni
+   fade de despliegue) apenas se desmarca el checkbox. */
+body.miikaeru-anim-off .avatar-scene-container::after,
+body.miikaeru-anim-off .layer-lion,
+body.miikaeru-anim-off .panel.glass,
+body.miikaeru-anim-off .panel__header::before,
+body.miikaeru-anim-off .scanlines {
+  animation: none !important;
+}
+
+body.miikaeru-anim-off #avatarStage,
+body.miikaeru-anim-off .layer-bg,
+body.miikaeru-anim-off .layer-props,
+body.miikaeru-anim-off .layer-lion {
+  transition: none !important;
 }
 
 .avatar__meta {
@@ -6249,6 +6316,35 @@ textarea,
   padding: 44px 26px 26px;
   text-align: left;
   position: relative;
+}
+
+.modal--settings {
+  max-width: 380px;
+  padding: 44px 26px 26px;
+  text-align: left;
+  position: relative;
+}
+
+.settings-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 18px 0 8px;
+  padding: 12px 14px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  background: rgba(0, 240, 255, 0.04);
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+}
+
+.settings-toggle-row input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--neon-cyan);
+  cursor: pointer;
 }
 
 .profile-list {
@@ -10767,7 +10863,6 @@ button:active,
   .btn-profile-switch,
   .btn-hanzi-control,
   .finanzas-global-summary__dashboard-btn,
-  .finanzas-global-summary__admin-btn,
   .jp-config-lang-btn,
   .jp-config-mode-btn,
   .jp-script-btn,

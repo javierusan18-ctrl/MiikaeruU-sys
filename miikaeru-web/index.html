@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260811-1" />
+  <link rel="stylesheet" href="style.css?v=20260811-2" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -202,9 +202,21 @@
           <path class="pwa-install-icon__arrow" d="M31 26v6M28 29l3 3 3-3" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
       </button>
+      <!-- Zona Admin: reubicado acá desde adentro del Cuadro de Finanzas
+           (pedido explícito) — mismo elemento, mismo id
+           (#admin-panel-open-btn), mismo comportamiento hidden-por-defecto
+           hasta que applySuperAdminVisibility() en app.js confirme la
+           sesión real de Supabase Auth contra ADMIN_EMAIL. Solo cambió su
+           ubicación en el DOM y su estilo (ícono compacto de header en vez
+           de tarjeta ancha dentro del resumen de Finanzas). -->
+      <div class="hud__admin-zone">
+        <span class="hud__admin-zone-label">Admin</span>
+        <button type="button" class="hud__admin-zone-btn" id="admin-panel-open-btn" data-i18n-title="adminPanelOpenBtn" title="Panel de Administrador" hidden>🛡️</button>
+      </div>
       <button class="btn-profile-switch" id="profile-switch-btn" type="button" data-i18n-title="profileSwitchBtnTitle" title="Cambiar de perfil">
         👤 <span id="active-profile-name">Admin</span>
       </button>
+      <button class="btn-settings" id="settings-open-btn" type="button" data-i18n-title="settingsBtnTitle" title="Ajustes">⚙️</button>
       <span class="hud__profile-name" id="profile-name">Operador</span>
       <button class="btn-logout" id="logout-btn" type="button" data-i18n-title="logout" title="Cerrar sesión">⏻</button>
     </div>
@@ -1082,12 +1094,14 @@
               <span class="finanzas-global-summary__value" id="finanzas-global-balance">S/ 0</span>
             </div>
             <button type="button" class="finanzas-global-summary__dashboard-btn" id="finanzas-open-dashboard-btn" data-i18n="financeOpenDashboardBtn">📊 Ver Dashboard Completo</button>
-            <!-- Ocultos por defecto en el HTML (no solo vía JS) para que
-                 nunca haya ni un parpadeo visible antes de que
-                 checkAdminSession() confirme la sesión — ver
-                 applySuperAdminVisibility() en app.js. Solo se revelan si
-                 la sesión real de Supabase Auth coincide con ADMIN_EMAIL. -->
-            <button type="button" class="finanzas-global-summary__admin-btn" id="admin-panel-open-btn" data-i18n="adminPanelOpenBtn" hidden>🛡️ Panel de Administrador</button>
+            <!-- El botón del Panel de Administrador (#admin-panel-open-btn)
+                 vivía acá — pedido explícito de moverlo a la zona superior
+                 (ver <header class="hud">, bloque "Zona Admin"). Su
+                 comportamiento (hidden por defecto hasta que
+                 checkAdminSession() confirme ADMIN_EMAIL, ver
+                 applySuperAdminVisibility() en app.js) no cambió: sigue
+                 siendo el mismo elemento por id, solo se movió de lugar en
+                 el DOM — cero cambios de JS necesarios. -->
           </div>
         </div>
 
@@ -3152,6 +3166,29 @@
     </div>
   </div>
 
+  <!-- Modal de Ajustes: por ahora un único control ("Animaciones"), con
+       espacio para crecer. Apagarlo desactiva las animaciones decorativas
+       del León/Avatares (mismo set de selectores que ya usaba
+       @media(prefers-reduced-motion:reduce), ver style.css) vía la clase
+       body.miikaeru-anim-off — ver applyAnimationsSetting() en app.js.
+       Persiste en state.settings.animations (scopeado por perfil, igual
+       que el resto de state). -->
+  <div class="modal-overlay" id="settings-modal" hidden>
+    <div class="modal modal--settings glass">
+      <button type="button" class="btn-modal-close" id="settings-modal-close" aria-label="Cerrar">✕</button>
+
+      <h2 data-i18n="settingsTitle">Ajustes</h2>
+
+      <label class="settings-toggle-row" for="settings-animations-toggle">
+        <span data-i18n="settingsAnimationsLabel">Animaciones</span>
+        <input type="checkbox" id="settings-animations-toggle" checked />
+      </label>
+      <p class="modal__subtitle" data-i18n="settingsAnimationsHint">
+        Si la desactivás, el León y los Avatares se quedan en su versión compacta, sin el efecto de despliegue.
+      </p>
+    </div>
+  </div>
+
   <!-- Ventanas flotantes (drag/resize/minimize/maximize) — módulo aparte,
        mismo criterio que readerEngine.js/storyEngine.js. app.js lo usa
        recién dentro de su DOMContentLoaded (ver enable() sobre
@@ -3159,7 +3196,7 @@
        etiquetas <script> no importa en la práctica — se carga acá antes
        igual, por prolijidad. -->
   <script src="floatingWindow.js?v=20260811-1"></script>
-  <script src="app.js?v=20260810-12"></script>
+  <script src="app.js?v=20260811-1"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de
