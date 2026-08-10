@@ -1063,7 +1063,7 @@ const I18N = {
     adminPanelOpenBtn: "🛡️ Panel de Administrador",
     adminPanelTitle: "🛡️ Panel de Administrador",
     adminPanelTabTransactions: "💳 Transacciones",
-    adminPanelTabInspector: "🕵️ Inspector de Bugs",
+    adminPanelTabInspector: "📋 Bandeja de Sugerencias y Fallas",
     adminPanelTabAutomation: "🤖 Automatización (n8n)",
     adminPanelRefreshBtn: "🔄 Actualizar",
     adminPanelExportBtn: "📥 Exportar CSV",
@@ -1100,6 +1100,8 @@ const I18N = {
     inspectorApproveBtn: "✅ Aprobar",
     inspectorDiscardBtn: "❌ Descartar",
     inspectorResolveBtn: "✔️ Marcar Resuelto",
+    inspectorSentBy: "Enviado por",
+    inspectorSentByUnknown: "Operador desconocido",
     automationStatTotal: "Total",
     automationStatPending: "Pendientes",
     automationStatApproved: "Aprobadas",
@@ -1277,8 +1279,8 @@ const I18N = {
     feedbackTitle: "🐞 Bugs & Sugerencias",
     feedbackSubtitle: "¿Encontraste un error o tienes una idea para mejorar Miikaeru? Cuéntanos.",
     feedbackTypeLabel: "Tipo",
-    feedbackTypeBug: "🐞 Bug / Error",
-    feedbackTypeSuggestion: "💡 Sugerencia",
+    feedbackTypeBug: "🐞 Falla",
+    feedbackTypeSuggestion: "💡 Sugerencia para mejorar",
     feedbackMessagePlaceholder: "Describe el bug o tu idea...",
     feedbackSubmitBtn: "Enviar",
     feedbackStatusSuccess: "¡Gracias! Tu mensaje fue enviado.",
@@ -1965,7 +1967,7 @@ const I18N = {
     adminPanelOpenBtn: "🛡️ Admin Panel",
     adminPanelTitle: "🛡️ Admin Panel",
     adminPanelTabTransactions: "💳 Transactions",
-    adminPanelTabInspector: "🕵️ Bug Inspector",
+    adminPanelTabInspector: "📋 Suggestions & Issues Inbox",
     adminPanelTabAutomation: "🤖 Automation (n8n)",
     adminPanelRefreshBtn: "🔄 Refresh",
     adminPanelExportBtn: "📥 Export CSV",
@@ -2002,6 +2004,8 @@ const I18N = {
     inspectorApproveBtn: "✅ Approve",
     inspectorDiscardBtn: "❌ Discard",
     inspectorResolveBtn: "✔️ Mark Resolved",
+    inspectorSentBy: "Sent by",
+    inspectorSentByUnknown: "Unknown operator",
     automationStatTotal: "Total",
     automationStatPending: "Pending",
     automationStatApproved: "Approved",
@@ -2179,8 +2183,8 @@ const I18N = {
     feedbackTitle: "🐞 Bugs & Suggestions",
     feedbackSubtitle: "Found a bug or have an idea to improve Miikaeru? Tell us.",
     feedbackTypeLabel: "Type",
-    feedbackTypeBug: "🐞 Bug / Error",
-    feedbackTypeSuggestion: "💡 Suggestion",
+    feedbackTypeBug: "🐞 Issue",
+    feedbackTypeSuggestion: "💡 Suggestion to improve",
     feedbackMessagePlaceholder: "Describe the bug or your idea...",
     feedbackSubmitBtn: "Send",
     feedbackStatusSuccess: "Thanks! Your message was sent.",
@@ -2867,7 +2871,7 @@ const I18N = {
     adminPanelOpenBtn: "🛡️ 管理者パネル",
     adminPanelTitle: "🛡️ 管理者パネル",
     adminPanelTabTransactions: "💳 取引",
-    adminPanelTabInspector: "🕵️ バグ検査",
+    adminPanelTabInspector: "📋 提案・不具合の受信箱",
     adminPanelTabAutomation: "🤖 自動化（n8n）",
     adminPanelRefreshBtn: "🔄 更新",
     adminPanelExportBtn: "📥 CSVをエクスポート",
@@ -2904,6 +2908,8 @@ const I18N = {
     inspectorApproveBtn: "✅ 承認",
     inspectorDiscardBtn: "❌ 却下",
     inspectorResolveBtn: "✔️ 解決済みにする",
+    inspectorSentBy: "送信者",
+    inspectorSentByUnknown: "不明なオペレーター",
     automationStatTotal: "合計",
     automationStatPending: "保留中",
     automationStatApproved: "承認済み",
@@ -3081,8 +3087,8 @@ const I18N = {
     feedbackTitle: "🐞 バグ＆提案",
     feedbackSubtitle: "バグを見つけましたか？Miikaeruを改善するアイデアはありますか？教えてください。",
     feedbackTypeLabel: "種類",
-    feedbackTypeBug: "🐞 バグ／エラー",
-    feedbackTypeSuggestion: "💡 提案",
+    feedbackTypeBug: "🐞 不具合",
+    feedbackTypeSuggestion: "💡 改善提案",
     feedbackMessagePlaceholder: "バグやアイデアを説明してください...",
     feedbackSubmitBtn: "送信",
     feedbackStatusSuccess: "ありがとうございます！メッセージを送信しました。",
@@ -8549,13 +8555,15 @@ document.addEventListener("DOMContentLoaded", () => {
   // bump, los dispositivos que ya corrieron /api/init-db con el esquema
   // viejo nunca volverían a llamarlo y se quedarían sin las tablas
   // nuevas hasta limpiar su localStorage a mano.
-  // Subida de nuevo (antes v20260809-3): este bloque agregó la tabla
-  // `transactions` (faltaba por completo — hacía fallar tanto el
-  // respaldo silencioso de cada transacción nueva como la pestaña
-  // "💼 Transacciones" del Panel de Administrador) — sin este bump, un
-  // dispositivo que ya hubiera corrido /api/init-db con el esquema
-  // anterior no lo volvería a llamar, y la tabla nunca se crearía sola.
-  const DB_INIT_FLAG_KEY = "miikaeru_db_init_v20260810-4";
+  // Subida de nuevo (antes v20260810-4): este bloque agregó la tabla
+  // `feedback` (faltaba por completo — hacía fallar el envío de Bugs &
+  // Sugerencias con "No se pudo enviar", mismo síntoma que ya se había
+  // visto con `transactions`) + la política que permite insertar sin
+  // sesión (RLS bloqueaba el insert anónimo antes de esto) — sin este
+  // bump, un dispositivo que ya hubiera corrido /api/init-db con el
+  // esquema anterior no lo volvería a llamar, y la tabla nunca se
+  // crearía sola.
+  const DB_INIT_FLAG_KEY = "miikaeru_db_init_v20260810-5";
   if (!localStorage.getItem(DB_INIT_FLAG_KEY)) {
     fetch("/api/init-db")
       .then((res) => res.json())
@@ -10191,17 +10199,27 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      // operator_name/phone: quién lo manda, denormalizado en la fila
+      // (mismo criterio que business_name en transactions) para que el
+      // Agente Inspector lo muestre sin tener que cruzar con otra tabla.
+      const masterAccountForFeedback = loadMasterAccount();
       supabaseClient
         .from("feedback")
         .insert({
           profile_id: activeProfileId,
+          operator_name: state.operatorName || null,
+          phone: (masterAccountForFeedback && masterAccountForFeedback.phone) || null,
           type: feedbackType.value,
           message,
         })
         .then(({ error }) => {
           if (error) {
             console.warn("Supabase: no se pudo guardar el feedback:", error.message);
-            feedbackStatus.textContent = t("feedbackStatusError");
+            // error.message queda a la vista (no solo en consola) — es
+            // lo que de verdad ayuda a diagnosticar si vuelve a fallar
+            // (ej.: RLS rechazando el insert, columna que falta), en vez
+            // de un "no se pudo enviar" genérico sin pistas.
+            feedbackStatus.textContent = `${t("feedbackStatusError")} (${error.message})`;
             feedbackStatus.classList.add("feedback-section__status--error");
           } else {
             feedbackStatus.textContent = t("feedbackStatusSuccess");
@@ -10657,6 +10675,16 @@ document.addEventListener("DOMContentLoaded", () => {
       statusSpan.textContent = t(`inspectorStatus_${status}`);
       header.append(dateSpan, statusSpan);
 
+      // Quién lo mandó — operator_name/phone se guardan directo en la
+      // fila al momento del submit (ver #feedback-form más arriba, no
+      // requiere ningún JOIN acá). Si el reporte es de antes de que
+      // existieran esas columnas, cae al aviso genérico en vez de
+      // mostrar "null" o dejarlo en blanco.
+      const senderParts = [row.operator_name, row.phone].filter(Boolean);
+      const sender = document.createElement("p");
+      sender.className = "inspector-card__sender";
+      sender.textContent = `${t("inspectorSentBy")}: ${senderParts.length ? senderParts.join(" · ") : t("inspectorSentByUnknown")}`;
+
       const message = document.createElement("p");
       message.className = "inspector-card__message";
       message.textContent = row.message || "";
@@ -10687,7 +10715,7 @@ document.addEventListener("DOMContentLoaded", () => {
         actions.append(resolveBtn);
       }
 
-      card.append(header, message);
+      card.append(header, sender, message);
       if (actions.children.length) card.appendChild(actions);
       inspectorCards.appendChild(card);
     });

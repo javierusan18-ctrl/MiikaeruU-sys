@@ -174,6 +174,27 @@ const SCHEMA_STATEMENTS = [
     currency text,
     txn_date text
   )`,
+  // feedback: "Bugs & Sugerencias" (ver #feedback-form en el modal del
+  // León, app.js) — la tabla que faltaba y hacía fallar el envío con
+  // "No se pudo enviar" (mismo síntoma que faltaba en `transactions`
+  // antes de este mismo mecanismo). Columnas = lo que ya insertan/leen
+  // el submit del formulario y el Agente Inspector del Panel de
+  // Administrador: profile_id/operator_name/phone (quién lo mandó —
+  // denormalizado en la fila en vez de JOIN, mismo criterio que
+  // business_name en transactions, para que el Inspector lo muestre sin
+  // consultas extra), type/message (el reporte en sí), status (ciclo de
+  // vida pendiente→aprobado/descartado→resuelto, ver
+  // renderInspectorCards() en app.js), created_at (fecha).
+  `create table if not exists public.feedback (
+    id uuid primary key default gen_random_uuid(),
+    profile_id text,
+    operator_name text,
+    phone text,
+    type text not null,
+    message text not null,
+    status text not null default 'pendiente',
+    created_at timestamptz not null default now()
+  )`,
   // Escuadrones (Squads) — mismo criterio "quien conoce el código entra"
   // que Amigos (identidad = phone de la Cuenta Principal, sin Supabase
   // Auth de usuario final). `code` es el código corto compartible
@@ -210,6 +231,7 @@ const SCHEMA_STATEMENTS = [
   `alter table public.player_progress enable row level security`,
   `alter table public.hero_avatars enable row level security`,
   `alter table public.transactions enable row level security`,
+  `alter table public.feedback enable row level security`,
   `alter table public.app_squads enable row level security`,
   `alter table public.app_squad_members enable row level security`,
   `alter table public.app_squad_messages enable row level security`,
@@ -240,6 +262,17 @@ const SCHEMA_STATEMENTS = [
   `create policy "anon full access hero_avatars" on public.hero_avatars for all using (true) with check (true)`,
   `drop policy if exists "anon full access transactions" on public.transactions`,
   `create policy "anon full access transactions" on public.transactions for all using (true) with check (true)`,
+  // feedback es la EXCEPCIÓN a "anon full access" de este bloque, a
+  // propósito: cualquiera (sin sesión) puede MANDAR un reporte nuevo
+  // (si no, el formulario de Bugs & Sugerencias no podría insertar
+  // nada), pero leer o actualizar reportes ajenos queda reservado al
+  // Admin real — ver ensureFeedbackAdminPolicies() más abajo, que agrega
+  // las políticas "for select"/"for update to authenticated" exigiendo
+  // el email de ADMIN_EMAIL. Sin esta policy de insert, el submit del
+  // formulario fallaba silenciosamente contra RLS (mismo síntoma que
+  // reportó el usuario: "No se pudo enviar").
+  `drop policy if exists "anon can insert feedback" on public.feedback`,
+  `create policy "anon can insert feedback" on public.feedback for insert with check (true)`,
   `drop policy if exists "anon full access squads" on public.app_squads`,
   `create policy "anon full access squads" on public.app_squads for all using (true) with check (true)`,
   `drop policy if exists "anon full access squad_members" on public.app_squad_members`,

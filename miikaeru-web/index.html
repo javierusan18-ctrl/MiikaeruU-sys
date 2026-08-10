@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260810-9" />
+  <link rel="stylesheet" href="style.css?v=20260810-10" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -2618,8 +2618,8 @@
         <p class="feedback-section__subtitle" data-i18n="feedbackSubtitle">¿Encontraste un error o tienes una idea para mejorar Miikaeru? Cuéntanos.</p>
         <form id="feedback-form">
           <select id="feedback-type" data-i18n-title="feedbackTypeLabel" title="Tipo">
-            <option value="bug" data-i18n="feedbackTypeBug">🐞 Bug / Error</option>
-            <option value="suggestion" data-i18n="feedbackTypeSuggestion">💡 Sugerencia</option>
+            <option value="bug" data-i18n="feedbackTypeBug">🐞 Falla</option>
+            <option value="suggestion" data-i18n="feedbackTypeSuggestion">💡 Sugerencia para mejorar</option>
           </select>
           <textarea id="feedback-message" rows="3" data-i18n-placeholder="feedbackMessagePlaceholder" placeholder="Describe el bug o tu idea..." required></textarea>
           <button type="submit" class="btn-send" data-i18n="feedbackSubmitBtn">Enviar</button>
@@ -2654,7 +2654,7 @@
 
       <div class="admin-panel-tabs" id="admin-panel-tabs">
         <button type="button" class="admin-panel-tab admin-panel-tab--active" data-admin-tab="transactions" data-i18n="adminPanelTabTransactions">💳 Transacciones</button>
-        <button type="button" class="admin-panel-tab" data-admin-tab="inspector" data-i18n="adminPanelTabInspector">🕵️ Inspector de Bugs</button>
+        <button type="button" class="admin-panel-tab" data-admin-tab="inspector" data-i18n="adminPanelTabInspector">📋 Bandeja de Sugerencias y Fallas</button>
         <button type="button" class="admin-panel-tab" data-admin-tab="automation" data-i18n="adminPanelTabAutomation">🤖 Automatización (n8n)</button>
         <button type="button" class="admin-panel-tab" data-admin-tab="users" data-i18n="adminPanelTabUsers">👥 Usuarios</button>
         <button type="button" class="admin-panel-tab" data-admin-tab="metrics" data-i18n="adminPanelTabMetrics">📊 Métricas</button>
@@ -3152,7 +3152,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260810-10"></script>
+  <script src="app.js?v=20260810-11"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de

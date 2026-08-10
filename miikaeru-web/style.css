@@ -8710,6 +8710,13 @@ textarea,
   color: var(--neon-magenta);
 }
 
+.inspector-card__sender {
+  font-size: 0.72rem;
+  color: var(--neon-cyan);
+  font-weight: 600;
+  margin: 2px 0 4px;
+}
+
 .inspector-card__message {
   font-size: 0.85rem;
   color: var(--text-primary);
