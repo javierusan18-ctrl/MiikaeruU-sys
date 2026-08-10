@@ -236,17 +236,26 @@
       );
     }
 
+    // Punto de verdad único para "¿este panel puede volverse flotante
+    // ahora mismo?". Antes esto se decidía comparando this.mediaQuery.matches
+    // (un cómputo de matchMedia() separado, hecho en JS) — pero matchMedia()
+    // y el @media real que aplica display:none/flex en el CSS pueden
+    // discrepar por un pixel bajo zoom del navegador o DPR fraccionario
+    // (redondeos distintos, es un desacuerdo real y documentado entre
+    // ambos motores). Con esa comparación, un desktop legítimo con zoom
+    // ≠100% podía quedar bloqueado para siempre sin poder arrastrar nada.
+    // Preguntarle directo al `display` calculado elimina la doble fuente
+    // de verdad: es el MISMO CSS que ya decide si el panel se ve o no, así
+    // que nunca puede discrepar consigo mismo. Solo aplica cuando hay
+    // mediaQuery configurado (paneles sin gating siempre están activos).
+    _isFloatingEligible() {
+      if (!this.mediaQuery) return true;
+      return getComputedStyle(this.el).display !== "none";
+    }
+
     _undock() {
       if (this.mode === "floating" || this.mode === "maximized") return;
-      // Si el breakpoint de este panel no está activo (ej. matchMedia y el
-      // @media de CSS discreparon por un pixel por zoom del navegador/DPR
-      // fraccionario — desacuerdo real y documentado entre ambos), no hay
-      // que undockear: el panel debe quedarse en su layout responsivo
-      // normal. Sin este guard, un pointerdown suelto en la cabecera podía
-      // sacar el panel a position:fixed con el rect "inactivo" congelado,
-      // dejándolo visualmente trabado fuera de flujo — exactamente el
-      // síntoma de "las ventanas quedan estáticas / bloquean el mouse".
-      if (this.mediaQuery && !this.mediaQuery.matches) return;
+      if (!this._isFloatingEligible()) return;
       const rect = this.el.getBoundingClientRect();
       this.el.style.position = "fixed";
       this.el.style.top = `${rect.top}px`;
@@ -266,6 +275,18 @@
       this.el.style.flex = "none";
       this.mode = "floating";
       this.el.classList.add("floating-window--floating");
+      // z-index explícito apenas se despega — sin esto, un panel que
+      // todavía no recibió NINGÚN pointerdown (ver _wireFocus) se queda
+      // con z-index:auto, y "auto" pierde contra CUALQUIER otro panel
+      // flotante que sí tenga un z-index numérico ya asignado, sin
+      // importar el orden real de interacción. En la práctica: el
+      // usuario arrastra la ventana A sobre la B, A ya tiene z-index de
+      // su propio pointerdown de arrastre — pero si B nunca se tocó
+      // todavía, B queda tapada Y ADEMÁS invisible al mouse en esa zona
+      // (el navegador entrega el evento a A, que está "arriba" aunque
+      // nadie la puso ahí a propósito) — exactamente el síntoma de
+      // "ventana congelada / el contenedor bloquea el mouse".
+      if (!this.el.style.zIndex) this.el.style.zIndex = String(nextZ());
     }
 
     _wireDrag() {
@@ -304,7 +325,7 @@
         // cualquier ventana futura que reutilice un header con botones
         // propios queda cubierta acá igual).
         if (event.target.closest(".floating-window__btn, button, a, input, select, textarea")) return;
-        if (this.mediaQuery && !this.mediaQuery.matches) return; // panel fuera de rango — sigue su layout responsivo normal
+        if (!this._isFloatingEligible()) return; // panel fuera de rango — sigue su layout responsivo normal
         if (this.mode === "maximized") return; // no se arrastra maximizada
         if (this.minimized) {
           // Arrastrar una ventana minimizada es válido (reposicionar el
@@ -352,7 +373,7 @@
       };
 
       this.resizeHandle.addEventListener("pointerdown", (event) => {
-        if (this.mediaQuery && !this.mediaQuery.matches) return; // panel fuera de rango — sigue su layout responsivo normal
+        if (!this._isFloatingEligible()) return; // panel fuera de rango — sigue su layout responsivo normal
         if (this.mode === "maximized" || this.minimized) return;
         event.preventDefault();
         event.stopPropagation();
@@ -464,7 +485,7 @@
     _restorePersisted() {
       const saved = loadPersisted(this.id);
       if (!saved || saved.mode === "docked") return;
-      if (this.mediaQuery && !this.mediaQuery.matches) return;
+      if (!this._isFloatingEligible()) return;
       if (saved.mode === "floating" && saved.top && saved.left) {
         this.el.style.position = "fixed";
         this.el.style.top = saved.top;
@@ -474,12 +495,16 @@
         // Mismo motivo que en _undock(): restaurar directo a "floating"
         // en una recarga nunca pasa por _undock(), así que sin esto el
         // max-width/max-height responsivo del layout docked seguiría
-        // recortando el tamaño restaurado.
+        // recortando el tamaño restaurado — y lo mismo para el z-index
+        // (ver el comentario al final de _undock()): sin asignar uno acá
+        // también, una ventana restaurada en floating con z-index:auto
+        // podía perder contra cualquier otra que sí tuviera uno numérico.
         this.el.style.maxWidth = "none";
         this.el.style.maxHeight = "none";
         this.el.style.flex = "none";
         this.mode = "floating";
         this.el.classList.add("floating-window--floating");
+        if (!this.el.style.zIndex) this.el.style.zIndex = String(nextZ());
       } else if (saved.mode === "maximized") {
         this.toggleMaximize();
       }
