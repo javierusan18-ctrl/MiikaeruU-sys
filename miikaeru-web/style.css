@@ -1423,17 +1423,40 @@ textarea,
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  padding: 6px 8px 6px 12px;
+  /* Más alta que el mínimo visual necesario a propósito: el área de
+     agarre real tiene que ser fácil de acertar con un mouse real, no
+     solo "técnicamente presente". */
+  padding: 11px 10px 11px 12px;
+  min-height: 40px;
   background: rgba(0, 240, 255, 0.06);
   border-bottom: 1px solid var(--glass-border);
   cursor: grab;
   touch-action: none;
+  user-select: none;
   /* position+z-index: mismo criterio que .panel--avatar .panel__header/
      #avatarScene/.avatar__meta — sin esto, la textura de mandala
      (::before, z-index:0) del panel del León podría pintarse por
      encima de esta barra inyectada. */
   position: relative;
   z-index: 1;
+  flex: none;
+}
+
+.floating-window__titlebar:hover,
+.floating-window__header--reused:hover {
+  background: rgba(0, 240, 255, 0.12);
+}
+
+/* Pista visual de "esto se agarra" — 6 puntos en columna antes del
+   título, mismo lenguaje que un grip de ventana de escritorio. Solo en
+   la cabecera inyectada (la reutilizada del chat ya tiene su propio
+   texto de sobra y no necesita el ícono extra). */
+.floating-window__titlebar::before {
+  content: "⠿";
+  font-size: 0.85rem;
+  color: var(--neon-cyan);
+  opacity: 0.6;
+  line-height: 1;
   flex: none;
 }
 
@@ -1503,14 +1526,57 @@ textarea,
   box-shadow: 0 0 10px rgba(255, 46, 154, 0.5);
 }
 
+/* Base compartida por las 8 asas (4 bordes + 4 esquinas, ver
+   RESIZE_DIRECTIONS en floatingWindow.js) — cada modificador de abajo
+   solo fija posición/tamaño/cursor. Los bordes son tiras angostas
+   invisibles (área de agarre generosa sin ensuciar visualmente el
+   marco); las esquinas mantienen el grip diagonal cyan de siempre para
+   que quede claro dónde "agarrar" para redimensionar en diagonal. */
 .floating-window__resize-handle {
   position: absolute;
-  right: 0;
-  bottom: 0;
+  touch-action: none;
+  z-index: 2;
+}
+
+.floating-window__resize-handle--n,
+.floating-window__resize-handle--s {
+  left: 8px;
+  right: 8px;
+  height: 8px;
+  cursor: ns-resize;
+}
+
+.floating-window__resize-handle--n {
+  top: -4px;
+}
+
+.floating-window__resize-handle--s {
+  bottom: -4px;
+}
+
+.floating-window__resize-handle--e,
+.floating-window__resize-handle--w {
+  top: 8px;
+  bottom: 8px;
+  width: 8px;
+  cursor: ew-resize;
+}
+
+.floating-window__resize-handle--e {
+  right: -4px;
+}
+
+.floating-window__resize-handle--w {
+  left: -4px;
+}
+
+.floating-window__resize-handle--ne,
+.floating-window__resize-handle--nw,
+.floating-window__resize-handle--se,
+.floating-window__resize-handle--sw {
   width: 18px;
   height: 18px;
-  cursor: nwse-resize;
-  touch-action: none;
+  opacity: 0.85;
   background-image: repeating-linear-gradient(
     135deg,
     rgba(0, 242, 255, 0.65) 0px,
@@ -1518,8 +1584,30 @@ textarea,
     transparent 1.5px,
     transparent 4px
   );
-  opacity: 0.85;
-  z-index: 2;
+}
+
+.floating-window__resize-handle--se {
+  right: 0;
+  bottom: 0;
+  cursor: nwse-resize;
+}
+
+.floating-window__resize-handle--nw {
+  left: 0;
+  top: 0;
+  cursor: nwse-resize;
+}
+
+.floating-window__resize-handle--ne {
+  right: 0;
+  top: 0;
+  cursor: nesw-resize;
+}
+
+.floating-window__resize-handle--sw {
+  left: 0;
+  bottom: 0;
+  cursor: nesw-resize;
 }
 
 .panel--chat {

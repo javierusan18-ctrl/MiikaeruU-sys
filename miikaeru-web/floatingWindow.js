@@ -34,6 +34,10 @@
   const Z_MAX = 480;
   let zCounter = Z_BASE;
 
+  // 4 bordes + 4 esquinas — redimensionar "desde cualquier borde", no
+  // solo la esquina inferior-derecha de antes.
+  const RESIZE_DIRECTIONS = ["n", "s", "e", "w", "ne", "nw", "se", "sw"];
+
   function nextZ() {
     zCounter = zCounter >= Z_MAX ? Z_BASE : zCounter + 1;
     return zCounter;
@@ -216,10 +220,17 @@
       this.headerEl.appendChild(controls);
 
       if (this.resizable) {
-        this.resizeHandle = document.createElement("div");
-        this.resizeHandle.className = "floating-window__resize-handle";
-        this.resizeHandle.setAttribute("aria-hidden", "true");
-        this.el.appendChild(this.resizeHandle);
+        // 8 asas (4 bordes + 4 esquinas) en vez de una sola en la
+        // esquina inferior-derecha — el pedido explícito es poder
+        // redimensionar "desde las esquinas/bordes", no solo una.
+        this.resizeHandles = RESIZE_DIRECTIONS.map((dir) => {
+          const handle = document.createElement("div");
+          handle.className = `floating-window__resize-handle floating-window__resize-handle--${dir}`;
+          handle.dataset.resizeDir = dir;
+          handle.setAttribute("aria-hidden", "true");
+          this.el.appendChild(handle);
+          return handle;
+        });
       }
     }
 
@@ -346,48 +357,78 @@
       });
     }
 
+    // Redimensiona desde cualquiera de las 8 asas (_buildChrome las crea
+    // todas). `dir` combina hasta dos letras ("n"/"s" + "e"/"w") — cada
+    // una mueve el borde correspondiente; los bordes "n"/"w" además
+    // desplazan top/left para que el borde OPUESTO quede fijo en su
+    // lugar (redimensionar desde la esquina superior-izquierda no debe
+    // mover la esquina inferior-derecha).
     _wireResize() {
+      let activeHandle = null;
       let startX = 0;
       let startY = 0;
       let startWidth = 0;
       let startHeight = 0;
+      let startTop = 0;
+      let startLeft = 0;
 
       const onPointerMove = (event) => {
         if (!this.resizeState) return;
+        const dir = this.resizeState;
         const dx = event.clientX - startX;
         const dy = event.clientY - startY;
-        const newWidth = clamp(startWidth + dx, this.minWidth, window.innerWidth - 20);
-        const newHeight = clamp(startHeight + dy, this.minHeight, window.innerHeight - 20);
-        this.el.style.width = `${newWidth}px`;
-        this.el.style.height = `${newHeight}px`;
+        const maxWidth = window.innerWidth - 20;
+        const maxHeight = window.innerHeight - 20;
+
+        if (dir.includes("e")) {
+          this.el.style.width = `${clamp(startWidth + dx, this.minWidth, maxWidth)}px`;
+        } else if (dir.includes("w")) {
+          const newWidth = clamp(startWidth - dx, this.minWidth, maxWidth);
+          this.el.style.width = `${newWidth}px`;
+          this.el.style.left = `${startLeft + (startWidth - newWidth)}px`;
+        }
+
+        if (dir.includes("s")) {
+          this.el.style.height = `${clamp(startHeight + dy, this.minHeight, maxHeight)}px`;
+        } else if (dir.includes("n")) {
+          const newHeight = clamp(startHeight - dy, this.minHeight, maxHeight);
+          this.el.style.height = `${newHeight}px`;
+          this.el.style.top = `${startTop + (startHeight - newHeight)}px`;
+        }
       };
 
       const onPointerUp = (event) => {
         if (!this.resizeState) return;
         this.resizeState = null;
         this.el.classList.remove("floating-window--resizing");
-        safePointerCapture(this.resizeHandle, event.pointerId, false);
+        safePointerCapture(activeHandle, event.pointerId, false);
+        activeHandle = null;
         this._persist();
         window.removeEventListener("pointermove", onPointerMove);
         window.removeEventListener("pointerup", onPointerUp);
       };
 
-      this.resizeHandle.addEventListener("pointerdown", (event) => {
-        if (!this._isFloatingEligible()) return; // panel fuera de rango — sigue su layout responsivo normal
-        if (this.mode === "maximized" || this.minimized) return;
-        event.preventDefault();
-        event.stopPropagation();
-        this._undock();
-        const rect = this.el.getBoundingClientRect();
-        startX = event.clientX;
-        startY = event.clientY;
-        startWidth = rect.width;
-        startHeight = rect.height;
-        this.resizeState = true;
-        this.el.classList.add("floating-window--resizing");
-        safePointerCapture(this.resizeHandle, event.pointerId, true);
-        window.addEventListener("pointermove", onPointerMove);
-        window.addEventListener("pointerup", onPointerUp);
+      this.resizeHandles.forEach((handle) => {
+        handle.addEventListener("pointerdown", (event) => {
+          if (!this._isFloatingEligible()) return; // panel fuera de rango — sigue su layout responsivo normal
+          if (this.mode === "maximized" || this.minimized) return;
+          event.preventDefault();
+          event.stopPropagation();
+          this._undock();
+          const rect = this.el.getBoundingClientRect();
+          startX = event.clientX;
+          startY = event.clientY;
+          startWidth = rect.width;
+          startHeight = rect.height;
+          startTop = rect.top;
+          startLeft = rect.left;
+          this.resizeState = handle.dataset.resizeDir;
+          activeHandle = handle;
+          this.el.classList.add("floating-window--resizing");
+          safePointerCapture(handle, event.pointerId, true);
+          window.addEventListener("pointermove", onPointerMove);
+          window.addEventListener("pointerup", onPointerUp);
+        });
       });
     }
 
