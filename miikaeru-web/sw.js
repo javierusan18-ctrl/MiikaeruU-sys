@@ -22,7 +22,7 @@
 // index.html (ver ese archivo) — subirlo a mano en cada deploy real
 // hace que `activate` borre el caché viejo y todo se vuelva a guardar
 // fresco, evitando que un celular se quede pegado en una versión vieja.
-const CACHE_NAME = "miikaeru-cache-v20260810-11";
+const CACHE_NAME = "miikaeru-cache-v20260810-12";
 
 const STATIC_ASSETS = [
   "./",
@@ -44,6 +44,10 @@ const STATIC_ASSETS = [
   // Lore — ninguno de los dos lo trae embebido, así que necesita su
   // propia entrada acá igual que storyEngine.js.
   "readerEngine.js",
+  // floatingWindow.js: sistema de ventanas arrastrables/redimensionables/
+  // minimizables/maximizables (tarjeta del León + panel de Chat en
+  // desktop) — mismo criterio que los dos módulos de arriba.
+  "floatingWindow.js",
   "manifest.json",
   // Iconos PWA (ver manifest.json + <link rel="apple-touch-icon"/icon">
   // en index.html) — sin estos, el prompt de instalación y el ícono de

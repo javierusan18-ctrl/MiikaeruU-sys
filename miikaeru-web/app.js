@@ -20395,6 +20395,35 @@ document.addEventListener("DOMContentLoaded", () => {
   // apenas carga la página).
   syncActiveAppCard(activeApp);
 
+  // Ventanas flotantes (drag/resize/minimize/maximize) — ver
+  // floatingWindow.js. Gateadas al mismo ancho de pantalla donde cada
+  // contenedor YA es un panel de escritorio independiente (ver
+  // style.css): por debajo de eso, el módulo queda inactivo solo y
+  // ambos siguen su layout responsivo normal, sin ningún cambio.
+  if (window.MiikaeruFloatingWindow) {
+    const avatarPanelEl = document.querySelector(".panel--avatar");
+    if (avatarPanelEl) {
+      MiikaeruFloatingWindow.enable(avatarPanelEl, {
+        id: "leon",
+        title: "🦁 León · UNIT-042",
+        mediaQuery: "(min-width: 768px)",
+        minWidth: 260,
+        minHeight: 220,
+      });
+    }
+    // #chat-modal ya es el panel fijo "cara a cara con el León" en
+    // escritorio (ver style.css, @media min-width:901px) — reutiliza su
+    // propia cabecera (.chat-header-moba, "Feed // Chat") como agarre
+    // de arrastre en vez de inyectarle una segunda barra encima.
+    MiikaeruFloatingWindow.enable(chatModal, {
+      id: "chat",
+      header: document.querySelector(".chat-header-moba"),
+      mediaQuery: "(min-width: 901px)",
+      minWidth: 280,
+      minHeight: 220,
+    });
+  }
+
   // El resto de la app ya está renderizado detrás del candado (no hay
   // datos sensibles reales que proteger — todo vive en el mismo
   // localStorage del navegador), pero la bienvenida del operador

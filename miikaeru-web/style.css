@@ -1334,6 +1334,194 @@ textarea,
   );
 }
 
+/* ===================== VENTANAS FLOTANTES (floatingWindow.js) =====================
+   Sistema genérico de ventanas arrastrables/redimensionables/
+   minimizables/maximizables — ver floatingWindow.js para la lógica.
+   Acá solo vive la piel visual: mismo lenguaje HUD del resto de la app
+   (glass + borde cyan + glow), sin inventar un estilo nuevo. */
+
+.floating-window {
+  transition: box-shadow 0.25s ease;
+  /* #chat-modal ya trae `resize: both` nativo (ver style.css más abajo,
+     @media min-width:901px) — una vez que el módulo toma control del
+     resize con su propio grip (.floating-window__resize-handle), se
+     apaga el nativo para no tener dos asas de resize superpuestas
+     (la gris del navegador + la cyan del módulo). */
+  resize: none !important;
+}
+
+/* Mientras está "acoplada" (layout normal, flex-item de siempre) no
+   necesita ningún estilo especial — el glow/marco solo aparece una vez
+   que se desprende (floating) o se maximiza, para que quede claro
+   visualmente que "salió" de su lugar habitual. */
+.floating-window--floating,
+.floating-window--maximized {
+  box-shadow: 0 0 0 1px rgba(0, 240, 255, 0.35), 0 18px 48px rgba(0, 0, 0, 0.55), var(--shadow-neon-cyan);
+  border-radius: var(--radius-lg);
+}
+
+.floating-window--floating {
+  transition: top 0.22s ease, left 0.22s ease, width 0.22s ease, height 0.22s ease, box-shadow 0.25s ease;
+}
+
+/* Durante el arrastre/resize activo se cortan las transiciones de
+   posición/tamaño — sin esto, la ventana "persigue" al puntero con
+   retraso en vez de moverse 1:1, se siente pegajoso en vez de fluido. */
+.floating-window--dragging,
+.floating-window--resizing {
+  transition: box-shadow 0.25s ease !important;
+  user-select: none;
+}
+
+.floating-window--dragging {
+  cursor: grabbing !important;
+}
+
+.floating-window--maximized {
+  position: fixed !important;
+  inset: 14px !important;
+  width: auto !important;
+  height: auto !important;
+  transition: inset 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* Minimizada: floatingWindow.js fija la altura inline exacta de la
+   cabecera (ver toggleMinimize()) — acá solo se fuerza el overflow
+   escondido para que el resto del contenido (que sigue intacto en el
+   DOM, sin tocarse) quede recortado en vez de desbordar. Deliberado no
+   usar `display:none` sobre "los hijos que no sean la cabecera": la
+   cabecera reutilizada del chat (.chat-header-moba) vive UN nivel más
+   adentro que la del León (inyectada como hijo directo), así que un
+   selector estructural por profundidad no sirve para las dos por
+   igual — colapsar la altura del contenedor raíz sí funciona para
+   cualquier profundidad. */
+.floating-window--minimized {
+  min-height: 0 !important;
+  overflow: hidden !important;
+  resize: none !important;
+  transition: height 0.22s ease, box-shadow 0.25s ease;
+}
+
+.floating-window--minimized .floating-window__resize-handle {
+  display: none;
+}
+
+/* El módulo desactiva su propia lógica (drag/resize/min/max) fuera del
+   rango de pantalla configurado (ver `mediaQuery` en floatingWindow.js)
+   — acá solo se asegura de que ningún resto visual (glow, cursor grab)
+   sobreviva a esa desactivación. */
+.floating-window--inactive {
+  box-shadow: none !important;
+  cursor: auto !important;
+}
+
+/* Cabecera INYECTADA por el módulo (cuando el contenedor no traía
+   ninguna propia, ej. la tarjeta del León) — barra angosta con el
+   mismo lenguaje visual que .chat-header-moba, pero autocontenida. */
+.floating-window__titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 8px 6px 12px;
+  background: rgba(0, 240, 255, 0.06);
+  border-bottom: 1px solid var(--glass-border);
+  cursor: grab;
+  touch-action: none;
+  /* position+z-index: mismo criterio que .panel--avatar .panel__header/
+     #avatarScene/.avatar__meta — sin esto, la textura de mandala
+     (::before, z-index:0) del panel del León podría pintarse por
+     encima de esta barra inyectada. */
+  position: relative;
+  z-index: 1;
+  flex: none;
+}
+
+.floating-window__title {
+  font-size: 0.7rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--neon-cyan);
+  text-shadow: var(--shadow-neon-cyan);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Cabecera REUTILIZADA (ej. .chat-header-moba) — se le agrega el
+   agarre de arrastre sin pisar su padding/tipografía existente; solo
+   se corrige justify-content para que los controles nuevos se vayan al
+   extremo derecho sin separar el título de su tag (canal-01). */
+.floating-window__header--reused {
+  cursor: grab;
+  touch-action: none;
+  justify-content: flex-start !important;
+}
+
+.floating-window__header--reused .floating-window__controls {
+  margin-left: auto;
+}
+
+.floating-window--dragging .floating-window__header,
+.floating-window--dragging .floating-window__titlebar {
+  cursor: grabbing;
+}
+
+.floating-window__controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+}
+
+.floating-window__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  background: rgba(5, 10, 18, 0.4);
+  color: var(--text-secondary);
+  font-size: 0.62rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.floating-window__btn:hover {
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.floating-window__btn--close:hover {
+  border-color: var(--neon-magenta);
+  color: var(--neon-magenta);
+  box-shadow: 0 0 10px rgba(255, 46, 154, 0.5);
+}
+
+.floating-window__resize-handle {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 18px;
+  height: 18px;
+  cursor: nwse-resize;
+  touch-action: none;
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgba(0, 242, 255, 0.65) 0px,
+    rgba(0, 242, 255, 0.65) 1.5px,
+    transparent 1.5px,
+    transparent 4px
+  );
+  opacity: 0.85;
+  z-index: 2;
+}
+
 .panel--chat {
   flex: 1 1 480px;
   height: calc(100vh - 140px);
