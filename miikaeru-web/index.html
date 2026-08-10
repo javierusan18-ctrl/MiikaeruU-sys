@@ -3142,7 +3142,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260810-3"></script>
+  <script src="app.js?v=20260810-4"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de
@@ -3177,6 +3177,12 @@
             document.addEventListener("visibilitychange", () => {
               if (document.visibilityState === "visible") registration.update();
             });
+            // Respaldo para pestañas que quedan abiertas y en primer
+            // plano durante horas SIN pasar nunca por background/foreground
+            // (visibilitychange nunca dispara en ese caso) — un chequeo
+            // cada 20 minutos asegura que ni esa pestaña se quede pegada
+            // en una versión vieja esperando a que alguien la cierre.
+            setInterval(() => registration.update(), 20 * 60 * 1000);
           })
           .catch((err) => {
             console.warn("Service Worker: no se pudo registrar (la app sigue funcionando igual):", err);

@@ -22,7 +22,7 @@
 // index.html (ver ese archivo) — subirlo a mano en cada deploy real
 // hace que `activate` borre el caché viejo y todo se vuelva a guardar
 // fresco, evitando que un celular se quede pegado en una versión vieja.
-const CACHE_NAME = "miikaeru-cache-v20260810-3";
+const CACHE_NAME = "miikaeru-cache-v20260810-4";
 
 const STATIC_ASSETS = [
   "./",
@@ -162,8 +162,17 @@ self.addEventListener("fetch", (event) => {
   // Service Worker se actualice solo. El caché queda como respaldo SOLO
   // para cuando no hay red — ahí sí se sirve lo último que se guardó.
   if (isNavigationRequest(event.request, url)) {
+    // `cache: "reload"` fuerza a este fetch a ignorar por completo el
+    // caché HTTP del navegador (no solo el Cache Storage de este SW) y
+    // pedirle el documento a la red de verdad — sin esto, algunos
+    // navegadores podían servir una copia de index.html guardada en su
+    // caché HTTP normal aunque el SW quisiera "Network First", dejando
+    // a un usuario pegado en una versión vieja pese a tener internet.
+    // Ver también vercel.json: "/" e "/index.html" ahora mandan
+    // Cache-Control: no-cache/no-store desde el origen, doble refuerzo
+    // del mismo objetivo (que el HTML SIEMPRE se revalide con la red).
     event.respondWith(
-      fetch(event.request)
+      fetch(event.request, { cache: "reload" })
         .then((response) => {
           if (response && response.ok) {
             const clone = response.clone();

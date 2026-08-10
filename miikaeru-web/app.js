@@ -999,6 +999,8 @@ const I18N = {
     metricsDbAuthFailed: "⚠️ SUPABASE_DB_URL tiene usuario/contraseña incorrectos.",
     metricsDbNotFound: "⚠️ SUPABASE_DB_URL apunta a una base de datos que no existe.",
     metricsConnectionFailed: "⚠️ No se pudo conectar al host de la base de datos — revisá que SUPABASE_DB_URL sea la cadena de conexión correcta (pooler).",
+    metricsDiagnosticsEnv: "Entorno", metricsDiagnosticsBranch: "Rama", metricsDiagnosticsFoundKeys: "Variables SUPABASE_* encontradas",
+    metricsDiagnosticsNoneFound: "ninguna",
     metricsNetworkError: "⚠️ Error de red al conectar con Supabase.",
     adminPanelTabPhotos: "📸 Fotos",
     adminPhotosHint: "Pega la URL de una imagen para cada personaje y guarda — se refleja al instante en la pantalla de elección de Héroe.",
@@ -1896,6 +1898,8 @@ const I18N = {
     metricsDbAuthFailed: "⚠️ SUPABASE_DB_URL has the wrong username/password.",
     metricsDbNotFound: "⚠️ SUPABASE_DB_URL points to a database that doesn't exist.",
     metricsConnectionFailed: "⚠️ Couldn't connect to the database host — check that SUPABASE_DB_URL is the correct (pooler) connection string.",
+    metricsDiagnosticsEnv: "Environment", metricsDiagnosticsBranch: "Branch", metricsDiagnosticsFoundKeys: "SUPABASE_* vars found",
+    metricsDiagnosticsNoneFound: "none",
     metricsNetworkError: "⚠️ Network error connecting to Supabase.",
     adminPanelTabPhotos: "📸 Photos",
     adminPhotosHint: "Paste an image URL for each character and save — reflected instantly on the Hero selection screen.",
@@ -2793,6 +2797,8 @@ const I18N = {
     metricsDbAuthFailed: "⚠️ SUPABASE_DB_URLのユーザー名またはパスワードが間違っています。",
     metricsDbNotFound: "⚠️ SUPABASE_DB_URLが存在しないデータベースを指しています。",
     metricsConnectionFailed: "⚠️ データベースホストに接続できませんでした — SUPABASE_DB_URLが正しい接続文字列（プーラー）か確認してください。",
+    metricsDiagnosticsEnv: "環境", metricsDiagnosticsBranch: "ブランチ", metricsDiagnosticsFoundKeys: "見つかったSUPABASE_*変数",
+    metricsDiagnosticsNoneFound: "なし",
     metricsNetworkError: "⚠️ Supabaseへの接続でネットワークエラーが発生しました。",
     adminPanelTabPhotos: "📸 写真",
     adminPhotosHint: "各キャラクターの画像URLを貼り付けて保存してください — ヒーロー選択画面に即反映されます。",
@@ -10870,10 +10876,21 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await res.json();
 
       if (!data.ok) {
+        console.warn("Usuarios: api/admin-list-users respondió con error —", data.error, data.detail || "", data.diagnostics || "");
         usersRows = [];
         renderUsersStats([]);
         renderUsersTable([]);
-        setUsersStatus(data.error === "table_missing" ? t("usersTableMissingWarning") : t("adminPanelNetworkError"));
+        // table_missing usa un aviso propio (invita a correr /api/init-db,
+        // ver usersTableMissingWarning) — el resto de los códigos
+        // (missing_env/not_authorized/etc.) reutiliza el mismo clasificador
+        // + diagnóstico visible que ya tiene la pestaña Métricas (ver
+        // metricsErrorMessage() arriba), en vez del genérico
+        // "adminPanelNetworkError" que antes escondía la causa real.
+        setUsersStatus(
+          data.error === "table_missing"
+            ? t("usersTableMissingWarning")
+            : metricsErrorMessage(data.error, data.detail, data.diagnostics)
+        );
         return;
       }
 
@@ -10953,9 +10970,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await res.json();
 
       if (!data.ok) {
-        console.warn("Métricas: api/admin-metrics respondió con error —", data.error, data.detail || "");
+        console.warn("Métricas: api/admin-metrics respondió con error —", data.error, data.detail || "", data.diagnostics || "");
         renderMetricsStats(null);
-        setMetricsStatus(metricsErrorMessage(data.error, data.detail));
+        setMetricsStatus(metricsErrorMessage(data.error, data.detail, data.diagnostics));
         return;
       }
 
@@ -10975,7 +10992,15 @@ document.addEventListener("DOMContentLoaded", () => {
   // crudo de Postgres/Node: se muestra entre paréntesis porque esta
   // pestaña ya está detrás del gate de Super Admin, no hay nada sensible
   // que un usuario final pueda ver acá.
-  function metricsErrorMessage(error, detail) {
+  //
+  // `diagnostics` (ver getSupabaseEnvDiagnostics() en api/_utils.js):
+  // solo viene poblado cuando error === "missing_env" — se muestra
+  // directo en la pantalla en vez de obligar a abrir DevTools/Network
+  // para verlo. Nunca trae el valor de ninguna variable, solo en qué
+  // Environment/rama corrió la función y los NOMBRES de cualquier env
+  // var que contenga "SUPABASE" (para detectar un typo de nombre en el
+  // dashboard de Vercel, ej. SUPABASE_DB_URI en vez de SUPABASE_DB_URL).
+  function metricsErrorMessage(error, detail, diagnostics) {
     const key = {
       table_missing: "metricsTableMissingWarning",
       not_authorized: "metricsNotAuthorized",
@@ -10984,8 +11009,15 @@ document.addEventListener("DOMContentLoaded", () => {
       db_not_found: "metricsDbNotFound",
       connection_failed: "metricsConnectionFailed",
     }[error] || "metricsNetworkError";
-    const base = t(key);
-    return detail ? `${base} (${detail})` : base;
+    let message = t(key);
+    if (detail) message += ` (${detail})`;
+    if (error === "missing_env" && diagnostics) {
+      const foundKeys = diagnostics.envKeysContainingSupabase && diagnostics.envKeysContainingSupabase.length
+        ? diagnostics.envKeysContainingSupabase.join(", ")
+        : t("metricsDiagnosticsNoneFound");
+      message += ` — ${t("metricsDiagnosticsEnv")}: ${diagnostics.vercelEnv || "?"} / ${t("metricsDiagnosticsBranch")}: ${diagnostics.gitBranch || "?"} / ${t("metricsDiagnosticsFoundKeys")}: ${foundKeys}`;
+    }
+    return message;
   }
 
   if (metricsRefreshBtn) metricsRefreshBtn.addEventListener("click", fetchAdminMetrics);

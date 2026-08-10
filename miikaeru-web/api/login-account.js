@@ -17,7 +17,8 @@ module.exports = async function handler(req, res) {
   if (!connectionString) {
     res.status(500).json({
       ok: false,
-      error: "Falta SUPABASE_DB_URL en las variables de entorno de Vercel.",
+      error: "missing_env",
+      detail: "Falta SUPABASE_DB_URL en las variables de entorno de Vercel.",
       diagnostics: getSupabaseEnvDiagnostics(),
     });
     return;

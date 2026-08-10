@@ -33,9 +33,15 @@ module.exports = async function handler(req, res) {
 
   const connectionString = (process.env.SUPABASE_DB_URL || "").trim();
   if (!connectionString) {
+    // `error` como código corto (no la frase en español) — mismo criterio
+    // que admin-metrics.js, así el frontend puede clasificar el mensaje
+    // en vez de mostrar siempre el genérico "Error de red" para
+    // cualquier fallo (ver metricsErrorMessage()/fetchUsersAccounts() en
+    // app.js).
     res.status(500).json({
       ok: false,
-      error: "Falta SUPABASE_DB_URL en las variables de entorno de Vercel.",
+      error: "missing_env",
+      detail: "Falta SUPABASE_DB_URL en las variables de entorno de Vercel.",
       diagnostics: getSupabaseEnvDiagnostics(),
     });
     return;
