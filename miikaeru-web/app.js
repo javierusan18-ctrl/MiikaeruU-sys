@@ -420,6 +420,70 @@ const MASTER_LOGGED_IN_KEY = "miikaeru_master_logged_in";
 // de página reintentaría la migración de nuevo innecesariamente.
 const MASTER_MIGRATED_KEY = "miikaeru_master_migrated";
 
+// Modo híbrido: si /api/register-account o /api/login-account no
+// responden por un problema de infraestructura (SUPABASE_DB_URL sin
+// configurar en Vercel, ENOTFOUND al host de Postgres, timeout de red,
+// etc. — ver MASTER_AUTH_INFRA_ERRORS más abajo) la app NUNCA debe
+// dejar al Operador sin poder entrar. `MASTER_LOCAL_FALLBACK_KEY`
+// guarda una cuenta 100% local (hash + salt derivados con Web Crypto
+// PBKDF2, nunca la contraseña en texto plano) que permite registrarse/
+// entrar sin servidor. En cuanto el servidor vuelve a responder (login
+// exitoso o rechazado con "invalid_credentials" que sí matchea el hash
+// local), se sube sola a Supabase vía trySyncLocalFallbackToServer() y
+// esta clave se limpia — es un estado transitorio, no una segunda
+// fuente de verdad permanente.
+const MASTER_LOCAL_FALLBACK_KEY = "miikaeru_master_local_fallback";
+// Códigos que representan un fallo de INFRAESTRUCTURA (servidor
+// alcanzable pero no puede hacer su trabajo) — ver getSupabaseEnvDiagnostics()
+// en api/_utils.js y el catch de cada endpoint en api/*.js. Distinto de
+// un rechazo de dominio real (invalid_credentials/account_suspended/
+// account_exists/invalid_input), que sí hay que respetar tal cual.
+const MASTER_AUTH_INFRA_ERRORS = new Set(["missing_env", "connection_failed", "auth_failed", "db_not_found", "server_error"]);
+
+function bytesToHex(bytes) {
+  return Array.from(bytes).map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+function hexToBytes(hex) {
+  const out = new Uint8Array(hex.length / 2);
+  for (let i = 0; i < out.length; i++) out[i] = parseInt(hex.substr(i * 2, 2), 16);
+  return out;
+}
+// PBKDF2 vía Web Crypto (nativo del navegador, sin dependencias nuevas)
+// — mismo criterio de "nunca contraseña en texto plano" que hashPassword()
+// del lado del servidor (api/_utils.js), pero con la API disponible acá
+// (el módulo `crypto` de Node no existe en el navegador).
+async function deriveLocalPasswordHash(password, saltHex) {
+  const keyMaterial = await crypto.subtle.importKey("raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveBits"]);
+  const bits = await crypto.subtle.deriveBits(
+    { name: "PBKDF2", salt: hexToBytes(saltHex), iterations: 100000, hash: "SHA-256" },
+    keyMaterial,
+    256
+  );
+  return bytesToHex(new Uint8Array(bits));
+}
+function loadLocalFallbackAccount() {
+  try {
+    return JSON.parse(localStorage.getItem(MASTER_LOCAL_FALLBACK_KEY));
+  } catch (err) {
+    return null;
+  }
+}
+async function saveLocalFallbackAccount(phone, password, name) {
+  const saltHex = bytesToHex(crypto.getRandomValues(new Uint8Array(16)));
+  const hashHex = await deriveLocalPasswordHash(password, saltHex);
+  localStorage.setItem(MASTER_LOCAL_FALLBACK_KEY, JSON.stringify({ phone, name: name || null, saltHex, hashHex }));
+}
+// Verificación 100% local (nunca pega al servidor) — usada tanto para
+// entrar sin conexión como para confirmar, ya con conexión, que un
+// "invalid_credentials" del servidor en realidad es "esta cuenta local
+// todavía no se subió" (ver trySyncLocalFallbackToServer()).
+async function verifyLocalFallbackAccount(phone, password) {
+  const account = loadLocalFallbackAccount();
+  if (!account || account.phone !== phone) return null;
+  const hashHex = await deriveLocalPasswordHash(password, account.saltHex);
+  return hashHex === account.hashHex ? account : null;
+}
+
 // ---------------------------------------------------
 // Sistema de Perfiles de Usuario
 // Cada perfil ("Admin", "Mamá - Salón", "Hermano - Camión"...) es una
@@ -734,6 +798,7 @@ const I18N = {
     masterAuthAccountExists: "Ya existe una cuenta en este dispositivo. Inicia sesión con tu celular y contraseña.",
     masterAuthAccountSuspended: "Esta cuenta está suspendida. Contacta al administrador.",
     masterAuthNetworkError: "⚠️ No se pudo conectar. Revisa tu conexión e intenta de nuevo.",
+    masterAuthLocalModeNotice: "📴 No se pudo conectar con el servidor — tu cuenta se guardó en este dispositivo y se sincronizará sola en cuanto vuelva la conexión.",
     masterAuthGoRegister: "¿No tienes cuenta? Crear una",
     masterAuthGoLogin: "¿Ya tienes cuenta? Iniciar sesión",
     profileSwitchBtnTitle: "Cambiar de perfil",
@@ -1633,6 +1698,7 @@ const I18N = {
     masterAuthAccountExists: "An account already exists on this device. Log in with your phone and password.",
     masterAuthAccountSuspended: "This account is suspended. Contact the administrator.",
     masterAuthNetworkError: "⚠️ Couldn't connect. Check your connection and try again.",
+    masterAuthLocalModeNotice: "📴 Couldn't reach the server — your account was saved on this device and will sync automatically once the connection is back.",
     masterAuthGoRegister: "Don't have an account? Create one",
     masterAuthGoLogin: "Already have an account? Log in",
     profileSwitchBtnTitle: "Switch profile",
@@ -2532,6 +2598,7 @@ const I18N = {
     masterAuthAccountExists: "この端末にはすでにアカウントがあります。電話番号とパスワードでログインしてください。",
     masterAuthAccountSuspended: "このアカウントは停止されています。管理者に連絡してください。",
     masterAuthNetworkError: "⚠️ 接続できませんでした。接続を確認してもう一度お試しください。",
+    masterAuthLocalModeNotice: "📴 サーバーに接続できませんでした — アカウントはこの端末に保存され、接続が回復すると自動的に同期されます。",
     masterAuthGoRegister: "アカウントをお持ちでないですか？作成する",
     masterAuthGoLogin: "すでにアカウントをお持ちですか？ログイン",
     profileSwitchBtnTitle: "プロフィールを切り替える",
@@ -11679,14 +11746,35 @@ document.addEventListener("DOMContentLoaded", () => {
           panel.hidden = panel.dataset.chatPanel !== target;
         });
         if (target === "all") chatFeed.scrollTop = chatFeed.scrollHeight;
+        // try/catch de red: ensureContactRegistered() ya se protege sola,
+        // pero loadFriends()/renderSquadTab() pueden propagar un error
+        // real de Supabase (tabla sin política RLS, host inalcanzable,
+        // etc.) que antes quedaba como una excepción sin atrapar en la
+        // consola. Ninguna de las dos pestañas depende de esto para
+        // mostrar ALGO: loadFriends() ya devuelve los contactos de
+        // prueba locales aunque Supabase falle, y renderSquadTab() cae
+        // en el estado "sin Escuadrón" — atrapar acá es solo para que un
+        // fallo más profundo/inesperado nunca deje un error rojo suelto.
         if (target === "friends") {
-          await ensureContactRegistered();
-          renderChatFriendsList(await loadFriends());
-          wireFriendshipsRealtime();
+          try {
+            await ensureContactRegistered();
+            renderChatFriendsList(await loadFriends());
+            wireFriendshipsRealtime();
+          } catch (err) {
+            console.warn("Pestaña Amigos: no se pudo cargar contra Supabase, se muestran solo los contactos locales:", err);
+            renderChatFriendsList(Object.values(loadLocalTestContacts()).map((c) => ({ ...c, relationship: "friend" })));
+          }
         }
         if (target === "squad") {
-          await ensureContactRegistered();
-          await renderSquadTab();
+          try {
+            await ensureContactRegistered();
+            await renderSquadTab();
+          } catch (err) {
+            console.warn("Pestaña Escuadrón: no se pudo cargar contra Supabase:", err);
+            stopSquadRealtime();
+            if (chatSquadActive) chatSquadActive.hidden = true;
+            if (chatSquadNoSquad) chatSquadNoSquad.hidden = false;
+          }
         }
         if (target === "conversation") {
           openConversationMode();
@@ -19697,10 +19785,22 @@ document.addEventListener("DOMContentLoaded", () => {
           masterLoginPhone.value = phone;
           masterLoginError.textContent = t("masterAuthAccountExists");
           masterLoginError.hidden = false;
-        } else {
-          masterRegisterError.textContent = t("masterAuthNetworkError");
-          masterRegisterError.hidden = false;
+          return;
         }
+        // Fallo de INFRAESTRUCTURA (SUPABASE_DB_URL sin configurar en
+        // Vercel, ENOTFOUND al host de Postgres, etc. — ver
+        // MASTER_AUTH_INFRA_ERRORS arriba) — el servidor respondió, pero
+        // no pudo hacer su trabajo. En vez de dejar al Operador sin
+        // poder entrar, se registra 100% local (hash PBKDF2, nunca la
+        // contraseña en claro) y se sube sola en cuanto vuelva la
+        // conexión (ver trySyncLocalFallbackToServer(), disparado desde
+        // el próximo login exitoso).
+        if (MASTER_AUTH_INFRA_ERRORS.has(data.error)) {
+          await registerMasterAccountLocally(phone, password);
+          return;
+        }
+        masterRegisterError.textContent = t("masterAuthNetworkError");
+        masterRegisterError.hidden = false;
         return;
       }
 
@@ -19713,12 +19813,37 @@ document.addEventListener("DOMContentLoaded", () => {
       masterAuthModal.hidden = true;
       onMasterAuthSuccess();
     } catch (err) {
-      masterRegisterError.textContent = t("masterAuthNetworkError");
-      masterRegisterError.hidden = false;
+      // Fetch en sí mismo falló (sin red, DNS del propio Vercel, etc.) —
+      // mismo criterio que arriba: fallback local en vez de bloquear.
+      await registerMasterAccountLocally(phone, password);
     } finally {
       setFormBusy(masterRegisterForm, false);
     }
   });
+
+  // Registro 100% local — ver comentario junto a MASTER_LOCAL_FALLBACK_KEY.
+  // Nunca falla por red (no toca el servidor); si el propio Web Crypto
+  // fallara por algún motivo (navegador viejísimo sin soporte), recién
+  // ahí se muestra el error genérico.
+  async function registerMasterAccountLocally(phone, password) {
+    try {
+      await saveLocalFallbackAccount(phone, password, null);
+      localStorage.setItem(MASTER_ACCOUNT_KEY, JSON.stringify({ phone, name: null }));
+      localStorage.setItem(MASTER_LOGGED_IN_KEY, "true");
+      // No hay migración legacy pendiente que reintentar en este
+      // dispositivo — el registro que sí falta subir es este nuevo
+      // fallback, que usa su propia clave (MASTER_LOCAL_FALLBACK_KEY) y
+      // su propio disparador de sync (ver trySyncLocalFallbackToServer()).
+      localStorage.setItem(MASTER_MIGRATED_KEY, "true");
+      masterAuthModal.hidden = true;
+      addMessage({ author: "SISTEMA", text: t("masterAuthLocalModeNotice"), variant: "system" });
+      onMasterAuthSuccess();
+    } catch (err) {
+      console.warn("Registro local (fallback) falló:", err);
+      masterRegisterError.textContent = t("masterAuthNetworkError");
+      masterRegisterError.hidden = false;
+    }
+  }
 
   masterAuthGoRegisterBtn.addEventListener("click", () => {
     masterLoginError.hidden = true;
@@ -19747,24 +19872,96 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await res.json();
 
       if (!data.ok) {
+        // El servidor SÍ respondió pero no pudo hacer su trabajo
+        // (SUPABASE_DB_URL rota/ausente) — entrar con la cuenta local de
+        // este dispositivo si coincide, en vez de bloquear al Operador.
+        if (MASTER_AUTH_INFRA_ERRORS.has(data.error)) {
+          if (await loginMasterAccountLocally(phone, password)) return;
+          masterLoginError.textContent = t("masterAuthNetworkError");
+          masterLoginError.hidden = false;
+          return;
+        }
+        // "invalid_credentials" es ambiguo en un caso específico: una
+        // cuenta que se creó en modo local-fallback (ver
+        // registerMasterAccountLocally()) todavía no existe en el
+        // servidor, así que el servidor correctamente dice que no la
+        // reconoce. Si el hash local coincide, significa que la
+        // conexión YA volvió — se aprovecha este mismo submit (tenemos
+        // la contraseña en claro en memoria, nunca se vuelve a pedir)
+        // para subirla de una vez (ver trySyncLocalFallbackToServer()).
+        if (data.error === "invalid_credentials") {
+          const localMatch = await verifyLocalFallbackAccount(phone, password);
+          if (localMatch && (await trySyncLocalFallbackToServer(phone, password, localMatch.name))) return;
+        }
         masterLoginError.textContent =
           data.error === "account_suspended" ? t("masterAuthAccountSuspended") : t("masterAuthInvalidCredentials");
         masterLoginError.hidden = false;
         return;
       }
 
+      // Login real contra el servidor tuvo éxito — si además había una
+      // cuenta local-fallback pendiente para OTRO teléfono en este
+      // dispositivo, se deja como está (no se toca sin que el Operador
+      // la use activamente); esta cuenta que sí respondió el servidor
+      // es la fuente de verdad de acá en más.
       localStorage.setItem(MASTER_ACCOUNT_KEY, JSON.stringify({ phone: data.user.phone, name: data.user.name }));
       localStorage.setItem(MASTER_LOGGED_IN_KEY, "true");
       localStorage.setItem(MASTER_MIGRATED_KEY, "true");
       masterAuthModal.hidden = true;
       onMasterAuthSuccess();
     } catch (err) {
+      // Fetch en sí mismo falló (sin red) — mismo fallback que arriba.
+      if (await loginMasterAccountLocally(phone, password)) return;
       masterLoginError.textContent = t("masterAuthNetworkError");
       masterLoginError.hidden = false;
     } finally {
       setFormBusy(masterLoginForm, false);
     }
   });
+
+  // Intenta entrar con la cuenta 100% local de este dispositivo (ver
+  // MASTER_LOCAL_FALLBACK_KEY). Devuelve true/false para que el caller
+  // sepa si ya resolvió el submit o si tiene que mostrar un error.
+  async function loginMasterAccountLocally(phone, password) {
+    const localMatch = await verifyLocalFallbackAccount(phone, password);
+    if (!localMatch) return false;
+    localStorage.setItem(MASTER_ACCOUNT_KEY, JSON.stringify({ phone, name: localMatch.name }));
+    localStorage.setItem(MASTER_LOGGED_IN_KEY, "true");
+    masterAuthModal.hidden = true;
+    addMessage({ author: "SISTEMA", text: t("masterAuthLocalModeNotice"), variant: "system" });
+    onMasterAuthSuccess();
+    return true;
+  }
+
+  // Sube una cuenta local-fallback al servidor apenas se confirma que la
+  // conexión volvió (llamado desde el submit de login cuando el hash
+  // local coincide con lo que el servidor acaba de decir que no conoce
+  // — ver el bloque "invalid_credentials" arriba). Mejor esfuerzo: si
+  // este intento puntual de sync también falla, simplemente se sigue
+  // usando el modo local sin romper nada; se reintentará en el próximo
+  // login exitoso.
+  async function trySyncLocalFallbackToServer(phone, password, name) {
+    try {
+      const res = await fetch("/api/register-account", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone, password, name: name || undefined }),
+      });
+      const data = await res.json();
+      if (!data.ok && data.error !== "account_exists") return false;
+
+      localStorage.removeItem(MASTER_LOCAL_FALLBACK_KEY);
+      const syncedName = (data.user && data.user.name) || name || null;
+      localStorage.setItem(MASTER_ACCOUNT_KEY, JSON.stringify({ phone, name: syncedName }));
+      localStorage.setItem(MASTER_LOGGED_IN_KEY, "true");
+      masterAuthModal.hidden = true;
+      onMasterAuthSuccess();
+      return true;
+    } catch (err) {
+      console.warn("No se pudo sincronizar la cuenta local con el servidor (se reintentará en el próximo login):", err);
+      return false;
+    }
+  }
 
   // Sube a Supabase (public.users) una cuenta que todavía solo existe en
   // el localStorage de ESTE dispositivo, guardada ahí antes de que
