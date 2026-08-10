@@ -22,7 +22,7 @@
 // cambios) sepa a qué fila apuntar.
 
 const { Client } = require("pg");
-const { verifyAdminToken } = require("./_utils");
+const { verifyAdminToken, getSupabaseEnvDiagnostics } = require("./_utils");
 
 module.exports = async function handler(req, res) {
   const isAdmin = await verifyAdminToken(req.headers.authorization);
@@ -33,7 +33,11 @@ module.exports = async function handler(req, res) {
 
   const connectionString = (process.env.SUPABASE_DB_URL || "").trim();
   if (!connectionString) {
-    res.status(500).json({ ok: false, error: "Falta SUPABASE_DB_URL en las variables de entorno de Vercel." });
+    res.status(500).json({
+      ok: false,
+      error: "Falta SUPABASE_DB_URL en las variables de entorno de Vercel.",
+      diagnostics: getSupabaseEnvDiagnostics(),
+    });
     return;
   }
 

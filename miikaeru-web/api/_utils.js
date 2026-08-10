@@ -63,4 +63,27 @@ async function verifyAdminToken(authHeader) {
   }
 }
 
-module.exports = { hashPassword, verifyPassword, verifyAdminToken, ADMIN_EMAIL };
+// Diagnóstico best-effort para cuando SUPABASE_DB_URL aparece "faltante"
+// en tiempo de ejecución pese a que el código la lee con el nombre
+// correcto (los 6 endpoints que dependen de ella hacen exactamente
+// `process.env.SUPABASE_DB_URL`, sin variantes — confirmado por
+// revisión exhaustiva del código, no es un typo de nombre en el repo).
+// Cuando eso pasa, la causa casi siempre vive en la config de Vercel
+// (variable no guardada, guardada solo para un Environment que no es
+// el que sirve esta request, o guardada DESPUÉS del último deploy —
+// Vercel no la inyecta en deploys ya existentes, hace falta un redeploy
+// nuevo). Nunca devuelve el valor de ninguna variable, solo metadata
+// que ya es pública o inofensiva: en qué Environment/branch corre esta
+// función ahora mismo, y los NOMBRES (no valores) de cualquier variable
+// de entorno que contenga "SUPABASE" — así, si alguien la guardó con un
+// nombre ligeramente distinto (ej. "SUPABASE_DB_URI" en vez de
+// "SUPABASE_DB_URL"), aparece acá mismo en la respuesta de error.
+function getSupabaseEnvDiagnostics() {
+  return {
+    vercelEnv: process.env.VERCEL_ENV || null,
+    gitBranch: process.env.VERCEL_GIT_COMMIT_REF || null,
+    envKeysContainingSupabase: Object.keys(process.env).filter((k) => k.toUpperCase().includes("SUPABASE")),
+  };
+}
+
+module.exports = { hashPassword, verifyPassword, verifyAdminToken, ADMIN_EMAIL, getSupabaseEnvDiagnostics };

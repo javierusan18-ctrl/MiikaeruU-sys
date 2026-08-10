@@ -25,6 +25,7 @@
 // de nuevo.
 
 const { Client } = require("pg");
+const { getSupabaseEnvDiagnostics } = require("./_utils");
 
 const SCHEMA_STATEMENTS = [
   // Cuentas de Operador (login real por teléfono+contraseña) — reemplaza
@@ -294,6 +295,7 @@ module.exports = async function handler(req, res) {
       error: "Falta SUPABASE_DB_URL en las variables de entorno de Vercel (Project Settings → Environment Variables).",
       howToFix:
         "Supabase → Settings → Database → Connection string (modo 'Transaction pooler', puerto 6543) → copiar → Vercel → Project Settings → Environment Variables → agregar SUPABASE_DB_URL → redeploy.",
+      diagnostics: getSupabaseEnvDiagnostics(),
     });
     return;
   }

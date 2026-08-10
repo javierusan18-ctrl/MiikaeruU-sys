@@ -7,7 +7,7 @@
 // ningún log.
 
 const { Client } = require("pg");
-const { verifyAdminToken, hashPassword } = require("./_utils");
+const { verifyAdminToken, hashPassword, getSupabaseEnvDiagnostics } = require("./_utils");
 
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") {
@@ -23,7 +23,11 @@ module.exports = async function handler(req, res) {
 
   const connectionString = (process.env.SUPABASE_DB_URL || "").trim();
   if (!connectionString) {
-    res.status(500).json({ ok: false, error: "Falta SUPABASE_DB_URL en las variables de entorno de Vercel." });
+    res.status(500).json({
+      ok: false,
+      error: "Falta SUPABASE_DB_URL en las variables de entorno de Vercel.",
+      diagnostics: getSupabaseEnvDiagnostics(),
+    });
     return;
   }
 

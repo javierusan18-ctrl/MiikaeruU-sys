@@ -7,7 +7,7 @@
 // para la anon key (ver init-db.js).
 
 const { Client } = require("pg");
-const { verifyAdminToken } = require("./_utils");
+const { verifyAdminToken, getSupabaseEnvDiagnostics } = require("./_utils");
 
 module.exports = async function handler(req, res) {
   const isAdmin = await verifyAdminToken(req.headers.authorization);
@@ -22,7 +22,12 @@ module.exports = async function handler(req, res) {
   // en vez de decir claramente "está vacía" o "está mal formada".
   const connectionString = (process.env.SUPABASE_DB_URL || "").trim();
   if (!connectionString) {
-    res.status(500).json({ ok: false, error: "missing_env", detail: "Falta SUPABASE_DB_URL en las variables de entorno de Vercel." });
+    res.status(500).json({
+      ok: false,
+      error: "missing_env",
+      detail: "Falta SUPABASE_DB_URL en las variables de entorno de Vercel.",
+      diagnostics: getSupabaseEnvDiagnostics(),
+    });
     return;
   }
 
