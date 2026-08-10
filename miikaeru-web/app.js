@@ -1103,6 +1103,8 @@ const I18N = {
     metricsConnectionFailed: "⚠️ No se pudo conectar al host de la base de datos — revisá que SUPABASE_DB_URL sea la cadena de conexión correcta (pooler).",
     metricsDiagnosticsEnv: "Entorno", metricsDiagnosticsBranch: "Rama", metricsDiagnosticsFoundKeys: "Variables SUPABASE_* encontradas",
     metricsDiagnosticsNoneFound: "ninguna",
+    metricsLocalModeNotice: "📱 Modo local — sin conexión al servidor, mostrando datos de este dispositivo (perfiles y contactos locales).",
+    usersLocalModeNotice: "📱 Modo local — sin conexión al servidor no hay listado multi-dispositivo disponible. Los datos de Perfiles/Amigos siguen funcionando normalmente en este dispositivo.",
     metricsNetworkError: "⚠️ Error de red al conectar con Supabase.",
     adminPanelTabPhotos: "📸 Fotos",
     adminPhotosHint: "Pega la URL de una imagen para cada personaje y guarda — se refleja al instante en la pantalla de elección de Héroe.",
@@ -2003,6 +2005,8 @@ const I18N = {
     metricsConnectionFailed: "⚠️ Couldn't connect to the database host — check that SUPABASE_DB_URL is the correct (pooler) connection string.",
     metricsDiagnosticsEnv: "Environment", metricsDiagnosticsBranch: "Branch", metricsDiagnosticsFoundKeys: "SUPABASE_* vars found",
     metricsDiagnosticsNoneFound: "none",
+    metricsLocalModeNotice: "📱 Local mode — no server connection, showing data from this device (local profiles and contacts).",
+    usersLocalModeNotice: "📱 Local mode — no multi-device listing available without a server connection. Profiles/Friends keep working normally on this device.",
     metricsNetworkError: "⚠️ Network error connecting to Supabase.",
     adminPanelTabPhotos: "📸 Photos",
     adminPhotosHint: "Paste an image URL for each character and save — reflected instantly on the Hero selection screen.",
@@ -2903,6 +2907,8 @@ const I18N = {
     metricsConnectionFailed: "⚠️ データベースホストに接続できませんでした — SUPABASE_DB_URLが正しい接続文字列（プーラー）か確認してください。",
     metricsDiagnosticsEnv: "環境", metricsDiagnosticsBranch: "ブランチ", metricsDiagnosticsFoundKeys: "見つかったSUPABASE_*変数",
     metricsDiagnosticsNoneFound: "なし",
+    metricsLocalModeNotice: "📱 ローカルモード — サーバーに接続できないため、この端末のデータ（ローカルのプロフィールと連絡先）を表示しています。",
+    usersLocalModeNotice: "📱 ローカルモード — サーバーに接続できないため、複数端末の一覧は利用できません。プロフィール／フレンドはこの端末で通常どおり機能します。",
     metricsNetworkError: "⚠️ Supabaseへの接続でネットワークエラーが発生しました。",
     adminPanelTabPhotos: "📸 写真",
     adminPhotosHint: "各キャラクターの画像URLを貼り付けて保存してください — ヒーロー選択画面に即反映されます。",
@@ -10968,7 +10974,7 @@ document.addEventListener("DOMContentLoaded", () => {
       usersRows = [];
       renderUsersStats([]);
       renderUsersTable([]);
-      setUsersStatus(metricsErrorMessage("connection_failed", null, null));
+      setUsersStatus(t("usersLocalModeNotice"));
       return;
     }
     setUsersStatus(t("adminPanelLoading"));
@@ -10992,16 +10998,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (!data.ok) {
         console.warn("Usuarios: api/admin-list-users respondió con error —", data.error, data.detail || "", data.diagnostics || "");
-        if (MASTER_AUTH_INFRA_ERRORS.has(data.error)) masterAuthBackendDown = true;
         usersRows = [];
         renderUsersStats([]);
         renderUsersTable([]);
-        // table_missing usa un aviso propio (invita a correr /api/init-db,
-        // ver usersTableMissingWarning) — el resto de los códigos
-        // (missing_env/not_authorized/etc.) reutiliza el mismo clasificador
-        // + diagnóstico visible que ya tiene la pestaña Métricas (ver
-        // metricsErrorMessage() arriba), en vez del genérico
-        // "adminPanelNetworkError" que antes escondía la causa real.
+        // Fallo de INFRAESTRUCTURA (mismo backend que Métricas, ver
+        // MASTER_AUTH_INFRA_ERRORS) — modo local calmo, nunca una
+        // alerta. table_missing tiene su propio aviso (invita a correr
+        // /api/init-db); el resto de fallos "de dominio" (not_authorized,
+        // etc.) reutiliza el clasificador + diagnóstico de Métricas —
+        // esos SÍ son accionables por el Admin, esconderlos sería peor.
+        if (MASTER_AUTH_INFRA_ERRORS.has(data.error)) {
+          masterAuthBackendDown = true;
+          setUsersStatus(t("usersLocalModeNotice"));
+          return;
+        }
         setUsersStatus(
           data.error === "table_missing"
             ? t("usersTableMissingWarning")
@@ -11020,7 +11030,7 @@ document.addEventListener("DOMContentLoaded", () => {
       usersRows = [];
       renderUsersStats([]);
       renderUsersTable([]);
-      setUsersStatus(t("adminPanelNetworkError"));
+      setUsersStatus(t("usersLocalModeNotice"));
     }
   }
 
@@ -11066,19 +11076,45 @@ document.addEventListener("DOMContentLoaded", () => {
     metricsStatMutual.textContent = metrics ? metrics.total_mutual_friendships : 0;
   }
 
+  // Modo Local Autónomo para Métricas: los 4 números de arriba son
+  // agregados GLOBALES de verdad (cuentan filas de public.users/
+  // app_contacts/app_friendships en Supabase) — sin conexión al
+  // servidor, este dispositivo no puede saber cuántos operadores
+  // existen en TOTAL, así que no se inventa esa cifra. Lo que SÍ es
+  // información real y verificable desde acá es el estado de ESTE
+  // dispositivo: cuántos Sub-Perfiles locales tiene (loadUserProfiles())
+  // y cuántos contactos de prueba locales tiene en Amigos
+  // (loadLocalTestContacts(), ver Modo Simulación Local) — se muestran
+  // en las mismas 4 casillas para no romper el layout, con
+  // metricsLocalModeNotice dejando claro que es un vistazo local, no el
+  // total de la plataforma. Los contactos de prueba locales siempre son
+  // "amigo mutuo" (ver loadFriends()/removeFriend() — nadie del otro
+  // lado puede reciprocar), así que Relaciones y Amigos Mutuos
+  // reutilizan el mismo número que Contactos en este modo.
+  function renderLocalOnlyMetrics() {
+    const localProfiles = loadUserProfiles().length;
+    const localContacts = Object.keys(loadLocalTestContacts()).length;
+    renderMetricsStats({
+      total_operators: localProfiles,
+      total_contacts: localContacts,
+      total_relationships: localContacts,
+      total_mutual_friendships: localContacts,
+    });
+    setMetricsStatus(t("metricsLocalModeNotice"));
+  }
+
   async function fetchAdminMetrics() {
     if (!isSuperAdmin) return;
     if (!supabaseClient) {
-      renderMetricsStats(null);
-      setMetricsStatus(t("metricsNoClient"));
+      renderLocalOnlyMetrics();
       return;
     }
     // Modo Local Autónomo: mismo backend (SUPABASE_DB_URL) que
     // register-account/login-account/admin-list-users — si ya se sabe
-    // caído esta sesión, ni se intenta.
+    // caído esta sesión, ni se intenta la red: se muestran directo los
+    // números locales, sin ninguna advertencia de infraestructura.
     if (!isOnline() || masterAuthBackendDown) {
-      renderMetricsStats(null);
-      setMetricsStatus(metricsErrorMessage("connection_failed", null, null));
+      renderLocalOnlyMetrics();
       return;
     }
     setMetricsStatus(t("metricsLoading"));
@@ -11096,7 +11132,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (!data.ok) {
         console.warn("Métricas: api/admin-metrics respondió con error —", data.error, data.detail || "", data.diagnostics || "");
-        if (MASTER_AUTH_INFRA_ERRORS.has(data.error)) masterAuthBackendDown = true;
+        // Fallo de INFRAESTRUCTURA (SUPABASE_DB_URL rota/ausente,
+        // conexión caída) — nunca se muestra como alerta al Admin: se
+        // prende el circuit breaker y se cae a los números locales, la
+        // misma experiencia "limpia y sin advertencias" pedida. Fallos
+        // de OTRO tipo (not_authorized: sesión de Admin vencida;
+        // table_missing: falta correr /api/init-db) siguen mostrando su
+        // mensaje real y específico — esos SÍ son accionables por el
+        // Admin y esconderlos sería peor que mostrarlos.
+        if (MASTER_AUTH_INFRA_ERRORS.has(data.error)) {
+          masterAuthBackendDown = true;
+          renderLocalOnlyMetrics();
+          return;
+        }
         renderMetricsStats(null);
         setMetricsStatus(metricsErrorMessage(data.error, data.detail, data.diagnostics));
         return;
@@ -11107,8 +11155,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (err) {
       console.warn("Métricas: no se pudo llamar a api/admin-metrics:", err);
       masterAuthBackendDown = true;
-      renderMetricsStats(null);
-      setMetricsStatus(t("metricsNetworkError"));
+      renderLocalOnlyMetrics();
     }
   }
 
