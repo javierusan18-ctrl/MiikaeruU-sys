@@ -19984,6 +19984,23 @@ document.addEventListener("DOMContentLoaded", () => {
     showMasterAuthView("register");
   });
 
+  // Llamado SOLO al registrar una Cuenta Principal nueva (nunca en
+  // login) — evita el "salto automático" a un operador viejo: el
+  // perfil/estado local (state.operatorName, nivel, avatar...) vive en
+  // localStorage scopeado por activeProfileId, completamente
+  // desconectado de qué número de teléfono se acaba de registrar. Sin
+  // este reset, un dispositivo que ya tenía un operador guardado de una
+  // sesión anterior (ej. una prueba vieja) resolvía state.operatorName
+  // como verdadero y onMasterAuthSuccess() se saltaba entero el welcome
+  // modal — "iniciando sesión" directo en ese operador viejo aunque la
+  // Cuenta Principal fuera genuinamente nueva. defaultState() ya deja
+  // level:1/xp:0/operatorName:null/avatar:null, así que resetear acá
+  // también garantiza que toda cuenta nueva arranca desde Nivel 1.
+  function resetOperatorStateForNewAccount() {
+    state = defaultState();
+    persist();
+  }
+
   // Se ejecuta una sola vez, justo después de pasar el candado (recién
   // logueado o ya con sesión activa desde una recarga anterior) — es
   // exactamente la lógica de "bienvenida al operador" que antes corría
@@ -20104,6 +20121,7 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem(MASTER_MIGRATED_KEY, "true");
       masterAuthModal.hidden = true;
       await clearStaleAdminSessionOnFreshMasterAuth();
+      resetOperatorStateForNewAccount();
       onMasterAuthSuccess();
     } catch (err) {
       // Fetch en sí mismo falló (sin red, DNS del propio Vercel, etc.) —
@@ -20133,6 +20151,7 @@ document.addEventListener("DOMContentLoaded", () => {
       masterAuthModal.hidden = true;
       addMessage({ author: "SISTEMA", text: t("masterAuthLocalModeNotice"), variant: "system" });
       await clearStaleAdminSessionOnFreshMasterAuth();
+      resetOperatorStateForNewAccount();
       onMasterAuthSuccess();
     } catch (err) {
       console.warn("Registro local (fallback) falló:", err);
