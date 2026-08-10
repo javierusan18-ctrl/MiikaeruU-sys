@@ -5,7 +5,7 @@
 // api/_utils.js para el resto del criterio de esta migración.
 
 const { Client } = require("pg");
-const { verifyPassword, getSupabaseEnvDiagnostics, classifyDbError } = require("./_utils");
+const { verifyPassword, getSupabaseEnvDiagnostics, classifyDbError, normalizePhone } = require("./_utils");
 
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") {
@@ -25,7 +25,10 @@ module.exports = async function handler(req, res) {
   }
 
   const body = req.body || {};
-  const phone = typeof body.phone === "string" ? body.phone.trim() : "";
+  // normalizePhone() (ver api/_utils.js): reconcilia formatos distintos
+  // del mismo celular (con/sin "0" nacional, con/sin "+"/"00") contra lo
+  // que haya quedado guardado en public.users al registrarse.
+  const phone = normalizePhone(typeof body.phone === "string" ? body.phone : "");
   const password = typeof body.password === "string" ? body.password : "";
 
   if (!phone || !password) {

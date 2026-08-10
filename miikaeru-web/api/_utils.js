@@ -136,6 +136,25 @@ function classifyDbError(err) {
   return "server_error";
 }
 
+// Normaliza el número de celular ANTES de guardarlo/consultarlo — MISMA
+// lógica que normalizePhone() en app.js (frontend), acá aplicada de
+// nuevo del lado del servidor como defensa en profundidad (cualquier
+// caller directo al API, no solo el frontend actual, queda cubierto).
+// Sin esto, un Operador podía "no existir" al loguearse si esta vez
+// tecleaba su número con un formato apenas distinto al que usó al
+// registrarse (ej.: con el "0" de marcado nacional adelante, o con
+// "+"/"00" de marcado internacional). Deliberadamente CONSERVADOR: solo
+// saca prefijos que son inequívocamente "solo formato" — nunca recorta
+// a un largo fijo de dígitos, porque eso sí podría fusionar por error
+// los números de DOS Operadores distintos.
+function normalizePhone(raw) {
+  if (typeof raw !== "string") return "";
+  let digits = raw.trim().replace(/\D/g, "");
+  if (digits.startsWith("00")) digits = digits.slice(2);
+  if (digits.length > 8 && digits.startsWith("0")) digits = digits.slice(1);
+  return digits;
+}
+
 module.exports = {
   hashPassword,
   verifyPassword,
@@ -143,4 +162,5 @@ module.exports = {
   ADMIN_EMAIL,
   getSupabaseEnvDiagnostics,
   classifyDbError,
+  normalizePhone,
 };

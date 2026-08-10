@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260809-6" />
+  <link rel="stylesheet" href="style.css?v=20260810-8" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -76,6 +76,14 @@
         </form>
         <button type="button" class="master-auth__toggle" id="master-auth-go-login-btn" data-i18n="masterAuthGoLogin">¿Ya tienes cuenta? Iniciar sesión</button>
       </div>
+
+      <!-- Escape hatch: este dispositivo recuerda OTRA cuenta (celular
+           distinto) — no borra nada del servidor, solo olvida la
+           referencia local para que se pueda registrar/entrar con una
+           cuenta legítima distinta en este mismo dispositivo. Visible en
+           ambas vistas; solo tiene efecto si loadMasterAccount() no es
+           null (ver wiring en app.js). -->
+      <button type="button" class="master-auth__forget" id="master-auth-forget-device-btn" data-i18n="masterAuthForgetDevice" hidden>¿No es tu cuenta? Usar otro número en este dispositivo</button>
     </div>
   </div>
 
@@ -3142,7 +3150,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260810-7"></script>
+  <script src="app.js?v=20260810-8"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de

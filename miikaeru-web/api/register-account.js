@@ -9,7 +9,7 @@
 // texto plano.
 
 const { Client } = require("pg");
-const { hashPassword, getSupabaseEnvDiagnostics, classifyDbError } = require("./_utils");
+const { hashPassword, getSupabaseEnvDiagnostics, classifyDbError, normalizePhone } = require("./_utils");
 
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") {
@@ -29,7 +29,10 @@ module.exports = async function handler(req, res) {
   }
 
   const body = req.body || {};
-  const phone = typeof body.phone === "string" ? body.phone.trim() : "";
+  // normalizePhone() (ver api/_utils.js): mismo criterio que el
+  // frontend — sin esto, "0991144640" y "991144640" se guardarían como
+  // DOS filas distintas en public.users pese a ser el mismo celular.
+  const phone = normalizePhone(typeof body.phone === "string" ? body.phone : "");
   const password = typeof body.password === "string" ? body.password : "";
   const name = typeof body.name === "string" && body.name.trim() ? body.name.trim() : null;
 

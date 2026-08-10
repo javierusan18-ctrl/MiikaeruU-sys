@@ -7,7 +7,7 @@
 // ningún log.
 
 const { Client } = require("pg");
-const { verifyAdminToken, hashPassword, getSupabaseEnvDiagnostics, classifyDbError } = require("./_utils");
+const { verifyAdminToken, hashPassword, getSupabaseEnvDiagnostics, classifyDbError, normalizePhone } = require("./_utils");
 
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") {
@@ -33,7 +33,7 @@ module.exports = async function handler(req, res) {
   }
 
   const body = req.body || {};
-  const phone = typeof body.phone === "string" ? body.phone.trim() : "";
+  const phone = normalizePhone(typeof body.phone === "string" ? body.phone : "");
   const newPassword = typeof body.newPassword === "string" ? body.newPassword : "";
 
   if (!phone || !newPassword || newPassword.length < 4) {

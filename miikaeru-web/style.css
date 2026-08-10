@@ -5917,6 +5917,30 @@ textarea,
   color: var(--text-primary);
 }
 
+/* Escape hatch: "esta no es mi cuenta" — deliberadamente más discreto
+   que .master-auth__toggle (texto más chico, sin subrayado por default)
+   porque es una acción menos común y algo destructiva para el estado
+   LOCAL de este dispositivo (ver wiring en app.js) — no debe competir
+   visualmente con los botones principales de Login/Registro. */
+.master-auth__forget {
+  display: block;
+  width: 100%;
+  margin-top: 14px;
+  background: none;
+  border: none;
+  padding: 4px;
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.master-auth__forget:hover,
+.master-auth__forget:focus-visible {
+  color: var(--neon-cyan);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .modal {
   width: 100%;
   max-width: 380px;

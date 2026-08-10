@@ -440,6 +440,30 @@ const MASTER_LOCAL_FALLBACK_KEY = "miikaeru_master_local_fallback";
 // account_exists/invalid_input), que sí hay que respetar tal cual.
 const MASTER_AUTH_INFRA_ERRORS = new Set(["missing_env", "connection_failed", "auth_failed", "db_not_found", "server_error"]);
 
+// Normaliza el número de celular ANTES de guardarlo/consultarlo (acá y
+// en api/_utils.js, misma lógica en ambos lados) — sin esto, un mismo
+// Operador podía "no encontrar" su cuenta al loguearse si esta vez
+// tecleaba el número con un formato apenas distinto al que usó al
+// registrarse (ej.: con el "0" de marcado nacional adelante, o con "+"/
+// "00" de marcado internacional). Deliberadamente CONSERVADOR: solo saca
+// prefijos que son inequívocamente "solo formato" (no dígitos reales del
+// número) — nunca recorta a un largo fijo de dígitos, porque eso sí
+// podría fusionar por error dos números de DISTINTOS Operadores.
+function normalizePhone(raw) {
+  if (typeof raw !== "string") return "";
+  let digits = raw.trim().replace(/\D/g, "");
+  // "00" al inicio es el prefijo de marcado internacional explícito
+  // (equivalente a escribir "+") — lo que sigue ya es código de país +
+  // número real, se descarta solo el marcador.
+  if (digits.startsWith("00")) digits = digits.slice(2);
+  // Un solo "0" inicial es el prefijo de marcado NACIONAL/trunk (ej.:
+  // "0991144640" y "991144640" son el mismo celular) — se descarta un
+  // único cero, nunca varios, para no tocar números que legítimamente
+  // tengan más ceros al inicio de una serie más corta.
+  if (digits.length > 8 && digits.startsWith("0")) digits = digits.slice(1);
+  return digits;
+}
+
 function bytesToHex(bytes) {
   return Array.from(bytes).map((b) => b.toString(16).padStart(2, "0")).join("");
 }
@@ -838,6 +862,7 @@ const I18N = {
     masterAuthLocalModeNotice: "📴 No se pudo conectar con el servidor — tu cuenta se guardó en este dispositivo y se sincronizará sola en cuanto vuelva la conexión.",
     masterAuthGoRegister: "¿No tienes cuenta? Crear una",
     masterAuthGoLogin: "¿Ya tienes cuenta? Iniciar sesión",
+    masterAuthForgetDevice: "¿No es tu cuenta? Usar otro número en este dispositivo",
     profileSwitchBtnTitle: "Cambiar de perfil",
     installAppBtn: "Instalar App",
     pwaIosModalTitle: "📲 Instalar en iPhone/iPad",
@@ -1740,6 +1765,7 @@ const I18N = {
     masterAuthLocalModeNotice: "📴 Couldn't reach the server — your account was saved on this device and will sync automatically once the connection is back.",
     masterAuthGoRegister: "Don't have an account? Create one",
     masterAuthGoLogin: "Already have an account? Log in",
+    masterAuthForgetDevice: "Not your account? Use a different number on this device",
     profileSwitchBtnTitle: "Switch profile",
     installAppBtn: "Install App",
     pwaIosModalTitle: "📲 Install on iPhone/iPad",
@@ -2642,6 +2668,7 @@ const I18N = {
     masterAuthLocalModeNotice: "📴 サーバーに接続できませんでした — アカウントはこの端末に保存され、接続が回復すると自動的に同期されます。",
     masterAuthGoRegister: "アカウントをお持ちでないですか？作成する",
     masterAuthGoLogin: "すでにアカウントをお持ちですか？ログイン",
+    masterAuthForgetDevice: "あなたのアカウントではありませんか？この端末で別の番号を使う",
     profileSwitchBtnTitle: "プロフィールを切り替える",
     installAppBtn: "アプリをインストール",
     pwaIosModalTitle: "📲 iPhone/iPadにインストール",
@@ -9303,6 +9330,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const masterRegisterError = document.getElementById("master-register-error");
   const masterAuthGoRegisterBtn = document.getElementById("master-auth-go-register-btn");
   const masterAuthGoLoginBtn = document.getElementById("master-auth-go-login-btn");
+  const masterAuthForgetDeviceBtn = document.getElementById("master-auth-forget-device-btn");
 
   const welcomeModal = document.getElementById("welcome-modal");
   const welcomeViewChoice = document.getElementById("welcome-view-choice");
@@ -19867,6 +19895,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function showMasterAuthView(view) {
     masterAuthViewLogin.hidden = view !== "login";
     masterAuthViewRegister.hidden = view !== "register";
+    refreshForgetDeviceButton();
   }
 
   function loadMasterAccount() {
@@ -19876,6 +19905,31 @@ document.addEventListener("DOMContentLoaded", () => {
       return null;
     }
   }
+
+  // Solo se muestra si este dispositivo YA recuerda una cuenta (si no
+  // hay ninguna, no hay nada que "olvidar" — la vista de Registro ya
+  // está vacía y lista para cualquier número).
+  function refreshForgetDeviceButton() {
+    if (!masterAuthForgetDeviceBtn) return;
+    masterAuthForgetDeviceBtn.hidden = !loadMasterAccount();
+  }
+
+  // Escape hatch pedido explícitamente: "permita limpiar/sobrescribir
+  // el estado local si el usuario intenta acceder con otra cuenta
+  // legítima". Solo toca localStorage de ESTE navegador — nunca borra
+  // ni modifica la cuenta real en Supabase (esa sigue intacta, el
+  // Operador puede seguir entrando a ella desde cualquier otro
+  // dispositivo). Deja el formulario de Registro limpio y listo para
+  // otro número, sin fricción.
+  masterAuthForgetDeviceBtn.addEventListener("click", () => {
+    localStorage.removeItem(MASTER_ACCOUNT_KEY);
+    localStorage.removeItem(MASTER_LOGGED_IN_KEY);
+    masterLoginError.hidden = true;
+    masterRegisterError.hidden = true;
+    masterLoginForm.reset();
+    masterRegisterForm.reset();
+    showMasterAuthView("register");
+  });
 
   // Se ejecuta una sola vez, justo después de pasar el candado (recién
   // logueado o ya con sesión activa desde una recarga anterior) — es
@@ -19908,19 +19962,25 @@ document.addEventListener("DOMContentLoaded", () => {
     event.preventDefault();
     masterRegisterError.hidden = true;
 
-    const phone = masterRegisterPhone.value.trim();
+    const phone = normalizePhone(masterRegisterPhone.value);
     const password = masterRegisterPassword.value;
     const confirmPassword = masterRegisterPasswordConfirm.value;
 
-    // Este sistema es de UNA sola cuenta RECORDADA por dispositivo (ver
-    // MASTER_ACCOUNT_KEY más arriba): si ya hay una cuenta guardada acá,
-    // un submit de registro NUNCA debe sobreescribirla en silencio (eso
-    // era el bug reportado originalmente: un número viejo dejaba de
-    // reconocerse porque el registro pisaba la cuenta). En vez de eso,
-    // se avisa y se manda directo a la vista de login. La unicidad REAL
-    // del teléfono la garantiza la base (`users.phone unique`, ver
-    // api/register-account.js) — esto es solo la guarda de UX local.
-    if (loadMasterAccount()) {
+    // Este sistema recuerda UNA cuenta por dispositivo (ver
+    // MASTER_ACCOUNT_KEY más arriba) solo para no volver a pedir
+    // credenciales en cada carga — NO es un candado que le impida a
+    // otro Operador legítimo (mismo dispositivo compartido, o el mismo
+    // Operador con OTRO número) crear su propia cuenta. Por eso el
+    // bloqueo acá es MUY específico: solo dispara si el número que se
+    // está registrando es EXACTAMENTE el mismo que ya está recordado
+    // (reintento redundante, que igual fallaría server-side con
+    // account_exists) — cualquier número DISTINTO sigue de largo y, si
+    // el registro sale bien, pisa la cuenta recordada más abajo (ver
+    // localStorage.setItem(MASTER_ACCOUNT_KEY, ...) tras el fetch OK).
+    // La unicidad REAL del teléfono la garantiza la base (`users.phone
+    // unique`, ver api/register-account.js) — esto es solo UX local.
+    const rememberedAccount = loadMasterAccount();
+    if (rememberedAccount && normalizePhone(rememberedAccount.phone) === phone) {
       showMasterAuthView("login");
       masterLoginPhone.value = phone;
       masterLoginError.textContent = t("masterAuthAccountExists");
@@ -20040,7 +20100,7 @@ document.addEventListener("DOMContentLoaded", () => {
     event.preventDefault();
     masterLoginError.hidden = true;
 
-    const phone = masterLoginPhone.value.trim();
+    const phone = normalizePhone(masterLoginPhone.value);
     const password = masterLoginPassword.value;
 
     setFormBusy(masterLoginForm, true);
