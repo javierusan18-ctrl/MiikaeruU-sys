@@ -7,7 +7,7 @@
 // para la anon key (ver init-db.js).
 
 const { Client } = require("pg");
-const { verifyAdminToken, getSupabaseEnvDiagnostics } = require("./_utils");
+const { verifyAdminToken, getSupabaseEnvDiagnostics, classifyDbError } = require("./_utils");
 
 module.exports = async function handler(req, res) {
   const isAdmin = await verifyAdminToken(req.headers.authorization);
@@ -52,31 +52,18 @@ module.exports = async function handler(req, res) {
     res.status(200).json({ ok: true, metrics: rows[0] });
   } catch (err) {
     console.error("admin-metrics falló:", err);
-    // Clasificación de errores de Postgres/red — el endpoint solo
-    // responde a un Admin ya verificado (ver verifyAdminToken() arriba),
-    // así que es seguro devolver err.message como `detail`: ayuda a
-    // diagnosticar SUPABASE_DB_URL mal configurada sin tener que ir a
-    // buscar los logs de Vercel.
-    let error = "server_error";
-    if (err.code === "42P01") {
-      // undefined_table — alguna tabla todavía no existe (falta correr
-      // /api/init-db desde la pestaña Base de Datos).
-      error = "table_missing";
-    } else if (err.code === "28P01" || err.code === "28000") {
-      // invalid_password / invalid_authorization_specification — el
-      // usuario/contraseña de la connection string está mal.
-      error = "auth_failed";
-    } else if (err.code === "3D000") {
-      // invalid_catalog_name — el nombre de la base en la connection
-      // string no existe en ese proyecto de Supabase.
-      error = "db_not_found";
-    } else if (["ENOTFOUND", "ECONNREFUSED", "ETIMEDOUT", "EHOSTUNREACH", "ENETUNREACH"].includes(err.code)) {
-      // Fallo de red/DNS llegando al host — típicamente SUPABASE_DB_URL
-      // apunta a un host/puerto incorrecto (ej.: usar la conexión directa
-      // en vez del connection pooler que Vercel necesita).
-      error = "connection_failed";
-    }
-    res.status(error === "table_missing" ? 200 : 500).json({ ok: false, error, detail: err.message });
+    // El endpoint solo responde a un Admin ya verificado (ver
+    // verifyAdminToken() arriba), así que es seguro devolver err.message
+    // como `detail` + diagnostics: ayuda a diagnosticar SUPABASE_DB_URL
+    // mal configurada (ej. host de conexión directa en vez del pooler)
+    // sin tener que ir a buscar los logs de Vercel.
+    const error = classifyDbError(err);
+    res.status(error === "table_missing" ? 200 : 500).json({
+      ok: false,
+      error,
+      detail: err.message,
+      diagnostics: getSupabaseEnvDiagnostics(),
+    });
   } finally {
     await client.end().catch(() => {});
   }

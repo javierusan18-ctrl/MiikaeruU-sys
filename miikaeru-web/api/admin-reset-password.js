@@ -7,7 +7,7 @@
 // ningún log.
 
 const { Client } = require("pg");
-const { verifyAdminToken, hashPassword, getSupabaseEnvDiagnostics } = require("./_utils");
+const { verifyAdminToken, hashPassword, getSupabaseEnvDiagnostics, classifyDbError } = require("./_utils");
 
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") {
@@ -56,7 +56,13 @@ module.exports = async function handler(req, res) {
     res.status(200).json({ ok: true });
   } catch (err) {
     console.error("admin-reset-password falló:", err);
-    res.status(500).json({ ok: false, error: "server_error" });
+    const error = classifyDbError(err);
+    res.status(error === "table_missing" ? 200 : 500).json({
+      ok: false,
+      error,
+      detail: err.message,
+      diagnostics: getSupabaseEnvDiagnostics(),
+    });
   } finally {
     await client.end().catch(() => {});
   }

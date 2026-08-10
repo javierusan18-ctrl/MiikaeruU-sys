@@ -5,7 +5,7 @@
 // api/_utils.js para el resto del criterio de esta migración.
 
 const { Client } = require("pg");
-const { verifyPassword, getSupabaseEnvDiagnostics } = require("./_utils");
+const { verifyPassword, getSupabaseEnvDiagnostics, classifyDbError } = require("./_utils");
 
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") {
@@ -59,7 +59,13 @@ module.exports = async function handler(req, res) {
     res.status(200).json({ ok: true, user: row });
   } catch (err) {
     console.error("login-account falló:", err);
-    res.status(500).json({ ok: false, error: "server_error" });
+    const error = classifyDbError(err);
+    res.status(error === "table_missing" ? 200 : 500).json({
+      ok: false,
+      error,
+      detail: err.message,
+      diagnostics: getSupabaseEnvDiagnostics(),
+    });
   } finally {
     await client.end().catch(() => {});
   }

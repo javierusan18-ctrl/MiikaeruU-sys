@@ -25,7 +25,7 @@
 // de nuevo.
 
 const { Client } = require("pg");
-const { getSupabaseEnvDiagnostics } = require("./_utils");
+const { getSupabaseEnvDiagnostics, classifyDbError } = require("./_utils");
 
 const SCHEMA_STATEMENTS = [
   // Cuentas de Operador (login real por teléfono+contraseña) — reemplaza
@@ -341,7 +341,13 @@ module.exports = async function handler(req, res) {
     // Solo llega acá un fallo de conexión (credencial mala, red, etc.) —
     // los fallos de statements individuales ya no burbujean hasta acá.
     console.error("init-db falló al conectar:", err);
-    res.status(500).json({ ok: false, error: err.message, failedStatements });
+    res.status(500).json({
+      ok: false,
+      error: classifyDbError(err),
+      detail: err.message,
+      diagnostics: getSupabaseEnvDiagnostics(),
+      failedStatements,
+    });
   } finally {
     await client.end().catch(() => {});
   }

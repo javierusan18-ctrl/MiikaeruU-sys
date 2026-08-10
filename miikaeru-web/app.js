@@ -10393,7 +10393,7 @@ document.addEventListener("DOMContentLoaded", () => {
         adminDbStatus.textContent = t("adminDbPartial");
         adminDbStatus.className = "admin-panel__status admin-panel__status--error";
       } else {
-        adminDbStatus.textContent = `${t("adminDbError")} ${data.error || ""}`;
+        adminDbStatus.textContent = `${t("adminDbError")} ${data.detail || data.error || ""}`;
         adminDbStatus.className = "admin-panel__status admin-panel__status--error";
       }
 

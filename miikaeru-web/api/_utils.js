@@ -78,12 +78,69 @@ async function verifyAdminToken(authHeader) {
 // de entorno que contenga "SUPABASE" — así, si alguien la guardó con un
 // nombre ligeramente distinto (ej. "SUPABASE_DB_URI" en vez de
 // "SUPABASE_DB_URL"), aparece acá mismo en la respuesta de error.
+// Regex que identifica el formato "Direct connection" de Supabase
+// (host db.<project-ref>.supabase.co) — ese host requiere salida IPv6,
+// que las Serverless Functions de Vercel (AWS Lambda por debajo) NO
+// tienen. El formato correcto para usar acá es el "Transaction pooler"
+// (host aws-0-<region>.pooler.supabase.com, puerto 6543), que sí
+// resuelve por IPv4. Ver Supabase → Settings → Database → Connection
+// string → modo "Transaction pooler".
+const DIRECT_CONNECTION_HOST_RE = /^db\..+\.supabase\.co$/i;
+
 function getSupabaseEnvDiagnostics() {
+  const rawConnectionString = (process.env.SUPABASE_DB_URL || "").trim();
+  let dbHost = null;
+  let dbPort = null;
+  let looksLikeDirectConnectionNotPooler = null;
+
+  if (rawConnectionString) {
+    try {
+      const parsed = new URL(rawConnectionString);
+      dbHost = parsed.hostname || null;
+      dbPort = parsed.port || null;
+      looksLikeDirectConnectionNotPooler = dbHost ? DIRECT_CONNECTION_HOST_RE.test(dbHost) : null;
+    } catch (err) {
+      // connectionString mal formada — no revienta el diagnóstico, solo
+      // deja los campos en null (la falla real ya se reporta aparte).
+    }
+  }
+
   return {
     vercelEnv: process.env.VERCEL_ENV || null,
     gitBranch: process.env.VERCEL_GIT_COMMIT_REF || null,
     envKeysContainingSupabase: Object.keys(process.env).filter((k) => k.toUpperCase().includes("SUPABASE")),
+    dbHost,
+    dbPort,
+    looksLikeDirectConnectionNotPooler,
   };
 }
 
-module.exports = { hashPassword, verifyPassword, verifyAdminToken, ADMIN_EMAIL, getSupabaseEnvDiagnostics };
+// Clasificación compartida de errores de Postgres/red para los 6
+// endpoints que dependen de SUPABASE_DB_URL (login-account,
+// register-account, admin-list-users, admin-reset-password,
+// admin-metrics, init-db) — antes vivía duplicada solo en
+// admin-metrics.js; centralizada acá para que todos devuelvan el mismo
+// código corto ante la misma falla real (ej.: ENOTFOUND siempre es
+// "connection_failed" en cualquiera de los 6, no solo en el que se
+// haya acordado de clasificarlo).
+function classifyDbError(err) {
+  if (err.code === "42P01") return "table_missing"; // undefined_table
+  if (err.code === "28P01" || err.code === "28000") return "auth_failed"; // credenciales inválidas
+  if (err.code === "3D000") return "db_not_found"; // invalid_catalog_name
+  if (["ENOTFOUND", "ECONNREFUSED", "ETIMEDOUT", "EHOSTUNREACH", "ENETUNREACH"].includes(err.code)) {
+    // Fallo de red/DNS llegando al host — típicamente SUPABASE_DB_URL
+    // apunta a la conexión directa (db.<ref>.supabase.co, requiere
+    // IPv6) en vez del Transaction pooler que Vercel necesita (IPv4).
+    return "connection_failed";
+  }
+  return "server_error";
+}
+
+module.exports = {
+  hashPassword,
+  verifyPassword,
+  verifyAdminToken,
+  ADMIN_EMAIL,
+  getSupabaseEnvDiagnostics,
+  classifyDbError,
+};

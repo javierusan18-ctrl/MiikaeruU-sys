@@ -9,7 +9,7 @@
 // texto plano.
 
 const { Client } = require("pg");
-const { hashPassword, getSupabaseEnvDiagnostics } = require("./_utils");
+const { hashPassword, getSupabaseEnvDiagnostics, classifyDbError } = require("./_utils");
 
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") {
@@ -59,7 +59,13 @@ module.exports = async function handler(req, res) {
     res.status(200).json({ ok: true, user: rows[0] });
   } catch (err) {
     console.error("register-account falló:", err);
-    res.status(500).json({ ok: false, error: "server_error" });
+    const error = classifyDbError(err);
+    res.status(error === "table_missing" ? 200 : 500).json({
+      ok: false,
+      error,
+      detail: err.message,
+      diagnostics: getSupabaseEnvDiagnostics(),
+    });
   } finally {
     await client.end().catch(() => {});
   }

@@ -22,7 +22,7 @@
 // cambios) sepa a qué fila apuntar.
 
 const { Client } = require("pg");
-const { verifyAdminToken, getSupabaseEnvDiagnostics } = require("./_utils");
+const { verifyAdminToken, getSupabaseEnvDiagnostics, classifyDbError } = require("./_utils");
 
 module.exports = async function handler(req, res) {
   const isAdmin = await verifyAdminToken(req.headers.authorization);
@@ -78,15 +78,17 @@ module.exports = async function handler(req, res) {
     res.status(200).json({ ok: true, users: rows });
   } catch (err) {
     console.error("admin-list-users falló:", err);
-    // 42P01 = "undefined_table" en Postgres — significa que /api/init-db
-    // todavía no corrió después de este cambio (o corrió antes de que
-    // existiera esta tabla). Se distingue para que el Admin vea un aviso
-    // claro en vez de un error crudo de servidor.
-    if (err.code === "42P01") {
-      res.status(200).json({ ok: false, error: "table_missing" });
-      return;
-    }
-    res.status(500).json({ ok: false, error: "server_error" });
+    // Clasificación compartida (ver classifyDbError() en _utils.js) +
+    // diagnostics: mismo criterio que admin-metrics.js, así el frontend
+    // ve exactamente qué host estaba intentando resolver (dbHost) en vez
+    // de un "Error de red" genérico ante un ENOTFOUND.
+    const error = classifyDbError(err);
+    res.status(error === "table_missing" ? 200 : 500).json({
+      ok: false,
+      error,
+      detail: err.message,
+      diagnostics: getSupabaseEnvDiagnostics(),
+    });
   } finally {
     await client.end().catch(() => {});
   }
