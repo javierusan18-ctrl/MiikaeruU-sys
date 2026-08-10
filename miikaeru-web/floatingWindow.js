@@ -238,6 +238,15 @@
 
     _undock() {
       if (this.mode === "floating" || this.mode === "maximized") return;
+      // Si el breakpoint de este panel no está activo (ej. matchMedia y el
+      // @media de CSS discreparon por un pixel por zoom del navegador/DPR
+      // fraccionario — desacuerdo real y documentado entre ambos), no hay
+      // que undockear: el panel debe quedarse en su layout responsivo
+      // normal. Sin este guard, un pointerdown suelto en la cabecera podía
+      // sacar el panel a position:fixed con el rect "inactivo" congelado,
+      // dejándolo visualmente trabado fuera de flujo — exactamente el
+      // síntoma de "las ventanas quedan estáticas / bloquean el mouse".
+      if (this.mediaQuery && !this.mediaQuery.matches) return;
       const rect = this.el.getBoundingClientRect();
       this.el.style.position = "fixed";
       this.el.style.top = `${rect.top}px`;
@@ -295,6 +304,7 @@
         // cualquier ventana futura que reutilice un header con botones
         // propios queda cubierta acá igual).
         if (event.target.closest(".floating-window__btn, button, a, input, select, textarea")) return;
+        if (this.mediaQuery && !this.mediaQuery.matches) return; // panel fuera de rango — sigue su layout responsivo normal
         if (this.mode === "maximized") return; // no se arrastra maximizada
         if (this.minimized) {
           // Arrastrar una ventana minimizada es válido (reposicionar el
@@ -342,6 +352,7 @@
       };
 
       this.resizeHandle.addEventListener("pointerdown", (event) => {
+        if (this.mediaQuery && !this.mediaQuery.matches) return; // panel fuera de rango — sigue su layout responsivo normal
         if (this.mode === "maximized" || this.minimized) return;
         event.preventDefault();
         event.stopPropagation();
