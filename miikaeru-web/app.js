@@ -8552,13 +8552,13 @@ document.addEventListener("DOMContentLoaded", () => {
   // bump, los dispositivos que ya corrieron /api/init-db con el esquema
   // viejo nunca volverían a llamarlo y se quedarían sin las tablas
   // nuevas hasta limpiar su localStorage a mano.
-  // Subida de nuevo (antes v20260809-2): este bloque agregó `replica
-  // identity full` a app_friendships + la sumó a la publicación de
-  // Realtime (necesario para wireFriendshipsRealtime() — detectar en
-  // vivo cuando alguien te sigue de vuelta y pasar de "Siguiendo" a
-  // "Amigo") — sin este bump, un dispositivo que ya hubiera corrido
-  // /api/init-db con el esquema anterior no lo volvería a llamar.
-  const DB_INIT_FLAG_KEY = "miikaeru_db_init_v20260809-3";
+  // Subida de nuevo (antes v20260809-3): este bloque agregó la tabla
+  // `transactions` (faltaba por completo — hacía fallar tanto el
+  // respaldo silencioso de cada transacción nueva como la pestaña
+  // "💼 Transacciones" del Panel de Administrador) — sin este bump, un
+  // dispositivo que ya hubiera corrido /api/init-db con el esquema
+  // anterior no lo volvería a llamar, y la tabla nunca se crearía sola.
+  const DB_INIT_FLAG_KEY = "miikaeru_db_init_v20260810-4";
   if (!localStorage.getItem(DB_INIT_FLAG_KEY)) {
     fetch("/api/init-db")
       .then((res) => res.json())

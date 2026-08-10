@@ -142,6 +142,38 @@ const SCHEMA_STATEMENTS = [
     image_url text not null,
     updated_at timestamptz not null default now()
   )`,
+  // transactions: respaldo en la nube del ledger de negocios (Finanzas →
+  // Servicio/Venta, ver businessLedger en app.js) — la tabla que
+  // faltaba y hacía fallar tanto syncTransactionToSupabase() (el upsert
+  // silencioso de cada transacción nueva) como la pestaña "💼
+  // Transacciones" del Panel de Administrador (fetchAdminPanelTransactions(),
+  // que hace `select * from transactions`). Columnas = EXACTAMENTE las
+  // que ese upsert/select ya usan hoy (no un subconjunto): id/profile_id
+  // (identidad), business_name/collaborator/type/concept (qué y quién),
+  // metodo_pago/ingreso_bruto/egresos/comision_monto/ganancia_neta/
+  // currency (los montos que se ven en la tabla del Admin y en el CSV
+  // exportado), txn_date (fecha, como texto "YYYY-MM-DD" — mismo
+  // criterio que last_active_date en player_progress más arriba, no un
+  // tipo `date` nativo). Sin política RLS por usuario (igual que
+  // player_progress): cada dispositivo escribe su propio respaldo vía la
+  // anon key pública, sin sesión de Supabase Auth — la única protección
+  // real de este proyecto es no tener backend propio expuesto, ver nota
+  // de seguridad junto a SUPABASE_KEY en app.js.
+  `create table if not exists public.transactions (
+    id uuid primary key default gen_random_uuid(),
+    profile_id text,
+    business_name text,
+    collaborator text,
+    type text,
+    concept text,
+    metodo_pago text,
+    ingreso_bruto numeric,
+    egresos numeric,
+    comision_monto numeric,
+    ganancia_neta numeric,
+    currency text,
+    txn_date text
+  )`,
   // Escuadrones (Squads) — mismo criterio "quien conoce el código entra"
   // que Amigos (identidad = phone de la Cuenta Principal, sin Supabase
   // Auth de usuario final). `code` es el código corto compartible
@@ -177,6 +209,7 @@ const SCHEMA_STATEMENTS = [
   `alter table public.app_friend_messages enable row level security`,
   `alter table public.player_progress enable row level security`,
   `alter table public.hero_avatars enable row level security`,
+  `alter table public.transactions enable row level security`,
   `alter table public.app_squads enable row level security`,
   `alter table public.app_squad_members enable row level security`,
   `alter table public.app_squad_messages enable row level security`,
@@ -205,6 +238,8 @@ const SCHEMA_STATEMENTS = [
   `create policy "anon full access player_progress" on public.player_progress for all using (true) with check (true)`,
   `drop policy if exists "anon full access hero_avatars" on public.hero_avatars`,
   `create policy "anon full access hero_avatars" on public.hero_avatars for all using (true) with check (true)`,
+  `drop policy if exists "anon full access transactions" on public.transactions`,
+  `create policy "anon full access transactions" on public.transactions for all using (true) with check (true)`,
   `drop policy if exists "anon full access squads" on public.app_squads`,
   `create policy "anon full access squads" on public.app_squads for all using (true) with check (true)`,
   `drop policy if exists "anon full access squad_members" on public.app_squad_members`,
