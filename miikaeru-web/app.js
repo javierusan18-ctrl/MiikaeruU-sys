@@ -712,6 +712,43 @@ const supabaseClient = (typeof window !== "undefined" && window.supabase && wind
   : null;
 
 // ---------------------------------------------------
+// "Modo Local Autónomo": circuit breaker liviano para que ningún flujo
+// (Cuenta Principal, Amigos/Escuadrón, Métricas del Admin) siga
+// reintentando contra un backend que YA se sabe caído dentro de la
+// misma sesión — pedido explícito de "eliminar cualquier mensaje de
+// error de red/base de datos de la consola".
+//
+// isOnline() usa navigator.onLine — gratis, no genera ningún tráfico
+// de red, así que nunca deja una entrada en consola. Cubre "sin
+// internet de verdad" al 100%.
+//
+// masterAuthBackendDown/supabaseBackendDown cubren el otro caso ("hay
+// internet pero ESE backend puntual no responde"): se activan la
+// PRIMERA vez que un intento real contra ese backend falla (esa
+// primera vez sí puede dejar una entrada de red fallida en consola —
+// es una limitación real del navegador, no de este código: no existe
+// forma de "probar" conectividad sin al menos un intento real) y desde
+// ahí saltan derecho al camino 100% local el resto de la sesión, sin
+// volver a tocar la red. Se resetean solos en cada carga de página
+// nueva (son `let` de módulo) — así una reconexión real se detecta de
+// nuevo la próxima vez que el Operador entre.
+//   - masterAuthBackendDown: los endpoints de Vercel con conexión
+//     directa a Postgres (SUPABASE_DB_URL) — register-account/
+//     login-account/admin-metrics/admin-list-users/admin-reset-password/
+//     init-db, TODOS dependen exactamente de la misma variable, así
+//     que comparten un solo flag.
+//   - supabaseBackendDown: llamadas del navegador directo a la REST
+//     API de Supabase (supabaseClient) — Amigos/Escuadrón/Contactos/
+//     progreso del operador. Falla independiente de la de arriba
+//     (podés tener SUPABASE_DB_URL rota en Vercel y el proyecto de
+//     Supabase igual arriba, o viceversa).
+let masterAuthBackendDown = false;
+let supabaseBackendDown = false;
+function isOnline() {
+  return typeof navigator === "undefined" || navigator.onLine !== false;
+}
+
+// ---------------------------------------------------
 // Rol SUPER_ADMIN: a diferencia del candado de contraseña que existía
 // antes (ADMIN_PANEL_PASSWORD, una cortina de interfaz sin seguridad
 // real — ver historial en PROGRESS_LOG Bloque 32), esto es autenticación
@@ -10923,6 +10960,17 @@ document.addEventListener("DOMContentLoaded", () => {
       setUsersStatus(t("adminPanelNoClient"));
       return;
     }
+    // Modo Local Autónomo: api/admin-list-users.js depende de
+    // SUPABASE_DB_URL, mismo backend que register-account/login-account
+    // (ver masterAuthBackendDown) — si ya se sabe caído esta sesión, ni
+    // se intenta.
+    if (!isOnline() || masterAuthBackendDown) {
+      usersRows = [];
+      renderUsersStats([]);
+      renderUsersTable([]);
+      setUsersStatus(metricsErrorMessage("connection_failed", null, null));
+      return;
+    }
     setUsersStatus(t("adminPanelLoading"));
     // try/catch explícito para que, pase lo que pase (tabla todavía no
     // creada, red, token vencido), la pestaña Usuarios SIEMPRE termine
@@ -10944,6 +10992,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (!data.ok) {
         console.warn("Usuarios: api/admin-list-users respondió con error —", data.error, data.detail || "", data.diagnostics || "");
+        if (MASTER_AUTH_INFRA_ERRORS.has(data.error)) masterAuthBackendDown = true;
         usersRows = [];
         renderUsersStats([]);
         renderUsersTable([]);
@@ -10967,6 +11016,7 @@ document.addEventListener("DOMContentLoaded", () => {
       setUsersStatus(`${t("usersRowCount")} ${usersRows.length}`);
     } catch (err) {
       console.warn("Usuarios: no se pudo leer las cuentas:", err);
+      masterAuthBackendDown = true;
       usersRows = [];
       renderUsersStats([]);
       renderUsersTable([]);
@@ -11023,6 +11073,14 @@ document.addEventListener("DOMContentLoaded", () => {
       setMetricsStatus(t("metricsNoClient"));
       return;
     }
+    // Modo Local Autónomo: mismo backend (SUPABASE_DB_URL) que
+    // register-account/login-account/admin-list-users — si ya se sabe
+    // caído esta sesión, ni se intenta.
+    if (!isOnline() || masterAuthBackendDown) {
+      renderMetricsStats(null);
+      setMetricsStatus(metricsErrorMessage("connection_failed", null, null));
+      return;
+    }
     setMetricsStatus(t("metricsLoading"));
     try {
       const { data: sessionData } = await supabaseClient.auth.getSession();
@@ -11038,6 +11096,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (!data.ok) {
         console.warn("Métricas: api/admin-metrics respondió con error —", data.error, data.detail || "", data.diagnostics || "");
+        if (MASTER_AUTH_INFRA_ERRORS.has(data.error)) masterAuthBackendDown = true;
         renderMetricsStats(null);
         setMetricsStatus(metricsErrorMessage(data.error, data.detail, data.diagnostics));
         return;
@@ -11047,6 +11106,7 @@ document.addEventListener("DOMContentLoaded", () => {
       setMetricsStatus("");
     } catch (err) {
       console.warn("Métricas: no se pudo llamar a api/admin-metrics:", err);
+      masterAuthBackendDown = true;
       renderMetricsStats(null);
       setMetricsStatus(t("metricsNetworkError"));
     }
@@ -11755,25 +11815,42 @@ document.addEventListener("DOMContentLoaded", () => {
         // prueba locales aunque Supabase falle, y renderSquadTab() cae
         // en el estado "sin Escuadrón" — atrapar acá es solo para que un
         // fallo más profundo/inesperado nunca deje un error rojo suelto.
+        // Modo Local Autónomo: sin internet, o con Supabase ya marcado
+        // como caído esta sesión (ver supabaseBackendDown), ni se
+        // intenta la red — directo a los contactos de prueba locales /
+        // estado "sin Escuadrón", mismo resultado visual que el catch
+        // de abajo pero sin generar tráfico de red nuevo.
         if (target === "friends") {
-          try {
-            await ensureContactRegistered();
-            renderChatFriendsList(await loadFriends());
-            wireFriendshipsRealtime();
-          } catch (err) {
-            console.warn("Pestaña Amigos: no se pudo cargar contra Supabase, se muestran solo los contactos locales:", err);
+          if (!isOnline() || supabaseBackendDown) {
             renderChatFriendsList(Object.values(loadLocalTestContacts()).map((c) => ({ ...c, relationship: "friend" })));
+          } else {
+            try {
+              await ensureContactRegistered();
+              renderChatFriendsList(await loadFriends());
+              wireFriendshipsRealtime();
+            } catch (err) {
+              console.warn("Pestaña Amigos: no se pudo cargar contra Supabase, se muestran solo los contactos locales:", err);
+              supabaseBackendDown = true;
+              renderChatFriendsList(Object.values(loadLocalTestContacts()).map((c) => ({ ...c, relationship: "friend" })));
+            }
           }
         }
         if (target === "squad") {
-          try {
-            await ensureContactRegistered();
-            await renderSquadTab();
-          } catch (err) {
-            console.warn("Pestaña Escuadrón: no se pudo cargar contra Supabase:", err);
+          if (!isOnline() || supabaseBackendDown) {
             stopSquadRealtime();
             if (chatSquadActive) chatSquadActive.hidden = true;
             if (chatSquadNoSquad) chatSquadNoSquad.hidden = false;
+          } else {
+            try {
+              await ensureContactRegistered();
+              await renderSquadTab();
+            } catch (err) {
+              console.warn("Pestaña Escuadrón: no se pudo cargar contra Supabase:", err);
+              supabaseBackendDown = true;
+              stopSquadRealtime();
+              if (chatSquadActive) chatSquadActive.hidden = true;
+              if (chatSquadNoSquad) chatSquadNoSquad.hidden = false;
+            }
           }
         }
         if (target === "conversation") {
@@ -11940,7 +12017,13 @@ document.addEventListener("DOMContentLoaded", () => {
   // admin no necesita ver el XP subir tick a tick, solo el progreso
   // real del operador con una frecuencia razonable.
   function syncPlayerProgressToSupabase() {
-    if (!supabaseClient) return;
+    // Modo Local Autónomo: sin internet, o con Supabase ya marcado como
+    // caído esta sesión, ni se intenta — el progreso YA vive 100% en
+    // localStorage (ver comentario arriba: "localStorage sigue siendo
+    // la ÚNICA fuente de verdad real"), así que saltarse esto no le
+    // quita nada al Operador, solo evita tráfico de red que se sabe
+    // inútil.
+    if (!supabaseClient || !isOnline() || supabaseBackendDown) return;
     supabaseClient
       .from("player_progress")
       .upsert({
@@ -11957,9 +12040,15 @@ document.addEventListener("DOMContentLoaded", () => {
         updated_at: new Date().toISOString(),
       })
       .then(({ error }) => {
-        if (error) console.warn("Supabase: no se pudo sincronizar el progreso del operador:", error.message);
+        if (error) {
+          console.warn("Supabase: no se pudo sincronizar el progreso del operador:", error.message);
+          supabaseBackendDown = true;
+        }
       })
-      .catch((err) => console.warn("Supabase: fallo de red al sincronizar el progreso del operador:", err));
+      .catch((err) => {
+        console.warn("Supabase: fallo de red al sincronizar el progreso del operador:", err);
+        supabaseBackendDown = true;
+      });
   }
 
   // Se llama al entrar a "Amigos" — hace que el propio teléfono sea
@@ -12410,6 +12499,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
       chatFriendAddStatus.hidden = true;
       hideTestFallback();
+      // Modo Local Autónomo: sin internet o con Supabase ya marcado
+      // caído esta sesión, ni se intenta — va directo al mismo camino
+      // que "schema-missing" de abajo (Modo Simulación Local).
+      if (!isOnline() || supabaseBackendDown) {
+        chatFriendAddStatus.hidden = true;
+        if (isPhoneFormat(query)) showTestFallback(query);
+        return;
+      }
       try {
         await addFriendByQuery(query);
         chatFriendPhoneInput.value = "";
@@ -12426,6 +12523,12 @@ document.addEventListener("DOMContentLoaded", () => {
         // información legítima para quien está agregando un amigo.
         if (err.message === "schema-missing") {
           chatFriendAddStatus.hidden = true;
+          // Un "schema-missing" acá significa que la llamada real a
+          // Supabase falló (tabla sin crear O conexión caída) — prender
+          // el circuit breaker es seguro en cualquiera de los dos casos:
+          // si solo faltaba la tabla, el peor efecto es no reintentar
+          // hasta la próxima carga de página, nunca romper nada.
+          supabaseBackendDown = true;
         } else {
           const key =
             err.message === "not-found" ? "chatFriendAddNotFound" :
@@ -12917,6 +13020,14 @@ document.addEventListener("DOMContentLoaded", () => {
         showSquadStatus("chatSquadNameRequired", false);
         return;
       }
+      // Modo Local Autónomo: Escuadrón es multijugador de verdad (otras
+      // personas se unen con el código) — no tiene sentido "simularlo"
+      // 100% local como Amigos. Sin conexión, se avisa con el mismo
+      // mensaje honesto de siempre en vez de intentar la red.
+      if (!isOnline() || supabaseBackendDown) {
+        showSquadStatus("chatSquadSchemaMissing", false);
+        return;
+      }
       try {
         await createSquad(name);
         chatSquadNameInput.value = "";
@@ -12927,6 +13038,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Supabase — ver Panel de Administrador → 🗄️ Base de Datos) tiene
         // su propio mensaje honesto, en vez del genérico "Algo falló" que
         // sonaba a que reintentar alcanzaba para arreglarlo.
+        if (err.message === "schema-missing") supabaseBackendDown = true;
         const key =
           err.message === "no-session" ? "chatSquadNoSession" :
           err.message === "schema-missing" ? "chatSquadSchemaMissing" :
@@ -12945,12 +13057,17 @@ document.addEventListener("DOMContentLoaded", () => {
         showSquadStatus("chatSquadCodeRequired", false);
         return;
       }
+      if (!isOnline() || supabaseBackendDown) {
+        showSquadStatus("chatSquadSchemaMissing", false);
+        return;
+      }
       try {
         await joinSquadByCode(code);
         chatSquadCodeInput.value = "";
         showSquadStatus("chatSquadJoinSuccess", true);
         await renderSquadTab();
       } catch (err) {
+        if (err.message === "schema-missing") supabaseBackendDown = true;
         const key =
           err.message === "not-found" ? "chatSquadJoinNotFound" :
           err.message === "no-session" ? "chatSquadNoSession" :
@@ -19771,6 +19888,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     setFormBusy(masterRegisterForm, true);
+    // Modo Local Autónomo: si ya sabemos (sin internet, o este mismo
+    // backend ya falló una vez esta sesión) que el servidor no va a
+    // responder, ni se intenta — directo al registro 100% local, cero
+    // tráfico de red, cero posible entrada nueva en consola.
+    if (!isOnline() || masterAuthBackendDown) {
+      await registerMasterAccountLocally(phone, password);
+      setFormBusy(masterRegisterForm, false);
+      return;
+    }
     try {
       const res = await fetch("/api/register-account", {
         method: "POST",
@@ -19778,6 +19904,9 @@ document.addEventListener("DOMContentLoaded", () => {
         body: JSON.stringify({ phone, password }),
       });
       const data = await res.json();
+      // El servidor respondió ALGO coherente — sea éxito o rechazo de
+      // dominio real, prueba que el backend está vivo.
+      masterAuthBackendDown = false;
 
       if (!data.ok) {
         if (data.error === "account_exists") {
@@ -19794,8 +19923,11 @@ document.addEventListener("DOMContentLoaded", () => {
         // poder entrar, se registra 100% local (hash PBKDF2, nunca la
         // contraseña en claro) y se sube sola en cuanto vuelva la
         // conexión (ver trySyncLocalFallbackToServer(), disparado desde
-        // el próximo login exitoso).
+        // el próximo login exitoso). Se marca el circuit breaker para
+        // que el PRÓXIMO intento (de este u otro formulario) ni
+        // siquiera vuelva a tocar la red esta sesión.
         if (MASTER_AUTH_INFRA_ERRORS.has(data.error)) {
+          masterAuthBackendDown = true;
           await registerMasterAccountLocally(phone, password);
           return;
         }
@@ -19814,7 +19946,9 @@ document.addEventListener("DOMContentLoaded", () => {
       onMasterAuthSuccess();
     } catch (err) {
       // Fetch en sí mismo falló (sin red, DNS del propio Vercel, etc.) —
-      // mismo criterio que arriba: fallback local en vez de bloquear.
+      // mismo criterio que arriba: fallback local en vez de bloquear, y
+      // se prende el circuit breaker para no reintentar esta sesión.
+      masterAuthBackendDown = true;
       await registerMasterAccountLocally(phone, password);
     } finally {
       setFormBusy(masterRegisterForm, false);
@@ -19863,6 +19997,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const password = masterLoginPassword.value;
 
     setFormBusy(masterLoginForm, true);
+    // Modo Local Autónomo: mismo criterio que el registro — sin
+    // internet o con este backend ya marcado como caído esta sesión,
+    // ni se intenta la red.
+    if (!isOnline() || masterAuthBackendDown) {
+      if (await loginMasterAccountLocally(phone, password)) {
+        setFormBusy(masterLoginForm, false);
+        return;
+      }
+      masterLoginError.textContent = t("masterAuthNetworkError");
+      masterLoginError.hidden = false;
+      setFormBusy(masterLoginForm, false);
+      return;
+    }
     try {
       const res = await fetch("/api/login-account", {
         method: "POST",
@@ -19870,12 +20017,16 @@ document.addEventListener("DOMContentLoaded", () => {
         body: JSON.stringify({ phone, password }),
       });
       const data = await res.json();
+      masterAuthBackendDown = false; // respondió algo coherente — vivo
 
       if (!data.ok) {
         // El servidor SÍ respondió pero no pudo hacer su trabajo
         // (SUPABASE_DB_URL rota/ausente) — entrar con la cuenta local de
         // este dispositivo si coincide, en vez de bloquear al Operador.
+        // Circuit breaker: el próximo intento (login o registro) ni
+        // vuelve a tocar la red esta sesión.
         if (MASTER_AUTH_INFRA_ERRORS.has(data.error)) {
+          masterAuthBackendDown = true;
           if (await loginMasterAccountLocally(phone, password)) return;
           masterLoginError.textContent = t("masterAuthNetworkError");
           masterLoginError.hidden = false;
@@ -19910,7 +20061,9 @@ document.addEventListener("DOMContentLoaded", () => {
       masterAuthModal.hidden = true;
       onMasterAuthSuccess();
     } catch (err) {
-      // Fetch en sí mismo falló (sin red) — mismo fallback que arriba.
+      // Fetch en sí mismo falló (sin red) — mismo fallback que arriba,
+      // circuit breaker incluido.
+      masterAuthBackendDown = true;
       if (await loginMasterAccountLocally(phone, password)) return;
       masterLoginError.textContent = t("masterAuthNetworkError");
       masterLoginError.hidden = false;
@@ -19979,6 +20132,11 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem(MASTER_MIGRATED_KEY, "true");
       return;
     }
+    // Modo Local Autónomo: este intento corre SOLO en segundo plano al
+    // cargar la página (nunca lo dispara el Operador a mano) — sin
+    // internet o con el backend ya marcado como caído esta sesión, ni
+    // se intenta; se reintenta solo en la próxima carga de página.
+    if (!isOnline() || masterAuthBackendDown) return;
     try {
       const res = await fetch("/api/register-account", {
         method: "POST",
