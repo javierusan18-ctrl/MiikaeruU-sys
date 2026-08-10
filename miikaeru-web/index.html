@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260810-8" />
+  <link rel="stylesheet" href="style.css?v=20260810-9" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -1088,7 +1088,6 @@
                  applySuperAdminVisibility() en app.js. Solo se revelan si
                  la sesión real de Supabase Auth coincide con ADMIN_EMAIL. -->
             <button type="button" class="finanzas-global-summary__admin-btn" id="admin-panel-open-btn" data-i18n="adminPanelOpenBtn" hidden>🛡️ Panel de Administrador</button>
-            <button type="button" class="finanzas-global-summary__admin-btn finanzas-global-summary__admin-btn--inspector" id="inspector-open-btn" data-i18n="inspectorOpenBtn" hidden>🕵️ Agente Inspector</button>
           </div>
         </div>
 
@@ -2631,10 +2630,13 @@
   </div>
 
   <!-- MODAL: PANEL DE ADMINISTRADOR — se abre desde [🛡️ Panel de
-       Administrador] o [🕵️ Agente Inspector] dentro del Cuadro de
-       Finanzas. Ambos botones están OCULTOS por defecto en el HTML (ver
-       #admin-panel-open-btn/#inspector-open-btn) y solo se revelan si
-       checkAdminSession() confirma una sesión REAL de Supabase Auth cuyo
+       Administrador] dentro del Cuadro de Finanzas (único punto de
+       entrada; el Agente Inspector vive ADENTRO como una pestaña más,
+       ver data-admin-tab="inspector" más abajo — antes tenía además su
+       propio botón de acceso directo suelto en Finanzas, se sacó por
+       prolijidad). Ese botón está OCULTO por defecto en el HTML (ver
+       #admin-panel-open-btn) y solo se revela si checkAdminSession()
+       confirma una sesión REAL de Supabase Auth cuyo
        email coincide con ADMIN_EMAIL (ver app.js) — a diferencia del
        candado de contraseña del Bloque 32 (una cortina de interfaz sin
        seguridad real), esto es autenticación real respaldada por RLS del
@@ -3150,7 +3152,7 @@
     </div>
   </div>
 
-  <script src="app.js?v=20260810-9"></script>
+  <script src="app.js?v=20260810-10"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de

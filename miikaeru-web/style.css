@@ -1694,18 +1694,6 @@ textarea,
   box-shadow: 0 0 12px rgba(255, 46, 154, 0.5);
 }
 
-.finanzas-global-summary__admin-btn--inspector {
-  border-color: rgba(0, 240, 255, 0.4);
-  background: rgba(0, 240, 255, 0.06);
-  color: var(--neon-cyan);
-}
-
-.finanzas-global-summary__admin-btn--inspector:hover {
-  background: var(--neon-cyan);
-  color: #04222a;
-  box-shadow: var(--shadow-neon-cyan);
-}
-
 @media (max-width: 480px) {
   .finanzas-global-summary {
     grid-template-columns: 1fr;

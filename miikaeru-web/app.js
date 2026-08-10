@@ -1061,7 +1061,6 @@ const I18N = {
     financeTabServicios: "Servicios / Negocio",
     financeOpenDashboardBtn: "📊 Ver Dashboard Completo",
     adminPanelOpenBtn: "🛡️ Panel de Administrador",
-    inspectorOpenBtn: "🕵️ Agente Inspector",
     adminPanelTitle: "🛡️ Panel de Administrador",
     adminPanelTabTransactions: "💳 Transacciones",
     adminPanelTabInspector: "🕵️ Inspector de Bugs",
@@ -1964,7 +1963,6 @@ const I18N = {
     financeTabServicios: "Services / Business",
     financeOpenDashboardBtn: "📊 View Full Dashboard",
     adminPanelOpenBtn: "🛡️ Admin Panel",
-    inspectorOpenBtn: "🕵️ Inspector Agent",
     adminPanelTitle: "🛡️ Admin Panel",
     adminPanelTabTransactions: "💳 Transactions",
     adminPanelTabInspector: "🕵️ Bug Inspector",
@@ -2867,7 +2865,6 @@ const I18N = {
     financeTabServicios: "サービス / ビジネス",
     financeOpenDashboardBtn: "📊 ダッシュボードを見る",
     adminPanelOpenBtn: "🛡️ 管理者パネル",
-    inspectorOpenBtn: "🕵️ インスペクターエージェント",
     adminPanelTitle: "🛡️ 管理者パネル",
     adminPanelTabTransactions: "💳 取引",
     adminPanelTabInspector: "🕵️ バグ検査",
@@ -8812,12 +8809,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const feedbackMessage = document.getElementById("feedback-message");
   const feedbackStatus = document.getElementById("feedback-status");
 
-  // Panel de Administrador (se abre desde "Panel de Administrador" o
-  // "Agente Inspector" dentro del Cuadro de Finanzas, ambos ocultos
-  // hasta que checkAdminSession() confirme una sesión real — ver más
-  // abajo) — lee de Supabase, no del ledger local.
+  // Panel de Administrador (se abre desde "Panel de Administrador" dentro
+  // del Cuadro de Finanzas, oculto hasta que checkAdminSession() confirme
+  // una sesión real — ver más abajo) — lee de Supabase, no del ledger
+  // local. El Agente Inspector ya no tiene su propio botón de acceso
+  // directo acá: vive exclusivamente como pestaña dentro de este modal
+  // (data-admin-tab="inspector"), quitado del Cuadro de Finanzas por
+  // prolijidad — pedido explícito.
   const adminPanelOpenBtn = document.getElementById("admin-panel-open-btn");
-  const inspectorOpenBtn = document.getElementById("inspector-open-btn");
   const adminPanelModal = document.getElementById("admin-panel-modal");
   const adminPanelModalClose = document.getElementById("admin-panel-modal-close");
   const adminPanelTabs = document.getElementById("admin-panel-tabs");
@@ -10254,9 +10253,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function applySuperAdminVisibility() {
     adminPanelOpenBtn.hidden = !isSuperAdmin;
-    inspectorOpenBtn.hidden = !isSuperAdmin;
     adminLoginTriggerBtn.textContent = isSuperAdmin ? t("adminLogoutTriggerBtn") : t("adminLoginTriggerBtn");
     if (!isSuperAdmin) closeAdminPanel();
+  }
+
+  // Evita que un evento FRESCO de autenticación de Cuenta Principal
+  // (registro o login que se acaba de completar recién — NUNCA la
+  // restauración de una sesión ya activa al recargar la página, ver
+  // checkMasterAuthAndInit()) herede por accidente privilegios de
+  // Administrador que hayan quedado abiertos en este mismo navegador
+  // (Supabase Auth, ver isSuperAdmin/checkAdminSession() arriba) — las
+  // dos identidades (Cuenta Principal por teléfono vs. Admin por
+  // email+contraseña de Supabase Auth) son sistemas completamente
+  // independientes, así que sin esto, un dispositivo donde alguien
+  // alguna vez entró como Admin (una demo, una prueba, un dispositivo
+  // compartido) le mostraba el Panel de Administrador a CUALQUIER
+  // Operador nuevo que se registrara o entrara después en ese mismo
+  // navegador, aunque nunca hubiera tocado el login de Admin. Pedido
+  // explícito: el acceso de administrador es únicamente para quien se
+  // autentica como tal a propósito, cada vez — nunca heredado.
+  async function clearStaleAdminSessionOnFreshMasterAuth() {
+    if (!isSuperAdmin) return;
+    if (supabaseClient) {
+      try {
+        await supabaseClient.auth.signOut();
+      } catch (err) {
+        console.warn("No se pudo cerrar la sesión de administrador previa:", err);
+      }
+    }
+    isSuperAdmin = false;
+    applySuperAdminVisibility();
   }
 
   // Se llama una vez al cargar la página: si ya había una sesión de
@@ -10455,7 +10481,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   adminPanelOpenBtn.addEventListener("click", () => openAdminPanel("transactions"));
-  inspectorOpenBtn.addEventListener("click", () => openAdminPanel("inspector"));
   adminPanelModalClose.addEventListener("click", closeAdminPanel);
   adminPanelModal.addEventListener("click", (event) => {
     if (event.target === adminPanelModal) closeAdminPanel();
@@ -20050,6 +20075,7 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem(MASTER_LOGGED_IN_KEY, "true");
       localStorage.setItem(MASTER_MIGRATED_KEY, "true");
       masterAuthModal.hidden = true;
+      await clearStaleAdminSessionOnFreshMasterAuth();
       onMasterAuthSuccess();
     } catch (err) {
       // Fetch en sí mismo falló (sin red, DNS del propio Vercel, etc.) —
@@ -20078,6 +20104,7 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem(MASTER_MIGRATED_KEY, "true");
       masterAuthModal.hidden = true;
       addMessage({ author: "SISTEMA", text: t("masterAuthLocalModeNotice"), variant: "system" });
+      await clearStaleAdminSessionOnFreshMasterAuth();
       onMasterAuthSuccess();
     } catch (err) {
       console.warn("Registro local (fallback) falló:", err);
@@ -20166,6 +20193,7 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem(MASTER_LOGGED_IN_KEY, "true");
       localStorage.setItem(MASTER_MIGRATED_KEY, "true");
       masterAuthModal.hidden = true;
+      await clearStaleAdminSessionOnFreshMasterAuth();
       onMasterAuthSuccess();
     } catch (err) {
       // Fetch en sí mismo falló (sin red) — mismo fallback que arriba,
@@ -20189,6 +20217,7 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem(MASTER_LOGGED_IN_KEY, "true");
     masterAuthModal.hidden = true;
     addMessage({ author: "SISTEMA", text: t("masterAuthLocalModeNotice"), variant: "system" });
+    await clearStaleAdminSessionOnFreshMasterAuth();
     onMasterAuthSuccess();
     return true;
   }
@@ -20215,6 +20244,7 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem(MASTER_ACCOUNT_KEY, JSON.stringify({ phone, name: syncedName }));
       localStorage.setItem(MASTER_LOGGED_IN_KEY, "true");
       masterAuthModal.hidden = true;
+      await clearStaleAdminSessionOnFreshMasterAuth();
       onMasterAuthSuccess();
       return true;
     } catch (err) {
