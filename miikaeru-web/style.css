@@ -1486,7 +1486,30 @@ textarea,
   inset: 14px !important;
   width: auto !important;
   height: auto !important;
+  /* Sin esto, el max-width/max-height responsivo del layout ACOPLADO
+     (ej. .panel--avatar llega a tener max-width:380-460px en varios
+     breakpoints) sigue ganando por encima de width/height:auto de acá
+     arriba — !important solo pelea contra OTRAS reglas de la misma
+     propiedad, no contra max-width, que es una propiedad DISTINTA que
+     también puede recortar el ancho resuelto. Pasa sobre todo al
+     maximizar de un tirón sin haber arrastrado antes (ver _undock(),
+     que ya limpiaba esto pero solo en el camino de arrastre/resize —
+     toggleMaximize() no pasaba por ahí). Resultado sin esto: la
+     ventana "maximizada" se quedaba clavada en una esquina con su
+     tamaño acoplado viejo en vez de llenar el inset:14px de arriba. */
+  max-width: none !important;
+  max-height: none !important;
   transition: inset 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* Blindaje extra del mismo problema: el contenido de ADENTRO tampoco
+   puede desbordar el marco maximizado — pedido explícito ("la interfaz
+   nunca rebase su espacio asignado"). overflow:hidden ya vive en
+   .panel--avatar/#chat-modal individualmente (ver sus reglas propias),
+   pero acá se refuerza a nivel genérico para CUALQUIER ventana
+   flotante futura que use este sistema y no lo haya declarado. */
+.floating-window--maximized {
+  overflow: hidden;
 }
 
 /* Minimizada: floatingWindow.js fija la altura inline exacta de la

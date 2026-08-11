@@ -674,6 +674,19 @@
         };
         this.mode = "maximized";
         this.el.style.zIndex = String(nextZ());
+        // Mismo motivo que en _undock(): el max-width/max-height
+        // responsivo del layout ACOPLADO (ej. .panel--avatar llega a
+        // 380-460px en varios breakpoints) sigue vivo si la ventana
+        // nunca pasó por _undock() (maximizar de un tirón sin haber
+        // arrastrado antes) — sin limpiarlo acá también, "maximizar" se
+        // quedaba clavado en el tamaño acoplado viejo en vez de llenar
+        // el inset:14px de .floating-window__maximized, dejando un
+        // recuadro chico pegado a una esquina en vez de la ventana
+        // llena (el bug real detrás de "cruza los límites / capas
+        // extrañas" reportado).
+        this.el.style.maxWidth = "none";
+        this.el.style.maxHeight = "none";
+        this.el.style.flex = "none";
         this.el.classList.add("floating-window--maximized");
         this.el.classList.remove("floating-window--floating");
       }
