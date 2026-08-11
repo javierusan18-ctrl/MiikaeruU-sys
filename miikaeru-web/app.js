@@ -16829,6 +16829,44 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // ---------------- Resetear Ventanas y Pantalla ----------------
+  // Botón de emergencia APARTE del de "Forzar Actualización" (ese
+  // limpia archivos viejos del Service Worker; este limpia ESTADO
+  // GUARDADO de pantalla/ventanas) — para cuando una ventana flotante
+  // (León/Chat/docks) quedó persistida en un modo/tamaño roto en
+  // localStorage (ver floatingWindow.js: savePersisted()/miikaeru_
+  // floatwin_<id>) y con solo recargar no alcanza, porque
+  // _restorePersisted() la vuelve a dejar exactamente como estaba. Solo
+  // toca preferencias de PANTALLA — nunca progreso/datos del usuario
+  // (nivel, oro, XP, transacciones, hábitos, etc., que viven en otras
+  // claves de localStorage completamente aparte).
+  //
+  // También fuerza a hidden=true CUALQUIER .modal-overlay que haya
+  // quedado visible en el momento del clic — un blindaje genérico para
+  // el caso "un modal se quedó trabado abierto sin que su botón de
+  // cerrar/click-afuera/Escape lo resolviera", sin necesidad de saber
+  // de antemano cuál es. Se excluye #master-auth-modal a propósito: es
+  // el candado real de la cuenta principal, nunca debe poder ocultarse
+  // por accidente.
+  if (resetScreenBtn) {
+    resetScreenBtn.addEventListener("click", () => {
+      resetScreenBtn.disabled = true;
+      resetScreenBtn.textContent = t("resetScreenBtnWorking");
+      try {
+        Object.keys(localStorage)
+          .filter((key) => key.startsWith("miikaeru_floatwin_"))
+          .forEach((key) => localStorage.removeItem(key));
+        localStorage.removeItem(SCALE_KEY);
+        document.querySelectorAll(".modal-overlay").forEach((modal) => {
+          if (modal.id !== "master-auth-modal") modal.hidden = true;
+        });
+      } catch (err) {
+        console.warn("Resetear pantalla: no se pudo limpiar todo el estado guardado:", err);
+      }
+      window.location.href = `${window.location.pathname}?resetscreen=${Date.now()}`;
+    });
+  }
+
   // ---------------- Instalación PWA (botón unificado "Instalar App") ----------------
   // Un solo botón cubre los dos caminos reales de instalación:
   // - Android/Chrome/Desktop compatible: el navegador dispara

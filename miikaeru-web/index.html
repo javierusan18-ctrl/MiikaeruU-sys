@@ -3145,6 +3145,19 @@
            localStorage/datos del usuario, solo el caché de archivos. -->
       <button type="button" class="btn-force-update" id="force-update-btn" data-i18n="forceUpdateBtn">🔄 Forzar Actualización / Limpiar Caché</button>
 
+      <!-- Botón de emergencia APARTE del de arriba: ese limpia el
+           Service Worker/CacheStorage (versión vieja de archivos); este
+           limpia el ESTADO GUARDADO de ventanas/pantalla (posición,
+           tamaño, modo maximizado/minimizado de León/Chat/docks, y la
+           escala visual) — para cuando una ventana quedó en un estado
+           roto/inconsistente guardado en localStorage (ej. maximizada
+           con medidas corruptas) y simplemente recargar no alcanza
+           porque _restorePersisted() la vuelve a poner tal cual quedó.
+           Tampoco borra progreso/datos del usuario (nivel, XP, oro,
+           transacciones, hábitos, etc.) — solo preferencias de
+           pantalla. -->
+      <button type="button" class="btn-force-update" id="reset-screen-btn" data-i18n="resetScreenBtn">🖥️ Resetear Ventanas y Pantalla</button>
+
       <!-- Único punto de entrada a la sesión SUPER_ADMIN — ver
            #admin-login-modal. Alterna su propio texto/acción según haya
            o no una sesión de admin activa (updateAdminLoginBtn() en
@@ -3204,7 +3217,7 @@
        etiquetas <script> no importa en la práctica — se carga acá antes
        igual, por prolijidad. -->
   <script src="floatingWindow.js?v=20260811-6"></script>
-  <script src="app.js?v=20260811-7"></script>
+  <script src="app.js?v=20260811-8"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de
