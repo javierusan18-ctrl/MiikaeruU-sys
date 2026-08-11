@@ -20775,12 +20775,15 @@ document.addEventListener("DOMContentLoaded", () => {
       const parsed = parseFloat(raw);
       return Number.isNaN(parsed) ? 100 : parsed;
     };
-    // Piso de "nacimiento" — solo para León y Chat, pedido explícito:
-    // deben aparecer con más aire bajo el header desde el primer
-    // instante (al abrir el Chat, o al arrastrar el León antes de que
-    // exista una posición guardada), aunque después el usuario sí pueda
-    // arrastrarlos hasta el tope general (más ajustado) si quiere. Los
-    // docks NO lo reciben — sin cambios ahí, no fueron parte del pedido.
+    // Piso de "nacimiento" — usado por TODAS las ventanas flotantes
+    // (León, Chat, docks): deben aparecer con más aire bajo el header
+    // desde el primer instante (al abrir el Chat, arrastrar el León, o
+    // restaurar cualquiera de las cuatro sin una posición guardada
+    // válida), aunque después el usuario sí pueda arrastrarlas hasta el
+    // tope general (más ajustado) si quiere. Pedido explícito: extender
+    // esto de León/Chat a "todas las ventanas flotantes... y demás
+    // módulos" tras confirmar que los docks quedaban con el mismo
+    // problema de nacer pegados al header.
     const floatingWindowSpawnMinTop = () => floatingWindowMinTop() + 40;
 
     const avatarPanelEl = document.querySelector(".panel--avatar");
@@ -20829,6 +20832,7 @@ document.addEventListener("DOMContentLoaded", () => {
         minWidth: 60,
         minHeight: 200,
         minTop: floatingWindowMinTop,
+        spawnMinTop: floatingWindowSpawnMinTop,
       });
     }
     const dockRightEl = document.querySelector(".hud-dock--right");
@@ -20839,6 +20843,7 @@ document.addEventListener("DOMContentLoaded", () => {
         minWidth: 60,
         minHeight: 200,
         minTop: floatingWindowMinTop,
+        spawnMinTop: floatingWindowSpawnMinTop,
       });
     }
   }
