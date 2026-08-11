@@ -20715,17 +20715,20 @@ document.addEventListener("DOMContentLoaded", () => {
   // style.css): por debajo de eso, el módulo queda inactivo solo y
   // ambos siguen su layout responsivo normal, sin ningún cambio.
   if (window.MiikaeruFloatingWindow) {
-    // Tope superior compartido por TODAS las ventanas flotantes: la
-    // altura real del header fijo de arriba (.hud — Balance/Racha/Admin/
-    // Perfil/Ajustes), leída en vivo en cada arrastre/resize/restauración
-    // en vez de una constante fija, porque ese header usa flex-wrap y
-    // puede pasar a dos líneas (pantallas medianas, zoom, texto más
-    // largo en otro idioma) — un número fijo se habría desincronizado
-    // apenas el header creciera. +8px de aire para que el borde de la
-    // ventana nunca quede pegado literalmente contra el header.
+    // Tope superior compartido por TODAS las ventanas flotantes. Antes
+    // se leía en vivo getBoundingClientRect().bottom de .hud, pero ese
+    // header usa flex-wrap y puede armar 3-4 filas según ancho/zoom/
+    // idioma — medirlo daba un tope demasiado profundo (270px+ en
+    // pantallas donde envuelve mucho), dejando a las ventanas con
+    // poquísimo espacio útil abajo. Se reemplaza por un valor FIJO
+    // (--floating-window-safe-top en style.css, una sola fuente de
+    // verdad compartida con la línea de contención visual — ver
+    // .floating-window-boundary) — predecible siempre, a costa de no
+    // proteger una fila extra si el header llega a envolver.
     const floatingWindowMinTop = () => {
-      const hud = document.querySelector(".hud");
-      return hud ? hud.getBoundingClientRect().bottom + 8 : 0;
+      const raw = getComputedStyle(document.documentElement).getPropertyValue("--floating-window-safe-top");
+      const parsed = parseFloat(raw);
+      return Number.isNaN(parsed) ? 100 : parsed;
     };
 
     const avatarPanelEl = document.querySelector(".panel--avatar");

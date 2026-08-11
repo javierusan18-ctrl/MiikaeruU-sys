@@ -41,6 +41,17 @@
      de layout del Bloque 37. */
   --avatar-scale: 1;
   --chat-scale: 1;
+
+  /* Tope superior fijo para las ventanas flotantes (ver floatingWindow.js
+     y .floating-window-boundary más abajo) — a propósito NO se calcula
+     desde .hud (getBoundingClientRect().bottom): ese header usa
+     flex-wrap y puede armar 3-4 filas según ancho/zoom/idioma, así que
+     medirlo en vivo devolvía un tope demasiado profundo (270px+),
+     dejando a las ventanas con poquísimo espacio útil abajo. Un valor
+     fijo y chico (una sola fila de header + aire) es predecible siempre,
+     a costa de no proteger una fila extra si el header llega a
+     envolver — trade-off aceptado a propósito. */
+  --floating-window-safe-top: 100px;
 }
 
 * {
@@ -1405,6 +1416,22 @@ textarea,
    minimizables/maximizables — ver floatingWindow.js para la lógica.
    Acá solo vive la piel visual: mismo lenguaje HUD del resto de la app
    (glass + borde cyan + glow), sin inventar un estilo nuevo. */
+
+/* Línea de contención — puramente visual, ver el comentario en
+   index.html. z-index apenas por debajo de Z_BASE (150, ver
+   floatingWindow.js) para quedar SIEMPRE detrás de cualquier ventana
+   flotante (que ya no puede cruzarla) pero por encima del contenido
+   normal, así se ve incluso con un panel justo pegado al límite. */
+.floating-window-boundary {
+  position: fixed;
+  top: var(--floating-window-safe-top);
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.35) 15%, rgba(0, 240, 255, 0.35) 85%, transparent);
+  pointer-events: none;
+  z-index: 149;
+}
 
 .floating-window {
   transition: box-shadow 0.25s ease;
