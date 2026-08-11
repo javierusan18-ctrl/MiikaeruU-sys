@@ -1503,6 +1503,8 @@ const I18N = {
     sevenMinGuideSidePlank: "Apoyado en un antebrazo de costado, cuerpo en línea recta, cambiá de lado a la mitad del tiempo.",
     forceUpdateBtn: "🔄 Forzar Actualización / Limpiar Caché",
     forceUpdateBtnWorking: "Limpiando caché...",
+    resetScreenBtn: "🖥️ Resetear Ventanas y Pantalla",
+    resetScreenBtnWorking: "Reseteando...",
     scaleControlsTitle: "🔍 Tamaño de Paneles",
     scaleControlsAvatar: "León",
     scaleControlsChat: "Chat",
@@ -2419,6 +2421,8 @@ const I18N = {
     sevenMinGuideSidePlank: "Resting on one forearm sideways, body in a straight line, switch sides halfway through.",
     forceUpdateBtn: "🔄 Force Update / Clear Cache",
     forceUpdateBtnWorking: "Clearing cache...",
+    resetScreenBtn: "🖥️ Reset Windows & Screen",
+    resetScreenBtnWorking: "Resetting...",
     scaleControlsTitle: "🔍 Panel Size",
     scaleControlsAvatar: "Lion",
     scaleControlsChat: "Chat",
@@ -3334,6 +3338,8 @@ const I18N = {
     sevenMinGuideSidePlank: "横向きで片方の前腕をつき、体を一直線に。時間の半分で反対側に切り替える。",
     forceUpdateBtn: "🔄 強制更新 / キャッシュ削除",
     forceUpdateBtnWorking: "キャッシュを削除中...",
+    resetScreenBtn: "🖥️ ウィンドウと画面をリセット",
+    resetScreenBtnWorking: "リセット中...",
     scaleControlsTitle: "🔍 パネルサイズ",
     scaleControlsAvatar: "獅子",
     scaleControlsChat: "チャット",
@@ -9294,6 +9300,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const workoutSessionFinishBtn = document.getElementById("workout-session-finish-btn");
 
   const forceUpdateBtn = document.getElementById("force-update-btn");
+  const resetScreenBtn = document.getElementById("reset-screen-btn");
   const avatarScaleInput = document.getElementById("avatar-scale-input");
   const avatarScaleValue = document.getElementById("avatar-scale-value");
   const chatScaleInput = document.getElementById("chat-scale-input");
