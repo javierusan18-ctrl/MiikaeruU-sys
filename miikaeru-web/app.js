@@ -9734,10 +9734,22 @@ document.addEventListener("DOMContentLoaded", () => {
       (gltf) => {
         // Éxito: recién acá se revela #avatar3dStage y se oculta la
         // escena PNG — antes de esto ambas rutas de fallo (red o 404 del
-        // propio .glb) dejan todo intacto.
-        renderAvatar3DScene(THREE, OrbitControls, gltf);
-        avatarScene.hidden = true;
-        avatar3dStage.hidden = false;
+        // propio .glb) dejan todo intacto. El .glb cargó bien, pero
+        // renderAvatar3DScene() todavía puede fallar por su cuenta (WebGL
+        // no disponible, modelo con geometría/materiales que Three.js no
+        // sepa manejar, etc.) — envuelto en try/catch para que ESE fallo
+        // tampoco deje la interfaz a medio camino (stage 3D revelado
+        // pero roto): si truena, se vuelve al avatar PNG de siempre en
+        // vez de propagar la excepción sin capturar.
+        try {
+          renderAvatar3DScene(THREE, OrbitControls, gltf);
+          avatarScene.hidden = true;
+          avatar3dStage.hidden = false;
+        } catch (renderErr) {
+          console.warn("Avatar 3D: el modelo cargó pero falló al renderizarse (se mantiene el avatar PNG):", renderErr);
+          avatarScene.hidden = false;
+          avatar3dStage.hidden = true;
+        }
       },
       undefined,
       (err) => {
