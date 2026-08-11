@@ -20715,6 +20715,19 @@ document.addEventListener("DOMContentLoaded", () => {
   // style.css): por debajo de eso, el módulo queda inactivo solo y
   // ambos siguen su layout responsivo normal, sin ningún cambio.
   if (window.MiikaeruFloatingWindow) {
+    // Tope superior compartido por TODAS las ventanas flotantes: la
+    // altura real del header fijo de arriba (.hud — Balance/Racha/Admin/
+    // Perfil/Ajustes), leída en vivo en cada arrastre/resize/restauración
+    // en vez de una constante fija, porque ese header usa flex-wrap y
+    // puede pasar a dos líneas (pantallas medianas, zoom, texto más
+    // largo en otro idioma) — un número fijo se habría desincronizado
+    // apenas el header creciera. +8px de aire para que el borde de la
+    // ventana nunca quede pegado literalmente contra el header.
+    const floatingWindowMinTop = () => {
+      const hud = document.querySelector(".hud");
+      return hud ? hud.getBoundingClientRect().bottom + 8 : 0;
+    };
+
     const avatarPanelEl = document.querySelector(".panel--avatar");
     if (avatarPanelEl) {
       MiikaeruFloatingWindow.enable(avatarPanelEl, {
@@ -20723,6 +20736,7 @@ document.addEventListener("DOMContentLoaded", () => {
         mediaQuery: "(min-width: 768px)",
         minWidth: 260,
         minHeight: 220,
+        minTop: floatingWindowMinTop,
       });
     }
     // #chat-modal ya es el panel fijo "cara a cara con el León" en
@@ -20735,6 +20749,7 @@ document.addEventListener("DOMContentLoaded", () => {
       mediaQuery: "(min-width: 901px)",
       minWidth: 280,
       minHeight: 220,
+      minTop: floatingWindowMinTop,
     });
 
     // Docks laterales de íconos (.hud-dock--left/--right) — pedido
@@ -20756,6 +20771,7 @@ document.addEventListener("DOMContentLoaded", () => {
         title: "☰ Menú",
         minWidth: 60,
         minHeight: 200,
+        minTop: floatingWindowMinTop,
       });
     }
     const dockRightEl = document.querySelector(".hud-dock--right");
@@ -20765,6 +20781,7 @@ document.addEventListener("DOMContentLoaded", () => {
         title: "☰ Apps",
         minWidth: 60,
         minHeight: 200,
+        minTop: floatingWindowMinTop,
       });
     }
   }

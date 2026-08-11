@@ -135,6 +135,15 @@
       this.minHeight = options.minHeight || 160;
       this.mediaQuery = options.mediaQuery ? window.matchMedia(options.mediaQuery) : null;
       this.onClose = typeof options.onClose === "function" ? options.onClose : null;
+      // Tope superior real (en px de viewport) que ninguna ventana puede
+      // cruzar al arrastrarse/redimensionarse/restaurarse — pensado para
+      // que el llamador (app.js) le pase la altura actual del header fijo
+      // de arriba, así los botones de minimizar/maximizar/cerrar de
+      // CUALQUIER ventana nunca terminan tapados detrás de él. Acepta un
+      // número fijo o (recomendado) una función evaluada en cada arrastre
+      // — el header real usa flex-wrap y puede cambiar de alto según el
+      // ancho de pantalla/zoom, así que un valor fijo se desincronizaría.
+      this._minTopOption = options.minTop;
 
       this.mode = "docked"; // "docked" | "floating" | "maximized"
       this.minimized = false;
@@ -297,12 +306,25 @@
       return getComputedStyle(this.el).display !== "none";
     }
 
+    // Valor de tope actual — se recalcula en cada llamado (no se cachea)
+    // porque options.minTop suele ser una función atada al alto real del
+    // header, que puede cambiar entre un arrastre y el siguiente.
+    _getMinTop() {
+      const value = typeof this._minTopOption === "function" ? this._minTopOption() : this._minTopOption;
+      return typeof value === "number" && !Number.isNaN(value) ? value : 0;
+    }
+
     _undock() {
       if (this.mode === "floating" || this.mode === "maximized") return;
       if (!this._isFloatingEligible()) return;
       const rect = this.el.getBoundingClientRect();
       this.el.style.position = "fixed";
-      this.el.style.top = `${rect.top}px`;
+      // clamp acá también: si el panel vive en flujo normal justo debajo
+      // del header pero algo (zoom, un breakpoint raro) lo dejó por
+      // encima del tope, la PRIMERA vez que se despega ya nace en zona
+      // seguridad — no hace falta esperar a que el usuario la arrastre
+      // una vez para "corregirla".
+      this.el.style.top = `${Math.max(rect.top, this._getMinTop())}px`;
       this.el.style.left = `${rect.left}px`;
       this.el.style.width = `${rect.width}px`;
       this.el.style.height = `${rect.height}px`;
@@ -362,7 +384,7 @@
         const maxLeft = window.innerWidth - Math.min(rect.width, 120);
         const maxTop = window.innerHeight - 36; // deja al menos la barra de título visible
         const newLeft = clamp(startLeft + dx, -rect.width + 120, maxLeft);
-        const newTop = clamp(startTop + dy, 0, maxTop);
+        const newTop = clamp(startTop + dy, this._getMinTop(), maxTop);
         this.el.style.left = `${newLeft}px`;
         this.el.style.top = `${newTop}px`;
       };
@@ -476,9 +498,20 @@
         if (dir.includes("s")) {
           this.el.style.height = `${clamp(startHeight + dy, this.minHeight, maxHeight)}px`;
         } else if (dir.includes("n")) {
-          const newHeight = clamp(startHeight - dy, this.minHeight, maxHeight);
+          let newHeight = clamp(startHeight - dy, this.minHeight, maxHeight);
+          let newTop = startTop + (startHeight - newHeight);
+          // Estirar desde el borde de arriba no puede empujar ese borde
+          // por encima del tope (header) — si el cálculo normal lo
+          // manda ahí, se lo clava en el tope y se recorta la altura
+          // en consecuencia (el borde de ABAJO sigue fijo en su lugar,
+          // mismo criterio que el resto de este bloque "n"/"s"/"e"/"w").
+          const minTopVal = this._getMinTop();
+          if (newTop < minTopVal) {
+            newTop = minTopVal;
+            newHeight = startTop + startHeight - newTop;
+          }
           this.el.style.height = `${newHeight}px`;
-          this.el.style.top = `${startTop + (startHeight - newHeight)}px`;
+          this.el.style.top = `${newTop}px`;
         }
       };
 
@@ -673,7 +706,13 @@
       this._restoring = true;
       if (saved.mode === "floating" && saved.top && saved.left) {
         this.el.style.position = "fixed";
-        this.el.style.top = saved.top;
+        // Una posición guardada de ANTES de que existiera este tope (u
+        // obtenida con el header en otro alto/breakpoint) podría caer
+        // por encima de la zona segura — se corrige acá para que nunca
+        // "reaparezca" tapada al recargar la página.
+        const savedTop = parseFloat(saved.top);
+        const minTopVal = this._getMinTop();
+        this.el.style.top = !Number.isNaN(savedTop) && savedTop < minTopVal ? `${minTopVal}px` : saved.top;
         this.el.style.left = saved.left;
         if (saved.width) this.el.style.width = saved.width;
         if (saved.height) this.el.style.height = saved.height;
