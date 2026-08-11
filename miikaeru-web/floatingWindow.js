@@ -109,6 +109,19 @@
     }
   }
 
+  // Puente opcional hacia el historial global de Ctrl+Z (ver app.js,
+  // que expone window.MiikaeruUndo porque este módulo vive en su propio
+  // archivo/closure sin acceso directo a esa pila). Si todavía no
+  // existe (ej. index.html cargó este script antes que app.js termine
+  // de correr su DOMContentLoaded) o app.js decide no incluirlo, la
+  // ventana sigue funcionando exactamente igual — el undo es un extra,
+  // nunca una dependencia dura del arrastre/resize en sí.
+  function pushWindowUndo(label, undoFn) {
+    if (window.MiikaeruUndo && typeof window.MiikaeruUndo.push === "function") {
+      window.MiikaeruUndo.push(label, undoFn);
+    }
+  }
+
   class FloatingWindow {
     constructor(el, options) {
       this.el = el;
@@ -128,6 +141,7 @@
       this.beforeMaximize = null; // { mode, top, left, width, height }
       this.dragState = null;
       this.resizeState = null;
+      this._restoring = false;
 
       this.el.classList.add("floating-window");
       this._buildChrome(options.header || null);
@@ -362,6 +376,17 @@
         window.removeEventListener("pointerup", onPointerUp);
         window.removeEventListener("mousemove", onMouseMove);
         window.removeEventListener("mouseup", onMouseUp);
+
+        const endTop = this.el.style.top;
+        const endLeft = this.el.style.left;
+        const originTop = `${startTop}px`;
+        const originLeft = `${startLeft}px`;
+        if (endTop === originTop && endLeft === originLeft) return; // no se movió realmente, nada que deshacer
+        pushWindowUndo(`Mover ventana (${this.title || this.id || ""})`.trim(), () => {
+          this.el.style.top = originTop;
+          this.el.style.left = originLeft;
+          this._persist();
+        });
       };
 
       const onPointerMove = (event) => applyMove(event.clientX, event.clientY);
@@ -467,6 +492,21 @@
         window.removeEventListener("pointerup", onPointerUp);
         window.removeEventListener("mousemove", onMouseMove);
         window.removeEventListener("mouseup", onMouseUp);
+
+        const origin = { top: `${startTop}px`, left: `${startLeft}px`, width: `${startWidth}px`, height: `${startHeight}px` };
+        const changed =
+          this.el.style.top !== origin.top ||
+          this.el.style.left !== origin.left ||
+          this.el.style.width !== origin.width ||
+          this.el.style.height !== origin.height;
+        if (!changed) return;
+        pushWindowUndo(`Redimensionar ventana (${this.title || this.id || ""})`.trim(), () => {
+          this.el.style.top = origin.top;
+          this.el.style.left = origin.left;
+          this.el.style.width = origin.width;
+          this.el.style.height = origin.height;
+          this._persist();
+        });
       };
 
       const onPointerMove = (event) => applyMove(event.clientX, event.clientY);
@@ -541,6 +581,15 @@
         this.minimizeBtn.title = this.minimizeBtn.getAttribute("aria-label");
       }
       this._persist();
+      // Sin este guard, restaurar el estado guardado al cargar la página
+      // (ver _restorePersisted(), que también llama a toggleMinimize())
+      // ensuciaría el historial de Ctrl+Z con una entrada que el usuario
+      // nunca pidió.
+      if (!this._restoring) {
+        pushWindowUndo(`${this.minimized ? "Minimizar" : "Restaurar"} ventana (${this.title || this.id || ""})`.trim(), () =>
+          this.toggleMinimize()
+        );
+      }
     }
 
     toggleMaximize() {
@@ -583,6 +632,12 @@
         this.maximizeBtn.title = this.maximizeBtn.getAttribute("aria-label");
       }
       this._persist();
+      if (!this._restoring) {
+        const isMax = this.mode === "maximized";
+        pushWindowUndo(`${isMax ? "Maximizar" : "Restaurar"} ventana (${this.title || this.id || ""})`.trim(), () =>
+          this.toggleMaximize()
+        );
+      }
     }
 
     close() {
@@ -612,6 +667,10 @@
       const saved = loadPersisted(this.id);
       if (!saved || saved.mode === "docked") return;
       if (!this._isFloatingEligible()) return;
+      // Evita que restaurar el estado guardado (al recargar la página)
+      // dispare pushWindowUndo() desde toggleMinimize()/toggleMaximize()
+      // más abajo — esto no es una acción del usuario en esta sesión.
+      this._restoring = true;
       if (saved.mode === "floating" && saved.top && saved.left) {
         this.el.style.position = "fixed";
         this.el.style.top = saved.top;
@@ -635,6 +694,7 @@
         this.toggleMaximize();
       }
       if (saved.minimized) this.toggleMinimize();
+      this._restoring = false;
     }
   }
 

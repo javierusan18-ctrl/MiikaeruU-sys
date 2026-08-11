@@ -1328,8 +1328,12 @@ const I18N = {
     dashboardColGanancia: "Ganancia Neta",
     dashboardColAcciones: "Acciones",
     dashboardDeleteBtn: "Eliminar transacción",
-    dashboardDeleteConfirm: "¿Eliminar esta transacción? Esta acción no se puede deshacer.",
+    dashboardDeleteConfirm: "¿Eliminar esta transacción? Podés deshacerlo con Ctrl+Z.",
     dashboardEmpty: "Todavía no hay transacciones registradas.",
+    undoNothingToUndo: "No hay nada que deshacer",
+    undoDone: "Deshecho",
+    undoLabelDeleteTransaction: "Eliminar transacción",
+    undoLabelAddWish: "Agregar deseo",
     fisicoRepsLabel: "Meta de repeticiones",
     fisicoStepsLabel: "Pasos registrados",
     fisicoRegister: "Registrar",
@@ -1568,6 +1572,10 @@ const I18N = {
     jpConvDoctorTitle: "En el Médico",
     jpConvApartmentTitle: "Buscando Departamento",
     jpConvPhoneTitle: "Llamada de Trabajo",
+    jpConvFactoryAdvTitle: "Instrucciones Técnicas y Avería",
+    jpConvMistakeTitle: "Reportar un Error al Jefe",
+    jpConvMeetingTitle: "Reunión de Coordinación de Tareas",
+    jpConvTrainingTitle: "Capacitación de un Sistema Nuevo",
     jpYoonOpenBtn: "🈴 Yōon",
     jpYoonNote: "Tabla de lectura — los trazos de き/し/ち/etc. y ゃ/ゅ/ょ se practican por separado arriba, en Hiragana/Katakana.",
     jpYoonQuizStart: "🎯 Quiz de Yōon",
@@ -2236,8 +2244,12 @@ const I18N = {
     dashboardColGanancia: "Net Profit",
     dashboardColAcciones: "Actions",
     dashboardDeleteBtn: "Delete transaction",
-    dashboardDeleteConfirm: "Delete this transaction? This cannot be undone.",
+    dashboardDeleteConfirm: "Delete this transaction? You can undo with Ctrl+Z.",
     dashboardEmpty: "No transactions logged yet.",
+    undoNothingToUndo: "Nothing to undo",
+    undoDone: "Undone",
+    undoLabelDeleteTransaction: "Delete transaction",
+    undoLabelAddWish: "Add wish",
     fisicoRepsLabel: "Rep goal",
     fisicoStepsLabel: "Steps logged",
     fisicoRegister: "Log",
@@ -2476,6 +2488,10 @@ const I18N = {
     jpConvDoctorTitle: "At the Doctor",
     jpConvApartmentTitle: "Apartment Hunting",
     jpConvPhoneTitle: "Work Phone Call",
+    jpConvFactoryAdvTitle: "Technical Instructions & Breakdown",
+    jpConvMistakeTitle: "Reporting a Mistake to the Boss",
+    jpConvMeetingTitle: "Task Coordination Meeting",
+    jpConvTrainingTitle: "Training on a New System",
     jpYoonOpenBtn: "🈴 Yōon",
     jpYoonNote: "Reading reference — the strokes for き/し/ち/etc. and ゃ/ゅ/ょ are practiced separately above, in Hiragana/Katakana.",
     jpYoonQuizStart: "🎯 Yōon Quiz",
@@ -3144,8 +3160,12 @@ const I18N = {
     dashboardColGanancia: "純利益",
     dashboardColAcciones: "操作",
     dashboardDeleteBtn: "取引を削除",
-    dashboardDeleteConfirm: "この取引を削除しますか？この操作は元に戻せません。",
+    dashboardDeleteConfirm: "この取引を削除しますか？Ctrl+Zで元に戻せます。",
     dashboardEmpty: "まだ取引が登録されていません。",
+    undoNothingToUndo: "元に戻す操作はありません",
+    undoDone: "元に戻しました",
+    undoLabelDeleteTransaction: "取引を削除",
+    undoLabelAddWish: "願いを追加",
     fisicoRepsLabel: "目標回数",
     fisicoStepsLabel: "記録した歩数",
     fisicoRegister: "登録",
@@ -3384,6 +3404,10 @@ const I18N = {
     jpConvDoctorTitle: "病院で",
     jpConvApartmentTitle: "部屋探し",
     jpConvPhoneTitle: "仕事の電話",
+    jpConvFactoryAdvTitle: "技術指示と故障",
+    jpConvMistakeTitle: "上司へのミス報告",
+    jpConvMeetingTitle: "業務調整会議",
+    jpConvTrainingTitle: "新システムの研修",
     jpYoonOpenBtn: "🈴 拗音",
     jpYoonNote: "読み方の一覧 — き・し・ち等とゃ・ゅ・ょの書き順は上のひらがな/カタカナで別途練習できます。",
     jpYoonQuizStart: "🎯 拗音クイズ",
@@ -5621,7 +5645,7 @@ const N4_VOCAB_CATEGORIES = [
       { kana: "ていきけん", kanji: "定期券", romaji: "teikiken", meaning: { es: "pase de abono", en: "commuter pass" }, example: { jp: "定期券で電車に乗ります。", reading: "ていきけんででんしゃにのります。", translation: { es: "Uso el abono para subir al tren.", en: "I use my commuter pass to ride the train." } } },
       { kana: "まんいんでんしゃ", kanji: "満員電車", romaji: "man'in densha", meaning: { es: "tren lleno / abarrotado", en: "crowded train" }, example: { jp: "満員電車は疲れます。", reading: "まんいんでんしゃはつかれます。", translation: { es: "El tren lleno cansa.", en: "Crowded trains are tiring." } } },
       { kana: "ちえん", kanji: "遅延", romaji: "chien", meaning: { es: "retraso", en: "delay" }, example: { jp: "電車の遅延がありました。", reading: "でんしゃのちえんがありました。", translation: { es: "Hubo un retraso en el tren.", en: "There was a train delay." } } },
-      { kana: "うんてんします", kanji: "運転します", romaji: "unten shimasu", meaning: { es: "conducir", en: "to drive" }, example: { jp: "車を運転します。", reading: "くるまをうんてんします。", translation: { es: "Conduzco el auto.", en: "I drive the car." } } },
+      { kana: "おいこします", kanji: "追い越します", romaji: "oikoshimasu", meaning: { es: "adelantar / rebasar (un vehículo)", en: "to overtake / pass (a vehicle)" }, example: { jp: "トラックを追い越します。", reading: "とらっくをおいこします。", translation: { es: "Rebaso al camión.", en: "I overtake the truck." } } },
       { kana: "ちゅうしゃじょう", kanji: "駐車場", romaji: "chuushajou", meaning: { es: "estacionamiento", en: "parking lot" }, example: { jp: "駐車場に車を止めます。", reading: "ちゅうしゃじょうにくるまをとめます。", translation: { es: "Estaciono el auto en el estacionamiento.", en: "I park the car in the parking lot." } } },
       { kana: "こうそくどうろ", kanji: "高速道路", romaji: "kousoku douro", meaning: { es: "autopista", en: "highway" }, example: { jp: "高速道路を走ります。", reading: "こうそくどうろをはしります。", translation: { es: "Manejo por la autopista.", en: "I drive on the highway." } } },
       { kana: "じゅうたい", kanji: "渋滞", romaji: "juutai", meaning: { es: "embotellamiento", en: "traffic jam" }, example: { jp: "道が渋滞しています。", reading: "みちがじゅうたいしています。", translation: { es: "Hay embotellamiento en el camino.", en: "The road has a traffic jam." } } },
@@ -5966,9 +5990,17 @@ const N4_GRAMMAR_POINTS = [
 // ---------------------------------------------------
 // Conversaciones Situacionales N4 (Navi): mismo esquema que
 // N5_CONVERSATION_SCENES pero con gramática/vocabulario de nivel N4 —
-// 3 escenas de "supervivencia" del día a día (pedido explícito): consulta
-// médica, búsqueda de departamento, llamada de trabajo educada (敬語
-// básico: ～ておりますmasuku/いらっしゃいます).
+// 7 escenas en total. 3 de "supervivencia" del día a día (consulta
+// médica, búsqueda de departamento, llamada de trabajo educada — 敬語
+// básico: ～ておりますmasuku/いらっしゃいます) + 4 escenas de ENTORNO
+// LABORAL robustas (pedido explícito, prioridad #1 del currículum):
+// instrucciones técnicas + avería real en planta (factoryAdvanced),
+// reportar un error a un superior (workMistake), reunión de coordinación
+// de tareas con jefe y compañeros (officeMeeting) y capacitación técnica
+// 1-a-1 de un sistema nuevo (training). Estas 4 usan gramática N4 real
+// (ば/たら/なら, なければなりません, ないでください, かもしれません,
+// ながら, ようになります, てしまいました, ではなく) en vez de vocabulario
+// aislado.
 // ---------------------------------------------------
 const N4_CONVERSATION_SCENES = [
   {
@@ -6025,6 +6057,104 @@ const N4_CONVERSATION_SCENES = [
       { segments: [{ text: "客", reading: "きゃく" }, { text: "：" }, { text: "お願いします", reading: "おねがいします" }, { text: "。" }, { text: "電話番号", reading: "でんわばんごう" }, { text: "を" }, { text: "お伝えして", reading: "おつたえして" }, { text: "も" }, { text: "いいですか。" }], traduccion: { es: "Cliente: Por favor. ¿Puedo dejarle mi número de teléfono?", en: "Customer: Please do. May I leave my phone number?" } },
       { segments: [{ text: "係員", reading: "かかりいん" }, { text: "：" }, { text: "はい、" }, { text: "どうぞ", }, { text: "。" }], traduccion: { es: "Recepción: Sí, adelante.", en: "Receptionist: Yes, please go ahead." } },
       { segments: [{ text: "客", reading: "きゃく" }, { text: "：" }, { text: "090", }, { text: "の" }, { text: "1234", }, { text: "の" }, { text: "5678", }, { text: "です。" }, { text: "よろしく" }, { text: "お願いします", reading: "おねがいします" }, { text: "。" }], traduccion: { es: "Cliente: Es el 090-1234-5678. Muchas gracias de antemano.", en: "Customer: It's 090-1234-5678. Thank you in advance." } },
+    ],
+  },
+  // Las 4 escenas siguientes (factoryAdvanced, workMistake, officeMeeting,
+  // training) responden al pedido explícito de "el entorno de trabajo es
+  // lo más importante": mínimo 3+ sesiones robustas de trabajo además de
+  // phonecall de arriba — instrucciones técnicas de fábrica con avería
+  // real, reportar un error a un superior, reunión de coordinación de
+  // tareas (jefe + 2 compañeros) y capacitación técnica 1-a-1. Gramática
+  // N4 real en uso: ば/たら/なら condicionales, なければなりません,
+  // ないでください, かもしれません, ながら, ようになります, てしまいました,
+  // ではなく — no vocabulario aislado, sino la gramática N4_GRAMMAR_POINTS
+  // aplicada a diálogo real.
+  {
+    id: "factoryAdvanced",
+    icon: "🏭",
+    titleKey: "jpConvFactoryAdvTitle",
+    lineas: [
+      { segments: [{ text: "Ａ：" }, { text: "今日", reading: "きょう" }, { text: "から" }, { text: "新しい", reading: "あたらしい" }, { text: "機械", reading: "きかい" }, { text: "の" }, { text: "使い方", reading: "つかいかた" }, { text: "を" }, { text: "教えます", reading: "おしえます" }, { text: "。" }, { text: "よく" }, { text: "聞いてください", reading: "きいてください" }, { text: "。" }], traduccion: { es: "Desde hoy te voy a enseñar cómo usar la nueva máquina. Escucha bien.", en: "Starting today I'll teach you how to use the new machine. Please listen carefully." } },
+      { segments: [{ text: "Ｂ：" }, { text: "はい、" }, { text: "お願いします", reading: "おねがいします" }, { text: "。" }, { text: "この" }, { text: "ボタン" }, { text: "を" }, { text: "押せば", reading: "おせば" }, { text: "いいですか。" }], traduccion: { es: "Sí, por favor. ¿Basta con presionar este botón?", en: "Yes, please. Is it enough to just press this button?" } },
+      { segments: [{ text: "Ａ：" }, { text: "そうです。" }, { text: "でも、" }, { text: "押す", reading: "おす" }, { text: "前", reading: "まえ" }, { text: "に" }, { text: "必ず", reading: "かならず" }, { text: "安全", reading: "あんぜん" }, { text: "ベルトをつけてください。" }, { text: "危ない", reading: "あぶない" }, { text: "ですから。" }], traduccion: { es: "Así es. Pero antes de presionarlo, ponte siempre el cinturón de seguridad. Porque es peligroso.", en: "That's right. But always put on the safety belt before pressing it, because it's dangerous." } },
+      { segments: [{ text: "Ｂ：" }, { text: "分かりました", reading: "わかりました" }, { text: "。" }, { text: "もし" }, { text: "機械", reading: "きかい" }, { text: "が" }, { text: "止まったら", reading: "とまったら" }, { text: "、" }, { text: "どうすればいいですか。" }], traduccion: { es: "Entendido. Si la máquina se detiene, ¿qué debo hacer?", en: "Understood. If the machine stops, what should I do?" } },
+      { segments: [{ text: "Ａ：" }, { text: "まず、" }, { text: "電源", reading: "でんげん" }, { text: "を" }, { text: "切らなければなりません", reading: "きらなければなりません" }, { text: "。" }, { text: "それから、" }, { text: "私", reading: "わたし" }, { text: "を" }, { text: "呼んでください", reading: "よんでください" }, { text: "。" }], traduccion: { es: "Primero, tienes que apagar la energía. Después, llámame.", en: "First, you have to turn off the power. After that, call me." } },
+      { segments: [{ text: "Ｂ：" }, { text: "分かりました", reading: "わかりました" }, { text: "。" }, { text: "作業", reading: "さぎょう" }, { text: "しながら、" }, { text: "機械", reading: "きかい" }, { text: "の" }, { text: "音", reading: "おと" }, { text: "を" }, { text: "確認した", reading: "かくにんした" }, { text: "ほうがいいですか。" }], traduccion: { es: "Entendido. Mientras trabajo, ¿es mejor revisar el sonido de la máquina?", en: "Understood. While I work, is it better to check the machine's sound?" } },
+      { segments: [{ text: "Ａ：" }, { text: "はい、そのとおりです。" }, { text: "音", reading: "おと" }, { text: "が" }, { text: "変", reading: "へん" }, { text: "だったら、" }, { text: "すぐに" }, { text: "教えてください", reading: "おしえてください" }, { text: "。" }], traduccion: { es: "Sí, exactamente. Si el sonido es extraño, avísame enseguida.", en: "Yes, exactly. If the sound is strange, let me know right away." } },
+      { segments: [{ text: "Ｂ：" }, { text: "すみません、" }, { text: "Ａさん。" }, { text: "この" }, { text: "ランプが" }, { text: "赤く", reading: "あかく" }, { text: "点滅しています", reading: "てんめつしています" }, { text: "。" }, { text: "故障", reading: "こしょう" }, { text: "かもしれません。" }], traduccion: { es: "Disculpe, señor A. Esta lámpara está parpadeando en rojo. Podría ser una avería.", en: "Excuse me, Mr. A. This light is blinking red. It might be a breakdown." } },
+      { segments: [{ text: "Ａ：" }, { text: "本当", reading: "ほんとう" }, { text: "ですか。" }, { text: "見せてください", reading: "みせてください" }, { text: "。" }, { text: "ああ、これは" }, { text: "センサー" }, { text: "の" }, { text: "問題", reading: "もんだい" }, { text: "ですね。" }], traduccion: { es: "¿En serio? Muéstrame. Ah, esto es un problema del sensor.", en: "Really? Show me. Ah, this is a sensor problem." } },
+      { segments: [{ text: "Ｂ：" }, { text: "直せますか", reading: "なおせますか" }, { text: "。" }, { text: "それとも、" }, { text: "修理", reading: "しゅうり" }, { text: "の" }, { text: "人", reading: "ひと" }, { text: "を" }, { text: "呼んだ", reading: "よんだ" }, { text: "ほうがいいですか。" }], traduccion: { es: "¿Se puede reparar? ¿O es mejor llamar al técnico de reparación?", en: "Can it be fixed? Or is it better to call a repair technician?" } },
+      { segments: [{ text: "Ａ：" }, { text: "私", reading: "わたし" }, { text: "には" }, { text: "直せません", reading: "なおせません" }, { text: "。" }, { text: "専門", reading: "せんもん" }, { text: "の" }, { text: "人", reading: "ひと" }, { text: "が" }, { text: "来る", reading: "くる" }, { text: "まで、この" }, { text: "機械", reading: "きかい" }, { text: "は" }, { text: "使わないでください", reading: "つかわないでください" }, { text: "。" }], traduccion: { es: "Yo no puedo repararlo. No uses esta máquina hasta que llegue el especialista.", en: "I can't fix it. Don't use this machine until the specialist arrives." } },
+      { segments: [{ text: "Ｂ：" }, { text: "分かりました", reading: "わかりました" }, { text: "。" }, { text: "他", reading: "ほか" }, { text: "の" }, { text: "機械", reading: "きかい" }, { text: "で" }, { text: "作業", reading: "さぎょう" }, { text: "を" }, { text: "続けても", reading: "つづけても" }, { text: "いいですか。" }], traduccion: { es: "Entendido. ¿Puedo continuar el trabajo en otra máquina?", en: "Understood. Can I continue working on another machine?" } },
+      { segments: [{ text: "Ａ：" }, { text: "いいですよ。" }, { text: "でも、" }, { text: "無理", reading: "むり" }, { text: "をしないでください。" }, { text: "疲れたら", reading: "つかれたら" }, { text: "、" }, { text: "休んでも", reading: "やすんでも" }, { text: "いいです。" }], traduccion: { es: "Está bien. Pero no te esfuerces demasiado. Si te cansas, puedes descansar.", en: "That's fine. But don't push yourself too hard. If you get tired, you may rest." } },
+      { segments: [{ text: "Ｂ：" }, { text: "ありがとうございます。" }, { text: "報告書", reading: "ほうこくしょ" }, { text: "はいつ" }, { text: "出せば", reading: "だせば" }, { text: "いいですか。" }], traduccion: { es: "Muchas gracias. ¿Cuándo debo entregar el informe?", en: "Thank you very much. When should I submit the report?" } },
+      { segments: [{ text: "Ａ：" }, { text: "今日", reading: "きょう" }, { text: "の" }, { text: "終わり", reading: "おわり" }, { text: "までに" }, { text: "出してください", reading: "だしてください" }, { text: "。" }, { text: "写真", reading: "しゃしん" }, { text: "も" }, { text: "忘れず", reading: "わすれず" }, { text: "に。" }], traduccion: { es: "Entrégalo antes de que termine el día. No olvides las fotos tampoco.", en: "Submit it before the day ends. Don't forget the photos either." } },
+      { segments: [{ text: "Ｂ：" }, { text: "分かりました", reading: "わかりました" }, { text: "。" }, { text: "気をつけて", reading: "きをつけて" }, { text: "作業します", reading: "さぎょうします" }, { text: "。" }], traduccion: { es: "Entendido. Trabajaré con cuidado.", en: "Understood. I'll work carefully." } },
+    ],
+  },
+  {
+    id: "workMistake",
+    icon: "😓",
+    titleKey: "jpConvMistakeTitle",
+    lineas: [
+      { segments: [{ text: "Ｂ：" }, { text: "部長", reading: "ぶちょう" }, { text: "、すみません。" }, { text: "ちょっと" }, { text: "お時間", reading: "おじかん" }, { text: "よろしいでしょうか。" }], traduccion: { es: "Jefe, disculpe. ¿Tiene un momento?", en: "Manager, excuse me. Do you have a moment?" } },
+      { segments: [{ text: "Ａ：" }, { text: "はい、" }, { text: "何", reading: "なん" }, { text: "ですか。" }], traduccion: { es: "Sí, ¿qué pasa?", en: "Yes, what is it?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "申し訳ありません", reading: "もうしわけありません" }, { text: "が、" }, { text: "先ほど", reading: "さきほど" }, { text: "の" }, { text: "メールで" }, { text: "間違った", reading: "まちがった" }, { text: "資料", reading: "しりょう" }, { text: "を" }, { text: "送ってしまいました", reading: "おくってしまいました" }, { text: "。" }], traduccion: { es: "Lo siento mucho, pero en el correo de hace un momento envié por error el documento equivocado.", en: "I'm very sorry, but in the email from earlier I accidentally sent the wrong document." } },
+      { segments: [{ text: "Ａ：" }, { text: "え、" }, { text: "本当", reading: "ほんとう" }, { text: "ですか。" }, { text: "どの" }, { text: "資料", reading: "しりょう" }, { text: "を" }, { text: "送りました", reading: "おくりました" }, { text: "か。" }], traduccion: { es: "¿Eh, en serio? ¿Qué documento envió?", en: "Huh, really? Which document did you send?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "先月", reading: "せんげつ" }, { text: "の" }, { text: "報告書", reading: "ほうこくしょ" }, { text: "ではなく、" }, { text: "去年", reading: "きょねん" }, { text: "の" }, { text: "データを" }, { text: "送ってしまいました", reading: "おくってしまいました" }, { text: "。" }], traduccion: { es: "En vez del informe del mes pasado, envié por error los datos del año pasado.", en: "Instead of last month's report, I mistakenly sent last year's data." } },
+      { segments: [{ text: "Ａ：" }, { text: "それは" }, { text: "困ります", reading: "こまります" }, { text: "ね。" }, { text: "もう" }, { text: "気づいた", reading: "きづいた" }, { text: "なら、すぐに" }, { text: "訂正しなければなりません", reading: "ていせいしなければなりません" }, { text: "。" }], traduccion: { es: "Eso es un problema. Ya que se dio cuenta, debe corregirlo de inmediato.", en: "That's a problem. Since you already noticed, you must correct it right away." } },
+      { segments: [{ text: "Ｂ：" }, { text: "はい、" }, { text: "正しい", reading: "ただしい" }, { text: "資料", reading: "しりょう" }, { text: "をもう" }, { text: "一度", reading: "いちど" }, { text: "送ります", reading: "おくります" }, { text: "。" }, { text: "お詫び", reading: "おわび" }, { text: "のメールも" }, { text: "書きます", reading: "かきます" }, { text: "。" }], traduccion: { es: "Sí, enviaré el documento correcto una vez más. También escribiré un correo de disculpa.", en: "Yes, I'll send the correct document again. I'll also write an apology email." } },
+      { segments: [{ text: "Ａ：" }, { text: "そうしてください。" }, { text: "それから、なぜこの" }, { text: "ミスが" }, { text: "起きた", reading: "おきた" }, { text: "か" }, { text: "考えて", reading: "かんがえて" }, { text: "みてください。" }], traduccion: { es: "Por favor haga eso. Además, piense por qué ocurrió este error.", en: "Please do that. Also, please think about why this mistake happened." } },
+      { segments: [{ text: "Ｂ：" }, { text: "確認不足", reading: "かくにんぶそく" }, { text: "だったと" }, { text: "思います", reading: "おもいます" }, { text: "。" }, { text: "次", reading: "つぎ" }, { text: "からは、" }, { text: "送る", reading: "おくる" }, { text: "前", reading: "まえ" }, { text: "に" }, { text: "必ず", reading: "かならず" }, { text: "内容", reading: "ないよう" }, { text: "を" }, { text: "確認します", reading: "かくにんします" }, { text: "。" }], traduccion: { es: "Creo que fue falta de verificación. De ahora en adelante, siempre revisaré el contenido antes de enviarlo.", en: "I think it was due to insufficient checking. From now on, I'll always check the content before sending." } },
+      { segments: [{ text: "Ａ：" }, { text: "いいと" }, { text: "思います", reading: "おもいます" }, { text: "。" }, { text: "同じ", reading: "おなじ" }, { text: "ミスを" }, { text: "繰り返さない", reading: "くりかえさない" }, { text: "ように" }, { text: "気をつけてください", reading: "きをつけてください" }, { text: "。" }], traduccion: { es: "Me parece bien. Tenga cuidado de no repetir el mismo error.", en: "I think that's good. Be careful not to repeat the same mistake." } },
+      { segments: [{ text: "Ｂ：" }, { text: "はい、" }, { text: "気をつけます", reading: "きをつけます" }, { text: "。" }, { text: "取引先", reading: "とりひきさき" }, { text: "には" }, { text: "私", reading: "わたし" }, { text: "から" }, { text: "説明した", reading: "せつめいした" }, { text: "ほうがいいですか。" }], traduccion: { es: "Sí, tendré cuidado. ¿Sería mejor que yo mismo le explique al cliente?", en: "Yes, I'll be careful. Would it be better if I explain to the client myself?" } },
+      { segments: [{ text: "Ａ：" }, { text: "いいえ、" }, { text: "大事な", reading: "だいじな" }, { text: "件", reading: "けん" }, { text: "ですから、" }, { text: "私", reading: "わたし" }, { text: "も" }, { text: "一緒", reading: "いっしょ" }, { text: "に" }, { text: "説明します", reading: "せつめいします" }, { text: "。" }], traduccion: { es: "No, ya que es un asunto importante, yo también explicaré junto con usted.", en: "No, since this is an important matter, I'll explain together with you." } },
+      { segments: [{ text: "Ｂ：" }, { text: "ありがとうございます。" }, { text: "本当に", reading: "ほんとうに" }, { text: "申し訳ございませんでした", reading: "もうしわけございませんでした" }, { text: "。" }], traduccion: { es: "Muchas gracias. Lamento mucho lo ocurrido.", en: "Thank you very much. I'm truly sorry for what happened." } },
+      { segments: [{ text: "Ａ：" }, { text: "大丈夫", reading: "だいじょうぶ" }, { text: "です。" }, { text: "誰", reading: "だれ" }, { text: "でもミスはあります。" }, { text: "次", reading: "つぎ" }, { text: "から" }, { text: "気をつければ", reading: "きをつければ" }, { text: "、" }, { text: "大丈夫", reading: "だいじょうぶ" }, { text: "ですよ。" }], traduccion: { es: "Está bien. Todos cometemos errores. Si tiene cuidado de ahora en adelante, estará bien.", en: "It's okay. Everyone makes mistakes. If you're careful from now on, it'll be fine." } },
+    ],
+  },
+  {
+    id: "officeMeeting",
+    icon: "🗂️",
+    titleKey: "jpConvMeetingTitle",
+    lineas: [
+      { segments: [{ text: "Ａ（" }, { text: "部長", reading: "ぶちょう" }, { text: "）：" }, { text: "今日", reading: "きょう" }, { text: "の" }, { text: "会議", reading: "かいぎ" }, { text: "では、" }, { text: "来月", reading: "らいげつ" }, { text: "の" }, { text: "プロジェクトについて" }, { text: "話し合いましょう", reading: "はなしあいましょう" }, { text: "。" }], traduccion: { es: "En la reunión de hoy, hablemos sobre el proyecto del próximo mes.", en: "In today's meeting, let's discuss next month's project." } },
+      { segments: [{ text: "Ｂ（" }, { text: "田中", reading: "たなか" }, { text: "）：" }, { text: "はい。まず、スケジュールを" }, { text: "確認した", reading: "かくにんした" }, { text: "ほうがいいと" }, { text: "思います", reading: "おもいます" }, { text: "。" }], traduccion: { es: "Sí. Primero, creo que sería mejor confirmar el cronograma.", en: "Yes. First, I think it would be good to check the schedule." } },
+      { segments: [{ text: "Ａ：" }, { text: "そうですね。" }, { text: "田中", reading: "たなか" }, { text: "さん、" }, { text: "資料", reading: "しりょう" }, { text: "を" }, { text: "見せてもらえます", reading: "みせてもらえます" }, { text: "か。" }], traduccion: { es: "Así es. Tanaka, ¿me podrías mostrar los documentos?", en: "That's right. Tanaka, could you show me the documents?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "はい、こちらです。" }, { text: "締め切り", reading: "しめきり" }, { text: "は" }, { text: "来月", reading: "らいげつ" }, { text: "の" }, { text: "十五日", reading: "じゅうごにち" }, { text: "です。" }], traduccion: { es: "Sí, aquí están. La fecha límite es el día quince del próximo mes.", en: "Yes, here they are. The deadline is the 15th of next month." } },
+      { segments: [{ text: "Ｃ（" }, { text: "鈴木", reading: "すずき" }, { text: "）：" }, { text: "部長", reading: "ぶちょう" }, { text: "、それまでに" }, { text: "準備", reading: "じゅんび" }, { text: "が" }, { text: "終わる", reading: "おわる" }, { text: "か" }, { text: "少し", reading: "すこし" }, { text: "心配", reading: "しんぱい" }, { text: "です。" }], traduccion: { es: "Jefe, me preocupa un poco si la preparación estará lista para entonces.", en: "Manager, I'm a bit worried whether the preparation will be finished by then." } },
+      { segments: [{ text: "Ａ：" }, { text: "確かに", reading: "たしかに" }, { text: "時間", reading: "じかん" }, { text: "が" }, { text: "少ない", reading: "すくない" }, { text: "ですね。" }, { text: "鈴木", reading: "すずき" }, { text: "さんは、" }, { text: "何", reading: "なに" }, { text: "が" }, { text: "一番", reading: "いちばん" }, { text: "大変", reading: "たいへん" }, { text: "だと" }, { text: "思います", reading: "おもいます" }, { text: "か。" }], traduccion: { es: "Es verdad que hay poco tiempo. Suzuki, ¿qué crees que es lo más difícil?", en: "It's true there's little time. Suzuki, what do you think is the hardest part?" } },
+      { segments: [{ text: "Ｃ：" }, { text: "デザインを" }, { text: "作る", reading: "つくる" }, { text: "のに" }, { text: "時間", reading: "じかん" }, { text: "がかかりそうです。もう" }, { text: "少し", reading: "すこし" }, { text: "人", reading: "ひと" }, { text: "が" }, { text: "必要", reading: "ひつよう" }, { text: "かもしれません。" }], traduccion: { es: "Parece que hacer el diseño tomará tiempo. Podríamos necesitar un poco más de personal.", en: "It seems making the design will take time. We might need a bit more staff." } },
+      { segments: [{ text: "Ａ：" }, { text: "分かりました", reading: "わかりました" }, { text: "。" }, { text: "田中", reading: "たなか" }, { text: "さんと" }, { text: "鈴木", reading: "すずき" }, { text: "さんで、デザインを" }, { text: "手伝って", reading: "てつだって" }, { text: "くれる" }, { text: "人", reading: "ひと" }, { text: "を" }, { text: "探してください", reading: "さがしてください" }, { text: "。" }], traduccion: { es: "Entendido. Tanaka y Suzuki, por favor busquen a alguien que pueda ayudar con el diseño.", en: "Understood. Tanaka and Suzuki, please look for someone who can help with the design." } },
+      { segments: [{ text: "Ｂ：" }, { text: "分かりました", reading: "わかりました" }, { text: "。" }, { text: "他", reading: "ほか" }, { text: "の" }, { text: "部署", reading: "ぶしょ" }, { text: "に" }, { text: "聞いてみます", reading: "きいてみます" }, { text: "。" }], traduccion: { es: "Entendido. Le preguntaré a otro departamento.", en: "Understood. I'll ask another department." } },
+      { segments: [{ text: "Ａ：" }, { text: "お願いします", reading: "おねがいします" }, { text: "。" }, { text: "それから、" }, { text: "進み具合", reading: "すすみぐあい" }, { text: "を" }, { text: "毎週", reading: "まいしゅう" }, { text: "報告してください", reading: "ほうこくしてください" }, { text: "。" }], traduccion: { es: "Por favor. Además, informen el progreso cada semana.", en: "Please do. Also, report the progress every week." } },
+      { segments: [{ text: "Ｃ：" }, { text: "分かりました", reading: "わかりました" }, { text: "。" }, { text: "もし" }, { text: "問題", reading: "もんだい" }, { text: "が" }, { text: "起きたら", reading: "おきたら" }, { text: "、すぐに" }, { text: "連絡します", reading: "れんらくします" }, { text: "。" }], traduccion: { es: "Entendido. Si surge algún problema, lo comunicaremos de inmediato.", en: "Understood. If any problem arises, we'll contact you right away." } },
+      { segments: [{ text: "Ａ：" }, { text: "よろしく" }, { text: "お願いします", reading: "おねがいします" }, { text: "。" }, { text: "何か", reading: "なにか" }, { text: "質問", reading: "しつもん" }, { text: "はありますか。" }], traduccion: { es: "Cuento con ustedes. ¿Tienen alguna pregunta?", en: "I'm counting on you. Do you have any questions?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "予算", reading: "よさん" }, { text: "はどのくらい" }, { text: "使っても", reading: "つかっても" }, { text: "いいですか。" }], traduccion: { es: "¿Cuánto presupuesto podemos usar?", en: "How much budget can we use?" } },
+      { segments: [{ text: "Ａ：" }, { text: "五十万円", reading: "ごじゅうまんえん" }, { text: "まで" }, { text: "使っても", reading: "つかっても" }, { text: "いいですが、" }, { text: "使う", reading: "つかう" }, { text: "前", reading: "まえ" }, { text: "に" }, { text: "必ず", reading: "かならず" }, { text: "私", reading: "わたし" }, { text: "に" }, { text: "相談してください", reading: "そうだんしてください" }, { text: "。" }], traduccion: { es: "Pueden usar hasta quinientos mil yenes, pero consúltenme siempre antes de usarlo.", en: "You can use up to 500,000 yen, but please always consult me before using it." } },
+      { segments: [{ text: "Ｃ：" }, { text: "分かりました", reading: "わかりました" }, { text: "。" }, { text: "頑張ります", reading: "がんばります" }, { text: "。" }], traduccion: { es: "Entendido. Haremos lo posible.", en: "Understood. We'll do our best." } },
+    ],
+  },
+  {
+    id: "training",
+    icon: "🖥️",
+    titleKey: "jpConvTrainingTitle",
+    lineas: [
+      { segments: [{ text: "Ａ：" }, { text: "今日", reading: "きょう" }, { text: "は" }, { text: "新しい", reading: "あたらしい" }, { text: "システムの" }, { text: "使い方", reading: "つかいかた" }, { text: "を" }, { text: "説明します", reading: "せつめいします" }, { text: "。" }, { text: "分からない", reading: "わからない" }, { text: "ことがあったら、いつでも" }, { text: "聞いてください", reading: "きいてください" }, { text: "。" }], traduccion: { es: "Hoy voy a explicar cómo usar el nuevo sistema. Si hay algo que no entiendas, pregúntame cuando quieras.", en: "Today I'll explain how to use the new system. If there's anything you don't understand, feel free to ask anytime." } },
+      { segments: [{ text: "Ｂ：" }, { text: "はい、よろしく" }, { text: "お願いします", reading: "おねがいします" }, { text: "。" }, { text: "この" }, { text: "アイコンをクリックすればいいですか。" }], traduccion: { es: "Sí, muchas gracias de antemano. ¿Basta con hacer clic en este icono?", en: "Yes, thank you in advance. Is it enough to click this icon?" } },
+      { segments: [{ text: "Ａ：" }, { text: "そうです。クリックすると、" }, { text: "新しい", reading: "あたらしい" }, { text: "画面", reading: "がめん" }, { text: "が" }, { text: "開きます", reading: "あきます" }, { text: "。ここにデータを" }, { text: "入力してください", reading: "にゅうりょくしてください" }, { text: "。" }], traduccion: { es: "Así es. Al hacer clic, se abre una nueva pantalla. Ingresa los datos aquí.", en: "That's right. When you click, a new screen opens. Please enter the data here." } },
+      { segments: [{ text: "Ｂ：" }, { text: "分かりました", reading: "わかりました" }, { text: "。" }, { text: "入力した", reading: "にゅうりょくした" }, { text: "後", reading: "あと" }, { text: "、" }, { text: "保存しなくても", reading: "ほぞんしなくても" }, { text: "いいですか。" }], traduccion: { es: "Entendido. Después de ingresarlo, ¿no es necesario guardarlo?", en: "Understood. After entering it, is it okay not to save it?" } },
+      { segments: [{ text: "Ａ：" }, { text: "いいえ、" }, { text: "必ず", reading: "かならず" }, { text: "保存しなければなりません", reading: "ほぞんしなければなりません" }, { text: "。" }, { text: "保存しない", reading: "ほぞんしない" }, { text: "と、データが" }, { text: "消えてしまいます", reading: "きえてしまいます" }, { text: "。" }], traduccion: { es: "No, tienes que guardarlo siempre. Si no lo guardas, los datos se borrarán.", en: "No, you must always save it. If you don't save it, the data will disappear." } },
+      { segments: [{ text: "Ｂ：" }, { text: "気をつけます", reading: "きをつけます" }, { text: "。" }, { text: "もしエラーが" }, { text: "出たら", reading: "でたら" }, { text: "、どうすればいいですか。" }], traduccion: { es: "Tendré cuidado. Si aparece un error, ¿qué debo hacer?", en: "I'll be careful. If an error appears, what should I do?" } },
+      { segments: [{ text: "Ａ：" }, { text: "エラーメッセージを" }, { text: "読んで", reading: "よんで" }, { text: "、" }, { text: "番号", reading: "ばんごう" }, { text: "をメモしてください。それから、" }, { text: "私", reading: "わたし" }, { text: "か" }, { text: "情報システム部", reading: "じょうほうしすてむぶ" }, { text: "に" }, { text: "連絡してください", reading: "れんらくしてください" }, { text: "。" }], traduccion: { es: "Lee el mensaje de error y anota el número. Después, contáctame a mí o al departamento de sistemas.", en: "Read the error message and note down the number. After that, contact me or the IT systems department." } },
+      { segments: [{ text: "Ｂ：" }, { text: "分かりました", reading: "わかりました" }, { text: "。" }, { text: "この" }, { text: "システムは" }, { text: "他", reading: "ほか" }, { text: "の" }, { text: "部署", reading: "ぶしょ" }, { text: "でも" }, { text: "使われています", reading: "つかわれています" }, { text: "か。" }], traduccion: { es: "Entendido. ¿Este sistema también se usa en otros departamentos?", en: "Understood. Is this system also used in other departments?" } },
+      { segments: [{ text: "Ａ：" }, { text: "はい、" }, { text: "来月", reading: "らいげつ" }, { text: "から" }, { text: "会社", reading: "かいしゃ" }, { text: "全体", reading: "ぜんたい" }, { text: "で" }, { text: "使われる", reading: "つかわれる" }, { text: "ようになります。だから、" }, { text: "今", reading: "いま" }, { text: "からしっかり" }, { text: "覚えた", reading: "おぼえた" }, { text: "ほうがいいですよ。" }], traduccion: { es: "Sí, a partir del próximo mes se usará en toda la empresa. Por eso, es mejor que lo aprendas bien desde ahora.", en: "Yes, starting next month it will be used company-wide. So it's better to learn it well starting now." } },
+      { segments: [{ text: "Ｂ：" }, { text: "分かりました", reading: "わかりました" }, { text: "。" }, { text: "少し", reading: "すこし" }, { text: "練習して", reading: "れんしゅうして" }, { text: "みてもいいですか。" }], traduccion: { es: "Entendido. ¿Puedo intentar practicar un poco?", en: "Understood. May I try practicing a little?" } },
+      { segments: [{ text: "Ａ：" }, { text: "もちろんです。" }, { text: "分からない", reading: "わからない" }, { text: "ところがあれば、" }, { text: "途中", reading: "とちゅう" }, { text: "で" }, { text: "止めても", reading: "とめても" }, { text: "いいですよ。" }], traduccion: { es: "Por supuesto. Si hay alguna parte que no entiendas, puedes detenerte a mitad de camino.", en: "Of course. If there's a part you don't understand, you can stop midway." } },
+      { segments: [{ text: "Ｂ：（" }, { text: "練習した", reading: "れんしゅうした" }, { text: "後", reading: "あと" }, { text: "）できました！データが" }, { text: "正しく", reading: "ただしく" }, { text: "保存されている", reading: "ほぞんされている" }, { text: "か" }, { text: "確認できます", reading: "かくにんできます" }, { text: "か。" }], traduccion: { es: "(Después de practicar) ¡Lo logré! ¿Puedes confirmar si los datos se guardaron correctamente?", en: "(After practicing) I did it! Can you confirm whether the data was saved correctly?" } },
+      { segments: [{ text: "Ａ：" }, { text: "見てみましょう", reading: "みてみましょう" }, { text: "。うん、" }, { text: "正しく", reading: "ただしく" }, { text: "入力できています", reading: "にゅうりょくできています" }, { text: "ね。" }, { text: "上手に", reading: "じょうずに" }, { text: "できるようになりました" }, { text: "ね。" }], traduccion: { es: "Vamos a ver. Sí, lo ingresaste correctamente. Ya te volviste bueno haciéndolo.", en: "Let's take a look. Yes, you entered it correctly. You've gotten good at doing it." } },
+      { segments: [{ text: "Ｂ：" }, { text: "ありがとうございます。これで" }, { text: "一人", reading: "ひとり" }, { text: "でも" }, { text: "作業", reading: "さぎょう" }, { text: "を" }, { text: "続けられる", reading: "つづけられる" }, { text: "と" }, { text: "思います", reading: "おもいます" }, { text: "。" }], traduccion: { es: "Muchas gracias. Con esto creo que podré seguir trabajando solo.", en: "Thank you very much. With this, I think I'll be able to continue working on my own." } },
+      { segments: [{ text: "Ａ：" }, { text: "頑張ってください", reading: "がんばってください" }, { text: "。" }, { text: "困った", reading: "こまった" }, { text: "ときは、" }, { text: "遠慮しないで", reading: "えんりょしないで" }, { text: "相談してください", reading: "そうだんしてください" }, { text: "ね。" }], traduccion: { es: "Esfuérzate. Cuando tengas problemas, no dudes en consultarme.", en: "Do your best. When you're in trouble, don't hesitate to consult me." } },
     ],
   },
 ];
@@ -8597,6 +8727,81 @@ document.addEventListener("DOMContentLoaded", () => {
         console.warn("init-db no disponible (¿corriendo local sin Vercel, o SUPABASE_DB_URL sin configurar?):", err.message);
       });
   }
+
+  // ---------------- Undo Global (Ctrl+Z / Cmd+Z) ----------------
+  // Pila genérica de "última acción reversible": cualquier parte de la
+  // app puede registrar una entrada (pushUndo) con una función que
+  // revierte lo que acaba de hacer. Ctrl+Z (Cmd+Z en Mac) saca la más
+  // reciente y la ejecuta. Cubre los movimientos/redimensionados/
+  // minimizados de ventanas flotantes (floatingWindow.js llama a
+  // window.MiikaeruUndo.push porque vive en un módulo/closure aparte,
+  // sin acceso directo a este) y un puñado de las acciones de estado
+  // más comunes y seguras de revertir (borrar una transacción, agregar
+  // un deseo) — no todas las interacciones de una app de este tamaño
+  // están cubiertas, solo las que tienen una reversión simple y sin
+  // efectos colaterales encadenados (ej. no se enganchó el toggle de
+  // hábitos porque puede disparar recompensas de racha que requerirían
+  // revertir oro/XP también, no solo el toggle en sí).
+  const UNDO_STACK_MAX = 30;
+  const undoStack = [];
+
+  function pushUndo(label, undoFn) {
+    undoStack.push({ label, undoFn });
+    if (undoStack.length > UNDO_STACK_MAX) undoStack.shift();
+  }
+
+  let undoToastTimer = null;
+  function showUndoToast(message) {
+    let toast = document.getElementById("undo-toast");
+    if (!toast) {
+      toast = document.createElement("div");
+      toast.id = "undo-toast";
+      toast.className = "undo-toast";
+      document.body.appendChild(toast);
+    }
+    toast.textContent = message;
+    toast.classList.remove("undo-toast--visible");
+    // Fuerza reflow para poder re-disparar la transición de entrada
+    // aunque el toast anterior siguiera visible (dos Ctrl+Z seguidos).
+    void toast.offsetWidth;
+    toast.classList.add("undo-toast--visible");
+    clearTimeout(undoToastTimer);
+    undoToastTimer = setTimeout(() => toast.classList.remove("undo-toast--visible"), 2200);
+  }
+
+  function performUndo() {
+    const entry = undoStack.pop();
+    if (!entry) {
+      showUndoToast(`↩️ ${t("undoNothingToUndo")}`);
+      return;
+    }
+    try {
+      entry.undoFn();
+    } catch (err) {
+      console.warn("Undo: no se pudo deshacer la acción:", err);
+      return;
+    }
+    showUndoToast(`↩️ ${t("undoDone")}: ${entry.label}`);
+  }
+
+  // Puente para floatingWindow.js (módulo aparte, sin acceso a este
+  // closure) — así el arrastre/resize/minimizado de ventanas también
+  // entra al mismo historial de Ctrl+Z.
+  window.MiikaeruUndo = { push: pushUndo };
+
+  document.addEventListener("keydown", (event) => {
+    const isZ = event.key === "z" || event.key === "Z";
+    if (!isZ || !(event.ctrlKey || event.metaKey) || event.shiftKey || event.altKey) return;
+    // Dentro de un campo de texto editable, el Ctrl+Z nativo del propio
+    // input/textarea (deshacer lo tecleado) tiene prioridad — no se
+    // intercepta ahí.
+    const target = event.target;
+    const isEditableField =
+      target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable);
+    if (isEditableField) return;
+    event.preventDefault();
+    performUndo();
+  });
 
   const chatForm = document.getElementById("chat-form");
   const chatInput = document.getElementById("chat-input");
@@ -15074,12 +15279,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function deleteTransaction(id) {
     if (!window.confirm(t("dashboardDeleteConfirm"))) return;
-    businessLedger = businessLedger.filter((txn) => txn.id !== id);
+    const removedIndex = businessLedger.findIndex((txn) => txn.id === id);
+    if (removedIndex === -1) return;
+    const [removed] = businessLedger.splice(removedIndex, 1);
     persistBusinessLedger();
     renderFinanzasGlobalSummary();
     refreshNegocioSuggestions();
     refreshNegocioColaboradorSuggestions();
     renderDashboard();
+    pushUndo(t("undoLabelDeleteTransaction"), () => {
+      businessLedger.splice(removedIndex, 0, removed);
+      persistBusinessLedger();
+      renderFinanzasGlobalSummary();
+      refreshNegocioSuggestions();
+      refreshNegocioColaboradorSuggestions();
+      renderDashboard();
+    });
   }
 
   // El ranking compara SIEMPRE todas las entidades entre sí (no respeta el
@@ -15509,17 +15724,23 @@ document.addEventListener("DOMContentLoaded", () => {
     const name = rawName.trim();
     if (!name) return false;
 
-    state.wishlist.push({
+    const wish = {
       id: `custom-${Date.now()}`,
       name,
       icon: "⭐",
       unlockLevel: state.level + 5,
       unlocked: false,
       requirements: [],
-    });
+    };
+    state.wishlist.push(wish);
 
     renderWishlist();
     persist();
+    pushUndo(t("undoLabelAddWish"), () => {
+      state.wishlist = state.wishlist.filter((w) => w.id !== wish.id);
+      renderWishlist();
+      persist();
+    });
     return true;
   }
 
@@ -17476,7 +17697,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // app.js, cacheado por el Service Worker (ver sw.js).
   const N5_DB_NAME = "miikaeru-n5";
   const N5_DB_VERSION = 1;
-  const N5_CONTENT_VERSION = "20260808-2"; // subir cuando cambie vocab/gramática/kanji/kana
+  const N5_CONTENT_VERSION = "20260811-1"; // subir cuando cambie vocab/gramática/kanji/kana
 
   let n5DbPromise = null;
 

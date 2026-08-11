@@ -1572,6 +1572,15 @@ textarea,
   align-items: center;
   gap: 4px;
   flex: none;
+  /* Las asas de resize de esquina (--ne/--nw, z-index:2, ver más abajo)
+     ocupan literalmente el mismo rincón superior donde caen estos
+     botones — sin ganar acá el pulgar/clic en el borde de un botón
+     activaba el resize en vez del minimizar/maximizar/cerrar. Con
+     position+z-index más alto, los botones SIEMPRE ganan el clic en su
+     propia área; el resto del área de la esquina (fuera de los
+     botones) sigue libre para agarrar el resize normalmente. */
+  position: relative;
+  z-index: 3;
 }
 
 .floating-window__btn {
@@ -1681,10 +1690,59 @@ textarea,
   cursor: nesw-resize;
 }
 
+/* Las esquinas superiores viven en el mismo rincón que los botones de
+   control (minimizar/maximizar/cerrar) de una cabecera INYECTADA (el
+   grip empieza en y:0 del panel — León, iconos laterales; la cabecera
+   REUTILIZADA del chat arranca más abajo y nunca choca). Subir el
+   z-index de .floating-window__controls no alcanza para ganarles el
+   clic: la cabecera arma su propio contexto de apilamiento (position +
+   z-index propios, ver .floating-window__titlebar) y ningún z-index de
+   un hijo puede "escapar" de ahí para competir con estas asas, que
+   viven afuera, como hermanas de la cabecera. La solución real es
+   geométrica: la franja libre ANTES de que empiecen los botones
+   (padding-top:11px de la cabecera inyectada) mide más que esta
+   altura reducida, así el clic ya no puede caer en zona compartida. */
+.floating-window__resize-handle--ne,
+.floating-window__resize-handle--nw {
+  height: 8px;
+}
+
 .floating-window__resize-handle--sw {
   left: 0;
   bottom: 0;
   cursor: nesw-resize;
+}
+
+/* ===================== UNDO TOAST (Ctrl+Z) ===================== */
+/* z-index entre la banda de ventanas flotantes (150-480) y el candado
+   de Cuenta Principal (500, techo real de la app) — así el toast se ve
+   por encima de cualquier ventana pero nunca compite con ese candado. */
+.undo-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  z-index: 490;
+  padding: 10px 18px;
+  border-radius: var(--radius-lg);
+  background: rgba(10, 14, 22, 0.92);
+  border: 1px solid var(--glass-border);
+  color: var(--neon-cyan);
+  font-size: 0.78rem;
+  letter-spacing: 0.4px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5), var(--shadow-neon-cyan);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  max-width: min(90vw, 420px);
+  text-align: center;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transform: translate(-50%, 12px);
+}
+
+.undo-toast--visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
 }
 
 .panel--chat {
