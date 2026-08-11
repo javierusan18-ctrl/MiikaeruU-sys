@@ -20730,6 +20730,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const parsed = parseFloat(raw);
       return Number.isNaN(parsed) ? 100 : parsed;
     };
+    // Piso de "nacimiento" — solo para León y Chat, pedido explícito:
+    // deben aparecer con más aire bajo el header desde el primer
+    // instante (al abrir el Chat, o al arrastrar el León antes de que
+    // exista una posición guardada), aunque después el usuario sí pueda
+    // arrastrarlos hasta el tope general (más ajustado) si quiere. Los
+    // docks NO lo reciben — sin cambios ahí, no fueron parte del pedido.
+    const floatingWindowSpawnMinTop = () => floatingWindowMinTop() + 40;
 
     const avatarPanelEl = document.querySelector(".panel--avatar");
     if (avatarPanelEl) {
@@ -20740,6 +20747,7 @@ document.addEventListener("DOMContentLoaded", () => {
         minWidth: 260,
         minHeight: 220,
         minTop: floatingWindowMinTop,
+        spawnMinTop: floatingWindowSpawnMinTop,
       });
     }
     // #chat-modal ya es el panel fijo "cara a cara con el León" en
@@ -20753,6 +20761,7 @@ document.addEventListener("DOMContentLoaded", () => {
       minWidth: 280,
       minHeight: 220,
       minTop: floatingWindowMinTop,
+      spawnMinTop: floatingWindowSpawnMinTop,
     });
 
     // Docks laterales de íconos (.hud-dock--left/--right) — pedido

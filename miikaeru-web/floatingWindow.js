@@ -144,6 +144,15 @@
       // — el header real usa flex-wrap y puede cambiar de alto según el
       // ancho de pantalla/zoom, así que un valor fijo se desincronizaría.
       this._minTopOption = options.minTop;
+      // Piso APARTE, más generoso, usado solo el instante en que la
+      // ventana se despega por primera vez (_undock() — el "nacimiento"
+      // real: abrir el Chat o arrastrar el León antes de que exista una
+      // posición guardada). Pedido explícito: la posición inicial debe
+      // dejar aire de sobra bajo el header, aunque después el usuario sí
+      // pueda arrastrarla hasta el tope general (más ajustado) si quiere.
+      // Si no se pasa, cae al mismo tope general de siempre (sin cambio
+      // de comportamiento para ventanas que no lo necesitan, ej. docks).
+      this._spawnMinTopOption = options.spawnMinTop;
 
       this.mode = "docked"; // "docked" | "floating" | "maximized"
       this.minimized = false;
@@ -314,17 +323,27 @@
       return typeof value === "number" && !Number.isNaN(value) ? value : 0;
     }
 
+    // Piso de "nacimiento" — si no se configuró uno propio (spawnMinTop),
+    // cae al tope general de siempre, así que ventanas que no lo piden
+    // (docks) se comportan exactamente igual que antes.
+    _getSpawnMinTop() {
+      if (this._spawnMinTopOption === undefined) return this._getMinTop();
+      const value = typeof this._spawnMinTopOption === "function" ? this._spawnMinTopOption() : this._spawnMinTopOption;
+      return typeof value === "number" && !Number.isNaN(value) ? value : this._getMinTop();
+    }
+
     _undock() {
       if (this.mode === "floating" || this.mode === "maximized") return;
       if (!this._isFloatingEligible()) return;
       const rect = this.el.getBoundingClientRect();
       this.el.style.position = "fixed";
-      // clamp acá también: si el panel vive en flujo normal justo debajo
-      // del header pero algo (zoom, un breakpoint raro) lo dejó por
-      // encima del tope, la PRIMERA vez que se despega ya nace en zona
-      // seguridad — no hace falta esperar a que el usuario la arrastre
-      // una vez para "corregirla".
-      this.el.style.top = `${Math.max(rect.top, this._getMinTop())}px`;
+      // El piso de nacimiento (más generoso que el tope general de
+      // arrastre) solo aplica ACÁ, en el instante en que la ventana se
+      // despega por primera vez — una vez flotando, el usuario puede
+      // arrastrarla hasta el tope general si quiere acercarla más al
+      // header (ver applyMove en _wireDrag(), que sigue usando
+      // _getMinTop() sin cambios).
+      this.el.style.top = `${Math.max(rect.top, this._getSpawnMinTop())}px`;
       this.el.style.left = `${rect.left}px`;
       this.el.style.width = `${rect.width}px`;
       this.el.style.height = `${rect.height}px`;
@@ -707,12 +726,15 @@
       if (saved.mode === "floating" && saved.top && saved.left) {
         this.el.style.position = "fixed";
         // Una posición guardada de ANTES de que existiera este tope (u
-        // obtenida con el header en otro alto/breakpoint) podría caer
-        // por encima de la zona segura — se corrige acá para que nunca
-        // "reaparezca" tapada al recargar la página.
+        // obtenida con el header en otro alto/breakpoint, o arrastrada
+        // por el usuario pegada al límite general en una sesión previa)
+        // podría reaparecer con poco aire bajo el header — se corrige
+        // acá con el mismo piso generoso de "nacimiento" que _undock(),
+        // porque reabrir/recargar cuenta como "abrir la ventana" tanto
+        // como la primera vez (pedido explícito: "al crear O ABRIR").
         const savedTop = parseFloat(saved.top);
-        const minTopVal = this._getMinTop();
-        this.el.style.top = !Number.isNaN(savedTop) && savedTop < minTopVal ? `${minTopVal}px` : saved.top;
+        const spawnMinTopVal = this._getSpawnMinTop();
+        this.el.style.top = !Number.isNaN(savedTop) && savedTop < spawnMinTopVal ? `${spawnMinTopVal}px` : saved.top;
         this.el.style.left = saved.left;
         if (saved.width) this.el.style.width = saved.width;
         if (saved.height) this.el.style.height = saved.height;
