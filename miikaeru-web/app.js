@@ -20503,6 +20503,37 @@ document.addEventListener("DOMContentLoaded", () => {
       minWidth: 280,
       minHeight: 220,
     });
+
+    // Docks laterales de íconos (.hud-dock--left/--right) — pedido
+    // explícito de que también tengan arrastre/resize/minimizar/
+    // maximizar completos. A diferencia del León/Chat, el dock NUNCA
+    // pasa a display:none en ningún breakpoint (ver style.css) — pasarle
+    // un `mediaQuery` acá sería una gate inconsistente con su CSS real
+    // (el mismo tipo de discrepancia que causaba paneles "atascados" en
+    // el León/Chat antes de que _isFloatingEligible() se corrigiera para
+    // leer el `display` calculado en vez de matchMedia() aparte), así
+    // que queda activo en cualquier ancho de pantalla. No es `closable`
+    // a propósito: minimizar deja la barra de título compacta visible
+    // para restaurar, pero cerrarlo del todo dejaría al Operador sin
+    // forma de volver a abrir su navegación principal.
+    const dockLeftEl = document.querySelector(".hud-dock--left");
+    if (dockLeftEl) {
+      MiikaeruFloatingWindow.enable(dockLeftEl, {
+        id: "dock-left",
+        title: "☰ Menú",
+        minWidth: 60,
+        minHeight: 200,
+      });
+    }
+    const dockRightEl = document.querySelector(".hud-dock--right");
+    if (dockRightEl) {
+      MiikaeruFloatingWindow.enable(dockRightEl, {
+        id: "dock-right",
+        title: "☰ Apps",
+        minWidth: 60,
+        minHeight: 200,
+      });
+    }
   }
 
   // El resto de la app ya está renderizado detrás del candado (no hay

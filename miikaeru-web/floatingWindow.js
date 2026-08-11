@@ -38,6 +38,12 @@
   // solo la esquina inferior-derecha de antes.
   const RESIZE_DIRECTIONS = ["n", "s", "e", "w", "ne", "nw", "se", "sw"];
 
+  // Ventana de tiempo para distinguir el mousedown "de compatibilidad"
+  // que el navegador manda solo tras un pointerdown real (mismo click
+  // físico) de un mousedown genuino sin Pointer Events detrás — ver el
+  // comentario largo en _wireDrag() más abajo.
+  const MOUSE_FALLBACK_WINDOW_MS = 80;
+
   function nextZ() {
     zCounter = zCounter >= Z_MAX ? Z_BASE : zCounter + 1;
     return zCounter;
@@ -237,10 +243,23 @@
     _wireFocus() {
       // Captura en fase de captura, no burbuja — así ni siquiera un
       // stopPropagation() de algo interno (ej. un tab del chat)
-      // evita que la ventana pase al frente al clickearla.
+      // evita que la ventana pase al frente al clickearla. `mousedown`
+      // (deduplicado igual que en _wireDrag()/_wireResize()) es el
+      // mismo respaldo por si Pointer Events no dispara en el mouse
+      // físico del usuario.
+      let lastPointerDownAt = 0;
       this.el.addEventListener(
         "pointerdown",
         () => {
+          lastPointerDownAt = Date.now();
+          this.el.style.zIndex = String(nextZ());
+        },
+        { capture: true }
+      );
+      this.el.addEventListener(
+        "mousedown",
+        () => {
+          if (Date.now() - lastPointerDownAt < MOUSE_FALLBACK_WINDOW_MS) return;
           this.el.style.zIndex = String(nextZ());
         },
         { capture: true }
@@ -300,16 +319,31 @@
       if (!this.el.style.zIndex) this.el.style.zIndex = String(nextZ());
     }
 
+    // Arrastre con Pointer Events como mecanismo principal + un respaldo
+    // por Mouse Events puro. El respaldo existe porque hay combinaciones
+    // reales de Windows (ciertos drivers de touchpad/tableta/Windows
+    // Ink instalados junto al navegador) donde `PointerEvent` existe
+    // globalmente pero `pointerdown` no llega a disparar de forma
+    // confiable sobre el mouse físico — mientras que los `MouseEvent`
+    // de toda la vida sí. Con solo Pointer Events, esos casos se sentían
+    // exactamente como "no pasa nada al arrastrar", sin ningún error en
+    // consola que lo delatara. El respaldo se auto-desactiva solo: el
+    // navegador manda un `mousedown` "de compatibilidad" inmediatamente
+    // después de CUALQUIER `pointerdown` real de mouse (mismo click
+    // físico) — esa ventana corta (`MOUSE_FALLBACK_WINDOW_MS`) es lo que
+    // distingue ese eco de un `mousedown` genuino sin Pointer Events
+    // detrás, así que nunca se procesa el mismo gesto dos veces.
     _wireDrag() {
       let startX = 0;
       let startY = 0;
       let startTop = 0;
       let startLeft = 0;
+      let lastPointerDownAt = 0;
 
-      const onPointerMove = (event) => {
+      const applyMove = (clientX, clientY) => {
         if (!this.dragState) return;
-        const dx = event.clientX - startX;
-        const dy = event.clientY - startY;
+        const dx = clientX - startX;
+        const dy = clientY - startY;
         const rect = this.el.getBoundingClientRect();
         const maxLeft = window.innerWidth - Math.min(rect.width, 120);
         const maxTop = window.innerHeight - 36; // deja al menos la barra de título visible
@@ -319,41 +353,64 @@
         this.el.style.top = `${newTop}px`;
       };
 
-      const onPointerUp = (event) => {
+      const endDrag = () => {
         if (!this.dragState) return;
         this.dragState = null;
         this.el.classList.remove("floating-window--dragging");
-        safePointerCapture(this.headerEl, event.pointerId, false);
         this._persist();
         window.removeEventListener("pointermove", onPointerMove);
         window.removeEventListener("pointerup", onPointerUp);
+        window.removeEventListener("mousemove", onMouseMove);
+        window.removeEventListener("mouseup", onMouseUp);
       };
 
-      this.headerEl.addEventListener("pointerdown", (event) => {
-        // No arrastrar si el click empezó en uno de los botones de
-        // control o en algún control interactivo que la cabecera ya
-        // trajera de antes (ej. el chat no tiene ninguno, pero
-        // cualquier ventana futura que reutilice un header con botones
-        // propios queda cubierta acá igual).
-        if (event.target.closest(".floating-window__btn, button, a, input, select, textarea")) return;
-        if (!this._isFloatingEligible()) return; // panel fuera de rango — sigue su layout responsivo normal
-        if (this.mode === "maximized") return; // no se arrastra maximizada
-        if (this.minimized) {
-          // Arrastrar una ventana minimizada es válido (reposicionar el
-          // "chip" compacto) — solo se salta el paso de restaurar tamaño.
-        }
-        event.preventDefault();
+      const onPointerMove = (event) => applyMove(event.clientX, event.clientY);
+      const onPointerUp = (event) => {
+        safePointerCapture(this.headerEl, event.pointerId, false);
+        endDrag();
+      };
+      const onMouseMove = (event) => applyMove(event.clientX, event.clientY);
+      const onMouseUp = () => endDrag();
+
+      const beginDrag = (clientX, clientY) => {
         this._undock();
         const rect = this.el.getBoundingClientRect();
-        startX = event.clientX;
-        startY = event.clientY;
+        startX = clientX;
+        startY = clientY;
         startTop = rect.top;
         startLeft = rect.left;
         this.dragState = true;
         this.el.classList.add("floating-window--dragging");
+      };
+
+      // No arrastrar si el click empezó en uno de los botones de control
+      // o en algún control interactivo que la cabecera ya trajera de
+      // antes (ej. el chat no tiene ninguno, pero cualquier ventana
+      // futura que reutilice un header con botones propios queda
+      // cubierta acá igual). Arrastrar una ventana minimizada es válido
+      // (reposiciona el "chip" compacto) — solo maximizada se excluye.
+      const canStart = (event) =>
+        !event.target.closest(".floating-window__btn, button, a, input, select, textarea") &&
+        this._isFloatingEligible() &&
+        this.mode !== "maximized";
+
+      this.headerEl.addEventListener("pointerdown", (event) => {
+        if (!canStart(event)) return;
+        lastPointerDownAt = Date.now();
+        event.preventDefault();
+        beginDrag(event.clientX, event.clientY);
         safePointerCapture(this.headerEl, event.pointerId, true);
         window.addEventListener("pointermove", onPointerMove);
         window.addEventListener("pointerup", onPointerUp);
+      });
+
+      this.headerEl.addEventListener("mousedown", (event) => {
+        if (Date.now() - lastPointerDownAt < MOUSE_FALLBACK_WINDOW_MS) return;
+        if (!canStart(event)) return;
+        event.preventDefault();
+        beginDrag(event.clientX, event.clientY);
+        window.addEventListener("mousemove", onMouseMove);
+        window.addEventListener("mouseup", onMouseUp);
       });
     }
 
@@ -363,6 +420,8 @@
     // desplazan top/left para que el borde OPUESTO quede fijo en su
     // lugar (redimensionar desde la esquina superior-izquierda no debe
     // mover la esquina inferior-derecha).
+    // Mismo criterio dual (Pointer Events + respaldo por Mouse Events)
+    // que _wireDrag() — ver el comentario largo ahí arriba.
     _wireResize() {
       let activeHandle = null;
       let startX = 0;
@@ -371,12 +430,13 @@
       let startHeight = 0;
       let startTop = 0;
       let startLeft = 0;
+      let lastPointerDownAt = 0;
 
-      const onPointerMove = (event) => {
+      const applyMove = (clientX, clientY) => {
         if (!this.resizeState) return;
         const dir = this.resizeState;
-        const dx = event.clientX - startX;
-        const dy = event.clientY - startY;
+        const dx = clientX - startX;
+        const dy = clientY - startY;
         const maxWidth = window.innerWidth - 20;
         const maxHeight = window.innerHeight - 20;
 
@@ -397,37 +457,62 @@
         }
       };
 
-      const onPointerUp = (event) => {
+      const endResize = () => {
         if (!this.resizeState) return;
         this.resizeState = null;
         this.el.classList.remove("floating-window--resizing");
-        safePointerCapture(activeHandle, event.pointerId, false);
         activeHandle = null;
         this._persist();
         window.removeEventListener("pointermove", onPointerMove);
         window.removeEventListener("pointerup", onPointerUp);
+        window.removeEventListener("mousemove", onMouseMove);
+        window.removeEventListener("mouseup", onMouseUp);
       };
+
+      const onPointerMove = (event) => applyMove(event.clientX, event.clientY);
+      const onPointerUp = (event) => {
+        safePointerCapture(activeHandle, event.pointerId, false);
+        endResize();
+      };
+      const onMouseMove = (event) => applyMove(event.clientX, event.clientY);
+      const onMouseUp = () => endResize();
+
+      const beginResize = (handle, clientX, clientY) => {
+        this._undock();
+        const rect = this.el.getBoundingClientRect();
+        startX = clientX;
+        startY = clientY;
+        startWidth = rect.width;
+        startHeight = rect.height;
+        startTop = rect.top;
+        startLeft = rect.left;
+        this.resizeState = handle.dataset.resizeDir;
+        activeHandle = handle;
+        this.el.classList.add("floating-window--resizing");
+      };
+
+      const canStart = () => this._isFloatingEligible() && this.mode !== "maximized" && !this.minimized;
 
       this.resizeHandles.forEach((handle) => {
         handle.addEventListener("pointerdown", (event) => {
-          if (!this._isFloatingEligible()) return; // panel fuera de rango — sigue su layout responsivo normal
-          if (this.mode === "maximized" || this.minimized) return;
+          if (!canStart()) return;
+          lastPointerDownAt = Date.now();
           event.preventDefault();
           event.stopPropagation();
-          this._undock();
-          const rect = this.el.getBoundingClientRect();
-          startX = event.clientX;
-          startY = event.clientY;
-          startWidth = rect.width;
-          startHeight = rect.height;
-          startTop = rect.top;
-          startLeft = rect.left;
-          this.resizeState = handle.dataset.resizeDir;
-          activeHandle = handle;
-          this.el.classList.add("floating-window--resizing");
+          beginResize(handle, event.clientX, event.clientY);
           safePointerCapture(handle, event.pointerId, true);
           window.addEventListener("pointermove", onPointerMove);
           window.addEventListener("pointerup", onPointerUp);
+        });
+
+        handle.addEventListener("mousedown", (event) => {
+          if (Date.now() - lastPointerDownAt < MOUSE_FALLBACK_WINDOW_MS) return;
+          if (!canStart()) return;
+          event.preventDefault();
+          event.stopPropagation();
+          beginResize(handle, event.clientX, event.clientY);
+          window.addEventListener("mousemove", onMouseMove);
+          window.addEventListener("mouseup", onMouseUp);
         });
       });
     }

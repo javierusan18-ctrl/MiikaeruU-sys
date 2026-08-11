@@ -1414,6 +1414,17 @@ textarea,
      apaga el nativo para no tener dos asas de resize superpuestas
      (la gris del navegador + la cyan del módulo). */
   resize: none !important;
+  /* Defensivo: nada dentro del layout de fondo debería llegar a poner
+     pointer-events:none sobre una ventana flotante o su cabecera, pero
+     se refuerza acá explícito — así el arrastre nunca puede quedar
+     "atrapado" detrás de un contenedor que decida no recibir eventos
+     de mouse. */
+  pointer-events: auto;
+}
+
+.floating-window__header,
+.floating-window__resize-handle {
+  pointer-events: auto;
 }
 
 /* Mientras está "acoplada" (layout normal, flex-item de siempre) no
@@ -9342,6 +9353,9 @@ body.miikaeru-anim-off .layer-lion {
   max-width: 1600px;
   margin: 0 auto;
   min-height: 0;
+  /* Defensivo, pedido explícito: nada en el fondo debe poder bloquear
+     los eventos de mouse de las ventanas flotantes que viven adentro. */
+  pointer-events: auto;
 }
 
 .hud-dock {
