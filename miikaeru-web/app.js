@@ -564,15 +564,18 @@ function migrateLegacyDataToProfile(profileId) {
 }
 
 // Resuelve el perfil activo al arrancar: si no hay ninguno guardado todavía
-// (primera vez que corre este sistema), crea "Admin" y migra hacia él
-// cualquier dato legacy sin perfil que ya existiera en este navegador.
+// (primera vez que corre este sistema), crea uno neutral ("Operador") y
+// migra hacia él cualquier dato legacy sin perfil que ya existiera en este
+// navegador. Antes se llamaba "Admin" a propósito de nada — un nombre
+// genérico y confuso para lo que es, en el 99% de los casos, el primer
+// Operador real que usa ese dispositivo, no un administrador.
 function ensureActiveProfile() {
   let profiles = loadUserProfiles();
 
   if (!profiles.length) {
     const defaultProfile = {
       id: `profile-${Date.now()}`,
-      name: "Admin",
+      name: "Operador",
       createdAt: new Date().toISOString(),
     };
     profiles = [defaultProfile];
@@ -21397,7 +21400,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderActiveProfileName() {
     const profiles = loadUserProfiles();
     const current = profiles.find((p) => p.id === activeProfileId);
-    activeProfileNameEl.textContent = current ? current.name : "Admin";
+    activeProfileNameEl.textContent = current ? current.name : "Operador";
   }
 
   function renderProfileList() {
@@ -21632,20 +21635,39 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Llamado SOLO al registrar una Cuenta Principal nueva (nunca en
-  // login) — evita el "salto automático" a un operador viejo: el
-  // perfil/estado local (state.operatorName, nivel, avatar...) vive en
-  // localStorage scopeado por activeProfileId, completamente
-  // desconectado de qué número de teléfono se acaba de registrar. Sin
-  // este reset, un dispositivo que ya tenía un operador guardado de una
-  // sesión anterior (ej. una prueba vieja) resolvía state.operatorName
-  // como verdadero y onMasterAuthSuccess() se saltaba entero el welcome
-  // modal — "iniciando sesión" directo en ese operador viejo aunque la
-  // Cuenta Principal fuera genuinamente nueva. defaultState() ya deja
-  // level:1/xp:0/operatorName:null/avatar:null, así que resetear acá
-  // también garantiza que toda cuenta nueva arranca desde Nivel 1.
+  // login) — bug real encontrado y corregido acá: `activeProfileId` (el
+  // Sub-Perfil, ver ensureActiveProfile() arriba del todo del archivo)
+  // se resuelve UNA sola vez por navegador/dispositivo, completamente
+  // ajeno a qué Cuenta Principal (teléfono) se acaba de registrar. La
+  // versión anterior de esta función solo hacía `state = defaultState();
+  // persist();` — es decir, pisaba el CONTENIDO del mismo Sub-Perfil que
+  // ya estaba activo en este navegador (típicamente el primero que se
+  // creó ahí, históricamente llamado "Admin"), sin crear una identidad
+  // propia para la cuenta nueva. Efecto real y visible: la insignia del
+  // header (#active-profile-name, ver renderActiveProfileName()) seguía
+  // mostrando el NOMBRE del Sub-Perfil viejo ("Admin") pese a que
+  // state.operatorName sí era el nombre correcto del Operador nuevo — y
+  // cada registro nuevo en ese mismo navegador BORRABA el progreso de
+  // quien fuera que usó ese Sub-Perfil antes.
+  //
+  // La corrección real: crear un Sub-Perfil GENUINAMENTE NUEVO (id único,
+  // nombre neutral) y recargar — mismo mecanismo ya usado por
+  // switchProfile()/el formulario "Crear perfil" — para que TODA la
+  // persistencia scopeada por activeProfileId (state, ledger, calendario,
+  // bio-sync, chat...) empiece de cero en una clave física propia, sin
+  // tocar ni heredar nunca la de otra Cuenta Principal que haya usado
+  // este mismo dispositivo antes.
   function resetOperatorStateForNewAccount() {
-    state = defaultState();
-    persist();
+    const profiles = loadUserProfiles();
+    const newProfile = {
+      id: `profile-${Date.now()}`,
+      name: "Operador",
+      createdAt: new Date().toISOString(),
+    };
+    profiles.push(newProfile);
+    persistUserProfiles(profiles);
+    localStorage.setItem(ACTIVE_PROFILE_KEY, newProfile.id);
+    location.reload();
   }
 
   // Se ejecuta una sola vez, justo después de pasar el candado (recién
@@ -21768,8 +21790,12 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem(MASTER_MIGRATED_KEY, "true");
       masterAuthModal.hidden = true;
       await clearStaleAdminSessionOnFreshMasterAuth();
+      // resetOperatorStateForNewAccount() recarga la página (crea un
+      // Sub-Perfil nuevo y necesita un load fresco para que
+      // activeProfileId se re-resuelva a él) — checkMasterAuthAndInit()
+      // ya va a llamar a onMasterAuthSuccess() solo en esa recarga, así
+      // que no hace falta (ni conviene) llamarlo acá también.
       resetOperatorStateForNewAccount();
-      onMasterAuthSuccess();
     } catch (err) {
       // Fetch en sí mismo falló (sin red, DNS del propio Vercel, etc.) —
       // mismo criterio que arriba: fallback local en vez de bloquear, y
@@ -21798,8 +21824,10 @@ document.addEventListener("DOMContentLoaded", () => {
       masterAuthModal.hidden = true;
       addMessage({ author: "SISTEMA", text: t("masterAuthLocalModeNotice"), variant: "system" });
       await clearStaleAdminSessionOnFreshMasterAuth();
+      // Ver comentario en el otro call site (masterRegisterForm submit) —
+      // resetOperatorStateForNewAccount() recarga y checkMasterAuthAndInit()
+      // se encarga de onMasterAuthSuccess() en esa recarga.
       resetOperatorStateForNewAccount();
-      onMasterAuthSuccess();
     } catch (err) {
       console.warn("Registro local (fallback) falló:", err);
       masterRegisterError.textContent = t("masterAuthNetworkError");
