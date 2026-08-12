@@ -511,17 +511,77 @@ async function verifyLocalFallbackAccount(phone, password) {
 // ---------------------------------------------------
 // Sistema de Perfiles de Usuario
 // Cada perfil ("Admin", "Mamá - Salón", "Hermano - Camión"...) es una
-// cuenta separada en el mismo dispositivo: TODA la persistencia de la app
-// (state, ledger de negocios, moneda del negocio, calendario, bio-sync,
-// módulo activo) vive en claves de localStorage con el sufijo
-// "::<profileId>", vía scopedKey(). Cambiar de perfil = escribir cuál es
-// el activo + recargar la página (más simple y robusto que reinicializar
-// en caliente los ~20 render*() de la app; ver switchProfile() más abajo).
-// Vive DENTRO de la Cuenta Principal: los Sub-Perfiles solo importan una
-// vez pasado el candado de arriba.
+// cuenta separada DENTRO de la Cuenta Principal activa: TODA la
+// persistencia de la app (state, ledger de negocios, moneda del negocio,
+// calendario, bio-sync, módulo activo) vive en claves de localStorage con
+// el sufijo "::<profileId>", vía scopedKey(). Cambiar de perfil = escribir
+// cuál es el activo + recargar la página (más simple y robusto que
+// reinicializar en caliente los ~20 render*() de la app; ver
+// switchProfile() más abajo).
+//
+// Bug real encontrado y corregido acá: USER_PROFILES_KEY/ACTIVE_PROFILE_KEY
+// vivían en una clave de localStorage FIJA, la MISMA para cualquier Cuenta
+// Principal que usara este dispositivo — así que un dispositivo reutilizado
+// para probar o usar varias Cuentas Principales (números de teléfono)
+// distintas mostraba en el Modal de Perfiles TODOS los Sub-Perfiles de
+// TODAS esas Cuentas Principales juntos, con el botón "Cambiar" dejando
+// entrar a la data de cualquiera de ellos — exactamente el síntoma
+// reportado ("veo el perfil de javierusan18@gmail.com/Admin en la lista y
+// puedo cambiarme"). La corrección: scopear estas dos claves por el
+// teléfono de la Cuenta Principal activa (mismo mecanismo scopedKey() de
+// siempre, ver activeMasterPhoneScope()/migrateLegacyDeviceWideProfilesIfNeeded()
+// más abajo) — cada Cuenta Principal tiene ahora su PROPIA lista de
+// Sub-Perfiles, invisible e inalcanzable para cualquier otra.
 // ---------------------------------------------------
-const USER_PROFILES_KEY = "miikaeru_user_profiles";
-const ACTIVE_PROFILE_KEY = "miikaeru_active_profile";
+
+// Resuelve el teléfono de la Cuenta Principal activa en ESTE momento (si
+// hay una recordada) para usarlo como prefijo de aislamiento — null antes
+// de pasar el candado por primera vez, caso en el que no importa (no hay
+// ningún Sub-Perfil real todavía).
+function activeMasterPhoneScope() {
+  // No se usa loadMasterAccount() a propósito: esa función vive DENTRO del
+  // closure de DOMContentLoaded (mucho más abajo en este archivo), pero
+  // este bloque corre a nivel de módulo, ANTES de que ese closure exista
+  // — llamarla desde acá tira "loadMasterAccount is not defined" y rompe
+  // la carga de la app entera. Se relee MASTER_ACCOUNT_KEY directo acá,
+  // con el mismo try/catch defensivo que esa función usa.
+  try {
+    const account = JSON.parse(localStorage.getItem(MASTER_ACCOUNT_KEY));
+    return account && account.phone ? normalizePhone(account.phone) : null;
+  } catch (err) {
+    return null;
+  }
+}
+
+const MASTER_PHONE_SCOPE = activeMasterPhoneScope();
+
+// Migra, una sola vez, la lista de Sub-Perfiles vieja (sin scopear, de
+// antes de este fix) a la Cuenta Principal que esté logueada la primera
+// vez que corre este código nuevo en este dispositivo — mejor esfuerzo:
+// esa Cuenta Principal conserva sus Sub-Perfiles de siempre sin perder
+// nada, pero ninguna OTRA Cuenta Principal que use este dispositivo
+// después vuelve a heredarlos, porque las claves viejas se borran apenas
+// se migran.
+function migrateLegacyDeviceWideProfilesIfNeeded(phoneScope) {
+  if (!phoneScope) return;
+  const scopedProfilesKey = `miikaeru_user_profiles::${phoneScope}`;
+  if (localStorage.getItem(scopedProfilesKey) !== null) return;
+
+  const legacyProfilesRaw = localStorage.getItem("miikaeru_user_profiles");
+  if (legacyProfilesRaw === null) return;
+
+  localStorage.setItem(scopedProfilesKey, legacyProfilesRaw);
+  const legacyActive = localStorage.getItem("miikaeru_active_profile");
+  if (legacyActive !== null) {
+    localStorage.setItem(`miikaeru_active_profile::${phoneScope}`, legacyActive);
+  }
+  localStorage.removeItem("miikaeru_user_profiles");
+  localStorage.removeItem("miikaeru_active_profile");
+}
+migrateLegacyDeviceWideProfilesIfNeeded(MASTER_PHONE_SCOPE);
+
+const USER_PROFILES_KEY = MASTER_PHONE_SCOPE ? `miikaeru_user_profiles::${MASTER_PHONE_SCOPE}` : "miikaeru_user_profiles";
+const ACTIVE_PROFILE_KEY = MASTER_PHONE_SCOPE ? `miikaeru_active_profile::${MASTER_PHONE_SCOPE}` : "miikaeru_active_profile";
 
 // Claves "legacy" de antes de que existiera este sistema de perfiles — se
 // migran UNA sola vez, íntegras, al primer perfil que se crea, para no
@@ -533,6 +593,33 @@ const LEGACY_UNSCOPED_KEYS = [
   "miikaeru_calendar_events",
   "miikaeru_biometrics_log",
   "miikaeru_active_app",
+];
+
+// Bases de TODAS las claves scopeadas por profileId en la app (ver cada
+// scopedKey("...", activeProfileId) a lo largo del archivo) — usada solo
+// por deleteProfile() más abajo para borrar de verdad los datos de un
+// Sub-Perfil eliminado, no solo sacarlo de la lista.
+const PROFILE_SCOPED_KEY_BASES = [
+  "miikaeru_state_v1",
+  "miikaeru_business_ledger",
+  "miikaeru_business_currency",
+  "miikaeru_calendar_events",
+  "miikaeru_biometrics_log",
+  "miikaeru_routine_log",
+  "miikaeru_habits_log",
+  "miikaeru_habits_meta",
+  "miikaeru_nutrition_goal",
+  "miikaeru_nutrition_log",
+  "miikaeru_nutrition_meta",
+  "miikaeru_jp_continue",
+  "miikaeru_workout_plan",
+  "miikaeru_workout_log",
+  "miikaeru_seven_min_log",
+  "miikaeru_active_app",
+  "miikaeru_chat_language",
+  "miikaeru_local_test_contacts",
+  "miikaeru_local_test_messages",
+  "miikaeru_conversation_their_language",
 ];
 
 function loadUserProfiles() {
@@ -888,6 +975,8 @@ const I18N = {
     profileCreateBtn: "+ Crear Perfil",
     profileActiveBadge: "Activo",
     profileSwitchTo: "Cambiar",
+    profileDeleteBtn: "🗑️ Eliminar",
+    profileDeleteConfirm: "¿Eliminar el perfil \"{name}\" y todos sus datos guardados en este dispositivo? Esta acción no se puede deshacer.",
     settingsBtnTitle: "Ajustes",
     settingsTitle: "Ajustes",
     settingsAnimationsLabel: "Animaciones",
@@ -1847,6 +1936,8 @@ const I18N = {
     profileCreateBtn: "+ Create Profile",
     profileActiveBadge: "Active",
     profileSwitchTo: "Switch",
+    profileDeleteBtn: "🗑️ Delete",
+    profileDeleteConfirm: "Delete the profile \"{name}\" and all its data saved on this device? This can't be undone.",
     settingsBtnTitle: "Settings",
     settingsTitle: "Settings",
     settingsAnimationsLabel: "Animations",
@@ -2806,6 +2897,8 @@ const I18N = {
     profileCreateBtn: "+ プロフィールを作成",
     profileActiveBadge: "アクティブ",
     profileSwitchTo: "切り替える",
+    profileDeleteBtn: "🗑️ 削除",
+    profileDeleteConfirm: "プロフィール「{name}」とこの端末に保存されたすべてのデータを削除しますか?元に戻せません。",
     settingsBtnTitle: "設定",
     settingsTitle: "設定",
     settingsAnimationsLabel: "アニメーション",
@@ -4734,6 +4827,34 @@ const N5_VOCAB_CATEGORIES = [
       { kana: "がんばってください", kanji: "頑張ってください", romaji: "ganbatte kudasai", meaning: { es: "esfuérzate / suerte", en: "good luck / do your best" } },
       { kana: "ようこそ", kanji: null, romaji: "youkoso", meaning: { es: "bienvenido", en: "welcome" } },
       { kana: "またね", kanji: null, romaji: "mata ne", meaning: { es: "nos vemos", en: "see you" } },
+      { kana: "どうぞよろしくおねがいします", kanji: "どうぞよろしくお願いします", romaji: "douzo yoroshiku onegaishimasu", meaning: { es: "un placer, cuento con usted", en: "pleased to work with you" } },
+      { kana: "おつかれさまでした", kanji: "お疲れ様でした", romaji: "otsukaresama deshita", meaning: { es: "buen trabajo (al terminar)", en: "good work (thanks for the effort)" } },
+      { kana: "いらっしゃいませ", kanji: null, romaji: "irasshaimase", meaning: { es: "bienvenido (en tiendas)", en: "welcome (shops)" } },
+      { kana: "かしこまりました", kanji: null, romaji: "kashikomarimashita", meaning: { es: "entendido (formal, servicio)", en: "certainly / understood (formal service)" } },
+      { kana: "おげんきで", kanji: "お元気で", romaji: "ogenki de", meaning: { es: "que estés bien (despedida larga)", en: "take care (long farewell)" } },
+      { kana: "わかりました", kanji: "分かりました", romaji: "wakarimashita", meaning: { es: "entendido", en: "understood / got it" } },
+      { kana: "だいじょうぶです", kanji: "大丈夫です", romaji: "daijoubu desu", meaning: { es: "está bien / no hay problema", en: "it's okay / no problem" } },
+      { kana: "たすけてください", kanji: "助けてください", romaji: "tasukete kudasai", meaning: { es: "ayúdeme, por favor", en: "please help me" } },
+      { kana: "ちょっとまってください", kanji: "ちょっと待ってください", romaji: "chotto matte kudasai", meaning: { es: "espere un momento, por favor", en: "please wait a moment" } },
+      { kana: "もういちどおねがいします", kanji: "もう一度お願いします", romaji: "mou ichido onegaishimasu", meaning: { es: "otra vez, por favor", en: "one more time, please" } },
+      { kana: "ゆっくりおねがいします", kanji: "ゆっくりお願いします", romaji: "yukkuri onegaishimasu", meaning: { es: "más despacio, por favor", en: "slowly, please" } },
+      { kana: "きをつけて", kanji: "気をつけて", romaji: "ki o tsukete", meaning: { es: "cuídate / ten cuidado", en: "take care / be careful" } },
+      { kana: "いいえ、けっこうです", kanji: "いいえ、結構です", romaji: "iie, kekkou desu", meaning: { es: "no, está bien así", en: "no, that's fine (polite refusal)" } },
+      { kana: "はい、そうです", kanji: null, romaji: "hai, sou desu", meaning: { es: "sí, así es", en: "yes, that's right" } },
+      { kana: "いいえ、そうではありません", kanji: null, romaji: "iie, sou dewa arimasen", meaning: { es: "no, no es así", en: "no, that's not right" } },
+      { kana: "どうしましたか", kanji: null, romaji: "dou shimashita ka", meaning: { es: "¿qué pasó? / ¿qué le pasa?", en: "what happened? / what's wrong?" } },
+      { kana: "なんでもないです", kanji: "何でもないです", romaji: "nandemonai desu", meaning: { es: "no es nada", en: "it's nothing" } },
+      { kana: "しんぱいしないで", kanji: "心配しないで", romaji: "shinpai shinaide", meaning: { es: "no te preocupes", en: "don't worry" } },
+      { kana: "がんばりました", kanji: "頑張りました", romaji: "ganbarimashita", meaning: { es: "me esforcé / lo logré", en: "I did my best" } },
+      { kana: "おめでとう", kanji: null, romaji: "omedetou", meaning: { es: "felicidades (casual)", en: "congratulations (casual)" } },
+      { kana: "じゃあね", kanji: null, romaji: "jaa ne", meaning: { es: "nos vemos (casual)", en: "see you (casual)" } },
+      { kana: "おさきにしつれいします", kanji: "お先に失礼します", romaji: "osaki ni shitsurei shimasu", meaning: { es: "me retiro primero, con permiso", en: "excuse me for leaving first" } },
+      { kana: "ごくろうさまでした", kanji: "ご苦労様でした", romaji: "gokurousama deshita", meaning: { es: "gracias por tu esfuerzo (a un subordinado)", en: "thanks for your hard work" } },
+      { kana: "おじゃまします", kanji: "お邪魔します", romaji: "ojama shimasu", meaning: { es: "disculpe la molestia (al entrar a una casa)", en: "excuse the intrusion (entering a home)" } },
+      { kana: "しょうしょうおまちください", kanji: "少々お待ちください", romaji: "shoushou omachi kudasai", meaning: { es: "espere un momento, por favor (formal)", en: "please wait a moment (formal)" } },
+      { kana: "だいじょうぶですか", kanji: "大丈夫ですか", romaji: "daijoubu desu ka", meaning: { es: "¿estás bien?", en: "are you okay?" } },
+      { kana: "おげんきそうですね", kanji: "お元気そうですね", romaji: "ogenki sou desu ne", meaning: { es: "te ves bien de salud", en: "you look well" } },
+      { kana: "いいですね", kanji: null, romaji: "ii desu ne", meaning: { es: "qué bien / suena bien", en: "sounds good / that's nice" } },
     ],
   },
   {
@@ -21416,16 +21537,50 @@ document.addEventListener("DOMContentLoaded", () => {
         badge.textContent = t("profileActiveBadge");
         row.appendChild(badge);
       } else {
+        const actions = document.createElement("div");
+        actions.className = "profile-row__actions";
+
         const switchBtn = document.createElement("button");
         switchBtn.type = "button";
         switchBtn.className = "profile-row__switch-btn";
         switchBtn.textContent = t("profileSwitchTo");
         switchBtn.addEventListener("click", () => switchProfile(profile.id));
-        row.appendChild(switchBtn);
+        actions.appendChild(switchBtn);
+
+        // Solo se puede borrar un perfil que NO es el activo (no tiene
+        // sentido borrarte a vos mismo a mitad de sesión) — pedido
+        // explícito del usuario para poder limpiar Sub-Perfiles viejos/
+        // duplicados que hayan quedado en la lista (ver deleteProfile()).
+        const deleteBtn = document.createElement("button");
+        deleteBtn.type = "button";
+        deleteBtn.className = "profile-row__delete-btn";
+        deleteBtn.textContent = t("profileDeleteBtn");
+        deleteBtn.addEventListener("click", () => deleteProfile(profile.id, profile.name));
+        actions.appendChild(deleteBtn);
+
+        row.appendChild(actions);
       }
 
       profileListEl.appendChild(row);
     });
+  }
+
+  // Borra un Sub-Perfil de verdad: lo saca de la lista Y limpia todas sus
+  // claves scopeadas (state, ledger, hábitos, rutina, chat...) — no solo
+  // lo oculta. Pedido explícito para poder limpiar perfiles viejos/
+  // duplicados/de prueba que se hayan acumulado en un dispositivo (ver
+  // PROFILE_SCOPED_KEY_BASES arriba del todo del archivo). Nunca borra el
+  // perfil ACTIVO (switchProfile() primero) para no dejar a la sesión en
+  // curso sin ningún dato al que apuntar.
+  function deleteProfile(profileId, profileName) {
+    if (profileId === activeProfileId) return;
+    if (!window.confirm(t("profileDeleteConfirm").replace("{name}", profileName))) return;
+
+    const profiles = loadUserProfiles().filter((p) => p.id !== profileId);
+    persistUserProfiles(profiles);
+    PROFILE_SCOPED_KEY_BASES.forEach((base) => localStorage.removeItem(scopedKey(base, profileId)));
+
+    renderProfileList();
   }
 
   function openProfileModal() {

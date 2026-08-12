@@ -6554,6 +6554,30 @@ body.miikaeru-anim-off .cyber-tile[data-forward*="bossfight"] {
   box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
 }
 
+.profile-row__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.profile-row__delete-btn {
+  font-size: 0.65rem;
+  letter-spacing: 0.5px;
+  color: var(--neon-magenta);
+  border: 1px solid rgba(255, 46, 154, 0.4);
+  background: rgba(255, 46, 154, 0.06);
+  padding: 4px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.profile-row__delete-btn:hover {
+  background: var(--neon-magenta);
+  color: #04121a;
+  box-shadow: 0 0 10px rgba(255, 46, 154, 0.5);
+}
+
 .profile-create-form {
   display: flex;
   gap: 8px;
