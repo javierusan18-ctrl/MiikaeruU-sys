@@ -883,6 +883,7 @@ const I18N = {
     miikaPassAvatarBoss: "Avatar Modo Boss",
     profilesTitle: "Perfiles de Usuario",
     profilesSubtitle: "Cada perfil guarda su propio historial, moneda y módulo activo.",
+    profilesCurrentOperatorLabel: "Operador actual:",
     profileCreatePlaceholder: "Nombre del nuevo perfil (ej. Mamá - Salón)",
     profileCreateBtn: "+ Crear Perfil",
     profileActiveBadge: "Activo",
@@ -1841,6 +1842,7 @@ const I18N = {
     miikaPassAvatarBoss: "Boss Mode Avatar",
     profilesTitle: "User Profiles",
     profilesSubtitle: "Each profile keeps its own history, currency and active module.",
+    profilesCurrentOperatorLabel: "Current operator:",
     profileCreatePlaceholder: "New profile name (e.g. Mom - Salon)",
     profileCreateBtn: "+ Create Profile",
     profileActiveBadge: "Active",
@@ -2799,6 +2801,7 @@ const I18N = {
     miikaPassAvatarBoss: "ボスモードアバター",
     profilesTitle: "ユーザープロフィール",
     profilesSubtitle: "各プロフィールは独自の履歴、通貨、アクティブモジュールを保持します。",
+    profilesCurrentOperatorLabel: "現在のオペレーター:",
     profileCreatePlaceholder: "新しいプロフィール名（例：ママ - 美容室）",
     profileCreateBtn: "+ プロフィールを作成",
     profileActiveBadge: "アクティブ",
@@ -10472,18 +10475,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const masterAuthGoLoginBtn = document.getElementById("master-auth-go-login-btn");
   const masterAuthForgetDeviceBtn = document.getElementById("master-auth-forget-device-btn");
 
-  const welcomeModal = document.getElementById("welcome-modal");
-  const welcomeViewChoice = document.getElementById("welcome-view-choice");
-  const welcomeViewCreate = document.getElementById("welcome-view-create");
-  const welcomeViewLogin = document.getElementById("welcome-view-login");
-  const welcomeCreateBtn = document.getElementById("welcome-create-btn");
-  const welcomeLoginBtn = document.getElementById("welcome-login-btn");
-  const welcomeBackFromCreate = document.getElementById("welcome-back-from-create");
-  const welcomeBackFromLogin = document.getElementById("welcome-back-from-login");
-  const welcomeLoginCreateBtn = document.getElementById("welcome-login-create-btn");
-  const registrationForm = document.getElementById("registration-form");
-  const operatorNameInput = document.getElementById("operator-name-input");
   const profileName = document.getElementById("profile-name");
+  const profileModalCurrentOperator = document.getElementById("profile-modal-current-operator");
   const logoutBtn = document.getElementById("logout-btn");
   // Avatar del Héroe en el Header — centro de identidad del Operador (ver
   // #hero-open-btn/#hero-modal más abajo, reemplaza los antiguos botones
@@ -11060,8 +11053,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ---- Onboarding: elegir avatar inicial (elenco completo) ----
   // openCharacterSelectModal() se llama la primera vez que el Operador
-  // entra y no tiene `state.avatar` todavía (ver onMasterAuthSuccess()/
-  // registrationForm más abajo) — sin botón de cerrar, es una elección
+  // entra y no tiene `state.avatar` todavía (ver onMasterAuthSuccess()
+  // más abajo) — sin botón de cerrar, es una elección
   // obligatoria la primera vez; después es reelegible libremente desde
   // #hero-modal. Las tarjetas se arman 100% en JS dentro de la grilla
   // vacía #character-select-grid (ver index.html) en vez de ids fijos
@@ -21518,70 +21511,21 @@ document.addEventListener("DOMContentLoaded", () => {
     switchProfile(newProfile.id);
   });
 
-  // ---------------- Perfil / Sesión: Crear cuenta / Iniciar sesión ----------------
+  // ---------------- Perfil / Sesión ----------------
+  // La Cuenta Principal (candado por teléfono, más abajo) es la única
+  // identidad real que se pide al Operador — este bloque antes también
+  // mostraba una pantalla "Crear Cuenta" separada pidiendo un "Nombre de
+  // operador" (vestigio de antes de que existiera el candado por
+  // teléfono), completamente redundante con eso y sin ninguna forma
+  // real de saltarla para quien ya tenía cuenta. Se retiró entera
+  // (ver onMasterAuthSuccess() más abajo): state.operatorName ahora
+  // puede quedar en null sin romper nada, porque cada lugar que lo usa
+  // ya tenía su propio `|| "Operador"`/`|| "TÚ"` de respaldo desde antes.
 
   function renderProfile() {
     profileName.textContent = state.operatorName || "Operador";
+    if (profileModalCurrentOperator) profileModalCurrentOperator.textContent = state.operatorName || "Operador";
   }
-
-  function showWelcomeView(view) {
-    welcomeViewChoice.hidden = view !== "choice";
-    welcomeViewCreate.hidden = view !== "create";
-    welcomeViewLogin.hidden = view !== "login";
-  }
-
-  function openWelcomeModal() {
-    showWelcomeView("choice");
-    welcomeModal.hidden = false;
-  }
-
-  function closeWelcomeModal() {
-    welcomeModal.hidden = true;
-  }
-
-  welcomeCreateBtn.addEventListener("click", () => showWelcomeView("create"));
-  welcomeLoginBtn.addEventListener("click", () => showWelcomeView("login"));
-  welcomeBackFromCreate.addEventListener("click", () => showWelcomeView("choice"));
-  welcomeBackFromLogin.addEventListener("click", () => showWelcomeView("choice"));
-  welcomeLoginCreateBtn.addEventListener("click", () => showWelcomeView("create"));
-
-  registrationForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const name = operatorNameInput.value.trim();
-    if (!name) return;
-
-    // Crear cuenta arranca siempre en un state fresco: Nivel 1, XP 0/100,
-    // Rango Kodomo, Diamantes 0 — sin arrastrar progreso previo sin dueño.
-    state = defaultState();
-    state.operatorName = name;
-    persist();
-
-    renderHud();
-    renderWishlist();
-    renderChatHistory();
-    renderProfile();
-    financeIngresoInput.value = state.pillars.finanzas.ingresoMensual || "";
-    renderFinanzasCategories();
-    updateFinanzasSummary();
-    refreshNegocioSuggestions();
-    refreshNegocioColaboradorSuggestions();
-    updateNegocioGananciaPreview();
-
-    closeWelcomeModal();
-    playAvatarEmote("welcome", 3500);
-    setAvatarSpeech(`¡Bienvenido, ${name}! Soy Miikaeru, tu guía.`);
-
-    addMessage({
-      author: "SISTEMA",
-      text: `Cuenta creada. Bienvenido al núcleo Miikaeru, ${name}.`,
-      variant: "system",
-    });
-
-    // Elección de Avatar Inicial (Fesha/Mijashi) — pedido explícito de que
-    // viva "en la pantalla de inicio": se dispara acá, apenas se crea la
-    // cuenta del Operador, antes de que toque nada más de la app.
-    openCharacterSelectModal();
-  });
 
   // 🔴 ahora cierra la sesión de la Cuenta Principal (candado de arriba),
   // no borra el progreso del perfil/operador — ese ya no es su trabajo
@@ -21671,22 +21615,21 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Se ejecuta una sola vez, justo después de pasar el candado (recién
-  // logueado o ya con sesión activa desde una recarga anterior) — es
-  // exactamente la lógica de "bienvenida al operador" que antes corría
-  // sin condición ninguna al cargar la página.
+  // logueado o ya con sesión activa desde una recarga anterior, o justo
+  // después de que resetOperatorStateForNewAccount() recargó a un
+  // Sub-Perfil nuevo). Ya no hay una rama separada para "sin nombre
+  // todavía" — ver el comentario junto a renderProfile() más arriba: se
+  // retiró la pantalla "Crear Cuenta"/"Nombre de operador" por completa,
+  // así que el único paso de bienvenida real que queda es la elección de
+  // Avatar (skin), que sí sigue siendo necesaria la primera vez.
   function onMasterAuthSuccess() {
-    if (!state.operatorName) {
-      openWelcomeModal();
-      setAvatarSpeech("Bienvenido, Operador. Crea tu cuenta para comenzar.");
-    } else {
-      playAvatarEmote("welcome", 3500);
-      setAvatarSpeech(`¡Bienvenido de vuelta, ${state.operatorName}!`);
-      // Perfiles creados antes de que existiera el Héroe unificado no
-      // tienen `avatar` guardado (loadState() ya migra desde
-      // playerCharacter cuando existe) — se les pide elegir recién ahora,
-      // una sola vez.
-      if (!state.avatar) openCharacterSelectModal();
-    }
+    playAvatarEmote("welcome", 3500);
+    setAvatarSpeech(state.operatorName ? `¡Bienvenido de vuelta, ${state.operatorName}!` : "¡Bienvenido, Operador!");
+    // Perfiles creados antes de que existiera el Héroe unificado no
+    // tienen `avatar` guardado (loadState() ya migra desde
+    // playerCharacter cuando existe) — se les pide elegir recién ahora,
+    // una sola vez.
+    if (!state.avatar) openCharacterSelectModal();
   }
 
   // Deshabilita el botón de submit mientras el fetch está en vuelo (evita

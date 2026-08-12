@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260811-8" />
+  <link rel="stylesheet" href="style.css?v=20260811-9" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -3120,63 +3120,19 @@
     </div>
   </div>
 
-  <!-- MODAL: BIENVENIDA / CREAR CUENTA / INICIAR SESIÓN -->
-  <div class="modal-overlay" id="welcome-modal" hidden>
-    <div class="modal glass">
-
-      <!-- Vista: elección inicial -->
-      <div class="modal__view" id="welcome-view-choice">
-        <h2>Bienvenido al Núcleo Miikaeru</h2>
-        <p class="modal__subtitle">No hay un operador guardado en este dispositivo. Elige una opción para continuar.</p>
-        <div class="modal__actions">
-          <button type="button" class="btn-send" id="welcome-create-btn">Crear cuenta</button>
-          <button type="button" class="btn-secondary" id="welcome-login-btn">Iniciar sesión</button>
-        </div>
-      </div>
-
-      <!-- Vista: crear cuenta -->
-      <div class="modal__view" id="welcome-view-create" hidden>
-        <h2>Crear Cuenta</h2>
-        <p class="modal__subtitle">Ingresa tu nombre de operador. Empezarás en Nivel 1, Rango Kodomo.</p>
-        <form id="registration-form">
-          <input
-            type="text"
-            id="operator-name-input"
-            placeholder="Nombre de operador"
-            autocomplete="off"
-            required
-          />
-          <button type="submit" class="btn-send">Crear cuenta</button>
-        </form>
-        <button type="button" class="btn-link" id="welcome-back-from-create">Volver</button>
-      </div>
-
-      <!-- Vista: iniciar sesión (sin cuenta guardada) -->
-      <div class="modal__view" id="welcome-view-login" hidden>
-        <h2>Iniciar Sesión</h2>
-        <p class="modal__subtitle modal__subtitle--warning">
-          No encontramos una cuenta guardada en este dispositivo.
-        </p>
-        <div class="modal__actions">
-          <button type="button" class="btn-send" id="welcome-login-create-btn">Crear cuenta</button>
-        </div>
-        <button type="button" class="btn-link" id="welcome-back-from-login">Volver</button>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- MODAL: PERFILES DE USUARIO — cuentas separadas en el mismo
-       dispositivo (miikaeru_user_profiles), cada una con su propio
-       state/ledger/moneda/módulo activo. No reemplaza el flujo de
-       "Crear cuenta" de arriba (ese es el nombre de operador DENTRO de
-       un perfil); este modal decide QUÉ perfil está activo antes de eso. -->
+  <!-- MODAL: PERFILES DE USUARIO — Sub-Perfiles separados dentro del
+       mismo dispositivo/Cuenta Principal (miikaeru_user_profiles), cada
+       uno con su propio state/ledger/moneda/módulo activo. -->
   <div class="modal-overlay" id="profile-modal" hidden>
     <div class="modal modal--profiles glass">
       <button type="button" class="btn-modal-close" id="profile-modal-close" aria-label="Cerrar">✕</button>
 
       <h2 data-i18n="profilesTitle">Perfiles de Usuario</h2>
       <p class="modal__subtitle" data-i18n="profilesSubtitle">Cada perfil guarda su propio historial, moneda y módulo activo.</p>
+      <p class="profile-modal__current-operator">
+        <span data-i18n="profilesCurrentOperatorLabel">Operador actual:</span>
+        <strong id="profile-modal-current-operator">Operador</strong>
+      </p>
 
       <div class="profile-list" id="profile-list">
         <!-- filas renderizadas por app.js -->
@@ -3272,7 +3228,7 @@
        etiquetas <script> no importa en la práctica — se carga acá antes
        igual, por prolijidad. -->
   <script src="floatingWindow.js?v=20260811-6"></script>
-  <script src="app.js?v=20260811-12"></script>
+  <script src="app.js?v=20260811-13"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de

@@ -6461,6 +6461,19 @@ body.miikaeru-anim-off .cyber-tile[data-forward*="bossfight"] {
   position: relative;
 }
 
+/* "Operador actual: X" en el Modal de Perfiles — pedido explícito de que
+   quede claro en todo momento quién es el Operador activo, separado de
+   la lista de Sub-Perfiles de abajo (ver renderProfile() en app.js). */
+.profile-modal__current-operator {
+  margin: 4px 0 16px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.profile-modal__current-operator strong {
+  color: var(--neon-cyan);
+}
+
 .settings-toggle-row {
   display: flex;
   align-items: center;
