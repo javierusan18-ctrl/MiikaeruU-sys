@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260811-6" />
+  <link rel="stylesheet" href="style.css?v=20260811-7" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -86,14 +86,6 @@
       <button type="button" class="master-auth__forget" id="master-auth-forget-device-btn" data-i18n="masterAuthForgetDevice" hidden>¿No es tu cuenta? Usar otro número en este dispositivo</button>
     </div>
   </div>
-
-  <!-- Frontera visual de contención para las ventanas flotantes (ver
-       floatingWindow.js: minTop) — línea fina fija a --floating-window-
-       safe-top del borde superior. Puramente decorativa/informativa (el
-       límite REAL lo aplica el clamp en JS); marca a simple vista dónde
-       arranca la zona segura de trabajo, sin bloquear clics (pointer-
-       events:none) ni interferir con nada debajo. -->
-  <div class="floating-window-boundary" aria-hidden="true"></div>
 
   <!-- HUD SUPERIOR -->
   <header class="hud">
@@ -3217,7 +3209,7 @@
        etiquetas <script> no importa en la práctica — se carga acá antes
        igual, por prolijidad. -->
   <script src="floatingWindow.js?v=20260811-6"></script>
-  <script src="app.js?v=20260811-9"></script>
+  <script src="app.js?v=20260811-10"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de

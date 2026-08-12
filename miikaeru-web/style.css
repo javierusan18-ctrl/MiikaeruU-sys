@@ -42,8 +42,8 @@
   --avatar-scale: 1;
   --chat-scale: 1;
 
-  /* Tope superior fijo para las ventanas flotantes (ver floatingWindow.js
-     y .floating-window-boundary más abajo) — a propósito NO se calcula
+  /* Tope superior fijo para las ventanas flotantes (ver floatingWindow.js)
+     — a propósito NO se calcula
      desde .hud (getBoundingClientRect().bottom): ese header usa
      flex-wrap y puede armar 3-4 filas según ancho/zoom/idioma, así que
      medirlo en vivo devolvía un tope demasiado profundo (270px+),
@@ -1416,22 +1416,6 @@ textarea,
    minimizables/maximizables — ver floatingWindow.js para la lógica.
    Acá solo vive la piel visual: mismo lenguaje HUD del resto de la app
    (glass + borde cyan + glow), sin inventar un estilo nuevo. */
-
-/* Línea de contención — puramente visual, ver el comentario en
-   index.html. z-index apenas por debajo de Z_BASE (150, ver
-   floatingWindow.js) para quedar SIEMPRE detrás de cualquier ventana
-   flotante (que ya no puede cruzarla) pero por encima del contenido
-   normal, así se ve incluso con un panel justo pegado al límite. */
-.floating-window-boundary {
-  position: fixed;
-  top: var(--floating-window-safe-top);
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.35) 15%, rgba(0, 240, 255, 0.35) 85%, transparent);
-  pointer-events: none;
-  z-index: 149;
-}
 
 .floating-window {
   transition: box-shadow 0.25s ease;
@@ -3266,6 +3250,22 @@ body.miikaeru-anim-off .layer-bg,
 body.miikaeru-anim-off .layer-props,
 body.miikaeru-anim-off .layer-lion {
   transition: none !important;
+}
+
+/* Pedido explícito (más allá de solo bajar el brillo/animación): con
+   "Animaciones" desactivado, la ventana del León y el punto de entrada
+   de Boss Fight desaparecen por completo — no solo se quedan quietos.
+   display:none en vez de desmontar del DOM: floatingWindow.js ya lee
+   getComputedStyle(el).display !== "none" como única fuente de verdad
+   de "¿este panel puede arrastrarse ahora?" (ver _isFloatingEligible()
+   en floatingWindow.js), así que ocultarlo así alcanza para que el
+   León tampoco quede arrastrable/clickeable mientras está oculto, sin
+   tocar ninguna lógica de JS. #app-card-bossfight cubre el ícono de
+   escritorio; el cyber-tile cubre el mismo acceso en Mobile Lite. */
+body.miikaeru-anim-off .panel--avatar,
+body.miikaeru-anim-off #app-card-bossfight,
+body.miikaeru-anim-off .cyber-tile[data-forward*="bossfight"] {
+  display: none !important;
 }
 
 .avatar__meta {

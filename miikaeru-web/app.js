@@ -20151,14 +20151,22 @@ document.addEventListener("DOMContentLoaded", () => {
     if (event.key === "Escape" && !profileModal.hidden) closeProfileModal();
   });
 
-  // Ajustes → Animaciones: body.miikaeru-anim-off (ver style.css, mismo
-  // set de selectores que @media(prefers-reduced-motion:reduce)) apaga
-  // el glow respirando + el fade de despliegue del León/Avatares,
-  // dejándolos en su versión estática/compacta.
+  // Ajustes → Animaciones: body.miikaeru-anim-off (ver style.css) apaga
+  // el glow respirando + el fade de despliegue de los Avatares, Y
+  // además oculta por completo la ventana del León y el acceso a Boss
+  // Fight (pedido explícito: no solo bajarles el brillo). El
+  // display:none vive en CSS (aplica solo con la clase presente); acá
+  // solo se cubre el caso borde de desactivar el toggle mientras Boss
+  // Fight está abierto — sin esto, el modal se quedaría abierto detrás
+  // de un ícono que ya desapareció, sin forma visible de volver a
+  // cerrarlo desde el propio ícono.
   function applyAnimationsSetting() {
     const enabled = !state.settings || state.settings.animations !== false;
     document.body.classList.toggle("miikaeru-anim-off", !enabled);
     settingsAnimationsToggle.checked = enabled;
+    if (!enabled && bossfightModal && !bossfightModal.hidden) {
+      bossfightModal.hidden = true;
+    }
   }
 
   function openSettingsModal() {
@@ -20767,9 +20775,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // pantallas donde envuelve mucho), dejando a las ventanas con
     // poquísimo espacio útil abajo. Se reemplaza por un valor FIJO
     // (--floating-window-safe-top en style.css, una sola fuente de
-    // verdad compartida con la línea de contención visual — ver
-    // .floating-window-boundary) — predecible siempre, a costa de no
-    // proteger una fila extra si el header llega a envolver.
+    // verdad) — predecible siempre, a costa de no proteger una fila
+    // extra si el header llega a envolver.
     const floatingWindowMinTop = () => {
       const raw = getComputedStyle(document.documentElement).getPropertyValue("--floating-window-safe-top");
       const parsed = parseFloat(raw);
