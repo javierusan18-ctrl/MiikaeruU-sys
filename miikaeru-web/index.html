@@ -1994,26 +1994,30 @@
              N3_VOCAB_CATEGORIES y análogos en app.js, cableado vía
              #jp-level-toggle click handler). Trazos/Examen de Nivel siguen
              ligados solo a KANJI_N5 (alcance documentado en app.js, sin
-             cambios). N4/N3 nacen bloqueados con candado DINÁMICO — el
-             texto real del badge (ej. "🔒 Nivel 21") y el atributo
-             `disabled` los pone renderJpTierLocks() en runtime según el
-             nivel INTERNO de Nihongo (JP_LEVEL_CONTENT.unlockLevel en
-             app.js), no un badge estático como antes. El markup de abajo
-             es solo el "peor caso" antes de que corra JS (por eso ya
-             arrancan con `disabled` en el HTML — nunca hay un frame
-             clickeable de más). N2/N1 SÍ se muestran a propósito (no se
-             ocultan) para que quede claro que el currículum va a seguir
-             creciendo — mismo criterio visual "grayscale + opacity" que
-             los tiers bloqueados de Miika Pass, con badge "Próximamente"
-             (appStatusComingSoon) ESTÁTICO (fuera de alcance, no tienen
-             contenido real todavía). -->
+             cambios). N4/N3 son SIEMPRE elegibles (sin `disabled`) — igual
+             que el selector de script Hiragana/Katakana/Kanji, donde el
+             candado real vive en cada TARJETA de contenido, no en la
+             pestaña (mismo criterio visual "visible pero bloqueado" que ya
+             usan los tiles de Kanji: se puede entrar a mirar N4/N3, pero
+             sus categorías/puntos de gramática/escenas aparecen atenuados
+             con 🔒 hasta cruzar el nivel interno de Nihongo — ver
+             renderN5VocabCategories()/renderN5GrammarList()/
+             renderConversationSceneGrid() en app.js). El badge (ej.
+             "🔒 Nivel 21") lo pone renderJpTierLocks() en runtime según
+             JP_LEVEL_CONTENT.unlockLevel. N2/N1 SÍ se muestran a propósito
+             (no se ocultan) para que quede claro que el currículum va a
+             seguir creciendo — mismo criterio visual "grayscale + opacity"
+             que los tiers bloqueados de Miika Pass, con badge
+             "Próximamente" (appStatusComingSoon) ESTÁTICO y `disabled`
+             real (esos SÍ siguen sin contenido real detrás, fuera de
+             alcance). -->
         <div class="jp-level-toggle" id="jp-level-toggle">
           <button type="button" class="jp-level-btn jp-level-btn--active" data-level="n5">N5</button>
-          <button type="button" class="jp-level-btn jp-level-btn--locked" data-level="n4" disabled>
+          <button type="button" class="jp-level-btn jp-level-btn--locked" data-level="n4">
             N4
             <span class="jp-level-btn__badge" id="jp-level-badge-n4"></span>
           </button>
-          <button type="button" class="jp-level-btn jp-level-btn--locked" data-level="n3" disabled>
+          <button type="button" class="jp-level-btn jp-level-btn--locked" data-level="n3">
             N3
             <span class="jp-level-btn__badge" id="jp-level-badge-n3"></span>
           </button>

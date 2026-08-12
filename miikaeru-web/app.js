@@ -1605,7 +1605,11 @@ const I18N = {
     jpLockedAt: "Se desbloquea en el Nivel",
     jpLockedKeepGoing: "Sigue ganando XP para desbloquearlo.",
     jpLevelExamOpenBtn: "📝 Examen de Nivel",
-    jpLevelExamAllUnlocked: "🎉 ¡Ya tienes todo desbloqueado en este script! Cambia de Hiragana/Katakana/Kanji arriba para examinarte de otro.",
+    jpLevelExamStageHiragana: "Hiragana",
+    jpLevelExamStageKatakana: "Katakana",
+    jpLevelExamStageYoon: "Yōon",
+    jpLevelExamStageN4Vocab: "Vocabulario N4",
+    jpLevelExamStageN4Grammar: "Gramática N4",
     jpLevelExamRowLabel: "Examinando:",
     jpLevelExamRetryHint: "si fallas 2 veces acá, el examen termina.",
     jpLevelExamRetry: "❌ Incorrecto — una oportunidad más con otro carácter de esta misma fila.",
@@ -2546,7 +2550,11 @@ const I18N = {
     jpLockedAt: "Unlocks at Level",
     jpLockedKeepGoing: "Keep earning XP to unlock it.",
     jpLevelExamOpenBtn: "📝 Level Exam",
-    jpLevelExamAllUnlocked: "🎉 You already have everything unlocked for this script! Switch Hiragana/Katakana/Kanji above to test another.",
+    jpLevelExamStageHiragana: "Hiragana",
+    jpLevelExamStageKatakana: "Katakana",
+    jpLevelExamStageYoon: "Yōon",
+    jpLevelExamStageN4Vocab: "N4 Vocabulary",
+    jpLevelExamStageN4Grammar: "N4 Grammar",
     jpLevelExamRowLabel: "Testing:",
     jpLevelExamRetryHint: "fail twice here and the exam ends.",
     jpLevelExamRetry: "❌ Incorrect — one more try with another character from this same row.",
@@ -3487,7 +3495,11 @@ const I18N = {
     jpLockedAt: "レベルで解放:",
     jpLockedKeepGoing: "XPを稼いで解放しよう。",
     jpLevelExamOpenBtn: "📝 レベル試験",
-    jpLevelExamAllUnlocked: "🎉 このスクリプトはすべて解放済みです！上のひらがな/カタカナ/漢字を切り替えて他を試験しよう。",
+    jpLevelExamStageHiragana: "ひらがな",
+    jpLevelExamStageKatakana: "カタカナ",
+    jpLevelExamStageYoon: "拗音",
+    jpLevelExamStageN4Vocab: "N4語彙",
+    jpLevelExamStageN4Grammar: "N4文法",
     jpLevelExamRowLabel: "試験中：",
     jpLevelExamRetryHint: "ここで2回間違えると試験終了。",
     jpLevelExamRetry: "❌ 不正解 — 同じ行の別の文字でもう一度挑戦できます。",
@@ -18788,6 +18800,13 @@ document.addEventListener("DOMContentLoaded", () => {
   // según isNihongoTierUnlocked(). Se llama al iniciar el módulo, cada vez
   // que grantJpXP() sube de nivel, y desde el "abuelo" de progreso legado
   // de N4 — así el candado siempre refleja el estado real sin recargar.
+  // N4/N3 ya NO se deshabilitan acá (pedido explícito: "los contenidos de
+  // N4 y N3 deben ser visibles pero aparecer bloqueados", igual que Kanji
+  // — donde el script SÍ es elegible y son los TILES individuales los que
+  // llevan el candado, no la pestaña entera). El badge/clase `--locked`
+  // se quedan como información visual; el candado real vive ahora en cada
+  // tarjeta de categoría/gramática/conversación (ver renderN5VocabCategories()/
+  // renderN5GrammarList()/renderConversationSceneGrid() más abajo).
   function renderJpTierLocks() {
     if (!jpLevelToggle) return;
     ["n4", "n3"].forEach((key) => {
@@ -18795,7 +18814,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const badge = document.getElementById(`jp-level-badge-${key}`);
       if (!btn || !badge) return;
       const unlocked = isNihongoTierUnlocked(key);
-      btn.disabled = !unlocked;
       btn.classList.toggle("jp-level-btn--locked", !unlocked);
       badge.textContent = unlocked ? "" : t("jpLevelLockedBadge").replace("{level}", JP_LEVEL_CONTENT[key].unlockLevel);
     });
@@ -18804,11 +18822,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Selector N5/N4/N3 (#jp-level-toggle en index.html) — el click ya lee
   // btn.dataset.level de forma genérica, así que soporta cualquier nivel
-  // con contenido real sin cambios acá. N4/N3 nacen con `disabled` real en
-  // el HTML y se desbloquean en runtime vía renderJpTierLocks() (ver
-  // arriba) según el nivel INTERNO de Nihongo — mientras estén bloqueados,
-  // `btn.disabled` sigue haciendo que un clic no haga nada, mismo criterio
-  // de siempre. N2/N1 quedan estáticos "Próximamente" (fuera de alcance).
+  // con contenido real sin cambios acá. N4/N3 son siempre elegibles (ver
+  // comentario arriba) — el candado real vive en cada tarjeta de
+  // contenido, no en esta pestaña. N2/N1 quedan estáticos "Próximamente"
+  // (fuera de alcance, `btn.disabled` sigue haciendo que un clic en esos
+  // dos no haga nada).
   if (jpLevelToggle) {
     const jpLevelButtons = Array.from(jpLevelToggle.querySelectorAll(".jp-level-btn"));
     jpLevelButtons.forEach((btn) => {
@@ -18857,22 +18875,34 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   loadN5ProgressCache();
 
+  // Sube el nivel INTERNO de Nihongo directo a `target` (nunca lo baja —
+  // guard `jpLevel < target`, idempotente). Compartido por dos casos:
+  // el "abuelo" de progreso legado de N4 (abajo) y el Examen de Ubicación
+  // (finishJpLevelExam(), ver más abajo) cuando el usuario demuestra
+  // dominio suficiente para saltar directo un tier sin tener que
+  // acumular jpXP a mano.
+  function setJpLevelFloor(target) {
+    const a = state.pillars.aprendizaje;
+    if (a.jpLevel < target) {
+      a.jpLevel = target;
+      a.jpXp = 0;
+      a.jpXpToNext = jpXpToNextForLevel(target);
+      if (target === 21) addMessage({ author: "SISTEMA", text: t("jpTierUnlockedN4"), variant: "system" });
+      if (target === 41) addMessage({ author: "SISTEMA", text: t("jpTierUnlockedN3"), variant: "system" });
+      persist();
+    }
+    renderJpTierLocks();
+  }
+
   // "Abuelo" del nivel interno de Nihongo: usuarios que YA tenían progreso
   // guardado en N4 (de antes de que este nivel interno existiera, cuando
   // N4 era 100% libre de elegir) no deben quedar bloqueados de golpe al
   // desbloquearse el candado — se les sube jpLevel a 21 (el mínimo real
-  // para N4) una sola vez. Idempotente: el guard `jpLevel < 21` hace que
-  // correr esto de nuevo en cargas futuras no haga nada.
+  // para N4) una sola vez.
   function grandfatherJpLevelFromLegacyN4Progress() {
     const hasN4Progress = Object.keys(n5ProgressCache).some((id) => id.startsWith("vocab:n4:") || id === "grammar:n4");
-    const a = state.pillars.aprendizaje;
-    if (hasN4Progress && a.jpLevel < 21) {
-      a.jpLevel = 21;
-      a.jpXp = 0;
-      a.jpXpToNext = jpXpToNextForLevel(21);
-      persist();
-    }
-    renderJpTierLocks();
+    if (hasN4Progress) setJpLevelFloor(21);
+    else renderJpTierLocks();
   }
 
   function saveN5Progress(id, score, total) {
@@ -18889,11 +18919,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Vocabulario N5: consulta libre, sin candado — pedido explícito ("todo
   // el vocabulario general... debe estar completamente desbloqueado desde
-  // el inicio, funcionando como una consulta libre de diccionario"). Solo
-  // la progresión de kana/kanji (Examen de Nivel, ver más abajo) sigue
-  // gobernada por nivel.
+  // el inicio, funcionando como una consulta libre de diccionario"). N4/N3
+  // SÍ llevan candado por tarjeta (mismo criterio "visible pero bloqueado"
+  // que ya usan los tiles de Kanji, ver applyJpLock()) hasta cruzar el
+  // nivel interno de Nihongo correspondiente — la grilla completa se
+  // muestra igual, solo cambia si la tarjeta abre o solo avisa.
+  function isJpCategoryLocked() {
+    return jpActiveLevel !== "n5" && !isNihongoTierUnlocked(jpActiveLevel);
+  }
+  function applyJpCardLock(card, lockedClass) {
+    const requiredLevel = JP_LEVEL_CONTENT[jpActiveLevel].unlockLevel;
+    card.classList.add(lockedClass);
+    const lock = document.createElement("span");
+    lock.className = "jp-lock-badge";
+    lock.textContent = t("jpLevelLockedBadge").replace("{level}", requiredLevel);
+    card.appendChild(lock);
+    return requiredLevel;
+  }
   function renderN5VocabCategories() {
     jpVocabCatGrid.innerHTML = "";
+    const locked = isJpCategoryLocked();
     getJpVocabCategories().forEach((cat) => {
       const card = document.createElement("button");
       card.type = "button";
@@ -18920,7 +18965,13 @@ document.addEventListener("DOMContentLoaded", () => {
         badge.textContent = `✓ ${progress.score}/${progress.total}`;
         card.appendChild(badge);
       }
-      card.addEventListener("click", () => openN5VocabWords(cat));
+
+      if (locked) {
+        const requiredLevel = applyJpCardLock(card, "jp-vocab-cat-card--locked");
+        card.addEventListener("click", () => notifyJpLocked(requiredLevel));
+      } else {
+        card.addEventListener("click", () => openN5VocabWords(cat));
+      }
 
       jpVocabCatGrid.appendChild(card);
     });
@@ -19166,6 +19217,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // ofrecer un quiz que no correspondería con el contenido mostrado.
     if (jpGrammarQuizStartBtn) jpGrammarQuizStartBtn.hidden = jpActiveLevel !== "n5";
 
+    const locked = isJpCategoryLocked();
     getJpGrammarPoints().forEach((point) => {
       const card = document.createElement("div");
       card.className = "jp-grammar-card";
@@ -19265,10 +19317,15 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       card.appendChild(body);
-      card.addEventListener("click", () => {
-        body.hidden = !body.hidden;
-        card.classList.toggle("jp-grammar-card--open", !body.hidden);
-      });
+      if (locked) {
+        const requiredLevel = applyJpCardLock(card, "jp-grammar-card--locked");
+        card.addEventListener("click", () => notifyJpLocked(requiredLevel));
+      } else {
+        card.addEventListener("click", () => {
+          body.hidden = !body.hidden;
+          card.classList.toggle("jp-grammar-card--open", !body.hidden);
+        });
+      }
       jpGrammarList.appendChild(card);
     });
   }
@@ -19344,6 +19401,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderConversationSceneGrid() {
     jpConversationSceneGrid.innerHTML = "";
+    const locked = isJpCategoryLocked();
     getJpConversationScenes().forEach((scene) => {
       const card = document.createElement("button");
       card.type = "button";
@@ -19362,7 +19420,12 @@ document.addEventListener("DOMContentLoaded", () => {
       meta.textContent = `${scene.lineas.length} ${t("jpConvLinesLabel")}`;
 
       card.append(icon, title, meta);
-      card.addEventListener("click", () => openConversationScene(scene.id));
+      if (locked) {
+        const requiredLevel = applyJpCardLock(card, "jp-vocab-cat-card--locked");
+        card.addEventListener("click", () => notifyJpLocked(requiredLevel));
+      } else {
+        card.addEventListener("click", () => openConversationScene(scene.id));
+      }
       jpConversationSceneGrid.appendChild(card);
     });
   }
@@ -19618,58 +19681,129 @@ document.addEventListener("DOMContentLoaded", () => {
   // subir de nivel", pedido explícito de un bloque anterior), solo que en
   // un pago único en vez de goteado en muchas sesiones.
   let jpLevelExamUnitIndex = -1;
-  let jpLevelExamStartFrontier = -1;
   let jpLevelExamHighestCleared = -1;
   let jpLevelExamRetried = false;
   let jpLevelExamCurrentItem = null;
+  let jpLevelExamCurrentUnit = null;
+  let jpLevelExamSequence = [];
+  // Índice, dentro de jpLevelExamSequence, de la ÚLTIMA unidad de la
+  // etapa Kanji N5 — completarla demuestra dominio N5 completo (desbloquea
+  // N4). Ver buildJpLevelExamSequence()/finishJpLevelExam() más abajo.
+  let jpLevelExamKanjiStageEndIndex = -1;
 
-  function jpLevelExamUnitCount() {
-    return jpScript === "kanji" ? KANJI_N5.length : GOJUON_ROWS.length;
+  // Arma la secuencia ÚNICA del examen — pedido explícito de "recuperar
+  // el Level Exam" como una prueba de ubicación real de punta a punta, en
+  // vez del examen viejo por-script (jpScript) que nunca hacía nada en
+  // Hiragana/Katakana (ya desbloqueados desde el nivel 1 por diseño) y no
+  // tenía relación alguna con N4/N3. Orden fijo: Hiragana → Katakana →
+  // Yōon → Kanji N5 → ronda extra de Vocabulario N4 → ronda extra de
+  // Gramática N4. Se reconstruye entera cada vez que arranca el examen
+  // (liviana, ~165 unidades; evita invalidarla si cambia el idioma de
+  // interfaz a mitad de sesión). Cada unidad trae un `review` opcional
+  // (solo si el examen termina fallando justo ahí) con la forma exacta
+  // que ya espera saveJpContinue() — `null` para las rondas de N4, que no
+  // tienen una vista de repaso propia armada.
+  function buildJpLevelExamSequence() {
+    const sequence = [];
+
+    GOJUON_ROWS.forEach((row, index) => {
+      sequence.push({
+        stage: "hiragana",
+        script: "hiragana",
+        requiredLevel: jpKanaRowUnlockLevel(index),
+        label: `${t("jpLevelExamStageHiragana")} — ${formatGojuonRowLabel(row)}`,
+        pool: row.hiragana.map((char, i) => ({ char, answer: row.romajiList[i] })),
+        review: { type: "review-kana-row", script: "hiragana", rowId: row.id, rowLabel: formatGojuonRowLabel(row) },
+      });
+    });
+    GOJUON_ROWS.forEach((row, index) => {
+      sequence.push({
+        stage: "katakana",
+        script: "katakana",
+        requiredLevel: jpKanaRowUnlockLevel(index),
+        label: `${t("jpLevelExamStageKatakana")} — ${formatGojuonRowLabel(row)}`,
+        pool: row.katakana.map((char, i) => ({ char, answer: row.romajiList[i] })),
+        review: { type: "review-kana-row", script: "katakana", rowId: row.id, rowLabel: formatGojuonRowLabel(row) },
+      });
+    });
+    YOON_ROWS.forEach((row, index) => {
+      sequence.push({
+        stage: "yoon",
+        script: "hiragana",
+        requiredLevel: jpYoonRowUnlockLevel(index),
+        label: `${t("jpLevelExamStageYoon")} — ${row.romajiList.join("/")}`,
+        pool: row.hiragana.map((char, i) => ({ char, answer: row.romajiList[i] })),
+        review: { type: "review-kana-row", script: "hiragana", rowId: row.id, rowLabel: row.romajiList.join("/") },
+      });
+    });
+    KANJI_N5.forEach((k, index) => {
+      sequence.push({
+        stage: "kanji",
+        script: "kanji",
+        requiredLevel: jpKanjiUnlockLevel(index),
+        label: `${t("jpKanjiN5Title")} — ${k.char}`,
+        pool: [{ char: k.char, answer: resolveJpMeaning(k.meaning) }],
+        review: { type: "review-kanji", char: k.char, meaning: resolveJpMeaning(k.meaning) },
+      });
+    });
+    const kanjiStageEndIndex = sequence.length - 1;
+
+    N4_VOCAB_CATEGORIES.forEach((cat) => {
+      sequence.push({
+        stage: "n4vocab",
+        script: "n4vocab",
+        requiredLevel: 1,
+        label: `${t("jpLevelExamStageN4Vocab")} — ${t(cat.titleKey)}`,
+        pool: cat.words.map((word) => ({ char: word.kanji || word.kana, answer: resolveJpMeaning(word.meaning) })),
+        review: null,
+      });
+    });
+    N4_GRAMMAR_POINTS.forEach((point) => {
+      sequence.push({
+        stage: "n4grammar",
+        script: "n4grammar",
+        requiredLevel: 1,
+        label: `${t("jpLevelExamStageN4Grammar")} — ${resolveJpMeaning(point.pattern)}`,
+        pool: point.examples.map((ex) => ({ char: ex.jp, answer: resolveJpMeaning(ex.translation) })),
+        review: null,
+      });
+    });
+
+    return { sequence, kanjiStageEndIndex };
   }
 
   function jpLevelExamUnitAt(index) {
-    if (jpScript === "kanji") {
-      const k = KANJI_N5[index];
-      if (!k) return null;
-      return {
-        requiredLevel: jpKanjiUnlockLevel(index),
-        label: t("jpKanjiN5Title"),
-        pool: [{ char: k.char, answer: resolveJpMeaning(k.meaning), script: "kanji" }],
-      };
-    }
-    const row = GOJUON_ROWS[index];
-    if (!row) return null;
-    return {
-      requiredLevel: jpKanaRowUnlockLevel(index),
-      label: formatGojuonRowLabel(row),
-      pool: row[jpScript].map((char, i) => ({ char, answer: row.romajiList[i], script: jpScript })),
-    };
+    return jpLevelExamSequence[index] || null;
   }
 
-  function jpLevelExamFrontierIndex() {
-    const count = jpLevelExamUnitCount();
-    for (let i = 0; i < count; i++) {
-      if (!isJpLevelUnlocked(jpLevelExamUnitAt(i).requiredLevel)) return i;
+  // Distractores de opción múltiple tomados del MISMO tipo de contenido
+  // que la unidad activa — deliberadamente NO filtrados por desbloqueo
+  // (son solo ruido de respuestas incorrectas, no contenido que se
+  // enseña ni se revela con la pregunta).
+  function jpLevelExamAllAnswersFor(stage) {
+    switch (stage) {
+      case "hiragana":
+      case "katakana":
+        return GOJUON_ROWS.flatMap((row) => row.romajiList);
+      case "yoon":
+        return YOON_ROWS.flatMap((row) => row.romajiList);
+      case "kanji":
+        return KANJI_N5.map((k) => resolveJpMeaning(k.meaning));
+      case "n4vocab":
+        return N4_VOCAB_CATEGORIES.flatMap((cat) => cat.words.map((w) => resolveJpMeaning(w.meaning)));
+      case "n4grammar":
+        return N4_GRAMMAR_POINTS.flatMap((p) => p.examples.map((ex) => resolveJpMeaning(ex.translation)));
+      default:
+        return [];
     }
-    return -1; // ya está todo desbloqueado para este script
-  }
-
-  // Pool de distractores de opción múltiple — deliberadamente NO filtrado
-  // por desbloqueo (son solo ruido de respuestas incorrectas, no
-  // contenido que se enseña ni se revela con explicación).
-  function jpLevelExamAllAnswers() {
-    return jpScript === "kanji" ? KANJI_N5.map((k) => resolveJpMeaning(k.meaning)) : GOJUON_ROWS.flatMap((row) => row.romajiList);
   }
 
   function startJpLevelExam() {
-    const frontier = jpLevelExamFrontierIndex();
-    if (frontier === -1) {
-      setAvatarSpeech(t("jpLevelExamAllUnlocked"));
-      return;
-    }
-    jpLevelExamUnitIndex = frontier;
-    jpLevelExamStartFrontier = frontier;
-    jpLevelExamHighestCleared = frontier - 1;
+    const built = buildJpLevelExamSequence();
+    jpLevelExamSequence = built.sequence;
+    jpLevelExamKanjiStageEndIndex = built.kanjiStageEndIndex;
+    jpLevelExamUnitIndex = 0;
+    jpLevelExamHighestCleared = -1;
     jpLevelExamRetried = false;
     showJpView("level-exam");
     renderJpLevelExamQuestion();
@@ -19677,13 +19811,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderJpLevelExamQuestion() {
     const unit = jpLevelExamUnitAt(jpLevelExamUnitIndex);
+    jpLevelExamCurrentUnit = unit;
     const item = unit.pool[Math.floor(Math.random() * unit.pool.length)];
     jpLevelExamCurrentItem = item;
     jpLevelExamLabel.textContent = `${t("jpLevelExamRowLabel")} ${unit.label} — ${t("jpLevelExamRetryHint")}`;
     jpLevelExamChar.textContent = item.char;
     jpLevelExamFeedback.hidden = true;
 
-    const distractors = shuffleArrayLocal(jpLevelExamAllAnswers().filter((a) => a !== item.answer)).slice(0, 3);
+    const distractors = shuffleArrayLocal(jpLevelExamAllAnswersFor(unit.stage).filter((a) => a !== item.answer)).slice(0, 3);
     const options = shuffleArrayLocal([item.answer, ...distractors]);
     jpLevelExamOptions.innerHTML = "";
     options.forEach((opt) => {
@@ -19695,10 +19830,11 @@ document.addEventListener("DOMContentLoaded", () => {
       jpLevelExamOptions.appendChild(btn);
     });
     // Misma restricción de audio de examen que showJpQuiz() — ver
-    // isJpExamAudioAllowed(). jpScript gobierna el script activo del
-    // Examen de Nivel entero (no varía por ítem individual).
-    jpLevelExamSpeakBtn.hidden = jpScript !== "kanji";
-    if (isJpExamAudioAllowed(jpScript)) speakKana(item.char);
+    // isJpExamAudioAllowed(). Ahora se decide por la ETAPA de la unidad
+    // activa (unit.script) — el examen ya no depende del toggle jpScript
+    // externo, así que cada unidad trae su propio script real.
+    jpLevelExamSpeakBtn.hidden = unit.stage !== "kanji";
+    if (isJpExamAudioAllowed(unit.script)) speakKana(item.char);
   }
 
   function handleJpLevelExamAnswer(selected, item) {
@@ -19725,7 +19861,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!jpLevelExamRetried) {
       // Pedido explícito: "le da otra pregunta del mismo nivel" — un solo
-      // reintento, con otro carácter al azar de la MISMA fila/kanji.
+      // reintento, con otro carácter al azar de la MISMA unidad.
       jpLevelExamRetried = true;
       jpLevelExamFeedback.textContent = t("jpLevelExamRetry");
       jpLevelExamFeedback.className = "jp-quiz-feedback jp-quiz-feedback--incorrect";
@@ -19733,22 +19869,33 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Segunda falla en la misma fila/kanji: el examen termina acá.
+    // Segunda falla en la misma unidad: el examen termina acá.
     jpLevelExamFeedback.textContent = t("jpQuizIncorrect") + ` "${item.answer}"`;
     jpLevelExamFeedback.className = "jp-quiz-feedback jp-quiz-feedback--incorrect";
     setTimeout(finishJpLevelExam, 1500);
   }
 
   function finishJpLevelExam() {
-    if (jpLevelExamHighestCleared >= jpLevelExamStartFrontier) {
+    if (jpLevelExamHighestCleared >= 0) {
       const unit = jpLevelExamUnitAt(jpLevelExamHighestCleared);
-      const xpNeeded = xpNeededToReachLevel(unit.requiredLevel);
+      const xpNeeded = unit.stage === "kanji" ? xpNeededToReachLevel(unit.requiredLevel) : 0;
       if (xpNeeded > 0) grantXP(xpNeeded);
       addGold(10);
       // XP fijo para el nivel INTERNO de Nihongo, a propósito NO se reusa
       // xpNeeded — esa cifra está calibrada para la curva GENERAL (puede
       // caer a 0 en repeticiones) y este examen sigue siendo repetible.
       grantJpXP(15);
+      // Salto directo del nivel interno de Nihongo (setJpLevelFloor(),
+      // definida junto al "abuelo" de progreso legado más arriba) —
+      // pedido explícito: completar TODO el recorrido de corrido
+      // desbloquea hasta el nivel demostrado, sin obligar a "empezar de
+      // cero". Regla binaria confirmada con el usuario: llegar al final
+      // de Kanji N5 desbloquea N4; llegar al final de TODA la secuencia
+      // (ambas rondas extra de N4 completas) desbloquea N3 directamente
+      // — completar solo una de las dos rondas no alcanza para N3.
+      if (jpLevelExamHighestCleared >= jpLevelExamKanjiStageEndIndex) setJpLevelFloor(21);
+      if (jpLevelExamHighestCleared >= jpLevelExamSequence.length - 1) setJpLevelFloor(41);
+
       setAvatarSpeech(`🎉 ${t("jpLevelExamPassedUpTo")} "${unit.label}"!`);
       addMessage({
         author: "SISTEMA",
@@ -19767,29 +19914,21 @@ document.addEventListener("DOMContentLoaded", () => {
       setAvatarSpeech(t("jpLevelExamNoProgress"));
       // Recomendación de repaso (pedido explícito: "analizar qué bloques
       // falló y mostrar automáticamente una recomendación personalizada")
-      // — el bloque que hizo perder el examen es jpLevelExamStartFrontier,
-      // el primero que el examen intentó y no logró superar. Fila de kana
-      // (kana SIEMPRE desbloqueada desde el inicio, ver getKanaList()):
-      // enlace directo a practicarla ahora mismo. Kanji (se desbloquea
-      // progresivamente): solo informativo, un deep-link ahí sería
-      // deshonesto porque ese contenido específico sigue bloqueado.
-      const failedUnit = jpLevelExamUnitAt(jpLevelExamStartFrontier);
-      if (failedUnit) {
-        if (jpScript === "kanji") {
-          const k = KANJI_N5[jpLevelExamStartFrontier];
-          if (k) saveJpContinue({ type: "review-kanji", char: k.char, meaning: resolveJpMeaning(k.meaning) });
-        } else {
-          const row = GOJUON_ROWS[jpLevelExamStartFrontier];
-          if (row) saveJpContinue({ type: "review-kana-row", script: jpScript, rowId: row.id, rowLabel: failedUnit.label });
-        }
-      }
+      // — la unidad que hizo perder el examen es jpLevelExamUnitIndex
+      // (nunca avanza en una falla, sigue apuntando a la unidad fallada).
+      // Kana/Yōon: enlace directo a practicarla ahora mismo (unit.review).
+      // Kanji/rondas extra de N4: sin deep-link para Kanji bloqueado o
+      // para las rondas de N4 (sin vista de repaso propia armada,
+      // `review: null`) — sería deshonesto prometer algo que no existe.
+      const failedUnit = jpLevelExamUnitAt(jpLevelExamUnitIndex);
+      if (failedUnit && failedUnit.review) saveJpContinue(failedUnit.review);
     }
     showJpView("grid");
   }
 
   jpLevelExamBackBtn.addEventListener("click", () => showJpView("grid"));
   jpLevelExamSpeakBtn.addEventListener("click", () => {
-    if (jpLevelExamCurrentItem && isJpExamAudioAllowed(jpScript)) speakKana(jpLevelExamCurrentItem.char);
+    if (jpLevelExamCurrentItem && jpLevelExamCurrentUnit && isJpExamAudioAllowed(jpLevelExamCurrentUnit.script)) speakKana(jpLevelExamCurrentItem.char);
   });
 
   // Reparte según el modo elegido en #jp-config-modal: Práctica va directo
