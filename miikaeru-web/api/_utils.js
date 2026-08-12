@@ -1,11 +1,13 @@
 // Utilidades compartidas por las Serverless Functions de cuentas
 // (register-account, login-account, admin-list-users,
-// admin-reset-password) — NO es una ruta en sí misma: el prefijo "_" en
-// el nombre de archivo hace que Vercel la excluya del ruteo automático
-// de /api (así como init-db.js SÍ es una ruta real, este archivo nunca
-// queda expuesto como endpoint público).
+// admin-reset-password, admin-metrics, admin-manage-admins) — NO es una
+// ruta en sí misma: el prefijo "_" en el nombre de archivo hace que
+// Vercel la excluya del ruteo automático de /api (así como init-db.js SÍ
+// es una ruta real, este archivo nunca queda expuesto como endpoint
+// público).
 
 const crypto = require("crypto");
+const { Client } = require("pg");
 
 const SCRYPT_KEYLEN = 64;
 
@@ -42,25 +44,64 @@ const ADMIN_EMAIL = "javierusan18@gmail.com";
 const SUPABASE_URL = "https://pzurvgcurifdkhbfxhrv.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_NApj9xOyicARat8ummK52Q_mY20RsBz";
 
-// Verifica que el token Bearer recibido sea el de una sesión REAL de
-// Supabase Auth cuyo email coincide exactamente con ADMIN_EMAIL —
-// nunca confía en un email mandado directamente por el cliente (eso
-// sería trivial de falsificar): le pregunta a Supabase mismo quién es
-// el dueño del token, igual que cualquier verificación de sesión del
-// lado del servidor.
-async function verifyAdminToken(authHeader) {
+// Comprueba si un email (ya verificado como dueño de una sesión REAL de
+// Supabase Auth, ver resolveAdminSession() más abajo) tiene acceso de
+// Admin: el Admin Raíz (ADMIN_EMAIL) SIEMPRE pasa, sin tocar la base —
+// así nunca puede quedar afuera aunque public.admins no exista todavía o
+// la conexión a Postgres esté caída. Cualquier otro email pasa solo si
+// aparece en public.admins (ver api/admin-manage-admins.js, la única
+// forma de agregar/quitar filas ahí). Si la tabla no existe todavía o la
+// consulta falla por cualquier motivo, se degrada de forma segura a
+// "solo el Admin Raíz" en vez de tirar el request entero — nunca al
+// revés (un fallo de red nunca debe ABRIR acceso de más).
+async function isEmailAdmin(email) {
+  if (!email) return false;
+  const normalized = email.toLowerCase();
+  if (normalized === ADMIN_EMAIL.toLowerCase()) return true;
+
+  const connectionString = (process.env.SUPABASE_DB_URL || "").trim();
+  if (!connectionString) return false;
+
+  const client = new Client({ connectionString, ssl: { rejectUnauthorized: false } });
+  try {
+    await client.connect();
+    const { rows } = await client.query("select 1 from public.admins where lower(email) = $1", [normalized]);
+    return rows.length > 0;
+  } catch (err) {
+    return false;
+  } finally {
+    await client.end().catch(() => {});
+  }
+}
+
+// Resuelve quién es el dueño de un token Bearer (sesión REAL de Supabase
+// Auth) y si esa persona tiene acceso de Admin — nunca confía en un email
+// mandado directamente por el cliente. Devuelve {email, isAdmin} en vez
+// de solo un booleano para que los endpoints que necesitan saber QUIÉN
+// hizo la acción (ej. admin-manage-admins.js, para el campo `added_by`)
+// no tengan que volver a golpear la API de Supabase Auth por su cuenta.
+async function resolveAdminSession(authHeader) {
   const token = typeof authHeader === "string" ? authHeader.replace(/^Bearer\s+/i, "").trim() : "";
-  if (!token) return false;
+  if (!token) return { email: null, isAdmin: false };
   try {
     const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
       headers: { Authorization: `Bearer ${token}`, apikey: SUPABASE_ANON_KEY },
     });
-    if (!res.ok) return false;
+    if (!res.ok) return { email: null, isAdmin: false };
     const data = await res.json();
-    return !!data.email && data.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+    const email = data.email || null;
+    return { email, isAdmin: await isEmailAdmin(email) };
   } catch (err) {
-    return false;
+    return { email: null, isAdmin: false };
   }
+}
+
+// Compatibilidad hacia atrás para los endpoints que solo necesitan
+// saber sí/no (admin-list-users.js, admin-reset-password.js,
+// admin-metrics.js) — internamente ahora chequea también public.admins,
+// no solo ADMIN_EMAIL.
+async function verifyAdminToken(authHeader) {
+  return (await resolveAdminSession(authHeader)).isAdmin;
 }
 
 // Diagnóstico best-effort para cuando SUPABASE_DB_URL aparece "faltante"
@@ -159,6 +200,7 @@ module.exports = {
   hashPassword,
   verifyPassword,
   verifyAdminToken,
+  resolveAdminSession,
   ADMIN_EMAIL,
   getSupabaseEnvDiagnostics,
   classifyDbError,

@@ -9022,6 +9022,20 @@ body.miikaeru-anim-off .cyber-tile[data-forward*="bossfight"] {
   font-size: 0.75rem;
 }
 
+/* Insignia "★ Principal" junto al email del Admin Raíz en la pestaña
+   Administradores — distingue visualmente la única fila sin botón de
+   quitar (ver renderAdminAccountsTable() en app.js). */
+.admin-admins-badge {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--neon-cyan);
+  color: var(--neon-cyan);
+  font-size: 0.65rem;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
 /* Pestañas del Panel de Admin (Transacciones / Inspector de Bugs) —
    mismo criterio visual que .finanzas-tabs/.habits-tabs, ya establecido
    en el resto de la app. */

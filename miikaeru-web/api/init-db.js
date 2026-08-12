@@ -56,6 +56,21 @@ const SCHEMA_STATEMENTS = [
     status text default 'active',
     created_at timestamp with time zone default timezone('utc'::text, now()) not null
   )`,
+  // admins: lista de emails con acceso al Panel de Administrador, además
+  // del ADMIN_EMAIL hardcodeado (ver api/_utils.js) — ese sigue siendo el
+  // "Admin Raíz" que nunca se puede borrar (protegido en
+  // api/admin-manage-admins.js, no acá), así que aunque esta tabla
+  // estuviera vacía o no existiera todavía, el Admin Raíz jamás se queda
+  // afuera. Mismo criterio de seguridad que `users` más arriba: SIN
+  // política "anon full access" — la única puerta de entrada es la
+  // conexión directa a Postgres desde las Serverless Functions
+  // (resolveAdminSession()/api/admin-manage-admins.js), nunca la anon key
+  // pública del navegador.
+  `create table if not exists public.admins (
+    email text primary key,
+    added_by text,
+    created_at timestamptz not null default now()
+  )`,
   `create table if not exists public.app_contacts (
     phone text primary key,
     display_name text not null,
@@ -225,6 +240,9 @@ const SCHEMA_STATEMENTS = [
   // Sin política "anon full access" para esta — ver el comentario junto
   // al CREATE TABLE de public.users más arriba, es intencional.
   `alter table public.users enable row level security`,
+  // Mismo criterio que public.users — ver el comentario junto al CREATE
+  // TABLE de public.admins más arriba.
+  `alter table public.admins enable row level security`,
   `alter table public.app_contacts enable row level security`,
   `alter table public.app_friendships enable row level security`,
   `alter table public.app_friend_messages enable row level security`,
@@ -336,6 +354,20 @@ async function ensureFeedbackAdminPolicies(client) {
   );
 }
 
+// Siembra al Admin Raíz (ADMIN_EMAIL) como primera fila de public.admins
+// — idempotente (on conflict do nothing) para poder correr este archivo
+// tantas veces como haga falta. No es estrictamente necesario para que
+// el Admin Raíz tenga acceso (resolveAdminSession() en api/_utils.js lo
+// deja pasar por comparación directa contra ADMIN_EMAIL sin siquiera
+// tocar esta tabla), pero así aparece listado en la pestaña
+// "Administradores" del Panel en vez de quedar invisible ahí.
+async function ensureRootAdminSeeded(client) {
+  await client.query(
+    `insert into public.admins (email, added_by) values ($1, 'system') on conflict (email) do nothing`,
+    [ADMIN_EMAIL.toLowerCase()]
+  );
+}
+
 // Corre UN statement aislado del resto — a propósito, en vez del
 // for-loop original que hacía `await client.query(statement)` directo:
 // ahí, un solo statement que fallara (choque de nombre, permiso, lo que
@@ -394,6 +426,12 @@ module.exports = async function handler(req, res) {
       await ensureFeedbackAdminPolicies(client);
     } catch (err) {
       failedStatements.push({ statement: "ensureFeedbackAdminPolicies", error: err.message });
+    }
+
+    try {
+      await ensureRootAdminSeeded(client);
+    } catch (err) {
+      failedStatements.push({ statement: "ensureRootAdminSeeded", error: err.message });
     }
 
     const ok = failedStatements.length === 0 && realtimeErrors.length === 0;

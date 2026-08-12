@@ -1147,6 +1147,19 @@ const I18N = {
     adminDbOk: "✅ Todo en orden — las tablas existen y están al día.",
     adminDbPartial: "⚠️ Se aplicó lo que se pudo, pero algo falló — revisa el detalle abajo.",
     adminDbError: "❌ No se pudo verificar la base de datos.",
+    adminPanelTabAdmins: "🔑 Administradores",
+    adminAdminsHint: "Otorga o quita acceso al Panel de Administrador. El email que agregues necesita tener su propia cuenta creada en Supabase Auth (Dashboard → Authentication → Users) — acá solo le das permiso.",
+    adminAdminsAddPlaceholder: "nuevo-admin@email.com",
+    adminAdminsAddBtn: "➕ Otorgar Acceso",
+    adminAdminsColEmail: "Email",
+    adminAdminsColAddedBy: "Agregado por",
+    adminAdminsColDate: "Fecha",
+    adminAdminsColActions: "Acciones",
+    adminAdminsRootBadge: "★ Principal",
+    adminAdminsRemoveBtn: "Quitar Acceso",
+    adminAdminsInvalidEmail: "Ese email no parece válido.",
+    adminAdminsConfirmRemove: "¿Quitar el acceso de Administrador a {email}?",
+    adminAdminsCannotRemoveRoot: "El Administrador Principal no se puede quitar desde acá.",
     usersStatTotal: "Operadores",
     usersStatAvgLevel: "Nivel Promedio",
     usersStatActiveToday: "Activos Hoy",
@@ -2092,6 +2105,19 @@ const I18N = {
     adminDbOk: "✅ Everything's in order — the tables exist and are up to date.",
     adminDbPartial: "⚠️ Applied what it could, but something failed — see the detail below.",
     adminDbError: "❌ Couldn't check the database.",
+    adminPanelTabAdmins: "🔑 Admins",
+    adminAdminsHint: "Grant or revoke access to the Admin Panel. The email you add needs its own account already created in Supabase Auth (Dashboard → Authentication → Users) — this only grants permission.",
+    adminAdminsAddPlaceholder: "new-admin@email.com",
+    adminAdminsAddBtn: "➕ Grant Access",
+    adminAdminsColEmail: "Email",
+    adminAdminsColAddedBy: "Added by",
+    adminAdminsColDate: "Date",
+    adminAdminsColActions: "Actions",
+    adminAdminsRootBadge: "★ Root",
+    adminAdminsRemoveBtn: "Revoke Access",
+    adminAdminsInvalidEmail: "That email doesn't look valid.",
+    adminAdminsConfirmRemove: "Revoke Admin access for {email}?",
+    adminAdminsCannotRemoveRoot: "The Root Admin can't be removed from here.",
     usersStatTotal: "Operators",
     usersStatAvgLevel: "Average Level",
     usersStatActiveToday: "Active Today",
@@ -3037,6 +3063,19 @@ const I18N = {
     adminDbOk: "✅ 問題ありません — テーブルは存在し、最新の状態です。",
     adminDbPartial: "⚠️ できる範囲は適用しましたが、一部失敗しました — 下の詳細を確認してください。",
     adminDbError: "❌ データベースを確認できませんでした。",
+    adminPanelTabAdmins: "🔑 管理者",
+    adminAdminsHint: "管理者パネルへのアクセス権を付与または取り消します。追加するメールアドレスは、あらかじめSupabase Auth（Dashboard → Authentication → Users）に自分のアカウントが作成されている必要があります — ここでは権限を与えるだけです。",
+    adminAdminsAddPlaceholder: "new-admin@email.com",
+    adminAdminsAddBtn: "➕ アクセスを付与",
+    adminAdminsColEmail: "メール",
+    adminAdminsColAddedBy: "追加者",
+    adminAdminsColDate: "日付",
+    adminAdminsColActions: "操作",
+    adminAdminsRootBadge: "★ 最高管理者",
+    adminAdminsRemoveBtn: "アクセスを取り消す",
+    adminAdminsInvalidEmail: "そのメールアドレスは無効なようです。",
+    adminAdminsConfirmRemove: "{email} の管理者アクセスを取り消しますか?",
+    adminAdminsCannotRemoveRoot: "最高管理者はここから削除できません。",
     usersStatTotal: "オペレーター数",
     usersStatAvgLevel: "平均レベル",
     usersStatActiveToday: "本日アクティブ",
@@ -9924,6 +9963,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const adminDbStatus = document.getElementById("admin-db-status");
   const adminDbReport = document.getElementById("admin-db-report");
 
+  // Pestaña "Administradores" (dar/quitar acceso al Panel — ver
+  // api/admin-manage-admins.js) — ver fetchAdminAccounts() más abajo.
+  const adminPanelTabAdmins = document.getElementById("admin-panel-tab-admins");
+  const adminAdminsAddForm = document.getElementById("admin-admins-add-form");
+  const adminAdminsAddEmail = document.getElementById("admin-admins-add-email");
+  const adminAdminsRefreshBtn = document.getElementById("admin-admins-refresh-btn");
+  const adminAdminsError = document.getElementById("admin-admins-error");
+  const adminAdminsStatus = document.getElementById("admin-admins-status");
+  const adminAdminsTableBody = document.getElementById("admin-admins-table-body");
+
   // Agente Inspector (pestaña dentro del Panel de Administrador)
   const inspectorRefreshBtn = document.getElementById("inspector-refresh-btn");
   const inspectorStatus = document.getElementById("inspector-status");
@@ -11524,6 +11573,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (adminPanelTabMetrics) adminPanelTabMetrics.hidden = target !== "metrics";
     if (adminPanelTabPhotos) adminPanelTabPhotos.hidden = target !== "photos";
     if (adminPanelTabDatabase) adminPanelTabDatabase.hidden = target !== "database";
+    if (adminPanelTabAdmins) adminPanelTabAdmins.hidden = target !== "admins";
     if (target === "inspector") fetchInspectorFeedback();
     if (target === "automation") {
       fetchAutomationTasks();
@@ -11536,6 +11586,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (target === "metrics") fetchAdminMetrics();
     if (target === "photos") renderAdminPhotosTab();
     if (target === "database") checkDatabaseStatus();
+    if (target === "admins") fetchAdminAccounts();
   }
 
   // Diagnóstico visible de /api/init-db — antes un fallo de
@@ -11579,6 +11630,142 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (adminDbCheckBtn) adminDbCheckBtn.addEventListener("click", checkDatabaseStatus);
+
+  // ---------------- Pestaña Administradores (api/admin-manage-admins.js) ----------------
+  // Mismo gate/token que Usuarios/Métricas (sesión real de Supabase Auth
+  // del propio Admin) — el backend vuelve a revalidar isAdmin por su
+  // cuenta (resolveAdminSession()), esto es solo para no mostrar la
+  // pestaña vacía a alguien sin sesión.
+  function setAdminAccountsStatus(text) {
+    if (adminAdminsStatus) adminAdminsStatus.textContent = text;
+  }
+
+  function renderAdminAccountsTable(rows) {
+    if (!adminAdminsTableBody) return;
+    adminAdminsTableBody.innerHTML = "";
+    rows.forEach((row) => {
+      const tr = document.createElement("tr");
+
+      const emailTd = document.createElement("td");
+      emailTd.textContent = row.email;
+      if (row.isRoot) {
+        const badge = document.createElement("span");
+        badge.className = "admin-admins-badge";
+        badge.textContent = t("adminAdminsRootBadge");
+        emailTd.appendChild(document.createTextNode(" "));
+        emailTd.appendChild(badge);
+      }
+      tr.appendChild(emailTd);
+
+      const addedByTd = document.createElement("td");
+      addedByTd.textContent = row.added_by || "—";
+      tr.appendChild(addedByTd);
+
+      const dateTd = document.createElement("td");
+      dateTd.textContent = row.created_at ? new Date(row.created_at).toLocaleDateString() : "—";
+      tr.appendChild(dateTd);
+
+      const actionsTd = document.createElement("td");
+      if (!row.isRoot) {
+        const removeBtn = document.createElement("button");
+        removeBtn.type = "button";
+        removeBtn.className = "btn-scan";
+        removeBtn.textContent = t("adminAdminsRemoveBtn");
+        removeBtn.addEventListener("click", () => removeAdminAccount(row.email));
+        actionsTd.appendChild(removeBtn);
+      }
+      tr.appendChild(actionsTd);
+
+      adminAdminsTableBody.appendChild(tr);
+    });
+  }
+
+  async function fetchAdminAccounts() {
+    if (!isSuperAdmin || !supabaseClient) return;
+    if (adminAdminsError) adminAdminsError.hidden = true;
+    setAdminAccountsStatus(t("adminPanelLoading"));
+    try {
+      const { data: sessionData } = await supabaseClient.auth.getSession();
+      const token = sessionData && sessionData.session && sessionData.session.access_token;
+      if (!token) {
+        setAdminAccountsStatus(t("adminPanelNoClient"));
+        return;
+      }
+
+      const res = await fetch("/api/admin-manage-admins", { headers: { Authorization: `Bearer ${token}` } });
+      const data = await res.json();
+
+      if (!data.ok) {
+        console.warn("Administradores: api/admin-manage-admins respondió con error —", data.error, data.detail || "");
+        renderAdminAccountsTable([]);
+        setAdminAccountsStatus(
+          data.error === "table_missing"
+            ? t("usersTableMissingWarning")
+            : metricsErrorMessage(data.error, data.detail, data.diagnostics)
+        );
+        return;
+      }
+
+      renderAdminAccountsTable(data.admins || []);
+      setAdminAccountsStatus("");
+    } catch (err) {
+      console.warn("Administradores: no se pudo leer la lista:", err);
+      renderAdminAccountsTable([]);
+      setAdminAccountsStatus(t("adminPanelNetworkError"));
+    }
+  }
+
+  async function callManageAdmins(action, email) {
+    const { data: sessionData } = await supabaseClient.auth.getSession();
+    const token = sessionData && sessionData.session && sessionData.session.access_token;
+    if (!token) return { ok: false, error: "not_authorized" };
+    const res = await fetch("/api/admin-manage-admins", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ action, email }),
+    });
+    return res.json();
+  }
+
+  if (adminAdminsAddForm) {
+    adminAdminsAddForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!isSuperAdmin || !supabaseClient) return;
+      adminAdminsError.hidden = true;
+
+      const email = adminAdminsAddEmail.value.trim();
+      try {
+        const data = await callManageAdmins("add", email);
+        if (!data.ok) {
+          adminAdminsError.textContent = data.error === "invalid_input" ? t("adminAdminsInvalidEmail") : t("adminPanelNetworkError");
+          adminAdminsError.hidden = false;
+          return;
+        }
+        adminAdminsAddForm.reset();
+        fetchAdminAccounts();
+      } catch (err) {
+        adminAdminsError.textContent = t("adminPanelNetworkError");
+        adminAdminsError.hidden = false;
+      }
+    });
+  }
+
+  async function removeAdminAccount(email) {
+    if (!isSuperAdmin || !supabaseClient) return;
+    if (!window.confirm(t("adminAdminsConfirmRemove").replace("{email}", email))) return;
+    try {
+      const data = await callManageAdmins("remove", email);
+      if (!data.ok) {
+        setAdminAccountsStatus(data.error === "cannot_remove_root" ? t("adminAdminsCannotRemoveRoot") : t("adminPanelNetworkError"));
+        return;
+      }
+      fetchAdminAccounts();
+    } catch (err) {
+      setAdminAccountsStatus(t("adminPanelNetworkError"));
+    }
+  }
+
+  if (adminAdminsRefreshBtn) adminAdminsRefreshBtn.addEventListener("click", fetchAdminAccounts);
 
   adminPanelTabs.addEventListener("click", (event) => {
     const tabBtn = event.target.closest(".admin-panel-tab");

@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260811-7" />
+  <link rel="stylesheet" href="style.css?v=20260811-8" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -2703,6 +2703,7 @@
         <button type="button" class="admin-panel-tab" data-admin-tab="metrics" data-i18n="adminPanelTabMetrics">📊 Métricas</button>
         <button type="button" class="admin-panel-tab" data-admin-tab="photos" data-i18n="adminPanelTabPhotos">📸 Fotos</button>
         <button type="button" class="admin-panel-tab" data-admin-tab="database" data-i18n="adminPanelTabDatabase">🗄️ Base de Datos</button>
+        <button type="button" class="admin-panel-tab" data-admin-tab="admins" data-i18n="adminPanelTabAdmins">🔑 Administradores</button>
       </div>
 
       <!-- Pestaña: Transacciones (contenido original, sin cambios de lógica) -->
@@ -2910,6 +2911,39 @@
         </div>
         <p class="admin-panel__status" id="admin-db-status"></p>
         <pre class="admin-db-report" id="admin-db-report" hidden></pre>
+      </div>
+
+      <!-- Pestaña: Administradores — quién tiene acceso a este mismo
+           Panel. El Admin Raíz (ADMIN_EMAIL, hardcodeado en el código —
+           ver api/_utils.js) no se puede quitar desde acá; cualquier
+           otro email listado necesita ADEMÁS tener su propia cuenta real
+           de Supabase Auth (creada a mano desde el Dashboard de
+           Supabase → Authentication → Users) — agregarlo acá solo le da
+           PERMISO, nunca crea la cuenta. Ver api/admin-manage-admins.js. -->
+      <div id="admin-panel-tab-admins" hidden>
+        <p class="admin-panel__status admin-panel__status--hint" data-i18n="adminAdminsHint">
+          Otorga o quita acceso al Panel de Administrador. El email que agregues necesita tener su propia cuenta creada en Supabase Auth (Dashboard → Authentication → Users) — acá solo le das permiso.
+        </p>
+        <form class="admin-panel__toolbar" id="admin-admins-add-form">
+          <input type="email" id="admin-admins-add-email" data-i18n-placeholder="adminAdminsAddPlaceholder" placeholder="nuevo-admin@email.com" required />
+          <button type="submit" class="btn-scan" data-i18n="adminAdminsAddBtn">➕ Otorgar Acceso</button>
+          <button type="button" class="btn-scan" id="admin-admins-refresh-btn" data-i18n="adminPanelRefreshBtn">🔄 Actualizar</button>
+        </form>
+        <p class="admin-panel__error" id="admin-admins-error" hidden></p>
+        <p class="admin-panel__status" id="admin-admins-status"></p>
+        <div class="admin-panel__table-wrap">
+          <table class="admin-panel__table" id="admin-admins-table">
+            <thead>
+              <tr>
+                <th data-i18n="adminAdminsColEmail">Email</th>
+                <th data-i18n="adminAdminsColAddedBy">Agregado por</th>
+                <th data-i18n="adminAdminsColDate">Fecha</th>
+                <th data-i18n="adminAdminsColActions">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="admin-admins-table-body"></tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
@@ -3238,7 +3272,7 @@
        etiquetas <script> no importa en la práctica — se carga acá antes
        igual, por prolijidad. -->
   <script src="floatingWindow.js?v=20260811-6"></script>
-  <script src="app.js?v=20260811-10"></script>
+  <script src="app.js?v=20260811-11"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de
