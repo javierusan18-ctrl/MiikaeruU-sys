@@ -4804,40 +4804,57 @@ body.miikaeru-anim-off .cyber-tile[data-forward*="bossfight"] {
   filter: brightness(1.15);
 }
 
-/* Selector único de modo (#jp-mode-select) — reemplaza la fila de 8
-   botones sueltos que había antes (pedido explícito: reducir
-   saturación visual en la vista principal del módulo). Ocupa el resto
-   del ancho junto al selector de script (Hiragana/Katakana/Kanji). */
-.jp-mode-select-wrap {
+/* Acciones rápidas (#jp-quick-actions: Práctica General/Examen de
+   Nivel/Trazos Reales) — reemplaza el <select> único que a su vez había
+   reemplazado 8 botones sueltos (pedido explícito de "pestañas" reales
+   en vez de un dropdown escondido, cuidando no repetir la saturación
+   visual original: por eso siguen agrupadas y envuelven en móvil en vez
+   de ser cuadros sueltos). Actúan sobre el script elegido arriba
+   (Hiragana/Katakana/Kanji), por eso viven en la misma fila que
+   .jp-script-toggle en vez de en .jp-tab-bar (que navega el nivel JLPT). */
+.jp-quick-actions {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  flex-wrap: wrap;
+  gap: 8px;
   flex: 1;
-  min-width: 180px;
 }
 
-.jp-mode-select-label {
-  font-size: 0.62rem;
-  letter-spacing: 0.5px;
-  color: var(--text-secondary);
-  text-transform: uppercase;
+.jp-quick-actions .jp-general-btn {
+  white-space: nowrap;
 }
 
-.jp-mode-select {
-  width: 100%;
-  padding: 9px 12px;
+/* Pestañas de contenido (#jp-content-tabs: Vocabulario/Gramática/
+   Conversaciones/Partículas/Yōon) — navegan el currículum del nivel JLPT
+   activo (#jp-level-toggle). Mismo lenguaje visual cian que
+   .jp-script-btn (misma toolbar), pero más grandes/legibles al ser la
+   navegación PRINCIPAL del módulo. Sin estado ":active" persistente a
+   propósito (cada clic navega a una sub-vista y siempre "resetea" al
+   volver — mismo criterio stateless que ya tenía el <select> que
+   reemplazan), así que no hay modificador `--active` acá. */
+.jp-tab-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.jp-tab-btn {
+  padding: 8px 16px;
   border-radius: var(--radius-md);
-  border: 1px solid rgba(0, 240, 255, 0.35);
-  background: rgba(10, 14, 26, 0.6);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  background: rgba(255, 255, 255, 0.03);
   color: var(--text-primary);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.2px;
   cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
 }
 
-.jp-mode-select:focus {
-  outline: none;
+.jp-tab-btn:hover {
+  background: rgba(0, 240, 255, 0.12);
   border-color: var(--neon-cyan);
-  box-shadow: var(--shadow-neon-cyan);
+  color: var(--neon-cyan);
 }
 
 /* Selector de nivel JLPT (N5 activo, N4-N1 bloqueados/próximamente) —
@@ -10988,6 +11005,7 @@ button:active,
   .jp-config-lang-btn,
   .jp-config-mode-btn,
   .jp-script-btn,
+  .jp-tab-btn,
   .finanzas-tab,
   .habits-tab,
   .workout-weekday-btn,

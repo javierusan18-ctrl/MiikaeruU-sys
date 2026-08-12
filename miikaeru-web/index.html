@@ -1943,6 +1943,15 @@
           <span class="jp-victory__reward-icon">🪙</span>
           <span class="jp-victory__reward-value" id="jp-victory-gold-value">0</span>
         </div>
+        <!-- Fila del nivel INTERNO de Nihongo (independiente del XP
+             general de arriba) — oculta si la actividad no otorgó ese
+             segundo tipo de XP (ver showJpVictoryModal() en app.js, mismo
+             criterio de hidden/animateCountUp que la fila de oro). -->
+        <div class="jp-victory__reward jp-victory__reward--tier" id="jp-victory-tier-xp-row" hidden>
+          <span class="jp-victory__reward-icon">🎓</span>
+          <span class="jp-victory__reward-value" id="jp-victory-tier-xp-value">0</span>
+          <span class="jp-victory__reward-unit" data-i18n="jpVictoryTierXpUnit">Nivel Nihongo</span>
+        </div>
       </div>
       <button type="button" class="btn-register jp-victory__continue-btn" id="jp-victory-continue-btn" data-i18n="jpVictoryContinue">¡Continuar!</button>
     </div>
@@ -1980,22 +1989,33 @@
              de la esquina. Pedido explícito, más relevante ahora que el
              módulo pasa a pantalla completa en celular. -->
         <button type="button" class="btn-jp-back" id="jp-grid-back-btn" data-i18n="jpBackToMenu">← Volver al Menú</button>
-        <!-- Selector de nivel JLPT: N5 y N4 ya tienen contenido real
+        <!-- Selector de nivel JLPT: N5/N4/N3 ya tienen contenido real
              (Vocabulario/Gramática/Conversaciones — ver N4_VOCAB_CATEGORIES/
-             N4_GRAMMAR_POINTS/N4_CONVERSATION_SCENES en app.js, cableado vía
+             N3_VOCAB_CATEGORIES y análogos en app.js, cableado vía
              #jp-level-toggle click handler). Trazos/Examen de Nivel siguen
              ligados solo a KANJI_N5 (alcance documentado en app.js, sin
-             cambios). N3-N1 SÍ se muestran a propósito (no se ocultan) para
-             que quede claro que el currículum va a seguir creciendo — mismo
-             criterio visual "grayscale + opacity" que los tiers bloqueados
-             de Miika Pass, con badge "Próximamente" (appStatusComingSoon).
-             Esos 3 SÍ llevan disabled real — un clic no debe hacer nada. -->
+             cambios). N4/N3 nacen bloqueados con candado DINÁMICO — el
+             texto real del badge (ej. "🔒 Nivel 21") y el atributo
+             `disabled` los pone renderJpTierLocks() en runtime según el
+             nivel INTERNO de Nihongo (JP_LEVEL_CONTENT.unlockLevel en
+             app.js), no un badge estático como antes. El markup de abajo
+             es solo el "peor caso" antes de que corra JS (por eso ya
+             arrancan con `disabled` en el HTML — nunca hay un frame
+             clickeable de más). N2/N1 SÍ se muestran a propósito (no se
+             ocultan) para que quede claro que el currículum va a seguir
+             creciendo — mismo criterio visual "grayscale + opacity" que
+             los tiers bloqueados de Miika Pass, con badge "Próximamente"
+             (appStatusComingSoon) ESTÁTICO (fuera de alcance, no tienen
+             contenido real todavía). -->
         <div class="jp-level-toggle" id="jp-level-toggle">
           <button type="button" class="jp-level-btn jp-level-btn--active" data-level="n5">N5</button>
-          <button type="button" class="jp-level-btn" data-level="n4">N4</button>
-          <button type="button" class="jp-level-btn jp-level-btn--locked" disabled>
+          <button type="button" class="jp-level-btn jp-level-btn--locked" data-level="n4" disabled>
+            N4
+            <span class="jp-level-btn__badge" id="jp-level-badge-n4"></span>
+          </button>
+          <button type="button" class="jp-level-btn jp-level-btn--locked" data-level="n3" disabled>
             N3
-            <span class="jp-level-btn__badge" data-i18n="appStatusComingSoon">Próximamente</span>
+            <span class="jp-level-btn__badge" id="jp-level-badge-n3"></span>
           </button>
           <button type="button" class="jp-level-btn jp-level-btn--locked" disabled>
             N2
@@ -2012,30 +2032,35 @@
             <button type="button" class="jp-script-btn" data-script="katakana" data-i18n="jpScriptKatakana">Katakana</button>
             <button type="button" class="jp-script-btn" data-script="kanji" data-i18n="jpScriptKanji">Kanji N5</button>
           </div>
-          <!-- Selector único de modo — reemplaza la fila de 8 botones
-               sueltos que había acá antes (pedido explícito: "demasiados
-               botones y cuadritos sueltos que abruman la pantalla móvil").
-               Un solo <select> agrupa Práctica General/Examen de
-               Nivel/Trazos/Vocabulario/Gramática/Conversaciones/Partículas/
-               Yōon — mismas acciones exactas de siempre (ver el listener
-               de jp-mode-select en app.js, que llama a las mismas
-               funciones que cada botón viejo llamaba), solo que ahora
-               ordenadas en un filtro de selección en vez de ocho
-               cuadritos compitiendo por espacio. -->
-          <div class="jp-mode-select-wrap">
-            <label for="jp-mode-select" class="jp-mode-select-label" data-i18n="jpModeSelectLabel">¿Qué quieres practicar?</label>
-            <select id="jp-mode-select" class="jp-mode-select">
-              <option value="" selected disabled data-i18n="jpModeSelectPlaceholder">Elige una opción...</option>
-              <option value="general-practice" data-i18n="jpGeneralPractice">🎯 Práctica General</option>
-              <option value="level-exam" data-i18n="jpLevelExamOpenBtn">📝 Examen de Nivel</option>
-              <option value="hanzi-writer" data-i18n="jpHanziWriterOpenBtn">✍️ Trazos Reales</option>
-              <option value="vocab" data-i18n="jpVocabOpenBtn">📚 Vocabulario</option>
-              <option value="grammar" data-i18n="jpGrammarOpenBtn">📖 Gramática</option>
-              <option value="conversations" data-i18n="jpConversationsOpenBtn">💬 Conversaciones</option>
-              <option value="particles" data-i18n="jpParticlesOpenBtn">🧩 Práctica de Partículas</option>
-              <option value="yoon" data-i18n="jpYoonOpenBtn">🈴 Yōon</option>
-            </select>
+          <!-- Rediseño de navegación (reemplaza el <select> único que
+               había acá antes): dos filas cortas en vez de un dropdown
+               escondido — pedido explícito de "pestañas" reales. Mismas
+               acciones exactas de siempre (ver el listener delegado de
+               data-mode en app.js, que llama a las mismas funciones que
+               el <select>/los 8 botones viejos llamaban); solo cambia
+               CÓMO se disparan. Se mantiene compacto a propósito (una
+               fila de 3 + una fila de 5, ambas envuelven en móvil) para
+               no repetir el problema original de "demasiados cuadritos
+               sueltos abrumando la pantalla móvil" que motivó el
+               <select> en primer lugar. -->
+          <div class="jp-quick-actions" id="jp-quick-actions">
+            <button type="button" class="btn-register jp-general-btn" data-mode="general-practice" data-i18n="jpGeneralPractice">🎯 Práctica General</button>
+            <button type="button" class="btn-register jp-general-btn" data-mode="level-exam" data-i18n="jpLevelExamOpenBtn">📝 Examen de Nivel</button>
+            <button type="button" class="btn-register jp-general-btn" data-mode="hanzi-writer" data-i18n="jpHanziWriterOpenBtn">✍️ Trazos Reales</button>
           </div>
+        </div>
+        <!-- Pestañas de contenido: navegan el currículum del nivel activo
+             (N5/N4/N3, ver #jp-level-toggle arriba) — separadas de las
+             acciones rápidas de arriba porque estas SÍ dependen del nivel
+             JLPT elegido, mientras que Práctica General/Examen/Trazos
+             actúan sobre el script (Hiragana/Katakana/Kanji), no sobre el
+             nivel. -->
+        <div class="jp-tab-bar" id="jp-content-tabs">
+          <button type="button" class="jp-tab-btn" data-mode="vocab" data-i18n="jpVocabOpenBtn">📚 Vocabulario</button>
+          <button type="button" class="jp-tab-btn" data-mode="grammar" data-i18n="jpGrammarOpenBtn">📖 Gramática</button>
+          <button type="button" class="jp-tab-btn" data-mode="conversations" data-i18n="jpConversationsOpenBtn">💬 Conversaciones</button>
+          <button type="button" class="jp-tab-btn" data-mode="particles" data-i18n="jpParticlesOpenBtn">🧩 Partículas</button>
+          <button type="button" class="jp-tab-btn" data-mode="yoon" data-i18n="jpYoonOpenBtn">🈴 Yōon</button>
         </div>
         <!-- Tarjeta de "Continuar donde lo dejaste" / recomendación de
              repaso — pedido explícito: guiar al usuario a su siguiente

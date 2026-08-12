@@ -1352,6 +1352,9 @@ const I18N = {
     appHabitsName: "Hábitos & Rachas",
     appStatusNew: "Nuevo",
     appStatusComingSoon: "Próximamente",
+    jpLevelLockedBadge: "🔒 Nivel {level}",
+    jpTierUnlockedN4: "🎉 ¡Desbloqueaste N4! Tu nivel de Nihongo ya te permite estudiar ese contenido.",
+    jpTierUnlockedN3: "🎉 ¡Desbloqueaste N3! Tu nivel de Nihongo ya te permite estudiar ese contenido.",
     appJapanesePlaceholder: "El módulo Japonés AI Coach está en desarrollo. Pronto vas a poder practicarlo aquí.",
     appAddedMessage: "Más módulos estarán disponibles próximamente en Apps & Módulos.",
     appCalendarName: "Calendario & Eventos",
@@ -1558,8 +1561,6 @@ const I18N = {
     jpHanziWriterOpenBtn: "✍️ Trazos Reales",
     jpVocabOpenBtn: "📚 Vocabulario",
     jpGrammarOpenBtn: "📖 Gramática",
-    jpModeSelectLabel: "¿Qué quieres practicar?",
-    jpModeSelectPlaceholder: "Elige una opción...",
     jpConversationsOpenBtn: "💬 Conversaciones",
     jpConversationsTitle: "💬 Conversaciones Situacionales",
     jpConvLinesLabel: "líneas",
@@ -1599,7 +1600,7 @@ const I18N = {
     jpContinueBtn: "Continuar →",
     jpContinueReviewLabel: "Recomendación de repaso",
     jpContinueReviewBtn: "Practicar ahora →",
-    jpParticlesOpenBtn: "🧩 Práctica de Partículas",
+    jpParticlesOpenBtn: "🧩 Partículas",
     jpParticleQuizPrompt: "Completa la partícula que falta:",
     jpLockedAt: "Se desbloquea en el Nivel",
     jpLockedKeepGoing: "Sigue ganando XP para desbloquearlo.",
@@ -1657,6 +1658,7 @@ const I18N = {
     ptConvDirectionsTitle: "Pidiendo Direcciones",
     jpVictoryEyebrow: "AI COACH",
     jpVictoryContinue: "¡Continuar!",
+    jpVictoryTierXpUnit: "Nivel Nihongo",
     jpVictoryTitlePractice: "¡Sesión completada!",
     jpVictoryTitleExam: "¡Examen superado!",
     jpVictoryTitleLevelExam: "¡Subiste de nivel!",
@@ -1685,6 +1687,27 @@ const I18N = {
     n4CatProcedures: "Trámites y Documentos",
     n4CatShopping: "Compras y Dinero",
     n4CatGiving: "Dar, Recibir y Poder Hacer",
+    n3CatOpinion: "Opinión y Razonamiento",
+    n3CatMedia: "Medios y Comunicación",
+    n3CatEmotions: "Emociones y Relaciones",
+    n3CatBusiness: "Negocios y Carrera Profesional",
+    n3CatEducation: "Educación y Vida Académica",
+    n3CatEnvironment: "Medio Ambiente y Problemas Sociales",
+    n3CatAdjectives: "Adjetivos Abstractos",
+    n3CatTrends: "Cambio y Tendencias",
+    n3CatEconomy: "Economía y Finanzas",
+    n3CatTech: "Tecnología Avanzada",
+    n3CatLaw: "Ley y Normas",
+    n3CatHealth: "Salud y Atención Médica",
+    n3CatArts: "Arte y Expresión Cultural",
+    n3CatConnectors: "Conectores y Expresiones Avanzadas",
+    jpConvOpinionTitle: "Discusión de Opiniones",
+    jpConvUniversityTitle: "Asesoría Universitaria",
+    jpConvNewsTitle: "Discusión de una Noticia",
+    jpConvComplaintTitle: "Queja Formal en una Tienda",
+    jpConvRelationshipTitle: "Consejo de Relación",
+    jpConvVolunteerTitle: "Voluntariado Ambiental",
+    jpConvInterviewTitle: "Entrevista de Trabajo a Fondo",
     n5GramWaTitle: "は — Partícula de Tema",
     n5GramMoTitle: "も — También",
     n5GramOTitle: "を — Objeto Directo",
@@ -2270,6 +2293,9 @@ const I18N = {
     appHabitsName: "Habits & Streaks",
     appStatusNew: "New",
     appStatusComingSoon: "Coming soon",
+    jpLevelLockedBadge: "🔒 Level {level}",
+    jpTierUnlockedN4: "🎉 You unlocked N4! Your Nihongo level now lets you study that content.",
+    jpTierUnlockedN3: "🎉 You unlocked N3! Your Nihongo level now lets you study that content.",
     appJapanesePlaceholder: "The Japanese AI Coach module is under development. You'll be able to practice here soon.",
     appAddedMessage: "More modules will be available soon in Apps & Modules.",
     appCalendarName: "Calendar & Events",
@@ -2476,8 +2502,6 @@ const I18N = {
     jpHanziWriterOpenBtn: "✍️ Real Strokes",
     jpVocabOpenBtn: "📚 Vocabulary",
     jpGrammarOpenBtn: "📖 Grammar",
-    jpModeSelectLabel: "What do you want to practice?",
-    jpModeSelectPlaceholder: "Choose an option...",
     jpConversationsOpenBtn: "💬 Conversations",
     jpConversationsTitle: "💬 Situational Conversations",
     jpConvLinesLabel: "lines",
@@ -2517,7 +2541,7 @@ const I18N = {
     jpContinueBtn: "Continue →",
     jpContinueReviewLabel: "Review recommendation",
     jpContinueReviewBtn: "Practice now →",
-    jpParticlesOpenBtn: "🧩 Particle Practice",
+    jpParticlesOpenBtn: "🧩 Particles",
     jpParticleQuizPrompt: "Fill in the missing particle:",
     jpLockedAt: "Unlocks at Level",
     jpLockedKeepGoing: "Keep earning XP to unlock it.",
@@ -2575,6 +2599,7 @@ const I18N = {
     ptConvDirectionsTitle: "Asking for Directions",
     jpVictoryEyebrow: "AI COACH",
     jpVictoryContinue: "Continue!",
+    jpVictoryTierXpUnit: "Nihongo Level",
     jpVictoryTitlePractice: "Session complete!",
     jpVictoryTitleExam: "Exam passed!",
     jpVictoryTitleLevelExam: "You leveled up!",
@@ -2603,6 +2628,27 @@ const I18N = {
     n4CatProcedures: "Procedures and Documents",
     n4CatShopping: "Shopping and Money",
     n4CatGiving: "Giving, Receiving and Potential Form",
+    n3CatOpinion: "Opinion and Reasoning",
+    n3CatMedia: "Media and Communication",
+    n3CatEmotions: "Emotions and Relationships",
+    n3CatBusiness: "Business and Career",
+    n3CatEducation: "Education and Academic Life",
+    n3CatEnvironment: "Environment and Social Issues",
+    n3CatAdjectives: "Abstract Adjectives",
+    n3CatTrends: "Change and Trends",
+    n3CatEconomy: "Economy and Finance",
+    n3CatTech: "Advanced Technology",
+    n3CatLaw: "Law and Rules",
+    n3CatHealth: "Health and Medical Care",
+    n3CatArts: "Art and Cultural Expression",
+    n3CatConnectors: "Advanced Connectors and Expressions",
+    jpConvOpinionTitle: "Opinion Discussion",
+    jpConvUniversityTitle: "University Advising",
+    jpConvNewsTitle: "News Discussion",
+    jpConvComplaintTitle: "Formal Store Complaint",
+    jpConvRelationshipTitle: "Relationship Advice",
+    jpConvVolunteerTitle: "Environmental Volunteering",
+    jpConvInterviewTitle: "In-Depth Job Interview",
     n5GramWaTitle: "は — Topic Particle",
     n5GramMoTitle: "も — Also/Too",
     n5GramOTitle: "を — Direct Object",
@@ -3188,6 +3234,9 @@ const I18N = {
     appHabitsName: "習慣＆連続記録",
     appStatusNew: "新着",
     appStatusComingSoon: "近日公開",
+    jpLevelLockedBadge: "🔒 レベル{level}",
+    jpTierUnlockedN4: "🎉 N4を解放しました！日本語レベルでその内容を勉強できるようになりました。",
+    jpTierUnlockedN3: "🎉 N3を解放しました！日本語レベルでその内容を勉強できるようになりました。",
     appJapanesePlaceholder: "日本語AIコーチモジュールは開発中です。もうすぐここで練習できるようになります。",
     appAddedMessage: "アプリ&モジュールに、もうすぐ新しいモジュールが追加されます。",
     appCalendarName: "カレンダー&イベント",
@@ -3394,8 +3443,6 @@ const I18N = {
     jpHanziWriterOpenBtn: "✍️ 本物の書き順",
     jpVocabOpenBtn: "📚 語彙",
     jpGrammarOpenBtn: "📖 文法",
-    jpModeSelectLabel: "何を練習しますか？",
-    jpModeSelectPlaceholder: "選択してください...",
     jpConversationsOpenBtn: "💬 会話",
     jpConversationsTitle: "💬 状況別会話",
     jpConvLinesLabel: "行",
@@ -3488,6 +3535,7 @@ const I18N = {
     ptConvDirectionsTitle: "道を尋ねる",
     jpVictoryEyebrow: "AIコーチ",
     jpVictoryContinue: "続ける！",
+    jpVictoryTierXpUnit: "日本語レベル",
     jpVictoryTitlePractice: "セッション完了！",
     jpVictoryTitleExam: "試験合格！",
     jpVictoryTitleLevelExam: "レベルアップ！",
@@ -3516,6 +3564,27 @@ const I18N = {
     n4CatProcedures: "手続きと書類",
     n4CatShopping: "買い物とお金",
     n4CatGiving: "やりもらいと可能形",
+    n3CatOpinion: "意見と考え",
+    n3CatMedia: "メディアと情報",
+    n3CatEmotions: "感情と人間関係",
+    n3CatBusiness: "ビジネスとキャリア",
+    n3CatEducation: "教育と学問",
+    n3CatEnvironment: "環境と社会問題",
+    n3CatAdjectives: "抽象的な形容詞",
+    n3CatTrends: "変化と傾向",
+    n3CatEconomy: "経済と金融",
+    n3CatTech: "先端技術",
+    n3CatLaw: "法律とルール",
+    n3CatHealth: "医療と健康管理",
+    n3CatArts: "芸術と文化的表現",
+    n3CatConnectors: "高度な接続表現",
+    jpConvOpinionTitle: "意見の議論",
+    jpConvUniversityTitle: "大学院の相談",
+    jpConvNewsTitle: "ニュースについての会話",
+    jpConvComplaintTitle: "お店でのクレーム",
+    jpConvRelationshipTitle: "恋愛相談",
+    jpConvVolunteerTitle: "環境ボランティア",
+    jpConvInterviewTitle: "深い面接",
     n5GramWaTitle: "は — 主題の助詞",
     n5GramMoTitle: "も — 〜も",
     n5GramOTitle: "を — 目的語",
@@ -6165,6 +6234,773 @@ const N4_CONVERSATION_SCENES = [
   },
 ];
 
+// ---------------------------------------------------
+// Vocabulario N3: mismo esquema que N4_VOCAB_CATEGORIES (kana/kanji/
+// romaji/meaning es-en/example) — pedido explícito de "sección
+// independiente" para N3, con datos totalmente distintos de N5/N4 (sin
+// repetir ninguna palabra ya cubierta arriba). 14 categorías, ~280
+// palabras — spread temático general (opinión/razonamiento, medios,
+// emociones, carrera, educación, medio ambiente, adjetivos abstractos,
+// tendencias, economía, tecnología avanzada, ley, salud avanzada, arte,
+// conectores formales), sin el sesgo laboral que tuvo N4 a propósito
+// (ese ya quedó cubierto ahí).
+// ---------------------------------------------------
+const N3_VOCAB_CATEGORIES = [
+  {
+    id: "opinion",
+    icon: "💭",
+    titleKey: "n3CatOpinion",
+    words: [
+      { kana: "いけん", kanji: "意見", romaji: "iken", meaning: { es: "opinión", en: "opinion" }, example: { jp: "私の意見を言ってもいいですか。", reading: "わたしのいけんをいってもいいですか。", translation: { es: "¿Puedo decir mi opinión?", en: "May I say my opinion?" } } },
+      { kana: "しゅちょう", kanji: "主張", romaji: "shuchou", meaning: { es: "afirmación / argumento", en: "claim, argument" }, example: { jp: "彼は自分の主張を変えません。", reading: "かれはじぶんのしゅちょうをかえません。", translation: { es: "Él no cambia su argumento.", en: "He doesn't change his argument." } } },
+      { kana: "さんせい", kanji: "賛成", romaji: "sansei", meaning: { es: "estar de acuerdo", en: "to agree" }, example: { jp: "その意見に賛成です。", reading: "そのいけんにさんせいです。", translation: { es: "Estoy de acuerdo con esa opinión.", en: "I agree with that opinion." } } },
+      { kana: "はんたい", kanji: "反対", romaji: "hantai", meaning: { es: "estar en contra", en: "to oppose" }, example: { jp: "私はその計画に反対です。", reading: "わたしはそのけいかくにはんたいです。", translation: { es: "Estoy en contra de ese plan.", en: "I'm against that plan." } } },
+      { kana: "けつろん", kanji: "結論", romaji: "ketsuron", meaning: { es: "conclusión", en: "conclusion" }, example: { jp: "結論を先に言ってください。", reading: "けつろんをさきにいってください。", translation: { es: "Diga la conclusión primero, por favor.", en: "Please state the conclusion first." } } },
+      { kana: "りゆう", kanji: "理由", romaji: "riyuu", meaning: { es: "razón", en: "reason" }, example: { jp: "反対する理由を教えてください。", reading: "はんたいするりゆうをおしえてください。", translation: { es: "Dime la razón por la que te opones.", en: "Tell me the reason you're against it." } } },
+      { kana: "たちば", kanji: "立場", romaji: "tachiba", meaning: { es: "postura / posición", en: "standpoint, position" }, example: { jp: "相手の立場を考えます。", reading: "あいてのたちばをかんがえます。", translation: { es: "Considero la postura de la otra persona.", en: "I consider the other person's standpoint." } } },
+      { kana: "はんだん", kanji: "判断", romaji: "handan", meaning: { es: "juicio / decisión", en: "judgment" }, example: { jp: "正しい判断をしたと思います。", reading: "ただしいはんだんをしたとおもいます。", translation: { es: "Creo que tomé la decisión correcta.", en: "I think I made the right judgment." } } },
+      { kana: "せっとく", kanji: "説得", romaji: "settoku", meaning: { es: "persuasión", en: "persuasion" }, example: { jp: "彼を説得するのは難しいです。", reading: "かれをせっとくするのはむずかしいです。", translation: { es: "Es difícil persuadirlo.", en: "It's hard to persuade him." } } },
+      { kana: "ぎろん", kanji: "議論", romaji: "giron", meaning: { es: "debate / discusión", en: "debate, discussion" }, example: { jp: "この問題について議論しましょう。", reading: "このもんだいについてぎろんしましょう。", translation: { es: "Debatamos sobre este problema.", en: "Let's discuss this issue." } } },
+      { kana: "むじゅん", kanji: "矛盾", romaji: "mujun", meaning: { es: "contradicción", en: "contradiction" }, example: { jp: "その説明には矛盾があります。", reading: "そのせつめいにはむじゅんがあります。", translation: { es: "Esa explicación tiene una contradicción.", en: "That explanation has a contradiction." } } },
+      { kana: "ごかい", kanji: "誤解", romaji: "gokai", meaning: { es: "malentendido", en: "misunderstanding" }, example: { jp: "それは誤解です。", reading: "それはごかいです。", translation: { es: "Eso es un malentendido.", en: "That's a misunderstanding." } } },
+      { kana: "こんきょ", kanji: "根拠", romaji: "konkyo", meaning: { es: "fundamento / base", en: "grounds, basis" }, example: { jp: "その主張には根拠がありません。", reading: "そのしゅちょうにはこんきょがありません。", translation: { es: "Ese argumento no tiene fundamento.", en: "That claim has no basis." } } },
+      { kana: "ひはん", kanji: "批判", romaji: "hihan", meaning: { es: "crítica", en: "criticism" }, example: { jp: "彼の意見を批判します。", reading: "かれのいけんをひはんします。", translation: { es: "Critico su opinión.", en: "I criticize his opinion." } } },
+      { kana: "してき", kanji: "指摘", romaji: "shiteki", meaning: { es: "señalar (un error)", en: "to point out" }, example: { jp: "問題点を指摘しました。", reading: "もんだいてんをしてきしました。", translation: { es: "Señalé el problema.", en: "I pointed out the problem." } } },
+      { kana: "なっとく", kanji: "納得", romaji: "nattoku", meaning: { es: "entender y aceptar", en: "to be convinced" }, example: { jp: "彼の説明に納得しました。", reading: "かれのせつめいになっとくしました。", translation: { es: "Me convenció su explicación.", en: "I was convinced by his explanation." } } },
+      { kana: "かちかん", kanji: "価値観", romaji: "kachikan", meaning: { es: "escala de valores", en: "values, sense of values" }, example: { jp: "私たちは価値観が違います。", reading: "わたしたちはかちかんがちがいます。", translation: { es: "Tenemos valores diferentes.", en: "We have different values." } } },
+      { kana: "へんこう", kanji: "変更", romaji: "henkou", meaning: { es: "cambio / modificación", en: "change, modification" }, example: { jp: "計画を変更する必要があります。", reading: "けいかくをへんこうするひつようがあります。", translation: { es: "Es necesario cambiar el plan.", en: "It's necessary to change the plan." } } },
+      { kana: "してん", kanji: "視点", romaji: "shiten", meaning: { es: "punto de vista", en: "viewpoint" }, example: { jp: "違う視点から見ましょう。", reading: "ちがうしてんからみましょう。", translation: { es: "Veámoslo desde otro punto de vista.", en: "Let's look at it from a different viewpoint." } } },
+      { kana: "ぜんてい", kanji: "前提", romaji: "zentei", meaning: { es: "premisa / supuesto", en: "premise, assumption" }, example: { jp: "その前提が間違っています。", reading: "そのぜんていがまちがっています。", translation: { es: "Esa premisa está equivocada.", en: "That premise is wrong." } } },
+    ],
+  },
+  {
+    id: "media",
+    icon: "📰",
+    titleKey: "n3CatMedia",
+    words: [
+      { kana: "きじ", kanji: "記事", romaji: "kiji", meaning: { es: "artículo (de noticias)", en: "article" }, example: { jp: "新聞でその記事を読みました。", reading: "しんぶんでそのきじをよみました。", translation: { es: "Leí ese artículo en el periódico.", en: "I read that article in the newspaper." } } },
+      { kana: "ほうそう", kanji: "放送", romaji: "housou", meaning: { es: "transmisión (TV/radio)", en: "broadcast" }, example: { jp: "番組は夜八時に放送されます。", reading: "ばんぐみはよるはちじにほうそうされます。", translation: { es: "El programa se transmite a las 8 de la noche.", en: "The program is broadcast at 8pm." } } },
+      { kana: "ばんぐみ", kanji: "番組", romaji: "bangumi", meaning: { es: "programa (TV)", en: "TV program" }, example: { jp: "好きな番組は何ですか。", reading: "すきなばんぐみはなんですか。", translation: { es: "¿Cuál es tu programa favorito?", en: "What's your favorite program?" } } },
+      { kana: "こうこく", kanji: "広告", romaji: "koukoku", meaning: { es: "publicidad", en: "advertisement" }, example: { jp: "テレビの広告が多すぎます。", reading: "てれびのこうこくがおおすぎます。", translation: { es: "Hay demasiada publicidad en la tele.", en: "There's too much advertising on TV." } } },
+      { kana: "じょうほう", kanji: "情報", romaji: "jouhou", meaning: { es: "información", en: "information" }, example: { jp: "正しい情報を集めましょう。", reading: "ただしいじょうほうをあつめましょう。", translation: { es: "Recopilemos información correcta.", en: "Let's gather correct information." } } },
+      { kana: "しちょうしゃ", kanji: "視聴者", romaji: "shichousha", meaning: { es: "televidente", en: "viewer" }, example: { jp: "視聴者からの質問に答えます。", reading: "しちょうしゃからのしつもんにこたえます。", translation: { es: "Respondo preguntas de los televidentes.", en: "I answer questions from viewers." } } },
+      { kana: "どくしゃ", kanji: "読者", romaji: "dokusha", meaning: { es: "lector", en: "reader" }, example: { jp: "読者の意見を紹介します。", reading: "どくしゃのいけんをしょうかいします。", translation: { es: "Presento la opinión de los lectores.", en: "I present readers' opinions." } } },
+      { kana: "はいしん", kanji: "配信", romaji: "haishin", meaning: { es: "transmisión / distribución (streaming)", en: "streaming, distribution" }, example: { jp: "動画をライブで配信します。", reading: "どうがをらいぶではいしんします。", translation: { es: "Transmito el video en vivo.", en: "I stream the video live." } } },
+      { kana: "わだい", kanji: "話題", romaji: "wadai", meaning: { es: "tema de actualidad", en: "topic, hot topic" }, example: { jp: "今、それが話題になっています。", reading: "いま、それがわだいになっています。", translation: { es: "Eso es tema de conversación ahora.", en: "That's a hot topic right now." } } },
+      { kana: "えいきょう", kanji: "影響", romaji: "eikyou", meaning: { es: "influencia / impacto", en: "influence, impact" }, example: { jp: "SNSは若者に大きな影響を与えます。", reading: "えすえぬえすはわかものにおおきなえいきょうをあたえます。", translation: { es: "Las redes sociales tienen una gran influencia en los jóvenes.", en: "Social media has a big influence on young people." } } },
+      { kana: "しゅざい", kanji: "取材", romaji: "shuzai", meaning: { es: "reportaje / investigación periodística", en: "(news) coverage, reporting" }, example: { jp: "記者が事故現場を取材しました。", reading: "きしゃがじこげんばをしゅざいしました。", translation: { es: "El periodista cubrió el lugar del accidente.", en: "The reporter covered the accident scene." } } },
+      { kana: "とくしゅう", kanji: "特集", romaji: "tokushuu", meaning: { es: "reportaje especial", en: "special feature" }, example: { jp: "今週は環境問題を特集します。", reading: "こんしゅうはかんきょうもんだいをとくしゅうします。", translation: { es: "Esta semana hacemos un especial sobre el medio ambiente.", en: "This week we run a special feature on environmental issues." } } },
+      { kana: "こうひょう", kanji: "公表", romaji: "kouhyou", meaning: { es: "anuncio público", en: "public announcement" }, example: { jp: "結果はまだ公表されていません。", reading: "けっかはまだこうひょうされていません。", translation: { es: "El resultado todavía no se ha anunciado públicamente.", en: "The result hasn't been publicly announced yet." } } },
+      { kana: "かくさん", kanji: "拡散", romaji: "kakusan", meaning: { es: "difusión (viral)", en: "spreading (viral)" }, example: { jp: "その情報はSNSで拡散しました。", reading: "そのじょうほうはえすえぬえすでかくさんしました。", translation: { es: "Esa información se difundió por las redes.", en: "That information spread through social media." } } },
+      { kana: "しんらいせい", kanji: "信頼性", romaji: "shinraisei", meaning: { es: "fiabilidad / credibilidad", en: "reliability, credibility" }, example: { jp: "この情報の信頼性は低いです。", reading: "このじょうほうのしんらいせいはひくいです。", translation: { es: "La fiabilidad de esta información es baja.", en: "This information's reliability is low." } } },
+      { kana: "へんしゅう", kanji: "編集", romaji: "henshuu", meaning: { es: "edición (de contenido)", en: "editing" }, example: { jp: "この動画を編集しています。", reading: "このどうがをへんしゅうしています。", translation: { es: "Estoy editando este video.", en: "I'm editing this video." } } },
+      { kana: "インタビュー", kanji: null, romaji: "intabyuu", meaning: { es: "entrevista (periodística)", en: "interview" }, example: { jp: "有名人にインタビューしました。", reading: "ゆうめいじんにいんたびゅーしました。", translation: { es: "Entrevisté a una persona famosa.", en: "I interviewed a famous person." } } },
+      { kana: "しゅだい", kanji: "主題", romaji: "shudai", meaning: { es: "tema principal", en: "main theme" }, example: { jp: "この映画の主題は何ですか。", reading: "このえいがのしゅだいはなんですか。", translation: { es: "¿Cuál es el tema principal de esta película?", en: "What's the main theme of this movie?" } } },
+      { kana: "せんでん", kanji: "宣伝", romaji: "senden", meaning: { es: "promoción / publicidad", en: "promotion, PR" }, example: { jp: "新しい商品を宣伝します。", reading: "あたらしいしょうひんをせんでんします。", translation: { es: "Promociono el nuevo producto.", en: "I promote the new product." } } },
+      { kana: "じっきょう", kanji: "実況", romaji: "jikkyou", meaning: { es: "comentario en directo", en: "live commentary" }, example: { jp: "試合の実況をします。", reading: "しあいのじっきょうをします。", translation: { es: "Hago la transmisión en vivo del partido.", en: "I do the live commentary of the match." } } },
+    ],
+  },
+  {
+    id: "emotionsDeep",
+    icon: "💞",
+    titleKey: "n3CatEmotions",
+    words: [
+      { kana: "しんらい", kanji: "信頼", romaji: "shinrai", meaning: { es: "confianza", en: "trust" }, example: { jp: "お互いに信頼しています。", reading: "おたがいにしんらいしています。", translation: { es: "Confiamos el uno en el otro.", en: "We trust each other." } } },
+      { kana: "しっと", kanji: "嫉妬", romaji: "shitto", meaning: { es: "celos", en: "jealousy" }, example: { jp: "友達に嫉妬してしまいました。", reading: "ともだちにしっとしてしまいました。", translation: { es: "Sentí celos de mi amigo.", en: "I ended up feeling jealous of my friend." } } },
+      { kana: "かんしゃ", kanji: "感謝", romaji: "kansha", meaning: { es: "agradecimiento", en: "gratitude" }, example: { jp: "いつも感謝しています。", reading: "いつもかんしゃしています。", translation: { es: "Siempre estoy agradecido.", en: "I'm always grateful." } } },
+      { kana: "こうかい", kanji: "後悔", romaji: "koukai", meaning: { es: "arrepentimiento", en: "regret" }, example: { jp: "あの決断を後悔しています。", reading: "あのけつだんをこうかいしています。", translation: { es: "Me arrepiento de esa decisión.", en: "I regret that decision." } } },
+      { kana: "れんあい", kanji: "恋愛", romaji: "ren'ai", meaning: { es: "amor romántico", en: "romance" }, example: { jp: "彼女は恋愛に興味がありません。", reading: "かのじょはれんあいにきょうみがありません。", translation: { es: "Ella no tiene interés en el amor romántico.", en: "She's not interested in romance." } } },
+      { kana: "かたおもい", kanji: "片思い", romaji: "kataomoi", meaning: { es: "amor no correspondido", en: "unrequited love" }, example: { jp: "三年間片思いをしています。", reading: "さんねんかんかたおもいをしています。", translation: { es: "Llevo tres años con un amor no correspondido.", en: "I've had an unrequited love for three years." } } },
+      { kana: "けんか", kanji: "喧嘩", romaji: "kenka", meaning: { es: "pelea / discusión", en: "fight, argument" }, example: { jp: "彼と喧嘩してしまいました。", reading: "かれとけんかしてしまいました。", translation: { es: "Terminé peleando con él.", en: "I ended up fighting with him." } } },
+      { kana: "なかなおり", kanji: "仲直り", romaji: "nakanaori", meaning: { es: "reconciliación", en: "making up, reconciliation" }, example: { jp: "友達と仲直りしました。", reading: "ともだちとなかなおりしました。", translation: { es: "Me reconcilié con mi amigo.", en: "I made up with my friend." } } },
+      { kana: "きずな", kanji: "絆", romaji: "kizuna", meaning: { es: "vínculo / lazo", en: "bond" }, example: { jp: "家族の絆は強いです。", reading: "かぞくのきずなはつよいです。", translation: { es: "El vínculo familiar es fuerte.", en: "The family bond is strong." } } },
+      { kana: "こどく", kanji: "孤独", romaji: "kodoku", meaning: { es: "soledad", en: "loneliness" }, example: { jp: "時々孤独を感じます。", reading: "ときどきこどくをかんじます。", translation: { es: "A veces siento soledad.", en: "Sometimes I feel loneliness." } } },
+      { kana: "あんしん", kanji: "安心", romaji: "anshin", meaning: { es: "tranquilidad / alivio", en: "relief, peace of mind" }, example: { jp: "その話を聞いて安心しました。", reading: "そのはなしをきいてあんしんしました。", translation: { es: "Me tranquilicé al escuchar eso.", en: "I felt relieved hearing that." } } },
+      { kana: "ふあん", kanji: "不安", romaji: "fuan", meaning: { es: "ansiedad / inquietud", en: "anxiety, unease" }, example: { jp: "将来について不安があります。", reading: "しょうらいについてふあんがあります。", translation: { es: "Tengo ansiedad sobre el futuro.", en: "I have anxiety about the future." } } },
+      { kana: "どうじょう", kanji: "同情", romaji: "doujou", meaning: { es: "compasión / lástima", en: "sympathy" }, example: { jp: "彼の状況に同情します。", reading: "かれのじょうきょうにどうじょうします。", translation: { es: "Siento compasión por su situación.", en: "I sympathize with his situation." } } },
+      { kana: "あこがれ", kanji: "憧れ", romaji: "akogare", meaning: { es: "admiración / anhelo", en: "admiration, longing" }, example: { jp: "姉に憧れています。", reading: "あねにあこがれています。", translation: { es: "Admiro a mi hermana mayor.", en: "I admire my older sister." } } },
+      { kana: "まんぞく", kanji: "満足", romaji: "manzoku", meaning: { es: "satisfacción", en: "satisfaction" }, example: { jp: "結果に満足しています。", reading: "けっかにまんぞくしています。", translation: { es: "Estoy satisfecho con el resultado.", en: "I'm satisfied with the result." } } },
+      { kana: "ふまん", kanji: "不満", romaji: "fuman", meaning: { es: "insatisfacción / queja", en: "dissatisfaction" }, example: { jp: "給料に不満があります。", reading: "きゅうりょうにふまんがあります。", translation: { es: "Estoy insatisfecho con el salario.", en: "I'm dissatisfied with my salary." } } },
+      { kana: "けんお", kanji: "嫌悪", romaji: "ken'o", meaning: { es: "aversión / repugnancia", en: "disgust, aversion" }, example: { jp: "彼のやり方に嫌悪感を持っています。", reading: "かれのやりかたにけんおかんをもっています。", translation: { es: "Siento aversión por su forma de actuar.", en: "I feel disgust at his way of doing things." } } },
+      { kana: "どうよう", kanji: "動揺", romaji: "douyou", meaning: { es: "conmoción / agitación", en: "agitation, being upset" }, example: { jp: "そのニュースに動揺しました。", reading: "そのにゅーすにどうようしました。", translation: { es: "Me conmocionó esa noticia.", en: "I was shaken by that news." } } },
+      { kana: "きょうかん", kanji: "共感", romaji: "kyoukan", meaning: { es: "empatía", en: "empathy" }, example: { jp: "あなたの気持ちに共感します。", reading: "あなたのきもちにきょうかんします。", translation: { es: "Empatizo con tus sentimientos.", en: "I empathize with your feelings." } } },
+      { kana: "なごやか", kanji: "和やか", romaji: "nagoyaka", meaning: { es: "ameno / agradable (na-adj)", en: "amicable, pleasant (atmosphere)" }, example: { jp: "会議は和やかな雰囲気でした。", reading: "かいぎはなごやかなふんいきでした。", translation: { es: "La reunión tuvo un ambiente ameno.", en: "The meeting had a pleasant atmosphere." } } },
+    ],
+  },
+  {
+    id: "businessCareer",
+    icon: "💼",
+    titleKey: "n3CatBusiness",
+    words: [
+      { kana: "しょうしん", kanji: "昇進", romaji: "shoushin", meaning: { es: "ascenso (de puesto)", en: "promotion" }, example: { jp: "来月、昇進します。", reading: "らいげつ、しょうしんします。", translation: { es: "El próximo mes tengo un ascenso.", en: "Next month I get a promotion." } } },
+      { kana: "てんきん", kanji: "転勤", romaji: "tenkin", meaning: { es: "traslado (de trabajo)", en: "job transfer" }, example: { jp: "大阪に転勤することになりました。", reading: "おおさかにてんきんすることになりました。", translation: { es: "Resultó que me trasladan a Osaka.", en: "It turned out I'm being transferred to Osaka." } } },
+      { kana: "たいしょく", kanji: "退職", romaji: "taishoku", meaning: { es: "retiro / renuncia definitiva", en: "retirement, resignation" }, example: { jp: "父は来年退職します。", reading: "ちちはらいねんたいしょくします。", translation: { es: "Mi padre se retira el próximo año.", en: "My father retires next year." } } },
+      { kana: "ぎょうせき", kanji: "業績", romaji: "gyouseki", meaning: { es: "desempeño (de empresa)", en: "business performance" }, example: { jp: "今年の業績は良かったです。", reading: "こんねんのぎょうせきはよかったです。", translation: { es: "El desempeño de este año fue bueno.", en: "This year's performance was good." } } },
+      { kana: "こきゃく", kanji: "顧客", romaji: "kokyaku", meaning: { es: "cliente (formal)", en: "customer, client" }, example: { jp: "顧客の満足を第一に考えます。", reading: "こきゃくのまんぞくをだいいちにかんがえます。", translation: { es: "Pienso primero en la satisfacción del cliente.", en: "I think of customer satisfaction first." } } },
+      { kana: "こうしょう", kanji: "交渉", romaji: "koushou", meaning: { es: "negociación", en: "negotiation" }, example: { jp: "価格について交渉します。", reading: "かかくについてこうしょうします。", translation: { es: "Negocio sobre el precio.", en: "I negotiate about the price." } } },
+      { kana: "ていあん", kanji: "提案", romaji: "teian", meaning: { es: "propuesta", en: "proposal" }, example: { jp: "新しい提案をしました。", reading: "あたらしいていあんをしました。", translation: { es: "Hice una nueva propuesta.", en: "I made a new proposal." } } },
+      { kana: "せきにん", kanji: "責任", romaji: "sekinin", meaning: { es: "responsabilidad", en: "responsibility" }, example: { jp: "この仕事の責任者は私です。", reading: "このしごとのせきにんしゃはわたしです。", translation: { es: "Yo soy el responsable de este trabajo.", en: "I'm the person responsible for this job." } } },
+      { kana: "こうりつ", kanji: "効率", romaji: "kouritsu", meaning: { es: "eficiencia", en: "efficiency" }, example: { jp: "もっと効率よく働きたいです。", reading: "もっとこうりつよくはたらきたいです。", translation: { es: "Quiero trabajar de forma más eficiente.", en: "I want to work more efficiently." } } },
+      { kana: "のうりょく", kanji: "能力", romaji: "nouryoku", meaning: { es: "capacidad / habilidad", en: "ability, capability" }, example: { jp: "彼には高い能力があります。", reading: "かれにはたかいのうりょくがあります。", translation: { es: "Él tiene una gran capacidad.", en: "He has high ability." } } },
+      { kana: "ぎむ", kanji: "義務", romaji: "gimu", meaning: { es: "obligación / deber", en: "obligation, duty" }, example: { jp: "報告するのは義務です。", reading: "ほうこくするのはぎむです。", translation: { es: "Informar es una obligación.", en: "Reporting is an obligation." } } },
+      { kana: "けんげん", kanji: "権限", romaji: "kengen", meaning: { es: "autoridad para decidir", en: "authority" }, example: { jp: "私にはその権限がありません。", reading: "わたしにはそのけんげんがありません。", translation: { es: "No tengo esa autoridad.", en: "I don't have that authority." } } },
+      { kana: "じんじ", kanji: "人事", romaji: "jinji", meaning: { es: "recursos humanos", en: "personnel, HR" }, example: { jp: "人事部に相談してください。", reading: "じんじぶにそうだんしてください。", translation: { es: "Consulte con el departamento de RRHH.", en: "Please consult with the HR department." } } },
+      { kana: "ぶんせき", kanji: "分析", romaji: "bunseki", meaning: { es: "análisis", en: "analysis" }, example: { jp: "データを分析します。", reading: "でーたをぶんせきします。", translation: { es: "Analizo los datos.", en: "I analyze the data." } } },
+      { kana: "たいおう", kanji: "対応", romaji: "taiou", meaning: { es: "manejo de una situación", en: "handling, response" }, example: { jp: "問題に早く対応します。", reading: "もんだいにはやくたいおうします。", translation: { es: "Respondo rápido al problema.", en: "I respond quickly to the problem." } } },
+      { kana: "もくひょう", kanji: "目標", romaji: "mokuhyou", meaning: { es: "meta / objetivo", en: "goal" }, example: { jp: "今年の目標を決めました。", reading: "こんねんのもくひょうをきめました。", translation: { es: "Decidí la meta de este año.", en: "I decided this year's goal." } } },
+      { kana: "じっせき", kanji: "実績", romaji: "jisseki", meaning: { es: "trayectoria comprobada", en: "track record, achievements" }, example: { jp: "彼には実績があります。", reading: "かれにはじっせきがあります。", translation: { es: "Él tiene un buen historial.", en: "He has a track record." } } },
+      { kana: "けんしゅう", kanji: "研修", romaji: "kenshuu", meaning: { es: "capacitación corporativa", en: "training (program)" }, example: { jp: "新入社員研修に参加します。", reading: "しんにゅうしゃいんけんしゅうにさんかします。", translation: { es: "Participo en la capacitación de nuevos empleados.", en: "I take part in the new-employee training." } } },
+      { kana: "はけん", kanji: "派遣", romaji: "haken", meaning: { es: "trabajador temporal", en: "temp dispatch, secondment" }, example: { jp: "派遣で働いています。", reading: "はけんではたらいています。", translation: { es: "Trabajo como empleado temporal.", en: "I work as a temp/dispatch worker." } } },
+      { kana: "どくりつ", kanji: "独立", romaji: "dokuritsu", meaning: { es: "independencia (laboral)", en: "independence" }, example: { jp: "将来、独立したいです。", reading: "しょうらい、どくりつしたいです。", translation: { es: "En el futuro quiero independizarme.", en: "In the future I want to become independent." } } },
+    ],
+  },
+  {
+    id: "education",
+    icon: "🎓",
+    titleKey: "n3CatEducation",
+    words: [
+      { kana: "しんがく", kanji: "進学", romaji: "shingaku", meaning: { es: "continuar estudios (nivel superior)", en: "advancing to higher education" }, example: { jp: "大学院に進学します。", reading: "だいがくいんにしんがくします。", translation: { es: "Continúo mis estudios en el posgrado.", en: "I'm advancing to graduate school." } } },
+      { kana: "せんこう", kanji: "専攻", romaji: "senkou", meaning: { es: "especialidad universitaria", en: "major, specialization" }, example: { jp: "経済学を専攻しています。", reading: "けいざいがくをせんこうしています。", translation: { es: "Mi especialidad es economía.", en: "I major in economics." } } },
+      { kana: "ろんぶん", kanji: "論文", romaji: "ronbun", meaning: { es: "tesis / artículo académico", en: "thesis, academic paper" }, example: { jp: "卒業論文を書いています。", reading: "そつぎょうろんぶんをかいています。", translation: { es: "Estoy escribiendo mi tesis de graduación.", en: "I'm writing my graduation thesis." } } },
+      { kana: "こうぎ", kanji: "講義", romaji: "kougi", meaning: { es: "clase universitaria", en: "lecture" }, example: { jp: "午後の講義に出ます。", reading: "ごごのこうぎにでます。", translation: { es: "Voy a la clase de la tarde.", en: "I attend the afternoon lecture." } } },
+      { kana: "しょうがくきん", kanji: "奨学金", romaji: "shougakukin", meaning: { es: "beca", en: "scholarship" }, example: { jp: "奨学金をもらっています。", reading: "しょうがくきんをもらっています。", translation: { es: "Recibo una beca.", en: "I receive a scholarship." } } },
+      { kana: "たんい", kanji: "単位", romaji: "tan'i", meaning: { es: "crédito académico", en: "academic credit" }, example: { jp: "もう卒業の単位が足りています。", reading: "もうそつぎょうのたんいがたりています。", translation: { es: "Ya tengo suficientes créditos para graduarme.", en: "I already have enough credits to graduate." } } },
+      { kana: "がくぶ", kanji: "学部", romaji: "gakubu", meaning: { es: "facultad universitaria", en: "faculty, department (university)" }, example: { jp: "文学部で学んでいます。", reading: "ぶんがくぶでまなんでいます。", translation: { es: "Estudio en la facultad de letras.", en: "I study in the Faculty of Literature." } } },
+      { kana: "けんきゅう", kanji: "研究", romaji: "kenkyuu", meaning: { es: "investigación", en: "research" }, example: { jp: "AIについて研究しています。", reading: "えーあいについてけんきゅうしています。", translation: { es: "Investigo sobre la IA.", en: "I do research on AI." } } },
+      { kana: "せいせき", kanji: "成績", romaji: "seiseki", meaning: { es: "calificaciones / notas", en: "grades, academic performance" }, example: { jp: "成績が上がりました。", reading: "せいせきがあがりました。", translation: { es: "Mis notas subieron.", en: "My grades went up." } } },
+      { kana: "ごうかく", kanji: "合格", romaji: "goukaku", meaning: { es: "aprobar un examen", en: "passing (an exam)" }, example: { jp: "試験に合格しました。", reading: "しけんにごうかくしました。", translation: { es: "Aprobé el examen.", en: "I passed the exam." } } },
+      { kana: "ふごうかく", kanji: "不合格", romaji: "fugoukaku", meaning: { es: "reprobar un examen", en: "failing (an exam)" }, example: { jp: "残念ながら不合格でした。", reading: "ざんねんながらふごうかくでした。", translation: { es: "Desafortunadamente reprobé.", en: "Unfortunately I failed." } } },
+      { kana: "りゅうがく", kanji: "留学", romaji: "ryuugaku", meaning: { es: "estudiar en el extranjero", en: "studying abroad" }, example: { jp: "来年アメリカに留学します。", reading: "らいねんあめりかにりゅうがくします。", translation: { es: "El próximo año estudio en EE.UU.", en: "Next year I'll study abroad in the US." } } },
+      { kana: "しどう", kanji: "指導", romaji: "shidou", meaning: { es: "tutoría académica", en: "guidance, supervision" }, example: { jp: "先生の指導を受けています。", reading: "せんせいのしどうをうけています。", translation: { es: "Recibo la tutoría del profesor.", en: "I receive the professor's guidance." } } },
+      { kana: "しけん", kanji: "試験", romaji: "shiken", meaning: { es: "examen", en: "exam, test" }, example: { jp: "来週、期末試験があります。", reading: "らいしゅう、きまつしけんがあります。", translation: { es: "La próxima semana hay examen final.", en: "There's a final exam next week." } } },
+      { kana: "がくれき", kanji: "学歴", romaji: "gakureki", meaning: { es: "historial académico", en: "academic background" }, example: { jp: "学歴は重視されません。", reading: "がくれきはじゅうしされません。", translation: { es: "El historial académico no se valora tanto.", en: "Academic background isn't emphasized much." } } },
+      { kana: "ぎもん", kanji: "疑問", romaji: "gimon", meaning: { es: "duda intelectual", en: "doubt, question" }, example: { jp: "その理論に疑問を持っています。", reading: "そのりろんにぎもんをもっています。", translation: { es: "Tengo dudas sobre esa teoría.", en: "I have doubts about that theory." } } },
+      { kana: "じっけん", kanji: "実験", romaji: "jikken", meaning: { es: "experimento", en: "experiment" }, example: { jp: "実験の結果を発表します。", reading: "じっけんのけっかをはっぴょうします。", translation: { es: "Presento los resultados del experimento.", en: "I present the experiment's results." } } },
+      { kana: "はっぴょう", kanji: "発表", romaji: "happyou", meaning: { es: "presentación académica", en: "presentation, announcement" }, example: { jp: "クラスで発表しました。", reading: "くらすではっぴょうしました。", translation: { es: "Hice una presentación en clase.", en: "I gave a presentation in class." } } },
+      { kana: "きょうよう", kanji: "教養", romaji: "kyouyou", meaning: { es: "cultura general", en: "general education, culture" }, example: { jp: "教養を深めたいです。", reading: "きょうようをふかめたいです。", translation: { es: "Quiero profundizar mi cultura general.", en: "I want to deepen my general education." } } },
+      { kana: "がくせいしょう", kanji: "学生証", romaji: "gakuseishou", meaning: { es: "carnet de estudiante", en: "student ID" }, example: { jp: "学生証を見せてください。", reading: "がくせいしょうをみせてください。", translation: { es: "Muestre su carnet de estudiante, por favor.", en: "Please show your student ID." } } },
+    ],
+  },
+  {
+    id: "environment",
+    icon: "🌍",
+    titleKey: "n3CatEnvironment",
+    words: [
+      { kana: "おんだんか", kanji: "温暖化", romaji: "ondanka", meaning: { es: "calentamiento global", en: "global warming" }, example: { jp: "地球温暖化が進んでいます。", reading: "ちきゅうおんだんかがすすんでいます。", translation: { es: "El calentamiento global avanza.", en: "Global warming is progressing." } } },
+      { kana: "おせん", kanji: "汚染", romaji: "osen", meaning: { es: "contaminación", en: "pollution" }, example: { jp: "川の汚染が問題です。", reading: "かわのおせんがもんだいです。", translation: { es: "La contaminación del río es un problema.", en: "River pollution is a problem." } } },
+      { kana: "しげん", kanji: "資源", romaji: "shigen", meaning: { es: "recursos naturales", en: "resources" }, example: { jp: "資源を大切に使いましょう。", reading: "しげんをたいせつにつかいましょう。", translation: { es: "Usemos los recursos con cuidado.", en: "Let's use resources carefully." } } },
+      { kana: "ぜつめつ", kanji: "絶滅", romaji: "zetsumetsu", meaning: { es: "extinción", en: "extinction" }, example: { jp: "この動物は絶滅の危機にあります。", reading: "このどうぶつはぜつめつのききにあります。", translation: { es: "Este animal está en peligro de extinción.", en: "This animal is at risk of extinction." } } },
+      { kana: "ほご", kanji: "保護", romaji: "hogo", meaning: { es: "protección", en: "protection" }, example: { jp: "自然を保護する必要があります。", reading: "しぜんをほごするひつようがあります。", translation: { es: "Es necesario proteger la naturaleza.", en: "It's necessary to protect nature." } } },
+      { kana: "しょうしか", kanji: "少子化", romaji: "shoushika", meaning: { es: "disminución de la natalidad", en: "declining birthrate" }, example: { jp: "少子化が社会問題になっています。", reading: "しょうしかがしゃかいもんだいになっています。", translation: { es: "La disminución de la natalidad se volvió un problema social.", en: "The declining birthrate has become a social problem." } } },
+      { kana: "こうれいか", kanji: "高齢化", romaji: "koureika", meaning: { es: "envejecimiento poblacional", en: "aging (of society)" }, example: { jp: "日本は高齢化が進んでいます。", reading: "にほんはこうれいかがすすんでいます。", translation: { es: "En Japón avanza el envejecimiento poblacional.", en: "Aging is progressing in Japan." } } },
+      { kana: "かくさ", kanji: "格差", romaji: "kakusa", meaning: { es: "desigualdad / brecha", en: "disparity, gap" }, example: { jp: "貧富の格差が広がっています。", reading: "ひんぷのかくさがひろがっています。", translation: { es: "La brecha entre ricos y pobres se amplía.", en: "The gap between rich and poor is widening." } } },
+      { kana: "ひんこん", kanji: "貧困", romaji: "hinkon", meaning: { es: "pobreza", en: "poverty" }, example: { jp: "世界には貧困の問題があります。", reading: "せかいにはひんこんのもんだいがあります。", translation: { es: "En el mundo hay un problema de pobreza.", en: "There's a poverty problem in the world." } } },
+      { kana: "さべつ", kanji: "差別", romaji: "sabetsu", meaning: { es: "discriminación", en: "discrimination" }, example: { jp: "差別はいけません。", reading: "さべつはいけません。", translation: { es: "La discriminación está mal.", en: "Discrimination is wrong." } } },
+      { kana: "びょうどう", kanji: "平等", romaji: "byoudou", meaning: { es: "igualdad", en: "equality" }, example: { jp: "男女平等が大切です。", reading: "だんじょびょうどうがたいせつです。", translation: { es: "La igualdad de género es importante.", en: "Gender equality is important." } } },
+      { kana: "じぞくかのう", kanji: "持続可能", romaji: "jizoku kanou", meaning: { es: "sostenible (na-adj)", en: "sustainable" }, example: { jp: "持続可能な社会を目指します。", reading: "じぞくかのうなしゃかいをめざします。", translation: { es: "Aspiramos a una sociedad sostenible.", en: "We aim for a sustainable society." } } },
+      { kana: "さいせいかのう", kanji: "再生可能", romaji: "saisei kanou", meaning: { es: "renovable (na-adj, energía)", en: "renewable" }, example: { jp: "再生可能エネルギーを使います。", reading: "さいせいかのうえねるぎーをつかいます。", translation: { es: "Usamos energía renovable.", en: "We use renewable energy." } } },
+      { kana: "きき", kanji: "危機", romaji: "kiki", meaning: { es: "crisis", en: "crisis" }, example: { jp: "環境危機について考えます。", reading: "かんきょうききについてかんがえます。", translation: { es: "Pienso sobre la crisis ambiental.", en: "I think about the environmental crisis." } } },
+      { kana: "さいがい", kanji: "災害", romaji: "saigai", meaning: { es: "desastre natural", en: "disaster" }, example: { jp: "自然災害に備えます。", reading: "しぜんさいがいにそなえます。", translation: { es: "Me preparo para desastres naturales.", en: "I prepare for natural disasters." } } },
+      { kana: "ふくし", kanji: "福祉", romaji: "fukushi", meaning: { es: "bienestar social", en: "welfare" }, example: { jp: "高齢者福祉を充実させます。", reading: "こうれいしゃふくしをじゅうじつさせます。", translation: { es: "Mejoramos el bienestar de los ancianos.", en: "We improve elderly welfare." } } },
+      { kana: "じんこうげんしょう", kanji: "人口減少", romaji: "jinkou genshou", meaning: { es: "disminución poblacional", en: "population decline" }, example: { jp: "地方の人口減少が深刻です。", reading: "ちほうのじんこうげんしょうがしんこくです。", translation: { es: "La disminución poblacional en las provincias es grave.", en: "Population decline in rural areas is serious." } } },
+      { kana: "せいさく", kanji: "政策", romaji: "seisaku", meaning: { es: "política gubernamental", en: "policy" }, example: { jp: "政府の政策に反対です。", reading: "せいふのせいさくにはんたいです。", translation: { es: "Estoy en contra de la política del gobierno.", en: "I'm against the government's policy." } } },
+      { kana: "きせい", kanji: "規制", romaji: "kisei", meaning: { es: "regulación", en: "regulation" }, example: { jp: "新しい規制ができました。", reading: "あたらしいきせいができました。", translation: { es: "Se creó una nueva regulación.", en: "A new regulation was created." } } },
+      { kana: "しみん", kanji: "市民", romaji: "shimin", meaning: { es: "ciudadano", en: "citizen" }, example: { jp: "市民の声を聞きます。", reading: "しみんのこえをききます。", translation: { es: "Escucho la voz de los ciudadanos.", en: "I listen to citizens' voices." } } },
+    ],
+  },
+  {
+    id: "abstractAdjectives",
+    icon: "🎭",
+    titleKey: "n3CatAdjectives",
+    words: [
+      { kana: "あいまい", kanji: "曖昧", romaji: "aimai", meaning: { es: "ambiguo (na-adj)", en: "ambiguous" }, example: { jp: "彼の返事は曖昧でした。", reading: "かれのへんじはあいまいでした。", translation: { es: "Su respuesta fue ambigua.", en: "His answer was ambiguous." } } },
+      { kana: "びみょう", kanji: "微妙", romaji: "bimyou", meaning: { es: "delicado / sutil (na-adj)", en: "subtle, delicate" }, example: { jp: "二つの色は微妙に違います。", reading: "ふたつのいろはびみょうにちがいます。", translation: { es: "Los dos colores son sutilmente diferentes.", en: "The two colors are subtly different." } } },
+      { kana: "てきせつ", kanji: "適切", romaji: "tekisetsu", meaning: { es: "apropiado / adecuado (na-adj)", en: "appropriate" }, example: { jp: "適切な言葉を選びます。", reading: "てきせつなことばをえらびます。", translation: { es: "Elijo las palabras apropiadas.", en: "I choose appropriate words." } } },
+      { kana: "そうたいてき", kanji: "相対的", romaji: "soutaiteki", meaning: { es: "relativo (na-adj)", en: "relative" }, example: { jp: "幸せは相対的なものです。", reading: "しあわせはそうたいてきなものです。", translation: { es: "La felicidad es algo relativo.", en: "Happiness is something relative." } } },
+      { kana: "ぜったいてき", kanji: "絶対的", romaji: "zettaiteki", meaning: { es: "absoluto (na-adj)", en: "absolute" }, example: { jp: "絶対的な答えはありません。", reading: "ぜったいてきなこたえはありません。", translation: { es: "No hay una respuesta absoluta.", en: "There's no absolute answer." } } },
+      { kana: "せんざいてき", kanji: "潜在的", romaji: "senzaiteki", meaning: { es: "potencial / latente (na-adj)", en: "potential, latent" }, example: { jp: "彼には潜在的な才能があります。", reading: "かれにはせんざいてきなさいのうがあります。", translation: { es: "Él tiene un talento potencial.", en: "He has latent talent." } } },
+      { kana: "きゃっかんてき", kanji: "客観的", romaji: "kyakkanteki", meaning: { es: "objetivo (na-adj)", en: "objective" }, example: { jp: "客観的に判断してください。", reading: "きゃっかんてきにはんだんしてください。", translation: { es: "Juzgue de forma objetiva, por favor.", en: "Please judge objectively." } } },
+      { kana: "しゅかんてき", kanji: "主観的", romaji: "shukanteki", meaning: { es: "subjetivo (na-adj)", en: "subjective" }, example: { jp: "それは主観的な意見です。", reading: "それはしゅかんてきないけんです。", translation: { es: "Esa es una opinión subjetiva.", en: "That's a subjective opinion." } } },
+      { kana: "いちじてき", kanji: "一時的", romaji: "ichijiteki", meaning: { es: "temporal / provisional (na-adj)", en: "temporary" }, example: { jp: "これは一時的な問題です。", reading: "これはいちじてきなもんだいです。", translation: { es: "Este es un problema temporal.", en: "This is a temporary problem." } } },
+      { kana: "えいえん", kanji: "永遠", romaji: "eien", meaning: { es: "eterno / eternidad", en: "eternal, eternity" }, example: { jp: "永遠の愛を信じますか。", reading: "えいえんのあいをしんじますか。", translation: { es: "¿Crees en el amor eterno?", en: "Do you believe in eternal love?" } } },
+      { kana: "こうかてき", kanji: "効果的", romaji: "koukateki", meaning: { es: "efectivo (na-adj)", en: "effective" }, example: { jp: "もっと効果的な方法があります。", reading: "もっとこうかてきなほうほうがあります。", translation: { es: "Hay un método más efectivo.", en: "There's a more effective method." } } },
+      { kana: "どくとく", kanji: "独特", romaji: "dokutoku", meaning: { es: "peculiar / único (na-adj)", en: "unique, peculiar" }, example: { jp: "彼女には独特な魅力があります。", reading: "かのじょにはどくとくなみりょくがあります。", translation: { es: "Ella tiene un encanto peculiar.", en: "She has a unique charm." } } },
+      { kana: "きちょう", kanji: "貴重", romaji: "kichou", meaning: { es: "valioso / preciado (na-adj)", en: "valuable, precious" }, example: { jp: "これは貴重な経験でした。", reading: "これはきちょうなけいけんでした。", translation: { es: "Esta fue una experiencia valiosa.", en: "This was a valuable experience." } } },
+      { kana: "ほうふ", kanji: "豊富", romaji: "houfu", meaning: { es: "abundante (na-adj)", en: "abundant, plentiful" }, example: { jp: "この店は種類が豊富です。", reading: "このみせはしゅるいがほうふです。", translation: { es: "Esta tienda tiene mucha variedad.", en: "This shop has an abundant variety." } } },
+      { kana: "じゅうだい", kanji: "重大", romaji: "juudai", meaning: { es: "grave / serio (na-adj)", en: "serious, grave" }, example: { jp: "これは重大な問題です。", reading: "これはじゅうだいなもんだいです。", translation: { es: "Este es un problema grave.", en: "This is a serious problem." } } },
+      { kana: "ふかけつ", kanji: "不可欠", romaji: "fukaketsu", meaning: { es: "indispensable (na-adj)", en: "indispensable, essential" }, example: { jp: "水は生活に不可欠です。", reading: "みずはせいかつにふかけつです。", translation: { es: "El agua es indispensable para la vida.", en: "Water is essential for life." } } },
+      { kana: "びんかん", kanji: "敏感", romaji: "binkan", meaning: { es: "sensible (na-adj)", en: "sensitive" }, example: { jp: "彼女は音に敏感です。", reading: "かのじょはおとにびんかんです。", translation: { es: "Ella es sensible a los sonidos.", en: "She's sensitive to sound." } } },
+      { kana: "いだい", kanji: "偉大", romaji: "idai", meaning: { es: "grandioso (na-adj, persona/logro)", en: "great (achievement/person)" }, example: { jp: "彼は偉大な科学者でした。", reading: "かれはいだいなかがくしゃでした。", translation: { es: "Él fue un gran científico.", en: "He was a great scientist." } } },
+      { kana: "もはんてき", kanji: "模範的", romaji: "mohanteki", meaning: { es: "ejemplar (na-adj)", en: "model, exemplary" }, example: { jp: "彼は模範的な学生です。", reading: "かれはもはんてきながくせいです。", translation: { es: "Él es un estudiante modelo.", en: "He is a model student." } } },
+      { kana: "りそうてき", kanji: "理想的", romaji: "risouteki", meaning: { es: "ideal (na-adj)", en: "ideal" }, example: { jp: "これは理想的な環境です。", reading: "これはりそうてきなかんきょうです。", translation: { es: "Este es un ambiente ideal.", en: "This is an ideal environment." } } },
+    ],
+  },
+  {
+    id: "changeTrends",
+    icon: "📈",
+    titleKey: "n3CatTrends",
+    words: [
+      { kana: "けいこう", kanji: "傾向", romaji: "keikou", meaning: { es: "tendencia", en: "tendency, trend" }, example: { jp: "最近、値上がりの傾向があります。", reading: "さいきん、ねあがりのけいこうがあります。", translation: { es: "Últimamente hay una tendencia a subir los precios.", en: "Lately there's a trend of prices rising." } } },
+      { kana: "ぞうか", kanji: "増加", romaji: "zouka", meaning: { es: "aumento", en: "increase" }, example: { jp: "人口が増加しています。", reading: "じんこうがぞうかしています。", translation: { es: "La población está aumentando.", en: "The population is increasing." } } },
+      { kana: "げんしょう", kanji: "減少", romaji: "genshou", meaning: { es: "disminución", en: "decrease" }, example: { jp: "売り上げが減少しました。", reading: "うりあげがげんしょうしました。", translation: { es: "Las ventas disminuyeron.", en: "Sales decreased." } } },
+      { kana: "へんどう", kanji: "変動", romaji: "hendou", meaning: { es: "fluctuación", en: "fluctuation" }, example: { jp: "為替が変動しています。", reading: "かわせがへんどうしています。", translation: { es: "El tipo de cambio está fluctuando.", en: "The exchange rate is fluctuating." } } },
+      { kana: "しんぽ", kanji: "進歩", romaji: "shinpo", meaning: { es: "progreso", en: "progress" }, example: { jp: "技術は進歩しました。", reading: "ぎじゅつはしんぽしました。", translation: { es: "La tecnología progresó.", en: "Technology progressed." } } },
+      { kana: "はってん", kanji: "発展", romaji: "hatten", meaning: { es: "desarrollo", en: "development" }, example: { jp: "この町は発展しています。", reading: "このまちははってんしています。", translation: { es: "Este pueblo se está desarrollando.", en: "This town is developing." } } },
+      { kana: "あっか", kanji: "悪化", romaji: "akka", meaning: { es: "empeoramiento", en: "worsening" }, example: { jp: "天気が悪化しています。", reading: "てんきがあっかしています。", translation: { es: "El clima está empeorando.", en: "The weather is worsening." } } },
+      { kana: "かいぜん", kanji: "改善", romaji: "kaizen", meaning: { es: "mejora", en: "improvement" }, example: { jp: "サービスを改善します。", reading: "さーびすをかいぜんします。", translation: { es: "Mejoro el servicio.", en: "I improve the service." } } },
+      { kana: "いじ", kanji: "維持", romaji: "iji", meaning: { es: "mantenimiento (de un estado)", en: "maintenance, upkeep" }, example: { jp: "健康を維持したいです。", reading: "けんこうをいじしたいです。", translation: { es: "Quiero mantener mi salud.", en: "I want to maintain my health." } } },
+      { kana: "けいぞく", kanji: "継続", romaji: "keizoku", meaning: { es: "continuación", en: "continuation" }, example: { jp: "練習を継続します。", reading: "れんしゅうをけいぞくします。", translation: { es: "Continúo con la práctica.", en: "I continue practicing." } } },
+      { kana: "ちゅうだん", kanji: "中断", romaji: "chuudan", meaning: { es: "interrupción", en: "interruption" }, example: { jp: "会議が中断されました。", reading: "かいぎがちゅうだんされました。", translation: { es: "La reunión fue interrumpida.", en: "The meeting was interrupted." } } },
+      { kana: "へんかく", kanji: "変革", romaji: "henkaku", meaning: { es: "reforma / transformación", en: "reform, transformation" }, example: { jp: "会社の変革が必要です。", reading: "かいしゃのへんかくがひつようです。", translation: { es: "Se necesita una reforma en la empresa.", en: "The company needs a reform." } } },
+      { kana: "すいい", kanji: "推移", romaji: "suii", meaning: { es: "evolución / curso de una situación", en: "transition, course" }, example: { jp: "状況の推移を見ています。", reading: "じょうきょうのすいいをみています。", translation: { es: "Observo la evolución de la situación.", en: "I'm watching the situation's course." } } },
+      { kana: "てんかん", kanji: "転換", romaji: "tenkan", meaning: { es: "cambio de dirección", en: "shift, conversion" }, example: { jp: "方針を転換しました。", reading: "ほうしんをてんかんしました。", translation: { es: "Cambié la dirección de la política.", en: "I made a policy shift." } } },
+      { kana: "かくだい", kanji: "拡大", romaji: "kakudai", meaning: { es: "expansión", en: "expansion" }, example: { jp: "事業を拡大します。", reading: "じぎょうをかくだいします。", translation: { es: "Expando el negocio.", en: "I expand the business." } } },
+      { kana: "しゅくしょう", kanji: "縮小", romaji: "shukushou", meaning: { es: "reducción", en: "shrinking, reduction" }, example: { jp: "市場が縮小しています。", reading: "しじょうがしゅくしょうしています。", translation: { es: "El mercado se está reduciendo.", en: "The market is shrinking." } } },
+      { kana: "あんてい", kanji: "安定", romaji: "antei", meaning: { es: "estabilidad", en: "stability" }, example: { jp: "生活が安定しました。", reading: "せいかつがあんていしました。", translation: { es: "Mi vida se estabilizó.", en: "My life became stable." } } },
+      { kana: "ふあんてい", kanji: "不安定", romaji: "fuantei", meaning: { es: "inestable (na-adj)", en: "unstable" }, example: { jp: "経済が不安定です。", reading: "けいざいがふあんていです。", translation: { es: "La economía es inestable.", en: "The economy is unstable." } } },
+      { kana: "しんか", kanji: "進化", romaji: "shinka", meaning: { es: "evolución", en: "evolution" }, example: { jp: "技術は進化し続けます。", reading: "ぎじゅつはしんかしつづけます。", translation: { es: "La tecnología sigue evolucionando.", en: "Technology keeps evolving." } } },
+      { kana: "すいたい", kanji: "衰退", romaji: "suitai", meaning: { es: "declive", en: "decline" }, example: { jp: "産業が衰退しています。", reading: "さんぎょうがすいたいしています。", translation: { es: "La industria está en declive.", en: "The industry is declining." } } },
+    ],
+  },
+  {
+    id: "economy",
+    icon: "💹",
+    titleKey: "n3CatEconomy",
+    words: [
+      { kana: "とうし", kanji: "投資", romaji: "toushi", meaning: { es: "inversión", en: "investment" }, example: { jp: "株に投資しています。", reading: "かぶにとうししています。", translation: { es: "Invierto en acciones.", en: "I invest in stocks." } } },
+      { kana: "しさん", kanji: "資産", romaji: "shisan", meaning: { es: "activos / patrimonio", en: "assets" }, example: { jp: "資産を増やしたいです。", reading: "しさんをふやしたいです。", translation: { es: "Quiero aumentar mis activos.", en: "I want to increase my assets." } } },
+      { kana: "しゃっきん", kanji: "借金", romaji: "shakkin", meaning: { es: "deuda", en: "debt" }, example: { jp: "借金を返しました。", reading: "しゃっきんをかえしました。", translation: { es: "Pagué mi deuda.", en: "I paid off my debt." } } },
+      { kana: "しゅうにゅう", kanji: "収入", romaji: "shuunyuu", meaning: { es: "ingresos", en: "income" }, example: { jp: "毎月の収入は決まっています。", reading: "まいつきのしゅうにゅうはきまっています。", translation: { es: "Mi ingreso mensual es fijo.", en: "My monthly income is fixed." } } },
+      { kana: "ししゅつ", kanji: "支出", romaji: "shishutsu", meaning: { es: "gastos / egresos", en: "expenditure" }, example: { jp: "支出を減らします。", reading: "ししゅつをへらします。", translation: { es: "Reduzco los gastos.", en: "I reduce expenditures." } } },
+      { kana: "けいえい", kanji: "経営", romaji: "keiei", meaning: { es: "gestión de negocio", en: "management (business)" }, example: { jp: "小さい店を経営しています。", reading: "ちいさいみせをけいえいしています。", translation: { es: "Administro una tienda pequeña.", en: "I run a small shop." } } },
+      { kana: "そんしつ", kanji: "損失", romaji: "sonshitsu", meaning: { es: "pérdida financiera", en: "loss (financial)" }, example: { jp: "大きな損失を出しました。", reading: "おおきなそんしつをだしました。", translation: { es: "Tuve una gran pérdida.", en: "I incurred a big loss." } } },
+      { kana: "りえき", kanji: "利益", romaji: "rieki", meaning: { es: "ganancia / beneficio", en: "profit" }, example: { jp: "今月は利益が出ました。", reading: "こんげつはりえきがでました。", translation: { es: "Este mes tuve ganancias.", en: "This month I made a profit." } } },
+      { kana: "はさん", kanji: "破産", romaji: "hasan", meaning: { es: "bancarrota", en: "bankruptcy" }, example: { jp: "会社が破産しました。", reading: "かいしゃがはさんしました。", translation: { es: "La empresa quebró.", en: "The company went bankrupt." } } },
+      { kana: "かぶ", kanji: "株", romaji: "kabu", meaning: { es: "acciones bursátiles", en: "stocks, shares" }, example: { jp: "株の値段が上がりました。", reading: "かぶのねだんがあがりました。", translation: { es: "El precio de las acciones subió.", en: "The stock price went up." } } },
+      { kana: "ざいさん", kanji: "財産", romaji: "zaisan", meaning: { es: "fortuna / propiedad", en: "fortune, property" }, example: { jp: "財産を残します。", reading: "ざいさんをのこします。", translation: { es: "Dejo una fortuna en herencia.", en: "I leave a fortune (inheritance)." } } },
+      { kana: "ほしょう", kanji: "保証", romaji: "hoshou", meaning: { es: "garantía", en: "guarantee" }, example: { jp: "一年間の保証があります。", reading: "いちねんかんのほしょうがあります。", translation: { es: "Tiene una garantía de un año.", en: "It has a one-year guarantee." } } },
+      { kana: "ゆうし", kanji: "融資", romaji: "yuushi", meaning: { es: "financiamiento / préstamo", en: "financing, loan" }, example: { jp: "銀行から融資を受けました。", reading: "ぎんこうからゆうしをうけました。", translation: { es: "Recibí un financiamiento del banco.", en: "I received financing from the bank." } } },
+      { kana: "けいざいせいちょう", kanji: "経済成長", romaji: "keizai seichou", meaning: { es: "crecimiento económico", en: "economic growth" }, example: { jp: "経済成長が続いています。", reading: "けいざいせいちょうがつづいています。", translation: { es: "El crecimiento económico continúa.", en: "Economic growth continues." } } },
+      { kana: "ふけいき", kanji: "不景気", romaji: "fukeiki", meaning: { es: "recesión económica", en: "recession" }, example: { jp: "不景気で仕事が減りました。", reading: "ふけいきでしごとがへりました。", translation: { es: "Por la recesión disminuyó el trabajo.", en: "Due to the recession, work decreased." } } },
+      { kana: "ぶっか", kanji: "物価", romaji: "bukka", meaning: { es: "precios (nivel general)", en: "prices (general level)" }, example: { jp: "物価が上がっています。", reading: "ぶっかがあがっています。", translation: { es: "Los precios están subiendo.", en: "Prices are rising." } } },
+      { kana: "きんゆう", kanji: "金融", romaji: "kin'yuu", meaning: { es: "finanzas", en: "finance" }, example: { jp: "金融について勉強しています。", reading: "きんゆうについてべんきょうしています。", translation: { es: "Estudio sobre finanzas.", en: "I study finance." } } },
+      { kana: "しほん", kanji: "資本", romaji: "shihon", meaning: { es: "capital financiero", en: "capital" }, example: { jp: "資本が足りません。", reading: "しほんがたりません。", translation: { es: "Falta capital.", en: "There isn't enough capital." } } },
+      { kana: "そうば", kanji: "相場", romaji: "souba", meaning: { es: "cotización de mercado", en: "market price" }, example: { jp: "今の相場を確認します。", reading: "いまのそうばをかくにんします。", translation: { es: "Confirmo la cotización actual.", en: "I check the current market price." } } },
+      { kana: "けいざいてき", kanji: "経済的", romaji: "keizaiteki", meaning: { es: "económico (na-adj, eficiente en costos)", en: "economical" }, example: { jp: "もっと経済的な方法を探します。", reading: "もっとけいざいてきなほうほうをさがします。", translation: { es: "Busco un método más económico.", en: "I look for a more economical method." } } },
+    ],
+  },
+  {
+    id: "techAdvanced",
+    icon: "🤖",
+    titleKey: "n3CatTech",
+    words: [
+      { kana: "じんこうちのう", kanji: "人工知能", romaji: "jinkou chinou", meaning: { es: "inteligencia artificial", en: "artificial intelligence" }, example: { jp: "人工知能が発達しています。", reading: "じんこうちのうがはったつしています。", translation: { es: "La inteligencia artificial se está desarrollando.", en: "Artificial intelligence is developing." } } },
+      { kana: "かいはつ", kanji: "開発", romaji: "kaihatsu", meaning: { es: "desarrollo (de producto/tecnología)", en: "development" }, example: { jp: "新しいアプリを開発します。", reading: "あたらしいあぷりをかいはつします。", translation: { es: "Desarrollo una nueva aplicación.", en: "I develop a new app." } } },
+      { kana: "ぎじゅつしゃ", kanji: "技術者", romaji: "gijutsusha", meaning: { es: "ingeniero / técnico", en: "engineer, technician" }, example: { jp: "彼はソフトの技術者です。", reading: "かれはそふとのぎじゅつしゃです。", translation: { es: "Él es ingeniero de software.", en: "He's a software engineer." } } },
+      { kana: "データベース", kanji: null, romaji: "deetabeesu", meaning: { es: "base de datos", en: "database" }, example: { jp: "データベースを管理します。", reading: "でーたべーすをかんりします。", translation: { es: "Administro la base de datos.", en: "I manage the database." } } },
+      { kana: "セキュリティ", kanji: null, romaji: "sekyuriti", meaning: { es: "seguridad informática", en: "security" }, example: { jp: "セキュリティを強化します。", reading: "せきゅりてぃをきょうかします。", translation: { es: "Refuerzo la seguridad.", en: "I strengthen the security." } } },
+      { kana: "はつめい", kanji: "発明", romaji: "hatsumei", meaning: { es: "invento", en: "invention" }, example: { jp: "便利な道具を発明しました。", reading: "べんりなどうぐをはつめいしました。", translation: { es: "Inventé una herramienta útil.", en: "I invented a useful tool." } } },
+      { kana: "とっきょ", kanji: "特許", romaji: "tokkyo", meaning: { es: "patente", en: "patent" }, example: { jp: "この技術は特許を取っています。", reading: "このぎじゅつはとっきょをとっています。", translation: { es: "Esta tecnología tiene patente.", en: "This technology has a patent." } } },
+      { kana: "デジタル", kanji: null, romaji: "dejitaru", meaning: { es: "digital", en: "digital" }, example: { jp: "デジタル化が進んでいます。", reading: "でじたるかがすすんでいます。", translation: { es: "Avanza la digitalización.", en: "Digitalization is progressing." } } },
+      { kana: "じどうか", kanji: "自動化", romaji: "jidouka", meaning: { es: "automatización", en: "automation" }, example: { jp: "作業を自動化しました。", reading: "さぎょうをじどうかしました。", translation: { es: "Automaticé el trabajo.", en: "I automated the task." } } },
+      { kana: "せいぎょ", kanji: "制御", romaji: "seigyo", meaning: { es: "control (de sistema/máquina)", en: "control" }, example: { jp: "ロボットを制御します。", reading: "ろぼっとをせいぎょします。", translation: { es: "Controlo el robot.", en: "I control the robot." } } },
+      { kana: "かいろ", kanji: "回路", romaji: "kairo", meaning: { es: "circuito eléctrico", en: "circuit" }, example: { jp: "この回路は複雑です。", reading: "このかいろはふくざつです。", translation: { es: "Este circuito es complicado.", en: "This circuit is complicated." } } },
+      { kana: "せんたんぎじゅつ", kanji: "先端技術", romaji: "sentan gijutsu", meaning: { es: "tecnología de punta", en: "cutting-edge technology" }, example: { jp: "先端技術を導入します。", reading: "せんたんぎじゅつをどうにゅうします。", translation: { es: "Introducimos tecnología de punta.", en: "We introduce cutting-edge technology." } } },
+      { kana: "かそう", kanji: "仮想", romaji: "kasou", meaning: { es: "virtual", en: "virtual" }, example: { jp: "仮想現実を体験します。", reading: "かそうげんじつをたいけんします。", translation: { es: "Experimento la realidad virtual.", en: "I experience virtual reality." } } },
+      { kana: "つうしん", kanji: "通信", romaji: "tsuushin", meaning: { es: "telecomunicaciones", en: "communication, telecommunications" }, example: { jp: "通信が遅いです。", reading: "つうしんがおそいです。", translation: { es: "La comunicación es lenta.", en: "The communication is slow." } } },
+      { kana: "ネットワーク", kanji: null, romaji: "nettowaaku", meaning: { es: "red de computadoras", en: "network" }, example: { jp: "ネットワークに接続します。", reading: "ねっとわーくにせつぞくします。", translation: { es: "Me conecto a la red.", en: "I connect to the network." } } },
+      { kana: "アルゴリズム", kanji: null, romaji: "arugorizumu", meaning: { es: "algoritmo", en: "algorithm" }, example: { jp: "このアルゴリズムは効率的です。", reading: "このあるごりずむはこうりつてきです。", translation: { es: "Este algoritmo es eficiente.", en: "This algorithm is efficient." } } },
+      { kana: "どうにゅう", kanji: "導入", romaji: "dounyuu", meaning: { es: "implementación de sistema", en: "introduction, implementation" }, example: { jp: "新しいシステムを導入します。", reading: "あたらしいしすてむをどうにゅうします。", translation: { es: "Implemento un nuevo sistema.", en: "I implement a new system." } } },
+      { kana: "かいりょう", kanji: "改良", romaji: "kairyou", meaning: { es: "mejora técnica", en: "improvement (technical)" }, example: { jp: "製品を改良しました。", reading: "せいひんをかいりょうしました。", translation: { es: "Mejoré el producto.", en: "I improved the product." } } },
+      { kana: "せいのう", kanji: "性能", romaji: "seinou", meaning: { es: "rendimiento (de máquina)", en: "performance (of a machine/device)" }, example: { jp: "このパソコンの性能はいいです。", reading: "このぱそこんのせいのうはいいです。", translation: { es: "El rendimiento de esta computadora es bueno.", en: "This computer's performance is good." } } },
+      { kana: "かどう", kanji: "稼働", romaji: "kadou", meaning: { es: "funcionamiento (de máquina)", en: "operation (machine running)" }, example: { jp: "工場は24時間稼働しています。", reading: "こうじょうはにじゅうよじかんかどうしています。", translation: { es: "La fábrica funciona 24 horas.", en: "The factory operates 24 hours." } } },
+    ],
+  },
+  {
+    id: "lawRules",
+    icon: "⚖️",
+    titleKey: "n3CatLaw",
+    words: [
+      { kana: "ほうりつ", kanji: "法律", romaji: "houritsu", meaning: { es: "ley", en: "law" }, example: { jp: "新しい法律ができました。", reading: "あたらしいほうりつができました。", translation: { es: "Se creó una nueva ley.", en: "A new law was created." } } },
+      { kana: "けんり", kanji: "権利", romaji: "kenri", meaning: { es: "derecho legal", en: "right" }, example: { jp: "誰にでも権利があります。", reading: "だれにでもけんりがあります。", translation: { es: "Todos tienen derechos.", en: "Everyone has rights." } } },
+      { kana: "いはん", kanji: "違反", romaji: "ihan", meaning: { es: "violación / infracción", en: "violation" }, example: { jp: "交通違反をしました。", reading: "こうつういはんをしました。", translation: { es: "Cometí una infracción de tráfico.", en: "I committed a traffic violation." } } },
+      { kana: "ばっきん", kanji: "罰金", romaji: "bakkin", meaning: { es: "multa", en: "fine" }, example: { jp: "罰金を払いました。", reading: "ばっきんをはらいました。", translation: { es: "Pagué la multa.", en: "I paid the fine." } } },
+      { kana: "さいばん", kanji: "裁判", romaji: "saiban", meaning: { es: "juicio legal", en: "trial" }, example: { jp: "裁判で争っています。", reading: "さいばんであらそっています。", translation: { es: "Están litigando en el juicio.", en: "They're fighting it out in trial." } } },
+      { kana: "べんごし", kanji: "弁護士", romaji: "bengoshi", meaning: { es: "abogado", en: "lawyer" }, example: { jp: "弁護士に相談しました。", reading: "べんごしにそうだんしました。", translation: { es: "Consulté a un abogado.", en: "I consulted a lawyer." } } },
+      { kana: "はんざい", kanji: "犯罪", romaji: "hanzai", meaning: { es: "crimen", en: "crime" }, example: { jp: "この町は犯罪が少ないです。", reading: "このまちははんざいがすくないです。", translation: { es: "En este pueblo hay poco crimen.", en: "This town has little crime." } } },
+      { kana: "たいほ", kanji: "逮捕", romaji: "taiho", meaning: { es: "arresto", en: "arrest" }, example: { jp: "犯人が逮捕されました。", reading: "はんにんがたいほされました。", translation: { es: "El culpable fue arrestado.", en: "The culprit was arrested." } } },
+      { kana: "きんし", kanji: "禁止", romaji: "kinshi", meaning: { es: "prohibición", en: "prohibition" }, example: { jp: "ここは駐車禁止です。", reading: "ここはちゅうしゃきんしです。", translation: { es: "Aquí está prohibido estacionar.", en: "Parking is prohibited here." } } },
+      { kana: "きょか", kanji: "許可", romaji: "kyoka", meaning: { es: "permiso", en: "permission" }, example: { jp: "使用の許可をもらいました。", reading: "しようのきょかをもらいました。", translation: { es: "Obtuve permiso de uso.", en: "I got permission to use it." } } },
+      { kana: "しょうこ", kanji: "証拠", romaji: "shouko", meaning: { es: "prueba / evidencia", en: "evidence" }, example: { jp: "証拠がありません。", reading: "しょうこがありません。", translation: { es: "No hay pruebas.", en: "There's no evidence." } } },
+      { kana: "しょうにん", kanji: "証人", romaji: "shounin", meaning: { es: "testigo", en: "witness" }, example: { jp: "証人として話します。", reading: "しょうにんとしてはなします。", translation: { es: "Hablo como testigo.", en: "I speak as a witness." } } },
+      { kana: "ばいしょう", kanji: "賠償", romaji: "baishou", meaning: { es: "indemnización", en: "compensation, damages" }, example: { jp: "被害を賠償します。", reading: "ひがいをばいしょうします。", translation: { es: "Indemnizo los daños.", en: "I compensate for the damages." } } },
+      { kana: "じょうれい", kanji: "条例", romaji: "jourei", meaning: { es: "ordenanza municipal", en: "ordinance" }, example: { jp: "新しい条例が決まりました。", reading: "あたらしいじょうれいがきまりました。", translation: { es: "Se decidió una nueva ordenanza.", en: "A new ordinance was decided." } } },
+      { kana: "じょうけん", kanji: "条件", romaji: "jouken", meaning: { es: "condición (requisito)", en: "condition, requirement" }, example: { jp: "契約の条件を確認します。", reading: "けいやくのじょうけんをかくにんします。", translation: { es: "Confirmo las condiciones del contrato.", en: "I confirm the contract's conditions." } } },
+      { kana: "きやく", kanji: "規約", romaji: "kiyaku", meaning: { es: "términos de servicio", en: "terms, regulations" }, example: { jp: "利用規約を読みました。", reading: "りようきやくをよみました。", translation: { es: "Leí los términos de uso.", en: "I read the terms of use." } } },
+      { kana: "じょうやく", kanji: "条約", romaji: "jouyaku", meaning: { es: "tratado internacional", en: "treaty" }, example: { jp: "二つの国が条約を結びました。", reading: "ふたつのくにがじょうやくをむすびました。", translation: { es: "Los dos países firmaron un tratado.", en: "The two countries signed a treaty." } } },
+      { kana: "しょばつ", kanji: "処罰", romaji: "shobatsu", meaning: { es: "castigo legal", en: "punishment" }, example: { jp: "厳しい処罰を受けました。", reading: "きびしいしょばつをうけました。", translation: { es: "Recibió un castigo severo.", en: "He received a severe punishment." } } },
+      { kana: "せいとう", kanji: "正当", romaji: "seitou", meaning: { es: "legítimo / justo (na-adj)", en: "legitimate, justified" }, example: { jp: "それは正当な理由です。", reading: "それはせいとうなりゆうです。", translation: { es: "Esa es una razón legítima.", en: "That's a legitimate reason." } } },
+      { kana: "ふほう", kanji: "不法", romaji: "fuhou", meaning: { es: "ilegal (na-adj)", en: "illegal, unlawful" }, example: { jp: "不法な行為は許されません。", reading: "ふほうなこういはゆるされません。", translation: { es: "No se permiten actos ilegales.", en: "Illegal acts are not permitted." } } },
+    ],
+  },
+  {
+    id: "healthAdvanced",
+    icon: "🏥",
+    titleKey: "n3CatHealth",
+    words: [
+      { kana: "ちりょう", kanji: "治療", romaji: "chiryou", meaning: { es: "tratamiento médico", en: "treatment" }, example: { jp: "治療を受けています。", reading: "ちりょうをうけています。", translation: { es: "Estoy recibiendo tratamiento.", en: "I'm receiving treatment." } } },
+      { kana: "しんだん", kanji: "診断", romaji: "shindan", meaning: { es: "diagnóstico", en: "diagnosis" }, example: { jp: "医者に診断してもらいました。", reading: "いしゃにしんだんしてもらいました。", translation: { es: "El médico me hizo un diagnóstico.", en: "I had the doctor diagnose me." } } },
+      { kana: "しゅじゅつ", kanji: "手術", romaji: "shujutsu", meaning: { es: "cirugía", en: "surgery" }, example: { jp: "来週、手術を受けます。", reading: "らいしゅう、しゅじゅつをうけます。", translation: { es: "La próxima semana me operan.", en: "Next week I'll have surgery." } } },
+      { kana: "しょうじょう", kanji: "症状", romaji: "shoujou", meaning: { es: "síntoma", en: "symptom" }, example: { jp: "どんな症状がありますか。", reading: "どんなしょうじょうがありますか。", translation: { es: "¿Qué síntomas tiene?", en: "What symptoms do you have?" } } },
+      { kana: "よぼうせっしゅ", kanji: "予防接種", romaji: "yobou sesshu", meaning: { es: "vacuna", en: "vaccination" }, example: { jp: "予防接種を受けました。", reading: "よぼうせっしゅをうけました。", translation: { es: "Me vacuné.", en: "I got vaccinated." } } },
+      { kana: "ふくさよう", kanji: "副作用", romaji: "fukusayou", meaning: { es: "efecto secundario", en: "side effect" }, example: { jp: "この薬に副作用はありますか。", reading: "このくすりにふくさようはありますか。", translation: { es: "¿Esta medicina tiene efectos secundarios?", en: "Does this medicine have side effects?" } } },
+      { kana: "たいしつ", kanji: "体質", romaji: "taishitsu", meaning: { es: "constitución física", en: "body constitution" }, example: { jp: "私は冷え性の体質です。", reading: "わたしはひえしょうのたいしつです。", translation: { es: "Tengo una constitución propensa al frío.", en: "I have a body constitution prone to coldness." } } },
+      { kana: "めんえき", kanji: "免疫", romaji: "men'eki", meaning: { es: "inmunidad", en: "immunity" }, example: { jp: "免疫を高める食べ物です。", reading: "めんえきをたかめるたべものです。", translation: { es: "Es un alimento que fortalece la inmunidad.", en: "It's food that boosts immunity." } } },
+      { kana: "ストレス", kanji: null, romaji: "sutoresu", meaning: { es: "estrés", en: "stress" }, example: { jp: "仕事のストレスがたまっています。", reading: "しごとのすとれすがたまっています。", translation: { es: "Se me acumula el estrés del trabajo.", en: "Work stress is building up." } } },
+      { kana: "せいかつしゅうかんびょう", kanji: "生活習慣病", romaji: "seikatsu shuukanbyou", meaning: { es: "enfermedad del estilo de vida", en: "lifestyle disease" }, example: { jp: "生活習慣病に注意しましょう。", reading: "せいかつしゅうかんびょうにちゅういしましょう。", translation: { es: "Cuidémonos de las enfermedades del estilo de vida.", en: "Let's watch out for lifestyle diseases." } } },
+      { kana: "まんせい", kanji: "慢性", romaji: "mansei", meaning: { es: "crónico (enfermedad)", en: "chronic" }, example: { jp: "慢性の腰痛があります。", reading: "まんせいのようつうがあります。", translation: { es: "Tengo dolor de espalda crónico.", en: "I have chronic back pain." } } },
+      { kana: "きゅうせい", kanji: "急性", romaji: "kyuusei", meaning: { es: "agudo (enfermedad)", en: "acute" }, example: { jp: "急性の胃炎になりました。", reading: "きゅうせいのいえんになりました。", translation: { es: "Tuve una gastritis aguda.", en: "I got acute gastritis." } } },
+      { kana: "かいふく", kanji: "回復", romaji: "kaifuku", meaning: { es: "recuperación", en: "recovery" }, example: { jp: "早く回復してください。", reading: "はやくかいふくしてください。", translation: { es: "Recupérate pronto.", en: "Please recover soon." } } },
+      { kana: "あんせい", kanji: "安静", romaji: "ansei", meaning: { es: "reposo médico", en: "rest (medical)" }, example: { jp: "しばらく安静にしてください。", reading: "しばらくあんせいにしてください。", translation: { es: "Guarde reposo por un tiempo.", en: "Please rest for a while." } } },
+      { kana: "だっすい", kanji: "脱水", romaji: "dassui", meaning: { es: "deshidratación", en: "dehydration" }, example: { jp: "脱水症状に気をつけてください。", reading: "だっすいしょうじょうにきをつけてください。", translation: { es: "Tenga cuidado con la deshidratación.", en: "Please be careful of dehydration." } } },
+      { kana: "せいしんてき", kanji: "精神的", romaji: "seishinteki", meaning: { es: "mental / psicológico (na-adj)", en: "mental, psychological" }, example: { jp: "精神的に疲れています。", reading: "せいしんてきにつかれています。", translation: { es: "Estoy mentalmente cansado.", en: "I'm mentally tired." } } },
+      { kana: "たいりょく", kanji: "体力", romaji: "tairyoku", meaning: { es: "resistencia física", en: "physical stamina" }, example: { jp: "体力が落ちました。", reading: "たいりょくがおちました。", translation: { es: "Mi resistencia física bajó.", en: "My physical stamina dropped." } } },
+      { kana: "きゅうきゅうしゃ", kanji: "救急車", romaji: "kyuukyuusha", meaning: { es: "ambulancia", en: "ambulance" }, example: { jp: "救急車を呼びました。", reading: "きゅうきゅうしゃをよびました。", translation: { es: "Llamé a la ambulancia.", en: "I called an ambulance." } } },
+      { kana: "ちんつうざい", kanji: "鎮痛剤", romaji: "chintsuuzai", meaning: { es: "analgésico", en: "painkiller" }, example: { jp: "鎮痛剤を飲みました。", reading: "ちんつうざいをのみました。", translation: { es: "Tomé un analgésico.", en: "I took a painkiller." } } },
+      { kana: "けんこうしんだん", kanji: "健康診断", romaji: "kenkou shindan", meaning: { es: "chequeo médico", en: "health checkup" }, example: { jp: "毎年健康診断を受けます。", reading: "まいねんけんこうしんだんをうけます。", translation: { es: "Me hago un chequeo médico cada año.", en: "I get a health checkup every year." } } },
+    ],
+  },
+  {
+    id: "artsCulture",
+    icon: "🎨",
+    titleKey: "n3CatArts",
+    words: [
+      { kana: "げいじゅつ", kanji: "芸術", romaji: "geijutsu", meaning: { es: "arte", en: "art" }, example: { jp: "芸術に興味があります。", reading: "げいじゅつにきょうみがあります。", translation: { es: "Tengo interés en el arte.", en: "I'm interested in art." } } },
+      { kana: "さくひん", kanji: "作品", romaji: "sakuhin", meaning: { es: "obra (artística)", en: "work (of art)" }, example: { jp: "この作品が好きです。", reading: "このさくひんがすきです。", translation: { es: "Me gusta esta obra.", en: "I like this work." } } },
+      { kana: "ひょうげん", kanji: "表現", romaji: "hyougen", meaning: { es: "expresión", en: "expression" }, example: { jp: "気持ちを表現するのが難しいです。", reading: "きもちをひょうげんするのがむずかしいです。", translation: { es: "Es difícil expresar los sentimientos.", en: "It's hard to express feelings." } } },
+      { kana: "そうさく", kanji: "創作", romaji: "sousaku", meaning: { es: "creación artística", en: "(artistic) creation" }, example: { jp: "小説を創作しています。", reading: "しょうせつをそうさくしています。", translation: { es: "Estoy creando una novela.", en: "I'm creating a novel." } } },
+      { kana: "でんとう", kanji: "伝統", romaji: "dentou", meaning: { es: "tradición", en: "tradition" }, example: { jp: "伝統を大切にします。", reading: "でんとうをたいせつにします。", translation: { es: "Valoro la tradición.", en: "I value tradition." } } },
+      { kana: "げんだい", kanji: "現代", romaji: "gendai", meaning: { es: "época contemporánea", en: "modern era, contemporary" }, example: { jp: "現代の音楽が好きです。", reading: "げんだいのおんがくがすきです。", translation: { es: "Me gusta la música contemporánea.", en: "I like contemporary music." } } },
+      { kana: "こせい", kanji: "個性", romaji: "kosei", meaning: { es: "individualidad", en: "individuality" }, example: { jp: "彼には個性があります。", reading: "かれにはこせいがあります。", translation: { es: "Él tiene personalidad propia.", en: "He has individuality." } } },
+      { kana: "さいのう", kanji: "才能", romaji: "sainou", meaning: { es: "talento", en: "talent" }, example: { jp: "絵の才能があります。", reading: "えのさいのうがあります。", translation: { es: "Tiene talento para dibujar.", en: "He/She has talent for drawing." } } },
+      { kana: "びじゅつ", kanji: "美術", romaji: "bijutsu", meaning: { es: "bellas artes", en: "fine arts" }, example: { jp: "美術館に行きました。", reading: "びじゅつかんにいきました。", translation: { es: "Fui al museo de arte.", en: "I went to the art museum." } } },
+      { kana: "けんちく", kanji: "建築", romaji: "kenchiku", meaning: { es: "arquitectura", en: "architecture" }, example: { jp: "この建物は建築が独特です。", reading: "このたてものはけんちくがどくとくです。", translation: { es: "La arquitectura de este edificio es peculiar.", en: "This building's architecture is unique." } } },
+      { kana: "かんしょう", kanji: "鑑賞", romaji: "kanshou", meaning: { es: "apreciación de arte", en: "appreciation (of art)" }, example: { jp: "美術館で作品を鑑賞します。", reading: "びじゅつかんでさくひんをかんしょうします。", translation: { es: "Aprecio las obras en el museo.", en: "I appreciate the artworks at the museum." } } },
+      { kana: "じょうえん", kanji: "上演", romaji: "jouen", meaning: { es: "puesta en escena teatral", en: "(stage) performance" }, example: { jp: "演劇が上演されます。", reading: "えんげきがじょうえんされます。", translation: { es: "Se representa la obra de teatro.", en: "The play is performed." } } },
+      { kana: "えんげき", kanji: "演劇", romaji: "engeki", meaning: { es: "teatro (obra dramática)", en: "theater, drama" }, example: { jp: "演劇部に入っています。", reading: "えんげきぶにはいっています。", translation: { es: "Estoy en el club de teatro.", en: "I'm in the drama club." } } },
+      { kana: "さっか", kanji: "作家", romaji: "sakka", meaning: { es: "escritor / autor", en: "writer, author" }, example: { jp: "好きな作家は誰ですか。", reading: "すきなさっかはだれですか。", translation: { es: "¿Quién es tu escritor favorito?", en: "Who is your favorite writer?" } } },
+      { kana: "がか", kanji: "画家", romaji: "gaka", meaning: { es: "pintor", en: "painter" }, example: { jp: "有名な画家の絵を見ました。", reading: "ゆうめいながかのえをみました。", translation: { es: "Vi el cuadro de un pintor famoso.", en: "I saw a painting by a famous painter." } } },
+      { kana: "さっきょくか", kanji: "作曲家", romaji: "sakkyokuka", meaning: { es: "compositor musical", en: "composer" }, example: { jp: "作曲家になりたいです。", reading: "さっきょくかになりたいです。", translation: { es: "Quiero ser compositor.", en: "I want to become a composer." } } },
+      { kana: "みりょく", kanji: "魅力", romaji: "miryoku", meaning: { es: "encanto / atractivo", en: "charm, appeal" }, example: { jp: "この町には魅力があります。", reading: "このまちにはみりょくがあります。", translation: { es: "Este pueblo tiene encanto.", en: "This town has charm." } } },
+      { kana: "かち", kanji: "価値", romaji: "kachi", meaning: { es: "valor (importancia)", en: "value, worth" }, example: { jp: "この絵には価値があります。", reading: "このえにはかちがあります。", translation: { es: "Este cuadro tiene valor.", en: "This painting has value." } } },
+      { kana: "こてん", kanji: "古典", romaji: "koten", meaning: { es: "obra clásica", en: "classic" }, example: { jp: "古典文学を読みます。", reading: "こてんぶんがくをよみます。", translation: { es: "Leo literatura clásica.", en: "I read classic literature." } } },
+      { kana: "かんきゃく", kanji: "観客", romaji: "kankyaku", meaning: { es: "audiencia / espectadores", en: "audience" }, example: { jp: "観客が拍手しました。", reading: "かんきゃくがはくしゅしました。", translation: { es: "El público aplaudió.", en: "The audience applauded." } } },
+    ],
+  },
+  {
+    id: "connectorsAdvanced",
+    icon: "🔗",
+    titleKey: "n3CatConnectors",
+    words: [
+      { kana: "むしろ", kanji: null, romaji: "mushiro", meaning: { es: "más bien", en: "rather" }, example: { jp: "高いより、むしろ安全な方を選びます。", reading: "たかいより、むしろあんぜんなほうをえらびます。", translation: { es: "Más que caro, prefiero la opción más segura.", en: "Rather than expensive, I choose the safer option." } } },
+      { kana: "いわば", kanji: null, romaji: "iwaba", meaning: { es: "por así decirlo", en: "so to speak" }, example: { jp: "彼はいわば私の先生です。", reading: "かれはいわばわたしのせんせいです。", translation: { es: "Él es, por así decirlo, mi maestro.", en: "He is, so to speak, my teacher." } } },
+      { kana: "かえって", kanji: null, romaji: "kaette", meaning: { es: "al contrario / en cambio", en: "on the contrary, instead" }, example: { jp: "休んだら、かえって疲れました。", reading: "やすんだら、かえってつかれました。", translation: { es: "Al descansar, en cambio, me cansé más.", en: "When I rested, I instead got more tired." } } },
+      { kana: "さらに", kanji: null, romaji: "sarani", meaning: { es: "además / aún más", en: "furthermore, moreover" }, example: { jp: "さらに詳しく説明します。", reading: "さらにくわしくせつめいします。", translation: { es: "Explico con más detalle todavía.", en: "I'll explain in further detail." } } },
+      { kana: "ただし", kanji: null, romaji: "tadashi", meaning: { es: "sin embargo (excepción)", en: "however, provided that" }, example: { jp: "参加できます。ただし、予約が必要です。", reading: "さんかできます。ただし、よやくがひつようです。", translation: { es: "Puede participar. Sin embargo, se requiere reserva.", en: "You can participate. However, a reservation is required." } } },
+      { kana: "もっとも", kanji: null, romaji: "mottomo", meaning: { es: "aunque bien es cierto que", en: "although, mind you" }, example: { jp: "彼は正しい。もっとも、少し厳しい。", reading: "かれはただしい。もっとも、すこしきびしい。", translation: { es: "Él tiene razón. Aunque, es un poco estricto.", en: "He's right. Although, he's a bit strict." } } },
+      { kana: "いっぽう", kanji: "一方", romaji: "ippou", meaning: { es: "por otro lado", en: "on the other hand" }, example: { jp: "兄は医者だ。一方、弟は画家だ。", reading: "あにはいしゃだ。いっぽう、おとうとはがかだ。", translation: { es: "Mi hermano mayor es médico. Por otro lado, mi hermano menor es pintor.", en: "My older brother is a doctor. On the other hand, my younger brother is a painter." } } },
+      { kana: "ちなみに", kanji: null, romaji: "chinamini", meaning: { es: "a propósito / por cierto", en: "by the way, incidentally" }, example: { jp: "ちなみに、彼は日本語も話せます。", reading: "ちなみに、かれはにほんごもはなせます。", translation: { es: "Por cierto, él también habla japonés.", en: "Incidentally, he also speaks Japanese." } } },
+      { kana: "なんといっても", kanji: null, romaji: "nan to itte mo", meaning: { es: "al fin y al cabo", en: "after all, when all is said and done" }, example: { jp: "なんといっても、健康が一番です。", reading: "なんといっても、けんこうがいちばんです。", translation: { es: "Al fin y al cabo, la salud es lo primero.", en: "After all, health comes first." } } },
+      { kana: "いずれにしても", kanji: null, romaji: "izure ni shite mo", meaning: { es: "de cualquier forma", en: "in any case" }, example: { jp: "いずれにしても、行くつもりです。", reading: "いずれにしても、いくつもりです。", translation: { es: "De cualquier forma, tengo la intención de ir.", en: "In any case, I intend to go." } } },
+      { kana: "それにしても", kanji: null, romaji: "sore ni shite mo", meaning: { es: "aun así", en: "even so, still" }, example: { jp: "それにしても、値段が高すぎます。", reading: "それにしても、ねだんがたかすぎます。", translation: { es: "Aun así, el precio es demasiado alto.", en: "Even so, the price is too high." } } },
+      { kana: "すなわち", kanji: null, romaji: "sunawachi", meaning: { es: "es decir (formal)", en: "that is to say, namely" }, example: { jp: "首都、すなわち東京に住んでいます。", reading: "しゅと、すなわちとうきょうにすんでいます。", translation: { es: "Vivo en la capital, es decir, en Tokio.", en: "I live in the capital, that is to say, Tokyo." } } },
+      { kana: "したがって", kanji: null, romaji: "shitagatte", meaning: { es: "por lo tanto (formal)", en: "therefore, accordingly" }, example: { jp: "雨です。したがって、試合は中止です。", reading: "あめです。したがって、しあいはちゅうしです。", translation: { es: "Está lloviendo. Por lo tanto, el partido se cancela.", en: "It's raining. Therefore, the match is canceled." } } },
+      { kana: "あるいは", kanji: null, romaji: "arui wa", meaning: { es: "o bien", en: "or, alternatively" }, example: { jp: "バスあるいは電車で行きます。", reading: "ばすあるいはでんしゃでいきます。", translation: { es: "Voy en bus o en tren.", en: "I'll go by bus or by train." } } },
+      { kana: "または", kanji: null, romaji: "mata wa", meaning: { es: "o (alternativa formal)", en: "or" }, example: { jp: "現金またはカードでお願いします。", reading: "げんきんまたはかーどでおねがいします。", translation: { es: "Efectivo o tarjeta, por favor.", en: "Cash or card, please." } } },
+      { kana: "かつ", kanji: null, romaji: "katsu", meaning: { es: "y además (formal)", en: "and also, moreover" }, example: { jp: "安くて、かつ美味しいです。", reading: "やすくて、かつおいしいです。", translation: { es: "Es barato y además rico.", en: "It's cheap and also delicious." } } },
+      { kana: "さもないと", kanji: null, romaji: "samonaito", meaning: { es: "de lo contrario", en: "otherwise" }, example: { jp: "急いでください。さもないと遅れます。", reading: "いそいでください。さもないとおくれます。", translation: { es: "Apúrese. De lo contrario llegará tarde.", en: "Please hurry. Otherwise you'll be late." } } },
+      { kana: "それゆえ", kanji: null, romaji: "soreyue", meaning: { es: "por esa razón (formal)", en: "therefore, hence" }, example: { jp: "彼は経験がある。それゆえ信頼されています。", reading: "かれはけいけんがある。それゆえしんらいされています。", translation: { es: "Él tiene experiencia. Por esa razón se le tiene confianza.", en: "He has experience. Hence he is trusted." } } },
+      { kana: "にもかかわらず", kanji: null, romaji: "ni mo kakawarazu", meaning: { es: "a pesar de", en: "despite, in spite of" }, example: { jp: "雨にもかかわらず、出かけました。", reading: "あめにもかかわらず、でかけました。", translation: { es: "A pesar de la lluvia, salí.", en: "Despite the rain, I went out." } } },
+      { kana: "ようするに", kanji: "要するに", romaji: "you suru ni", meaning: { es: "en resumen", en: "in short, in other words" }, example: { jp: "要するに、時間がないということです。", reading: "ようするに、じかんがないということです。", translation: { es: "En resumen, no hay tiempo.", en: "In short, there's no time." } } },
+    ],
+  },
+];
+
+// ---------------------------------------------------
+// Gramática N3: mismo esquema que N4_GRAMMAR_POINTS (pattern/explanation/
+// tip/examples con reading) — 14 estructuras reales de N3, todas
+// distintas de las ya cubiertas en N4 (たら/ば/なら, ので/のに, そう/よう/
+// かもしれません/はず, なければなりません/なくてもいい, あげる/くれる/
+// もらう, ようになる, ながら): preparación (ておく), finalización/
+// arrepentimiento (てしまう), obligación moral (べきだ), resultado no
+// controlado vs decisión propia (ことになる/ことにする), propósito
+// (ように), exclusividad/evento reciente (ばかり), simultaneidad
+// instantánea (たとたんに), dirección formal (に対して), causa positiva/
+// negativa (せいで/おかげで), cita/referencia (という), voz pasiva
+// (られる), causativo (させる) y certeza alta (に違いない).
+// ---------------------------------------------------
+const N3_GRAMMAR_POINTS = [
+  {
+    pattern: { es: "[Verbo en forma て] おきます", en: "[Verb in て-form] おきます" },
+    explanation: {
+      es: "Hacer algo POR ADELANTADO, dejándolo preparado para más tarde — implica previsión, no solo la acción en sí.",
+      en: "To do something IN ADVANCE, leaving it ready for later — implies foresight, not just the action itself.",
+    },
+    tip: {
+      es: "おく viene de 置く (\"dejar/poner\") — literalmente \"dejas hecha\" la acción para cuando la necesites.",
+      en: "おく comes from 置く (\"to put/leave\") — you literally \"leave the action done\" for when you need it.",
+    },
+    examples: [
+      { jp: "旅行の前に、荷物を準備しておきます。", reading: "りょこうのまえに、にもつをじゅんびしておきます。", romaji: "Ryokou no mae ni, nimotsu o junbi shite okimasu.", translation: { es: "Antes del viaje, preparo el equipaje con anticipación.", en: "Before the trip, I prepare the luggage in advance." } },
+      { jp: "会議の資料を読んでおいてください。", reading: "かいぎのしりょうをよんでおいてください。", romaji: "Kaigi no shiryou o yonde oite kudasai.", translation: { es: "Lea los documentos de la reunión con anticipación, por favor.", en: "Please read the meeting documents in advance." } },
+    ],
+  },
+  {
+    pattern: { es: "[Verbo en forma て] しまいます", en: "[Verb in て-form] しまいます" },
+    explanation: {
+      es: "Indica que una acción se completó por completo, a menudo con un matiz de lamento, sorpresa o algo irreversible/accidental.",
+      en: "Indicates an action was completed entirely, often with a nuance of regret, surprise, or something irreversible/accidental.",
+    },
+    tip: {
+      es: "En pasado casual se contrae a ～ちゃった/～じゃった — \"食べちゃった\" = \"me lo comí (todo, sin querer)\".",
+      en: "In casual past it contracts to ～ちゃった/～じゃった — \"食べちゃった\" = \"I ate it (all, without meaning to)\".",
+    },
+    examples: [
+      { jp: "大切な写真を無くしてしまいました。", reading: "たいせつなしゃしんをなくしてしまいました。", romaji: "Taisetsu na shashin o nakushite shimaimashita.", translation: { es: "Perdí (sin querer) una foto importante.", en: "I ended up losing an important photo." } },
+      { jp: "宿題を全部やってしまいました。", reading: "しゅくだいをぜんぶやってしまいました。", romaji: "Shukudai o zenbu yatte shimaimashita.", translation: { es: "Terminé de hacer toda la tarea.", en: "I finished doing all the homework." } },
+    ],
+  },
+  {
+    pattern: { es: "[Verbo en forma diccionario] べきだ", en: "[Verb in dictionary form] べきだ" },
+    explanation: {
+      es: "Expresa lo que ALGUIEN DEBERÍA hacer por deber moral o sentido común — más fuerte que un simple consejo, pero distinto de una obligación legal.",
+      en: "Expresses what someone SHOULD do out of moral duty or common sense — stronger than mere advice, but distinct from a legal obligation.",
+    },
+    tip: {
+      es: "する se vuelve すべきだ (irregular, no します-べきだ) — memorízalo como excepción.",
+      en: "する becomes すべきだ (irregular, not します-べきだ) — memorize it as an exception.",
+    },
+    examples: [
+      { jp: "約束は守るべきです。", reading: "やくそくはまもるべきです。", romaji: "Yakusoku wa mamoru beki desu.", translation: { es: "Se debe cumplir las promesas.", en: "You should keep your promises." } },
+      { jp: "もっと早く相談すべきでした。", reading: "もっとはやくそうだんすべきでした。", romaji: "Motto hayaku soudan subeki deshita.", translation: { es: "Debería haber consultado antes.", en: "I should have consulted earlier." } },
+    ],
+  },
+  {
+    pattern: { es: "[Oración simple] ことになります", en: "[Plain sentence] ことになります" },
+    explanation: {
+      es: "Describe una decisión o resultado que se dio por circunstancias externas, no por elección directa del hablante — \"resultó que...\".",
+      en: "Describes a decision or result that came about due to external circumstances, not the speaker's own direct choice — \"it turned out that...\".",
+    },
+    tip: {
+      es: "Contraste clave con ことにする (siguiente punto): ことになる = alguien/algo más lo decidió; ことにする = YO decidí.",
+      en: "Key contrast with ことにする (next point): ことになる = someone/something else decided it; ことにする = I decided.",
+    },
+    examples: [
+      { jp: "来月、大阪に転勤することになりました。", reading: "らいげつ、おおさかにてんきんすることになりました。", romaji: "Raigetsu, Oosaka ni tenkin suru koto ni narimashita.", translation: { es: "Resultó que me trasladan a Osaka el próximo mes.", en: "It turned out that I'm being transferred to Osaka next month." } },
+      { jp: "会議は中止することになりました。", reading: "かいぎはちゅうしすることになりました。", romaji: "Kaigi wa chuushi suru koto ni narimashita.", translation: { es: "Se decidió cancelar la reunión.", en: "It was decided that the meeting would be canceled." } },
+    ],
+  },
+  {
+    pattern: { es: "[Oración simple] ことにします", en: "[Plain sentence] ことにします" },
+    explanation: {
+      es: "El hablante toma una decisión PROPIA y consciente — contraste directo con ことになる del punto anterior.",
+      en: "The speaker makes their OWN conscious decision — direct contrast with ことになる from the previous point.",
+    },
+    tip: {
+      es: "Útil para anunciar resoluciones: \"タバコをやめることにしました\" = \"decidí dejar de fumar\".",
+      en: "Useful for announcing resolutions: \"タバコをやめることにしました\" = \"I decided to quit smoking\".",
+    },
+    examples: [
+      { jp: "来年、留学することにしました。", reading: "らいねん、りゅうがくすることにしました。", romaji: "Rainen, ryuugaku suru koto ni shimashita.", translation: { es: "Decidí estudiar en el extranjero el próximo año.", en: "I decided to study abroad next year." } },
+      { jp: "健康のために、毎朝走ることにしています。", reading: "けんこうのために、まいあさはしることにしています。", romaji: "Kenkou no tame ni, maiasa hashiru koto ni shite imasu.", translation: { es: "Por mi salud, tengo la costumbre de correr cada mañana.", en: "For my health, I've made it a habit to run every morning." } },
+    ],
+  },
+  {
+    pattern: { es: "[Verbo potencial/negativo] ように、[Acción]", en: "[Potential/negative verb] ように, [Action]" },
+    explanation: {
+      es: "Expresa el PROPÓSITO de una acción, especialmente cuando el resultado no es directamente controlable (a diferencia de ～ために, más directo).",
+      en: "Expresses the PURPOSE of an action, especially when the result isn't directly controllable (unlike ～ために, which is more direct).",
+    },
+    tip: {
+      es: "Muy común con verbos potenciales o negativos: \"忘れないように\" (para no olvidar), \"聞こえるように\" (para que se oiga).",
+      en: "Very common with potential or negative verbs: \"忘れないように\" (so as not to forget), \"聞こえるように\" (so it can be heard).",
+    },
+    examples: [
+      { jp: "忘れないように、メモしておきます。", reading: "わすれないように、めもしておきます。", romaji: "Wasurenai you ni, memo shite okimasu.", translation: { es: "Anoto una nota para no olvidarlo.", en: "I'll take a note so I don't forget." } },
+      { jp: "みんなに聞こえるように、大きい声で話します。", reading: "みんなにきこえるように、おおきいこえではなします。", romaji: "Minna ni kikoeru you ni, ookii koe de hanashimasu.", translation: { es: "Hablo en voz alta para que todos puedan oír.", en: "I speak loudly so that everyone can hear." } },
+    ],
+  },
+  {
+    pattern: { es: "[Sustantivo] ばかり · [Verbo en forma た] ばかり", en: "[Noun] ばかり · [Verb in た-form] ばかり" },
+    explanation: {
+      es: "Con sustantivos: \"solo/nada más que\" (exceso de una sola cosa). Con verbo en pasado: \"acabar de hacer algo\" (evento muy reciente).",
+      en: "With nouns: \"only/nothing but\" (excess of one thing). With past-tense verbs: \"just did something\" (very recent event).",
+    },
+    tip: {
+      es: "\"ゲームばかりしています\" (solo juega videojuegos) vs \"今来たばかりです\" (recién llegó) — mismo ばかり, dos usos distintos.",
+      en: "\"ゲームばかりしています\" (all he does is play games) vs \"今来たばかりです\" (he just arrived) — same ばかり, two distinct uses.",
+    },
+    examples: [
+      { jp: "彼はゲームばかりしています。", reading: "かれはげーむばかりしています。", romaji: "Kare wa geemu bakari shite imasu.", translation: { es: "Él no hace nada más que jugar videojuegos.", en: "All he does is play video games." } },
+      { jp: "日本に来たばかりで、まだ何も分かりません。", reading: "にほんにきたばかりで、まだなにもわかりません。", romaji: "Nihon ni kita bakari de, mada nani mo wakarimasen.", translation: { es: "Acabo de llegar a Japón, todavía no entiendo nada.", en: "I just arrived in Japan, I still don't understand anything." } },
+    ],
+  },
+  {
+    pattern: { es: "[Verbo en forma た] とたんに、[Resultado]", en: "[Verb in た-form] とたんに, [Result]" },
+    explanation: {
+      es: "\"Justo en el instante en que\" ocurrió A, pasó B inmediatamente — el segundo evento es inmediato e inesperado.",
+      en: "\"The very instant\" A happened, B happened right away — the second event is immediate and unexpected.",
+    },
+    tip: {
+      es: "Se usa casi siempre con eventos pasados y sorpresivos, no para rutinas — no digas \"起きたとたんに、朝ごはんを食べます\" (suena raro).",
+      en: "Almost always used with past, surprising events, not routines — don't say \"起きたとたんに、朝ごはんを食べます\" (sounds odd).",
+    },
+    examples: [
+      { jp: "ドアを開けたとたんに、猫が飛び出しました。", reading: "どあをあけたとたんに、ねこがとびだしました。", romaji: "Doa o aketa totan ni, neko ga tobidashimashita.", translation: { es: "Justo al abrir la puerta, el gato salió corriendo.", en: "The instant I opened the door, the cat dashed out." } },
+      { jp: "家に着いたとたんに、雨が降り始めました。", reading: "いえについたとたんに、あめがふりはじめました。", romaji: "Ie ni tsuita totan ni, ame ga furi hajimemashita.", translation: { es: "Justo al llegar a casa, empezó a llover.", en: "The moment I arrived home, it started to rain." } },
+    ],
+  },
+  {
+    pattern: { es: "[Sustantivo] に対して、[Comentario/Actitud]", en: "[Noun] に対して, [Comment/Attitude]" },
+    explanation: {
+      es: "Marca hacia QUIÉN o QUÉ se dirige una actitud, sentimiento o acción — más formal y específico que simplemente に.",
+      en: "Marks TOWARD WHOM or WHAT an attitude, feeling, or action is directed — more formal and specific than simply に.",
+    },
+    tip: {
+      es: "Muy usado en contextos de opinión/negocios: \"客に対して失礼だ\" (es descortés hacia el cliente).",
+      en: "Very common in opinion/business contexts: \"客に対して失礼だ\" (it's rude toward the customer).",
+    },
+    examples: [
+      { jp: "彼女は環境問題に対して関心があります。", reading: "かのじょはかんきょうもんだいにたいしてかんしんがあります。", romaji: "Kanojo wa kankyou mondai ni taishite kanshin ga arimasu.", translation: { es: "Ella tiene interés hacia los problemas ambientales.", en: "She has an interest toward environmental issues." } },
+      { jp: "お客様に対して丁寧に話してください。", reading: "おきゃくさまにたいしてていねいにはなしてください。", romaji: "Okyakusama ni taishite teinei ni hanashite kudasai.", translation: { es: "Hable de forma cortés con los clientes.", en: "Please speak politely toward the customers." } },
+    ],
+  },
+  {
+    pattern: { es: "[Razón mala] せいで · [Razón buena] おかげで", en: "[Bad reason] せいで · [Good reason] おかげで" },
+    explanation: {
+      es: "Ambas dan la CAUSA de un resultado, pero せいで culpa a algo/alguien de algo MALO, mientras que おかげで agradece algo/alguien por algo BUENO.",
+      en: "Both give the CAUSE of a result, but せいで blames something/someone for something BAD, while おかげで credits something/someone for something GOOD.",
+    },
+    tip: {
+      es: "Nunca mezcles el tono: \"あなたのおかげで失敗した\" suena sarcástico — usa せいで para lo malo, おかげで para lo bueno.",
+      en: "Never mix the tone: \"あなたのおかげで失敗した\" sounds sarcastic — use せいで for bad things, おかげで for good things.",
+    },
+    examples: [
+      { jp: "台風のせいで、電車が止まりました。", reading: "たいふうのせいで、でんしゃがとまりました。", romaji: "Taifuu no sei de, densha ga tomarimashita.", translation: { es: "Por culpa del tifón, el tren se detuvo.", en: "Because of the typhoon, the train stopped." } },
+      { jp: "先生のおかげで、試験に合格しました。", reading: "せんせいのおかげで、しけんにごうかくしました。", romaji: "Sensei no okage de, shiken ni goukaku shimashita.", translation: { es: "Gracias al profesor, aprobé el examen.", en: "Thanks to the teacher, I passed the exam." } },
+    ],
+  },
+  {
+    pattern: { es: "[Nombre/Oración] という [Sustantivo]", en: "[Name/Sentence] という [Noun]" },
+    explanation: {
+      es: "Introduce el NOMBRE de algo (\"llamado...\") o cita/referencia lo que alguien dijo u oyó (\"que dice que...\"), sin que el hablante lo confirme como propio.",
+      en: "Introduces the NAME of something (\"called...\") or cites/references what someone said or heard (\"that...\"), without the speaker confirming it as their own.",
+    },
+    tip: {
+      es: "\"田中さんという人\" (una persona llamada Tanaka) vs \"雨が降るという予報\" (un pronóstico que dice que lloverá) — mismo patrón, dos matices.",
+      en: "\"田中さんという人\" (a person called Tanaka) vs \"雨が降るという予報\" (a forecast that says it will rain) — same pattern, two nuances.",
+    },
+    examples: [
+      { jp: "「桜」という映画を見ました。", reading: "「さくら」というえいがをみました。", romaji: "\"Sakura\" to iu eiga o mimashita.", translation: { es: "Vi una película llamada \"Sakura\".", en: "I watched a movie called \"Sakura\"." } },
+      { jp: "来年、値上げするという話を聞きました。", reading: "らいねん、ねあげするというはなしをききました。", romaji: "Rainen, neage suru to iu hanashi o kikimashita.", translation: { es: "Escuché que dicen que subirán los precios el próximo año.", en: "I heard talk that they say prices will rise next year." } },
+    ],
+  },
+  {
+    pattern: { es: "[Verbo en forma pasiva] られます／れます", en: "[Verb in passive form] られます／れます" },
+    explanation: {
+      es: "El sujeto de la oración RECIBE la acción en vez de realizarla — útil para hechos objetivos o cuando no importa (o no se sabe) quién hizo la acción.",
+      en: "The sentence's subject RECEIVES the action instead of performing it — useful for objective facts, or when it doesn't matter (or isn't known) who did it.",
+    },
+    tip: {
+      es: "También expresa MOLESTIA cuando alguien más te hace algo: \"雨に降られました\" = \"me agarró la lluvia\" (algo malo que me pasó).",
+      en: "Also expresses ANNOYANCE when someone/something does something to you: \"雨に降られました\" = \"I got caught in the rain\" (something bad that happened to me).",
+    },
+    examples: [
+      { jp: "この本は世界中で読まれています。", reading: "このほんはせかいじゅうでよまれています。", romaji: "Kono hon wa sekaijuu de yomarete imasu.", translation: { es: "Este libro es leído en todo el mundo.", en: "This book is read all over the world." } },
+      { jp: "子供の時、よく兄にいじめられました。", reading: "こどものとき、よくあににいじめられました。", romaji: "Kodomo no toki, yoku ani ni ijimeraremashita.", translation: { es: "De niño, mi hermano mayor me molestaba a menudo.", en: "As a child, my older brother often bullied me." } },
+    ],
+  },
+  {
+    pattern: { es: "[Verbo en forma causativa] させます", en: "[Verb in causative form] させます" },
+    explanation: {
+      es: "El sujeto HACE o PERMITE que otra persona realice una acción — según el contexto, puede ser una orden (hacer que alguien haga algo) o un permiso (dejar que alguien haga algo).",
+      en: "The subject MAKES or LETS another person do an action — depending on context, it can be an order (make someone do something) or permission (let someone do something).",
+    },
+    tip: {
+      es: "\"子供に野菜を食べさせます\" puede ser \"hago que el niño coma verduras\" — el contexto de autoridad/relación decide el matiz exacto.",
+      en: "\"子供に野菜を食べさせます\" can be \"I make the child eat vegetables\" — the authority/relationship context decides the exact nuance.",
+    },
+    examples: [
+      { jp: "先生は学生に発表させました。", reading: "せんせいはがくせいにはっぴょうさせました。", romaji: "Sensei wa gakusei ni happyou sasemashita.", translation: { es: "El profesor hizo que el estudiante hiciera la presentación.", en: "The teacher had the student give the presentation." } },
+      { jp: "子供を一人で買い物に行かせます。", reading: "こどもをひとりでかいものにいかせます。", romaji: "Kodomo o hitori de kaimono ni ikasemasu.", translation: { es: "Dejo que mi hijo vaya solo de compras.", en: "I let my child go shopping alone." } },
+    ],
+  },
+  {
+    pattern: { es: "[Oración simple] に違いない", en: "[Plain sentence] に違いない" },
+    explanation: {
+      es: "Expresa una conclusión con MUY ALTA certeza basada en evidencia o razonamiento lógico — más fuerte que はず o かもしれません.",
+      en: "Expresses a conclusion with VERY HIGH certainty based on evidence or logical reasoning — stronger than はず or かもしれません.",
+    },
+    tip: {
+      es: "Escala de certeza de menor a mayor: かもしれません < でしょう < はずです < に違いない。",
+      en: "Certainty scale from lowest to highest: かもしれません < でしょう < はずです < に違いない。",
+    },
+    examples: [
+      { jp: "あの店はいつも人が多い。人気があるに違いない。", reading: "あのみせはいつもひとがおおい。にんきがあるにちがいない。", romaji: "Ano mise wa itsumo hito ga ooi. Ninki ga aru ni chigainai.", translation: { es: "Esa tienda siempre tiene mucha gente. Sin duda es popular.", en: "That shop always has lots of people. It must be popular." } },
+      { jp: "この字は彼が書いたに違いありません。", reading: "このじはかれがかいたにちがいありません。", romaji: "Kono ji wa kare ga kaita ni chigai arimasen.", translation: { es: "Esta letra sin duda la escribió él.", en: "This handwriting was undoubtedly written by him." } },
+    ],
+  },
+];
+
+// ---------------------------------------------------
+// Conversaciones Situacionales N3 (Navi): mismo esquema que
+// N4_CONVERSATION_SCENES — 7 escenas con spread temático general (no
+// laboral a propósito, eso ya se cubrió en N4): debate de opiniones,
+// asesoría universitaria, discusión de noticias, queja formal (keigo),
+// consejo de relación, voluntariado ambiental y entrevista de trabajo
+// profunda. Gramática N3 real en uso: べきだ, ことになる/ことにする,
+// ように, ばかり, たとたんに, に対して, せいで/おかげで, に違いない,
+// てしまう.
+// ---------------------------------------------------
+const N3_CONVERSATION_SCENES = [
+  {
+    id: "opinionDiscussion",
+    icon: "💭",
+    titleKey: "jpConvOpinionTitle",
+    lineas: [
+      { segments: [{ text: "Ａ：" }, { text: "最近", reading: "さいきん" }, { text: "、リモートワークについてどう" }, { text: "思います", reading: "おもいます" }, { text: "か。" }], traduccion: { es: "¿Qué piensas últimamente sobre el trabajo remoto?", en: "What do you think about remote work lately?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "私", reading: "わたし" }, { text: "はリモートワークに" }, { text: "賛成", reading: "さんせい" }, { text: "です。" }, { text: "時間", reading: "じかん" }, { text: "を" }, { text: "自由", reading: "じゆう" }, { text: "に" }, { text: "使える", reading: "つかえる" }, { text: "からです。" }], traduccion: { es: "Yo estoy a favor del trabajo remoto. Porque se puede usar el tiempo libremente.", en: "I'm in favor of remote work. Because you can use your time freely." } },
+      { segments: [{ text: "Ａ：" }, { text: "でも、" }, { text: "私", reading: "わたし" }, { text: "はむしろオフィスで" }, { text: "働く", reading: "はたらく" }, { text: "方", reading: "ほう" }, { text: "がいいと" }, { text: "思います", reading: "おもいます" }, { text: "。" }], traduccion: { es: "Pero yo pienso que, más bien, es mejor trabajar en la oficina.", en: "But I think, rather, it's better to work at the office." } },
+      { segments: [{ text: "Ｂ：" }, { text: "どうしてそう" }, { text: "思う", reading: "おもう" }, { text: "んですか。" }], traduccion: { es: "¿Por qué piensas eso?", en: "Why do you think that?" } },
+      { segments: [{ text: "Ａ：" }, { text: "一人", reading: "ひとり" }, { text: "で" }, { text: "家", reading: "いえ" }, { text: "にいると、かえって" }, { text: "集中", reading: "しゅうちゅう" }, { text: "できないからです。" }], traduccion: { es: "Porque, al contrario, cuando estoy sola en casa no puedo concentrarme.", en: "Because, on the contrary, when I'm alone at home I can't concentrate." } },
+      { segments: [{ text: "Ｂ：" }, { text: "なるほど。その" }, { text: "意見", reading: "いけん" }, { text: "にも" }, { text: "根拠", reading: "こんきょ" }, { text: "がありますね。" }], traduccion: { es: "Ya veo. Esa opinión también tiene fundamento.", en: "I see. That opinion has grounds too." } },
+      { segments: [{ text: "Ａ：" }, { text: "それに、" }, { text: "同僚", reading: "どうりょう" }, { text: "と" }, { text: "直接", reading: "ちょくせつ" }, { text: "話した", reading: "はなした" }, { text: "方", reading: "ほう" }, { text: "が" }, { text: "誤解", reading: "ごかい" }, { text: "も" }, { text: "少ない", reading: "すくない" }, { text: "と" }, { text: "思います", reading: "おもいます" }, { text: "。" }], traduccion: { es: "Además, creo que hablar directamente con los compañeros genera menos malentendidos.", en: "Moreover, I think talking directly with coworkers leads to fewer misunderstandings." } },
+      { segments: [{ text: "Ｂ：" }, { text: "確かに", reading: "たしかに" }, { text: "。でも、" }, { text: "通勤", reading: "つうきん" }, { text: "の" }, { text: "時間", reading: "じかん" }, { text: "が" }, { text: "無駄", reading: "むだ" }, { text: "になるという" }, { text: "考え方", reading: "かんがえかた" }, { text: "もあります。" }], traduccion: { es: "Es verdad. Pero también existe la idea de que el tiempo de traslado se desperdicia.", en: "True. But there's also the view that commuting time gets wasted." } },
+      { segments: [{ text: "Ａ：" }, { text: "それも" }, { text: "一つ", reading: "ひとつ" }, { text: "の" }, { text: "立場", reading: "たちば" }, { text: "ですね。" }, { text: "要するに", reading: "ようするに" }, { text: "、" }, { text: "人", reading: "ひと" }, { text: "によって" }, { text: "向き不向き", reading: "むきふむき" }, { text: "があるということです。" }], traduccion: { es: "Ese también es un punto de vista. En resumen, depende de cada persona si le conviene o no.", en: "That's one standpoint too. In short, it depends on whether it suits the person or not." } },
+      { segments: [{ text: "Ｂ：" }, { text: "そうですね。" }, { text: "会社", reading: "かいしゃ" }, { text: "が" }, { text: "両方", reading: "りょうほう" }, { text: "の" }, { text: "選択肢", reading: "せんたくし" }, { text: "を" }, { text: "用意する", reading: "よういする" }, { text: "べきだと" }, { text: "思います", reading: "おもいます" }, { text: "。" }], traduccion: { es: "Así es. Creo que la empresa debería ofrecer ambas opciones.", en: "That's right. I think the company should provide both options." } },
+      { segments: [{ text: "Ａ：" }, { text: "私", reading: "わたし" }, { text: "もそう" }, { text: "思います", reading: "おもいます" }, { text: "。" }, { text: "強制する", reading: "きょうせいする" }, { text: "のではなく、" }, { text: "選ばせる", reading: "えらばせる" }, { text: "方", reading: "ほう" }, { text: "がいいですよね。" }], traduccion: { es: "Yo también lo creo. Es mejor dejar que uno elija, en vez de obligar.", en: "I think so too. It's better to let people choose, rather than force it." } },
+      { segments: [{ text: "Ｂ：" }, { text: "この" }, { text: "議論", reading: "ぎろん" }, { text: "、" }, { text: "上司", reading: "じょうし" }, { text: "にも" }, { text: "提案", reading: "ていあん" }, { text: "してみましょうか。" }], traduccion: { es: "¿Le proponemos esta discusión también al jefe?", en: "Shall we propose this discussion to the boss too?" } },
+      { segments: [{ text: "Ａ：" }, { text: "いい" }, { text: "考え", reading: "かんがえ" }, { text: "ですね。" }, { text: "今度", reading: "こんど" }, { text: "の" }, { text: "会議", reading: "かいぎ" }, { text: "で" }, { text: "話してみます", reading: "はなしてみます" }, { text: "。" }], traduccion: { es: "Buena idea. Lo intentaré hablar en la próxima reunión.", en: "Good idea. I'll try bringing it up at the next meeting." } },
+    ],
+  },
+  {
+    id: "universityAdvising",
+    icon: "🎓",
+    titleKey: "jpConvUniversityTitle",
+    lineas: [
+      { segments: [{ text: "Ａ：" }, { text: "どうしましたか。" }, { text: "何か", reading: "なにか" }, { text: "相談したい", reading: "そうだんしたい" }, { text: "ことがあるんですか。" }], traduccion: { es: "¿Qué pasó? ¿Tienes algo que consultar?", en: "What's up? Do you have something you'd like to discuss?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "はい、" }, { text: "先生", reading: "せんせい" }, { text: "。" }, { text: "大学院", reading: "だいがくいん" }, { text: "に" }, { text: "進学する", reading: "しんがくする" }, { text: "べきかどうか" }, { text: "悩んでいます", reading: "なやんでいます" }, { text: "。" }], traduccion: { es: "Sí, profesor. Estoy indeciso sobre si debería continuar mis estudios en el posgrado.", en: "Yes, professor. I'm troubled about whether I should advance to graduate school." } },
+      { segments: [{ text: "Ａ：" }, { text: "なるほど。" }, { text: "何", reading: "なに" }, { text: "を" }, { text: "専攻したい", reading: "せんこうしたい" }, { text: "と" }, { text: "考えていますか", reading: "かんがえていますか" }, { text: "。" }], traduccion: { es: "Ya veo. ¿Qué especialidad estás pensando estudiar?", en: "I see. What do you think you want to major in?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "経済学", reading: "けいざいがく" }, { text: "を" }, { text: "専攻したい", reading: "せんこうしたい" }, { text: "です。でも、" }, { text: "就職した", reading: "しゅうしょくした" }, { text: "方", reading: "ほう" }, { text: "がいいという" }, { text: "意見", reading: "いけん" }, { text: "もあります。" }], traduccion: { es: "Quiero especializarme en economía. Pero también existe la opinión de que sería mejor conseguir empleo.", en: "I want to major in economics. But there's also the opinion that it would be better to get a job." } },
+      { segments: [{ text: "Ａ：" }, { text: "それは" }, { text: "大事な", reading: "だいじな" }, { text: "決断", reading: "けつだん" }, { text: "ですね。" }, { text: "奨学金", reading: "しょうがくきん" }, { text: "についてはどう" }, { text: "思いますか", reading: "おもいますか" }, { text: "。" }], traduccion: { es: "Esa es una decisión importante. ¿Qué piensas sobre las becas?", en: "That's an important decision. What do you think about scholarships?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "申請してみよう", reading: "しんせいしてみよう" }, { text: "と" }, { text: "思っています", reading: "おもっています" }, { text: "。でも、" }, { text: "合格する", reading: "ごうかくする" }, { text: "かどうか" }, { text: "分かりません", reading: "わかりません" }, { text: "。" }], traduccion: { es: "Estoy pensando en intentar solicitar una. Pero no sé si aprobaré.", en: "I'm thinking of trying to apply. But I don't know whether I'll be accepted." } },
+      { segments: [{ text: "Ａ：" }, { text: "あなたの" }, { text: "成績", reading: "せいせき" }, { text: "なら、" }, { text: "合格する", reading: "ごうかくする" }, { text: "可能性", reading: "かのうせい" }, { text: "は" }, { text: "高い", reading: "たかい" }, { text: "に" }, { text: "違いありません", reading: "ちがいありません" }, { text: "。" }], traduccion: { es: "Con tus calificaciones, sin duda las posibilidades de aprobar son altas.", en: "With your grades, the chances of passing must be high." } },
+      { segments: [{ text: "Ｂ：" }, { text: "ありがとうございます。" }, { text: "研究したい", reading: "けんきゅうしたい" }, { text: "テーマもまだ" }, { text: "曖昧", reading: "あいまい" }, { text: "なんです。" }], traduccion: { es: "Muchas gracias. El tema que quiero investigar todavía es ambiguo también.", en: "Thank you. The topic I want to research is still ambiguous too." } },
+      { segments: [{ text: "Ａ：" }, { text: "それなら、まず" }, { text: "論文", reading: "ろんぶん" }, { text: "を" }, { text: "書いてみる", reading: "かいてみる" }, { text: "ことにしたらどうですか。" }], traduccion: { es: "Entonces, ¿qué te parece decidir primero escribir un ensayo?", en: "In that case, how about deciding to first try writing a paper?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "分かりました", reading: "わかりました" }, { text: "。テーマを" }, { text: "絞る", reading: "しぼる" }, { text: "前", reading: "まえ" }, { text: "に、" }, { text: "色々な", reading: "いろいろな" }, { text: "研究", reading: "けんきゅう" }, { text: "を" }, { text: "調べてみます", reading: "しらべてみます" }, { text: "。" }], traduccion: { es: "Entendido. Antes de definir el tema, investigaré varios estudios.", en: "Understood. Before narrowing the topic, I'll look into various studies." } },
+      { segments: [{ text: "Ａ：" }, { text: "いいですね。" }, { text: "何か", reading: "なにか" }, { text: "困った", reading: "こまった" }, { text: "ことがあれば、いつでも" }, { text: "指導します", reading: "しどうします" }, { text: "よ。" }], traduccion: { es: "Muy bien. Si tienes algún problema, te guiaré en cualquier momento.", en: "Good. If you run into any trouble, I'll guide you anytime." } },
+      { segments: [{ text: "Ｂ：" }, { text: "本当に", reading: "ほんとうに" }, { text: "ありがとうございます。もう" }, { text: "少し", reading: "すこし" }, { text: "考えて", reading: "かんがえて" }, { text: "から、" }, { text: "決める", reading: "きめる" }, { text: "ことにします。" }], traduccion: { es: "Muchas gracias de verdad. Decidiré después de pensarlo un poco más.", en: "Thank you so much. I'll decide after thinking a bit more." } },
+    ],
+  },
+  {
+    id: "newsDiscussion",
+    icon: "📰",
+    titleKey: "jpConvNewsTitle",
+    lineas: [
+      { segments: [{ text: "Ａ：" }, { text: "今日", reading: "きょう" }, { text: "の" }, { text: "ニュース、見ましたか", reading: "にゅーす、みましたか" }, { text: "。" }, { text: "少子化", reading: "しょうしか" }, { text: "について" }, { text: "特集していました", reading: "とくしゅうしていました" }, { text: "ね。" }], traduccion: { es: "¿Viste las noticias de hoy? Hicieron un especial sobre la disminución de la natalidad.", en: "Did you see today's news? They ran a special on the declining birthrate." } },
+      { segments: [{ text: "Ｂ：" }, { text: "見ました", reading: "みました" }, { text: "。" }, { text: "高齢化", reading: "こうれいか" }, { text: "と" }, { text: "少子化", reading: "しょうしか" }, { text: "、" }, { text: "両方", reading: "りょうほう" }, { text: "が" }, { text: "進んでいる", reading: "すすんでいる" }, { text: "という" }, { text: "話", reading: "はなし" }, { text: "でした。" }], traduccion: { es: "Lo vi. Era sobre que tanto el envejecimiento como la disminución de la natalidad están avanzando.", en: "I saw it. It was about how both aging and the declining birthrate are progressing." } },
+      { segments: [{ text: "Ａ：" }, { text: "この" }, { text: "傾向", reading: "けいこう" }, { text: "が" }, { text: "続くと", reading: "つづくと" }, { text: "、" }, { text: "将来", reading: "しょうらい" }, { text: "、" }, { text: "労働力", reading: "ろうどうりょく" }, { text: "が" }, { text: "減少する", reading: "げんしょうする" }, { text: "に" }, { text: "違いありません", reading: "ちがいありません" }, { text: "。" }], traduccion: { es: "Si esta tendencia continúa, sin duda la fuerza laboral disminuirá en el futuro.", en: "If this trend continues, the workforce will surely decrease in the future." } },
+      { segments: [{ text: "Ｂ：" }, { text: "そうですね。" }, { text: "政府", reading: "せいふ" }, { text: "は" }, { text: "何か", reading: "なにか" }, { text: "政策", reading: "せいさく" }, { text: "を" }, { text: "考えている", reading: "かんがえている" }, { text: "んでしょうか。" }], traduccion: { es: "Así es. ¿El gobierno estará pensando en alguna política?", en: "That's right. I wonder if the government is considering some policy." } },
+      { segments: [{ text: "Ａ：" }, { text: "記事", reading: "きじ" }, { text: "によると、" }, { text: "子育て", reading: "こそだて" }, { text: "支援", reading: "しえん" }, { text: "の" }, { text: "予算", reading: "よさん" }, { text: "を" }, { text: "増加させる", reading: "ぞうかさせる" }, { text: "そうです。" }], traduccion: { es: "Según el artículo, parece que van a aumentar el presupuesto de apoyo a la crianza.", en: "According to the article, it seems they'll increase the budget for childcare support." } },
+      { segments: [{ text: "Ｂ：" }, { text: "それは" }, { text: "良い", reading: "いい" }, { text: "政策", reading: "せいさく" }, { text: "だと" }, { text: "思います", reading: "おもいます" }, { text: "。ただし、" }, { text: "実現する", reading: "じつげんする" }, { text: "かどうか" }, { text: "分かりません", reading: "わかりません" }, { text: "。" }], traduccion: { es: "Creo que es una buena política. Sin embargo, no se sabe si se llevará a cabo.", en: "I think that's a good policy. However, it's unclear whether it will be realized." } },
+      { segments: [{ text: "Ａ：" }, { text: "確かに", reading: "たしかに" }, { text: "。それに、この" }, { text: "問題", reading: "もんだい" }, { text: "は" }, { text: "少子化", reading: "しょうしか" }, { text: "だけの" }, { text: "問題", reading: "もんだい" }, { text: "ではないと" }, { text: "思います", reading: "おもいます" }, { text: "。" }], traduccion: { es: "Es verdad. Además, creo que este problema no es solo un problema de baja natalidad.", en: "True. Moreover, I think this issue isn't only a birthrate problem." } },
+      { segments: [{ text: "Ｂ：" }, { text: "どういう" }, { text: "意味", reading: "いみ" }, { text: "ですか。" }], traduccion: { es: "¿Qué quieres decir?", en: "What do you mean?" } },
+      { segments: [{ text: "Ａ：" }, { text: "格差", reading: "かくさ" }, { text: "の" }, { text: "問題", reading: "もんだい" }, { text: "も" }, { text: "関係している", reading: "かんけいしている" }, { text: "ということです。" }, { text: "育児", reading: "いくじ" }, { text: "にはお" }, { text: "金", reading: "かね" }, { text: "がかかりますから。" }], traduccion: { es: "Quiero decir que el problema de la desigualdad también está relacionado. Porque criar hijos cuesta dinero.", en: "I mean the inequality issue is related too. Because raising children costs money." } },
+      { segments: [{ text: "Ｂ：" }, { text: "なるほど、そう" }, { text: "考えると", reading: "かんがえると" }, { text: "、" }, { text: "根", reading: "ね" }, { text: "が" }, { text: "深い", reading: "ふかい" }, { text: "問題", reading: "もんだい" }, { text: "ですね。" }], traduccion: { es: "Ya veo, pensándolo así, es un problema de raíces profundas.", en: "I see, thinking about it that way, it's a deep-rooted problem." } },
+      { segments: [{ text: "Ａ：" }, { text: "私", reading: "わたし" }, { text: "たちにできることは" }, { text: "少ない", reading: "すくない" }, { text: "かもしれませんが、" }, { text: "関心", reading: "かんしん" }, { text: "を" }, { text: "持ち続ける", reading: "もちつづける" }, { text: "べきだと" }, { text: "思います", reading: "おもいます" }, { text: "。" }], traduccion: { es: "Puede que haya poco que nosotros podamos hacer, pero creo que deberíamos seguir mostrando interés.", en: "There may be little we can do, but I think we should keep taking an interest." } },
+      { segments: [{ text: "Ｂ：" }, { text: "そうですね。" }, { text: "今度", reading: "こんど" }, { text: "、この" }, { text: "話題", reading: "わだい" }, { text: "についてもっと" }, { text: "調べてみます", reading: "しらべてみます" }, { text: "。" }], traduccion: { es: "Así es. La próxima vez investigaré más sobre este tema.", en: "That's right. Next time I'll look into this topic more." } },
+    ],
+  },
+  {
+    id: "formalComplaint",
+    icon: "😤",
+    titleKey: "jpConvComplaintTitle",
+    lineas: [
+      { segments: [{ text: "Ｂ：" }, { text: "すみません、" }, { text: "先週", reading: "せんしゅう" }, { text: "買った", reading: "かった" }, { text: "商品", reading: "しょうひん" }, { text: "について" }, { text: "相談したい", reading: "そうだんしたい" }, { text: "ことがあります。" }], traduccion: { es: "Disculpe, tengo algo que consultar sobre un producto que compré la semana pasada.", en: "Excuse me, I have something I'd like to discuss about a product I bought last week." } },
+      { segments: [{ text: "Ａ：" }, { text: "かしこまりました", }, { text: "。どのような" }, { text: "問題", reading: "もんだい" }, { text: "がございましたか。" }], traduccion: { es: "Entendido. ¿Qué tipo de problema tuvo?", en: "Understood. What kind of problem did you have?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "使ってみたら", reading: "つかってみたら" }, { text: "、すぐに" }, { text: "壊れてしまいました", reading: "こわれてしまいました" }, { text: "。" }, { text: "品質", reading: "ひんしつ" }, { text: "に" }, { text: "問題", reading: "もんだい" }, { text: "がある" }, { text: "に" }, { text: "違いありません", reading: "ちがいありません" }, { text: "。" }], traduccion: { es: "Al usarlo, se rompió de inmediato. Sin duda hay un problema de calidad.", en: "When I tried using it, it broke right away. There must be a quality problem." } },
+      { segments: [{ text: "Ａ：" }, { text: "大変", reading: "たいへん" }, { text: "申し訳ございません", reading: "もうしわけございません" }, { text: "。" }, { text: "詳しい", reading: "くわしい" }, { text: "状況", reading: "じょうきょう" }, { text: "を" }, { text: "教えていただけますか", reading: "おしえていただけますか" }, { text: "。" }], traduccion: { es: "Le pido mil disculpas. ¿Podría contarme la situación con más detalle?", en: "I'm very sorry. Could you tell me the detailed situation?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "スイッチを" }, { text: "入れた", reading: "いれた" }, { text: "とたんに、" }, { text: "変な", reading: "へんな" }, { text: "音", reading: "おと" }, { text: "がして" }, { text: "止まりました", reading: "とまりました" }, { text: "。" }], traduccion: { es: "Justo al encenderlo, hizo un sonido raro y se detuvo.", en: "The moment I turned it on, it made a strange noise and stopped." } },
+      { segments: [{ text: "Ａ：" }, { text: "それは" }, { text: "困りました", reading: "こまりました" }, { text: "ね。" }, { text: "返品", reading: "へんぴん" }, { text: "または" }, { text: "交換", reading: "こうかん" }, { text: "に" }, { text: "対応させていただきます", reading: "たいおうさせていただきます" }, { text: "。" }], traduccion: { es: "Eso es un problema. Le atenderemos con una devolución o un cambio.", en: "That's troublesome. We'll handle it with a return or an exchange." } },
+      { segments: [{ text: "Ｂ：" }, { text: "返品してもらえますか", reading: "へんぴんしてもらえますか" }, { text: "。" }, { text: "同じ", reading: "おなじ" }, { text: "商品", reading: "しょうひん" }, { text: "を" }, { text: "買う", reading: "かう" }, { text: "気", reading: "き" }, { text: "にはなれません。" }], traduccion: { es: "¿Podría hacerme la devolución? No me da ganas de comprar el mismo producto.", en: "Could you give me a refund? I don't feel like buying the same product." } },
+      { segments: [{ text: "Ａ：" }, { text: "承知しました", reading: "しょうちしました" }, { text: "。レシートをお" }, { text: "持ち", reading: "もち" }, { text: "でしたら、" }, { text: "確認させてください", reading: "かくにんさせてください" }, { text: "。" }], traduccion: { es: "Entendido. Si tiene el recibo, permítame confirmarlo.", en: "Understood. If you have the receipt, please let me check it." } },
+      { segments: [{ text: "Ｂ：" }, { text: "はい、こちらです。それから、" }, { text: "謝罪", reading: "しゃざい" }, { text: "の" }, { text: "言葉", reading: "ことば" }, { text: "もいただきたいです。" }], traduccion: { es: "Sí, aquí está. Además, me gustaría recibir también una disculpa.", en: "Yes, here it is. Also, I would like to receive an apology as well." } },
+      { segments: [{ text: "Ａ：" }, { text: "おっしゃる" }, { text: "通り", reading: "とおり" }, { text: "です。この" }, { text: "度", reading: "たび" }, { text: "はご" }, { text: "不便", reading: "ふべん" }, { text: "をおかけして、" }, { text: "心", reading: "こころ" }, { text: "よりお" }, { text: "詫び", reading: "わび" }, { text: "申し上げます", reading: "もうしあげます" }, { text: "。" }], traduccion: { es: "Tiene toda la razón. En esta ocasión, le pido disculpas de corazón por las molestias causadas.", en: "You're absolutely right. This time, I sincerely apologize for the inconvenience caused." } },
+      { segments: [{ text: "Ｂ：" }, { text: "分かりました", reading: "わかりました" }, { text: "。" }, { text: "今後", reading: "こんご" }, { text: "は" }, { text: "品質管理", reading: "ひんしつかんり" }, { text: "をしっかりしてください。" }], traduccion: { es: "Entendido. De ahora en adelante, por favor hagan un control de calidad más riguroso.", en: "Understood. Please make sure to do proper quality control from now on." } },
+      { segments: [{ text: "Ａ：" }, { text: "ご指摘", reading: "ごしてき" }, { text: "、ありがとうございます。" }, { text: "今後", reading: "こんご" }, { text: "このようなことがないように" }, { text: "改善いたします", reading: "かいぜんいたします" }, { text: "。" }], traduccion: { es: "Gracias por señalarlo. Mejoraremos para que esto no vuelva a ocurrir.", en: "Thank you for pointing that out. We will improve so this doesn't happen again." } },
+    ],
+  },
+  {
+    id: "relationshipAdvice",
+    icon: "💔",
+    titleKey: "jpConvRelationshipTitle",
+    lineas: [
+      { segments: [{ text: "Ｂ：" }, { text: "ちょっと" }, { text: "相談", reading: "そうだん" }, { text: "があるんだけど、いい？" }], traduccion: { es: "Tengo algo que consultarte, ¿está bien?", en: "I have something I want to ask you about, is that okay?" } },
+      { segments: [{ text: "Ａ：" }, { text: "うん、もちろん。どうしたの？" }], traduccion: { es: "Sí, claro. ¿Qué pasó?", en: "Yeah, of course. What happened?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "昨日", reading: "きのう" }, { text: "、" }, { text: "彼", reading: "かれ" }, { text: "と" }, { text: "喧嘩してしまった", reading: "けんかしてしまった" }, { text: "んだ。" }], traduccion: { es: "Ayer terminé peleando con mi novio.", en: "Yesterday I ended up fighting with my boyfriend." } },
+      { segments: [{ text: "Ａ：" }, { text: "え、どうして" }, { text: "喧嘩", reading: "けんか" }, { text: "になったの？" }], traduccion: { es: "¿Eh, por qué se convirtió en pelea?", en: "Huh, why did it turn into a fight?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "彼", reading: "かれ" }, { text: "が" }, { text: "私", reading: "わたし" }, { text: "の" }, { text: "気持ち", reading: "きもち" }, { text: "を" }, { text: "分かってくれない", reading: "わかってくれない" }, { text: "ような" }, { text: "気", reading: "き" }, { text: "がして、" }, { text: "不安", reading: "ふあん" }, { text: "になったの。" }], traduccion: { es: "Sentí que él no entendía mis sentimientos, y me puse ansiosa.", en: "I felt like he didn't understand my feelings, and I got anxious." } },
+      { segments: [{ text: "Ａ：" }, { text: "それは" }, { text: "辛い", reading: "つらい" }, { text: "ね。それにしても、" }, { text: "話し合い", reading: "はなしあい" }, { text: "はしたの？" }], traduccion: { es: "Eso es difícil. Aun así, ¿hablaron sobre eso?", en: "That's hard. Even so, did you two talk it through?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "まだしていない。" }, { text: "連絡する", reading: "れんらくする" }, { text: "べきかどうか、" }, { text: "迷っている", reading: "まよっている" }, { text: "の。" }], traduccion: { es: "Todavía no. Estoy indecisa sobre si debería contactarlo o no.", en: "Not yet. I'm hesitant about whether I should reach out or not." } },
+      { segments: [{ text: "Ａ：" }, { text: "私", reading: "わたし" }, { text: "は" }, { text: "連絡した", reading: "れんらくした" }, { text: "方", reading: "ほう" }, { text: "がいいと" }, { text: "思う", reading: "おもう" }, { text: "よ。" }, { text: "誤解", reading: "ごかい" }, { text: "のままにしておくと、かえって" }, { text: "関係", reading: "かんけい" }, { text: "が" }, { text: "悪くなる", reading: "わるくなる" }, { text: "から。" }], traduccion: { es: "Yo creo que es mejor que lo contactes. Porque si dejas el malentendido así, al contrario, la relación empeorará.", en: "I think it's better to reach out. Because if you leave the misunderstanding as is, it'll only make the relationship worse." } },
+      { segments: [{ text: "Ｂ：" }, { text: "確かに", reading: "たしかに" }, { text: "そうだね。でも、" }, { text: "何", reading: "なに" }, { text: "と" }, { text: "言えば", reading: "いえば" }, { text: "いいか" }, { text: "分からない", reading: "わからない" }, { text: "。" }], traduccion: { es: "Es verdad. Pero no sé qué decir.", en: "That's true. But I don't know what to say." } },
+      { segments: [{ text: "Ａ：" }, { text: "正直な", reading: "しょうじきな" }, { text: "気持ち", reading: "きもち" }, { text: "を" }, { text: "伝える", reading: "つたえる" }, { text: "だけでいいと" }, { text: "思う", reading: "おもう" }, { text: "。" }, { text: "素直な", reading: "すなおな" }, { text: "方", reading: "ほう" }, { text: "が、きっと" }, { text: "彼", reading: "かれ" }, { text: "にも" }, { text: "伝わる", reading: "つたわる" }, { text: "よ。" }], traduccion: { es: "Creo que basta con transmitir tus sentimientos con honestidad. Siendo sincera, seguro que se lo transmitirás a él también.", en: "I think it's enough to just convey your honest feelings. Being genuine will surely get through to him too." } },
+      { segments: [{ text: "Ｂ：" }, { text: "そうか。" }, { text: "今夜", reading: "こんや" }, { text: "、" }, { text: "思い切って", reading: "おもいきって" }, { text: "連絡してみる", reading: "れんらくしてみる" }, { text: "ことにする。" }], traduccion: { es: "Ya veo. Esta noche, me decido a contactarlo con valentía.", en: "I see. Tonight, I'll decide to bravely reach out to him." } },
+      { segments: [{ text: "Ａ：" }, { text: "うん、" }, { text: "頑張って", reading: "がんばって" }, { text: "。" }, { text: "何か", reading: "なにか" }, { text: "あったら、また" }, { text: "相談してね", reading: "そうだんしてね" }, { text: "。" }], traduccion: { es: "Sí, ánimo. Si pasa algo, consúltame de nuevo.", en: "Yeah, good luck. If anything happens, talk to me again." } },
+    ],
+  },
+  {
+    id: "volunteerEnvironment",
+    icon: "🌱",
+    titleKey: "jpConvVolunteerTitle",
+    lineas: [
+      { segments: [{ text: "Ａ：" }, { text: "来週", reading: "らいしゅう" }, { text: "の" }, { text: "日曜日", reading: "にちようび" }, { text: "、" }, { text: "海", reading: "うみ" }, { text: "のごみ" }, { text: "拾い", reading: "ひろい" }, { text: "の" }, { text: "ボランティア", reading: "ぼらんてぃあ" }, { text: "に" }, { text: "参加しませんか", reading: "さんかしませんか" }, { text: "。" }], traduccion: { es: "¿No te gustaría participar el próximo domingo en un voluntariado de recolección de basura en la playa?", en: "Would you like to join a beach trash-collecting volunteer event next Sunday?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "いいですね。" }, { text: "最近", reading: "さいきん" }, { text: "、" }, { text: "環境問題", reading: "かんきょうもんだい" }, { text: "に" }, { text: "関心", reading: "かんしん" }, { text: "があるんです。" }], traduccion: { es: "Suena bien. Últimamente tengo interés en los problemas ambientales.", en: "That sounds good. Lately I've been interested in environmental issues." } },
+      { segments: [{ text: "Ａ：" }, { text: "私", reading: "わたし" }, { text: "も" }, { text: "同じ", reading: "おなじ" }, { text: "です。" }, { text: "海", reading: "うみ" }, { text: "の" }, { text: "汚染", reading: "おせん" }, { text: "が" }, { text: "深刻", reading: "しんこく" }, { text: "になっているという" }, { text: "ニュース", reading: "にゅーす" }, { text: "を見て、" }, { text: "何か", reading: "なにか" }, { text: "する", reading: "する" }, { text: "べきだと" }, { text: "思いました", reading: "おもいました" }, { text: "。" }], traduccion: { es: "A mí me pasa igual. Vi una noticia de que la contaminación del mar se está volviendo grave, y pensé que debería hacer algo.", en: "Same here. I saw news that ocean pollution is becoming serious, and I thought I should do something." } },
+      { segments: [{ text: "Ｂ：" }, { text: "具体的", reading: "ぐたいてき" }, { text: "には、" }, { text: "何", reading: "なに" }, { text: "をするんですか。" }], traduccion: { es: "En concreto, ¿qué se hace?", en: "Specifically, what do we do?" } },
+      { segments: [{ text: "Ａ：" }, { text: "海岸", reading: "かいがん" }, { text: "を" }, { text: "歩いて", reading: "あるいて" }, { text: "、プラスチックごみを" }, { text: "集めます", reading: "あつめます" }, { text: "。その" }, { text: "後", reading: "あと" }, { text: "、" }, { text: "資源", reading: "しげん" }, { text: "に" }, { text: "分けて", reading: "わけて" }, { text: "出す", reading: "だす" }, { text: "そうです。" }], traduccion: { es: "Se camina por la costa y se recolecta basura plástica. Después, parece que se separa para reciclar.", en: "You walk along the coast and collect plastic trash. After that, apparently it's sorted for recycling." } },
+      { segments: [{ text: "Ｂ：" }, { text: "それなら、" }, { text: "私", reading: "わたし" }, { text: "も" }, { text: "参加する", reading: "さんかする" }, { text: "ことにします。" }, { text: "何", reading: "なに" }, { text: "を" }, { text: "持って行けば", reading: "もっていけば" }, { text: "いいですか。" }], traduccion: { es: "Entonces, yo también decido participar. ¿Qué debería llevar?", en: "In that case, I'll decide to participate too. What should I bring?" } },
+      { segments: [{ text: "Ａ：" }, { text: "帽子", reading: "ぼうし" }, { text: "と" }, { text: "手袋", reading: "てぶくろ" }, { text: "があれば" }, { text: "十分", reading: "じゅうぶん" }, { text: "だそうです。" }, { text: "飲み物", reading: "のみもの" }, { text: "も" }, { text: "持って行った", reading: "もっていった" }, { text: "方", reading: "ほう" }, { text: "がいいですよ。" }], traduccion: { es: "Dicen que basta con sombrero y guantes. También es mejor llevar algo de beber.", en: "They say a hat and gloves are enough. It's also better to bring something to drink." } },
+      { segments: [{ text: "Ｂ：" }, { text: "分かりました", reading: "わかりました" }, { text: "。ただし、その" }, { text: "日", reading: "ひ" }, { text: "は" }, { text: "雨", reading: "あめ" }, { text: "が" }, { text: "降る", reading: "ふる" }, { text: "かもしれません。" }], traduccion: { es: "Entendido. Sin embargo, ese día quizás llueva.", en: "Understood. However, it might rain that day." } },
+      { segments: [{ text: "Ａ：" }, { text: "大丈夫", reading: "だいじょうぶ" }, { text: "です。" }, { text: "雨天", reading: "うてん" }, { text: "の" }, { text: "場合", reading: "ばあい" }, { text: "は、" }, { text: "来月", reading: "らいげつ" }, { text: "に" }, { text: "延期する", reading: "えんきする" }, { text: "ことになっているそうです。" }], traduccion: { es: "No hay problema. En caso de lluvia, parece que se decidió posponerlo al mes que viene.", en: "It's fine. In case of rain, apparently it's been decided to postpone it to next month." } },
+      { segments: [{ text: "Ｂ：" }, { text: "安心しました", reading: "あんしんしました" }, { text: "。こういう" }, { text: "活動", reading: "かつどう" }, { text: "を" }, { text: "通して", reading: "とおして" }, { text: "、" }, { text: "少し", reading: "すこし" }, { text: "でも" }, { text: "環境", reading: "かんきょう" }, { text: "を" }, { text: "守りたい", reading: "まもりたい" }, { text: "です。" }], traduccion: { es: "Me tranquilicé. A través de este tipo de actividades, quiero proteger el medio ambiente aunque sea un poco.", en: "I feel relieved. Through activities like this, I want to protect the environment even a little." } },
+      { segments: [{ text: "Ａ：" }, { text: "本当に", reading: "ほんとうに" }, { text: "そうですね。" }, { text: "一人一人", reading: "ひとりひとり" }, { text: "の" }, { text: "行動", reading: "こうどう" }, { text: "が、" }, { text: "いずれにしても" }, { text: "大切", reading: "たいせつ" }, { text: "だと" }, { text: "思います", reading: "おもいます" }, { text: "。" }], traduccion: { es: "Así es de verdad. Creo que, de cualquier forma, la acción de cada persona es importante.", en: "That's really true. I think each person's actions matter, in any case." } },
+      { segments: [{ text: "Ｂ：" }, { text: "では、" }, { text: "日曜日", reading: "にちようび" }, { text: "に" }, { text: "駅", reading: "えき" }, { text: "で" }, { text: "待ち合わせましょう", reading: "まちあわせましょう" }, { text: "。" }], traduccion: { es: "Entonces, nos vemos el domingo en la estación.", en: "Then, let's meet up at the station on Sunday." } },
+    ],
+  },
+  {
+    id: "jobInterviewDeep",
+    icon: "💼",
+    titleKey: "jpConvInterviewTitle",
+    lineas: [
+      { segments: [{ text: "Ａ：" }, { text: "それでは、あなたの" }, { text: "長所", reading: "ちょうしょ" }, { text: "と" }, { text: "短所", reading: "たんしょ" }, { text: "を" }, { text: "教えてください", reading: "おしえてください" }, { text: "。" }], traduccion: { es: "Entonces, dígame sus fortalezas y debilidades.", en: "Now then, please tell me your strengths and weaknesses." } },
+      { segments: [{ text: "Ｂ：" }, { text: "はい。" }, { text: "私", reading: "わたし" }, { text: "の" }, { text: "長所", reading: "ちょうしょ" }, { text: "は、" }, { text: "最後", reading: "さいご" }, { text: "まで" }, { text: "責任", reading: "せきにん" }, { text: "を" }, { text: "持って", reading: "もって" }, { text: "仕事", reading: "しごと" }, { text: "をすることです。" }], traduccion: { es: "Sí. Mi fortaleza es realizar el trabajo con responsabilidad hasta el final.", en: "Yes. My strength is carrying out work responsibly to the very end." } },
+      { segments: [{ text: "Ａ：" }, { text: "具体的な", reading: "ぐたいてきな" }, { text: "経験", reading: "けいけん" }, { text: "があれば、" }, { text: "教えてもらえますか", reading: "おしえてもらえますか" }, { text: "。" }], traduccion: { es: "Si tiene una experiencia concreta, ¿podría contármela?", en: "If you have a concrete experience, could you tell me about it?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "前", reading: "まえ" }, { text: "の" }, { text: "会社", reading: "かいしゃ" }, { text: "で、" }, { text: "締め切り", reading: "しめきり" }, { text: "が" }, { text: "迫った", reading: "せまった" }, { text: "企画", reading: "きかく" }, { text: "を" }, { text: "最後", reading: "さいご" }, { text: "まで" }, { text: "やり遂げました", reading: "やりとげました" }, { text: "。" }], traduccion: { es: "En mi empresa anterior, llevé a cabo hasta el final un proyecto con la fecha límite encima.", en: "At my previous company, I saw a project through to the end even as the deadline was approaching." } },
+      { segments: [{ text: "Ａ：" }, { text: "素晴らしい", reading: "すばらしい" }, { text: "ですね。では、" }, { text: "短所", reading: "たんしょ" }, { text: "はどうですか。" }], traduccion: { es: "Excelente. Entonces, ¿qué hay de sus debilidades?", en: "Excellent. Then, what about your weaknesses?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "完璧", reading: "かんぺき" }, { text: "を" }, { text: "目指す", reading: "めざす" }, { text: "せいで、" }, { text: "時間", reading: "じかん" }, { text: "がかかってしまうことがあります。" }], traduccion: { es: "Por buscar la perfección, a veces termino tomando mucho tiempo.", en: "Because I aim for perfection, there are times I end up taking too long." } },
+      { segments: [{ text: "Ａ：" }, { text: "なるほど。それを" }, { text: "改善する", reading: "かいぜんする" }, { text: "ために、" }, { text: "何か", reading: "なにか" }, { text: "していますか。" }], traduccion: { es: "Ya veo. Para mejorar eso, ¿está haciendo algo?", en: "I see. To improve that, are you doing anything?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "優先順位", reading: "ゆうせんじゅんい" }, { text: "をつける", reading: "つける" }, { text: "ことにしています。すべてを" }, { text: "完璧", reading: "かんぺき" }, { text: "にする" }, { text: "必要", reading: "ひつよう" }, { text: "はないと" }, { text: "考える", reading: "かんがえる" }, { text: "ようになりました。" }], traduccion: { es: "He decidido establecer prioridades. Empecé a pensar que no es necesario que todo sea perfecto.", en: "I've made it a rule to set priorities. I've come to think that not everything needs to be perfect." } },
+      { segments: [{ text: "Ａ：" }, { text: "良い", reading: "いい" }, { text: "成長", reading: "せいちょう" }, { text: "ですね。" }, { text: "当社", reading: "とうしゃ" }, { text: "を" }, { text: "志望する", reading: "しぼうする" }, { text: "理由", reading: "りゆう" }, { text: "は" }, { text: "何", reading: "なん" }, { text: "ですか。" }], traduccion: { es: "Es un buen crecimiento. ¿Cuál es la razón por la que aspira a esta empresa?", en: "That's good growth. What's your reason for aspiring to join our company?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "御社", reading: "おんしゃ" }, { text: "の" }, { text: "製品", reading: "せいひん" }, { text: "開発", reading: "かいはつ" }, { text: "に" }, { text: "対する", reading: "たいする" }, { text: "姿勢", reading: "しせい" }, { text: "に" }, { text: "魅力", reading: "みりょく" }, { text: "を" }, { text: "感じている", reading: "かんじている" }, { text: "からです。" }], traduccion: { es: "Porque siento atracción hacia la actitud de su empresa frente al desarrollo de productos.", en: "Because I feel drawn to your company's attitude toward product development." } },
+      { segments: [{ text: "Ａ：" }, { text: "将来的", reading: "しょうらいてき" }, { text: "には、どのような" }, { text: "目標", reading: "もくひょう" }, { text: "を" }, { text: "持っていますか", reading: "もっていますか" }, { text: "。" }], traduccion: { es: "A futuro, ¿qué tipo de metas tiene?", en: "In the future, what kind of goals do you have?" } },
+      { segments: [{ text: "Ｂ：" }, { text: "いずれは、" }, { text: "チーム", reading: "ちーむ" }, { text: "を" }, { text: "率いる", reading: "ひきいる" }, { text: "立場", reading: "たちば" }, { text: "になりたいと" }, { text: "考えています", reading: "かんがえています" }, { text: "。" }], traduccion: { es: "Eventualmente, pienso que quiero llegar a una posición de liderar un equipo.", en: "Eventually, I'm thinking I'd like to be in a position leading a team." } },
+      { segments: [{ text: "Ａ：" }, { text: "分かりました", reading: "わかりました" }, { text: "。" }, { text: "本日", reading: "ほんじつ" }, { text: "はありがとうございました。" }, { text: "結果", reading: "けっか" }, { text: "は" }, { text: "一週間", reading: "いっしゅうかん" }, { text: "以内", reading: "いない" }, { text: "にご" }, { text: "連絡します", reading: "れんらくします" }, { text: "。" }], traduccion: { es: "Entendido. Muchas gracias por hoy. Le contactaremos con el resultado dentro de una semana.", en: "Understood. Thank you very much for today. We'll contact you with the results within a week." } },
+      { segments: [{ text: "Ｂ：" }, { text: "ありがとうございました。よろしくお願いいたします", reading: "ありがとうございました。よろしくおねがいいたします" }, { text: "。" }], traduccion: { es: "Muchas gracias. Quedo a la espera de su respuesta.", en: "Thank you very much. I look forward to your response." } },
+    ],
+  },
+];
+
 const JP_MASTERY_THRESHOLD = 3; // respuestas correctas para brillo dorado + 3 estrellas
 
 // ---------------- Progresión por Nivel del Módulo Japonés ----------------
@@ -7997,7 +8833,7 @@ function defaultState() {
       // mastery: mapa "script:kana" -> veces respondida correctamente
       // (tope JP_MASTERY_THRESHOLD), usado por el módulo Japonés del App
       // Hub para el brillo dorado + estrellas de la cuadrícula Gojuon.
-      aprendizaje: { mastery: {} },
+      aprendizaje: { mastery: {}, jpLevel: 1, jpXp: 0, jpXpToNext: 15 },
     },
     // requirements: metas/checklist propias del deseo (ver modal de
     // Requisitos) — completarlas TODAS también desbloquea la tarjeta,
@@ -9393,6 +10229,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const jpVictoryXpValue = document.getElementById("jp-victory-xp-value");
   const jpVictoryGoldRow = document.getElementById("jp-victory-gold-row");
   const jpVictoryGoldValue = document.getElementById("jp-victory-gold-value");
+  const jpVictoryTierXpRow = document.getElementById("jp-victory-tier-xp-row");
+  const jpVictoryTierXpValue = document.getElementById("jp-victory-tier-xp-value");
   const jpVictoryContinueBtn = document.getElementById("jp-victory-continue-btn");
   const jpConfigLanguageRow = document.getElementById("jp-config-language-row");
   const jpConfigModeRow = document.getElementById("jp-config-mode-row");
@@ -9403,11 +10241,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const japaneseModalClose = document.getElementById("japanese-modal-close");
   const jpGridBackBtn = document.getElementById("jp-grid-back-btn");
   const jpScriptToggle = document.getElementById("jp-script-toggle");
-  // Selector único de modo (#jp-mode-select) — reemplaza los 8 botones
-  // sueltos que había antes (Práctica General/Examen de Nivel/Trazos/
-  // Vocabulario/Gramática/Conversaciones/Partículas/Yōon), ver su
-  // listener más abajo junto a jpRowsEl.addEventListener.
-  const jpModeSelect = document.getElementById("jp-mode-select");
+  // Pestañas de contenido / acciones rápidas (Práctica General/Examen de
+  // Nivel/Trazos/Vocabulario/Gramática/Conversaciones/Partículas/Yōon) —
+  // ver handleJpModeTrigger() más abajo, junto a jpRowsEl.addEventListener.
+  const jpQuickActions = document.getElementById("jp-quick-actions");
+  const jpContentTabs = document.getElementById("jp-content-tabs");
   const jpRowsEl = document.getElementById("jp-rows");
   const jpViewGrid = document.getElementById("jp-view-grid");
   const jpViewPhases = document.getElementById("jp-view-phases");
@@ -11798,6 +12636,52 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     renderHud();
+    persist();
+  }
+
+  // ---------------- Nivel interno de Nihongo (independiente del nivel/XP
+  // general de arriba) ----------------
+  // Pedido explícito: "N5 con progresión hasta el nivel 20, N4 hasta el
+  // nivel 40, y N3 con su propia escala" — un contador de nivel EXCLUSIVO
+  // del módulo de estudio, que crece completando actividades de Nihongo EN
+  // PARALELO al nivel/XP general (grantXP() arriba sigue llamándose igual
+  // en los mismos sitios; grantJpXP() se agrega AL LADO, no en vez de).
+  // Curva propia (base 15, ×1.08 por nivel) para no acoplarse a la curva
+  // general (×1.15 desde 100) — llegar al nivel 21 (desbloquea N4) cuesta
+  // ~657 XP de Nihongo, y al 41 (desbloquea N3) ~3705 XP, alcanzable con
+  // uso real del módulo sin que se sienta ni regalado ni imposible.
+  const JP_XP_GROWTH = 1.08;
+
+  // Recorre la curva desde el nivel 1 hasta `level` sin mutar estado — la
+  // usa grantJpXP() indirectamente vía JP_XP_GROWTH y el "abuelo" de N4
+  // (ver grandfatherJpLevelFromLegacyN4Progress() más abajo) para calcular
+  // qué jpXpToNext le correspondería a alguien que llega de un salto a un
+  // nivel dado, mismo criterio que xpNeededToReachLevel() para el nivel
+  // general.
+  function jpXpToNextForLevel(level) {
+    let xpToNext = 15;
+    for (let l = 1; l < level; l++) xpToNext = Math.round(xpToNext * JP_XP_GROWTH);
+    return xpToNext;
+  }
+
+  function grantJpXP(amount) {
+    const a = state.pillars.aprendizaje;
+    a.jpXp += amount;
+    let levelsGained = 0;
+
+    while (a.jpXp >= a.jpXpToNext) {
+      a.jpXp -= a.jpXpToNext;
+      a.jpLevel += 1;
+      a.jpXpToNext = Math.round(a.jpXpToNext * JP_XP_GROWTH);
+      levelsGained += 1;
+    }
+
+    if (levelsGained > 0) {
+      renderJpTierLocks();
+      if (a.jpLevel === 21) addMessage({ author: "SISTEMA", text: t("jpTierUnlockedN4"), variant: "system" });
+      if (a.jpLevel === 41) addMessage({ author: "SISTEMA", text: t("jpTierUnlockedN3"), variant: "system" });
+    }
+
     persist();
   }
 
@@ -17367,13 +18251,20 @@ document.addEventListener("DOMContentLoaded", () => {
     requestAnimationFrame(tick);
   }
 
-  function showJpVictoryModal({ title, subtitle, xp, gold }) {
+  // `tierXp` es el XP del nivel INTERNO de Nihongo (grantJpXP(), ver más
+  // abajo) — independiente del `xp` general de arriba. Mismo criterio
+  // hidden/animateCountUp que la fila de oro: si un llamador no pasa
+  // tierXp (ej. la Práctica de Partículas, que no otorga XP de Nihongo),
+  // la fila queda oculta sin romper nada.
+  function showJpVictoryModal({ title, subtitle, xp, gold, tierXp }) {
     jpVictoryTitle.textContent = title;
     jpVictorySubtitle.hidden = !subtitle;
     jpVictorySubtitle.textContent = subtitle || "";
     jpVictoryGoldRow.hidden = !gold;
+    jpVictoryTierXpRow.hidden = !tierXp;
     jpVictoryXpValue.textContent = "0";
     jpVictoryGoldValue.textContent = "0";
+    jpVictoryTierXpValue.textContent = "0";
     jpVictoryModal.hidden = false;
     // requestAnimationFrame extra para que el navegador pinte el "0"
     // inicial ANTES de arrancar el conteo — si se anima en el mismo
@@ -17382,6 +18273,7 @@ document.addEventListener("DOMContentLoaded", () => {
     requestAnimationFrame(() => {
       animateCountUp(jpVictoryXpValue, xp);
       if (gold) animateCountUp(jpVictoryGoldValue, gold);
+      if (tierXp) animateCountUp(jpVictoryTierXpValue, tierXp);
     });
   }
 
@@ -17754,7 +18646,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // app.js, cacheado por el Service Worker (ver sw.js).
   const N5_DB_NAME = "miikaeru-n5";
   const N5_DB_VERSION = 1;
-  const N5_CONTENT_VERSION = "20260811-1"; // subir cuando cambie vocab/gramática/kanji/kana
+  const N5_CONTENT_VERSION = "20260812-1"; // subir cuando cambie vocab/gramática/kanji/kana
 
   let n5DbPromise = null;
 
@@ -17821,55 +18713,102 @@ document.addEventListener("DOMContentLoaded", () => {
   // del propio app.js por el Service Worker. Si no hay red, esto igual
   // funciona: no depende de fetch, solo copia las constantes que ya están
   // cargadas en memoria hacia el almacenamiento local del navegador.
+  // CONTENT_ROWS en vez de 6 líneas sueltas de n5DbPut + un "6" hardcodeado
+  // — bug real que ya pasó una vez (el "6" se quedó viejo al agregar N4 y
+  // hubo que acordarse de subirlo a mano): ahora el check de "¿ya sincronizó
+  // todo?" se deriva de CONTENT_ROWS.length, así que agregar N2/N1 el día
+  // de mañana es solo agregar filas a este array, sin tocar el chequeo.
+  const JP_CONTENT_ROWS = [
+    { id: "vocab", data: N5_VOCAB_CATEGORIES },
+    { id: "grammar", data: N5_GRAMMAR_POINTS },
+    { id: "kanji", data: KANJI_N5 },
+    { id: "kana", data: GOJUON_ROWS },
+    { id: "vocab-n4", data: N4_VOCAB_CATEGORIES },
+    { id: "grammar-n4", data: N4_GRAMMAR_POINTS },
+    { id: "vocab-n3", data: N3_VOCAB_CATEGORIES },
+    { id: "grammar-n3", data: N3_GRAMMAR_POINTS },
+  ];
   function syncN5ContentToIndexedDb() {
     n5DbGetAll("content").then((existing) => {
-      const upToDate = existing.length >= 6 && existing.every((row) => row.version === N5_CONTENT_VERSION);
+      const upToDate = existing.length >= JP_CONTENT_ROWS.length && existing.every((row) => row.version === N5_CONTENT_VERSION);
       if (upToDate) return;
-      n5DbPut("content", { id: "vocab", version: N5_CONTENT_VERSION, data: N5_VOCAB_CATEGORIES });
-      n5DbPut("content", { id: "grammar", version: N5_CONTENT_VERSION, data: N5_GRAMMAR_POINTS });
-      n5DbPut("content", { id: "kanji", version: N5_CONTENT_VERSION, data: KANJI_N5 });
-      n5DbPut("content", { id: "kana", version: N5_CONTENT_VERSION, data: GOJUON_ROWS });
-      // Contenido N4 (ver N4_VOCAB_CATEGORIES/N4_GRAMMAR_POINTS arriba) —
-      // mismas 2 filas nuevas "vocab-n4"/"grammar-n4", mismo criterio de
-      // "mejor esfuerzo" que el resto de este bloque.
-      n5DbPut("content", { id: "vocab-n4", version: N5_CONTENT_VERSION, data: N4_VOCAB_CATEGORIES });
-      n5DbPut("content", { id: "grammar-n4", version: N5_CONTENT_VERSION, data: N4_GRAMMAR_POINTS });
+      JP_CONTENT_ROWS.forEach((row) => n5DbPut("content", { id: row.id, version: N5_CONTENT_VERSION, data: row.data }));
     });
   }
   syncN5ContentToIndexedDb();
 
-  // ---------------- Nivel JLPT activo (N5 / N4) ----------------
+  // ---------------- Nivel JLPT activo (N5 / N4 / N3) ----------------
   // Único estado nuevo que gobierna cuál dataset consultan Vocabulario/
   // Gramática/Conversaciones — Trazos/Examen de Nivel siguen ligados
   // SOLO a KANJI_N5 (alcance ya documentado más arriba, sin tocar). Los
   // IDs de progreso N5 quedan EXACTAMENTE iguales a como ya estaban
   // (`vocab:<catId>`, `grammar`) para no perder el progreso ya guardado
-  // de usuarios existentes — N4 usa IDs con prefijo propio en vez de
+  // de usuarios existentes — N4/N3 usan IDs con prefijo propio en vez de
   // reusar el esquema N5 sin marcar.
+  //
+  // JP_LEVEL_CONTENT reemplaza los ternarios binarios `=== "n4" ? X : Y`
+  // que había acá antes (no escalaban a un tercer nivel) — `unlockLevel`
+  // es también la única fuente de verdad para el bloqueo de N4/N3 del
+  // nuevo nivel interno de Nihongo (ver isNihongoTierUnlocked() más abajo).
+  const JP_LEVEL_CONTENT = {
+    n5: { vocab: N5_VOCAB_CATEGORIES, grammar: N5_GRAMMAR_POINTS, conversations: N5_CONVERSATION_SCENES, progressPrefix: null, unlockLevel: 1 },
+    n4: { vocab: N4_VOCAB_CATEGORIES, grammar: N4_GRAMMAR_POINTS, conversations: N4_CONVERSATION_SCENES, progressPrefix: "n4", unlockLevel: 21 },
+    n3: { vocab: N3_VOCAB_CATEGORIES, grammar: N3_GRAMMAR_POINTS, conversations: N3_CONVERSATION_SCENES, progressPrefix: "n3", unlockLevel: 41 },
+  };
   let jpActiveLevel = "n5";
 
   function getJpVocabCategories() {
-    return jpActiveLevel === "n4" ? N4_VOCAB_CATEGORIES : N5_VOCAB_CATEGORIES;
+    return JP_LEVEL_CONTENT[jpActiveLevel].vocab;
   }
   function getJpGrammarPoints() {
-    return jpActiveLevel === "n4" ? N4_GRAMMAR_POINTS : N5_GRAMMAR_POINTS;
+    return JP_LEVEL_CONTENT[jpActiveLevel].grammar;
   }
   function getJpConversationScenes() {
-    return jpActiveLevel === "n4" ? N4_CONVERSATION_SCENES : N5_CONVERSATION_SCENES;
+    return JP_LEVEL_CONTENT[jpActiveLevel].conversations;
   }
   function jpVocabProgressId(catId) {
-    return jpActiveLevel === "n5" ? `vocab:${catId}` : `vocab:${jpActiveLevel}:${catId}`;
+    const prefix = JP_LEVEL_CONTENT[jpActiveLevel].progressPrefix;
+    return prefix ? `vocab:${prefix}:${catId}` : `vocab:${catId}`;
   }
   function jpGrammarProgressId() {
-    return jpActiveLevel === "n5" ? "grammar" : `grammar:${jpActiveLevel}`;
+    const prefix = JP_LEVEL_CONTENT[jpActiveLevel].progressPrefix;
+    return prefix ? `grammar:${prefix}` : "grammar";
+  }
+  // Fuente de verdad de si N4/N3 están desbloqueados en el nivel INTERNO
+  // de Nihongo (ver grantJpXP() más abajo) — nombre distinto a
+  // isJpLevelUnlocked() (que gatea Kanji/Examen de Nivel por el nivel
+  // GENERAL, state.level) para no confundir los dos sistemas.
+  function isNihongoTierUnlocked(levelKey) {
+    return state.pillars.aprendizaje.jpLevel >= JP_LEVEL_CONTENT[levelKey].unlockLevel;
   }
 
-  // Selector N5/N4 (#jp-level-toggle en index.html) — antes solo N5 tenía
-  // botón real (N4-N1 quedaban `disabled`, ver comentario original en
-  // index.html); ahora N4 también tiene contenido real, así que se le
-  // quita el `disabled`/badge "Próximamente" ahí mismo y acá se cablea su
-  // click. N3-N1 siguen deshabilitados de verdad — un clic en esos no
-  // hace nada, mismo criterio "no prometer lo que no existe" de siempre.
+  // Candados dinámicos de N4/N3 (#jp-level-badge-n4/n3 en index.html) —
+  // reemplaza el badge estático "Próximamente" por el nivel real
+  // requerido (JP_LEVEL_CONTENT[key].unlockLevel), y togglea `disabled`
+  // según isNihongoTierUnlocked(). Se llama al iniciar el módulo, cada vez
+  // que grantJpXP() sube de nivel, y desde el "abuelo" de progreso legado
+  // de N4 — así el candado siempre refleja el estado real sin recargar.
+  function renderJpTierLocks() {
+    if (!jpLevelToggle) return;
+    ["n4", "n3"].forEach((key) => {
+      const btn = jpLevelToggle.querySelector(`[data-level="${key}"]`);
+      const badge = document.getElementById(`jp-level-badge-${key}`);
+      if (!btn || !badge) return;
+      const unlocked = isNihongoTierUnlocked(key);
+      btn.disabled = !unlocked;
+      btn.classList.toggle("jp-level-btn--locked", !unlocked);
+      badge.textContent = unlocked ? "" : t("jpLevelLockedBadge").replace("{level}", JP_LEVEL_CONTENT[key].unlockLevel);
+    });
+  }
+  renderJpTierLocks();
+
+  // Selector N5/N4/N3 (#jp-level-toggle en index.html) — el click ya lee
+  // btn.dataset.level de forma genérica, así que soporta cualquier nivel
+  // con contenido real sin cambios acá. N4/N3 nacen con `disabled` real en
+  // el HTML y se desbloquean en runtime vía renderJpTierLocks() (ver
+  // arriba) según el nivel INTERNO de Nihongo — mientras estén bloqueados,
+  // `btn.disabled` sigue haciendo que un clic no haga nada, mismo criterio
+  // de siempre. N2/N1 quedan estáticos "Próximamente" (fuera de alcance).
   if (jpLevelToggle) {
     const jpLevelButtons = Array.from(jpLevelToggle.querySelectorAll(".jp-level-btn"));
     jpLevelButtons.forEach((btn) => {
@@ -17911,11 +18850,30 @@ document.addEventListener("DOMContentLoaded", () => {
       rows.forEach((row) => {
         n5ProgressCache[row.id] = row;
       });
+      grandfatherJpLevelFromLegacyN4Progress();
       renderN5VocabCategories();
       renderN5GrammarList();
     });
   }
   loadN5ProgressCache();
+
+  // "Abuelo" del nivel interno de Nihongo: usuarios que YA tenían progreso
+  // guardado en N4 (de antes de que este nivel interno existiera, cuando
+  // N4 era 100% libre de elegir) no deben quedar bloqueados de golpe al
+  // desbloquearse el candado — se les sube jpLevel a 21 (el mínimo real
+  // para N4) una sola vez. Idempotente: el guard `jpLevel < 21` hace que
+  // correr esto de nuevo en cargas futuras no haga nada.
+  function grandfatherJpLevelFromLegacyN4Progress() {
+    const hasN4Progress = Object.keys(n5ProgressCache).some((id) => id.startsWith("vocab:n4:") || id === "grammar:n4");
+    const a = state.pillars.aprendizaje;
+    if (hasN4Progress && a.jpLevel < 21) {
+      a.jpLevel = 21;
+      a.jpXp = 0;
+      a.jpXpToNext = jpXpToNextForLevel(21);
+      persist();
+    }
+    renderJpTierLocks();
+  }
 
   function saveN5Progress(id, score, total) {
     const prev = n5ProgressCache[id];
@@ -18574,11 +19532,13 @@ document.addEventListener("DOMContentLoaded", () => {
       jpMiniQuizScore.textContent = `${t("jpMiniQuizScore")} ${miniQuizScore}/${miniQuizItems.length}`;
       addGold(5);
       grantXP(30);
+      grantJpXP(8);
       showJpVictoryModal({
         title: t("jpVictoryTitleMiniQuiz"),
         subtitle: `${t("jpMiniQuizScore")} ${miniQuizScore}/${miniQuizItems.length}`,
         xp: 30,
         gold: 5,
+        tierXp: 8,
       });
       // Progreso persistente en IndexedDB (ver bloque más arriba) — solo
       // pisa el registro guardado si este puntaje iguala o supera al mejor
@@ -18785,6 +19745,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const xpNeeded = xpNeededToReachLevel(unit.requiredLevel);
       if (xpNeeded > 0) grantXP(xpNeeded);
       addGold(10);
+      // XP fijo para el nivel INTERNO de Nihongo, a propósito NO se reusa
+      // xpNeeded — esa cifra está calibrada para la curva GENERAL (puede
+      // caer a 0 en repeticiones) y este examen sigue siendo repetible.
+      grantJpXP(15);
       setAvatarSpeech(`🎉 ${t("jpLevelExamPassedUpTo")} "${unit.label}"!`);
       addMessage({
         author: "SISTEMA",
@@ -18796,6 +19760,7 @@ document.addEventListener("DOMContentLoaded", () => {
         subtitle: `${t("jpLevelExamPassedUpTo")} "${unit.label}"`,
         xp: xpNeeded,
         gold: 10,
+        tierXp: 15,
       });
     } else {
       addGold(2);
@@ -19134,6 +20099,7 @@ document.addEventListener("DOMContentLoaded", () => {
         void jpQuizChar.offsetWidth;
         jpQuizChar.classList.add("jp-mastery-pop");
         grantXP(5);
+        grantJpXP(2);
       }
     }
     persist();
@@ -19152,6 +20118,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const total = jpQueue.length;
     addGold(2);
     grantXP(15);
+    grantJpXP(5);
     const text = jpMode === "examen"
       ? `${t("jpSessionComplete")} ${jpSessionCorrect}/${total}. +15 XP, +2 🪙`
       : `${t("jpPracticeSessionComplete")} +15 XP, +2 🪙`;
@@ -19161,6 +20128,7 @@ document.addEventListener("DOMContentLoaded", () => {
       subtitle: jpMode === "examen" ? `${t("jpMiniQuizScore")} ${jpSessionCorrect}/${total}` : null,
       xp: 15,
       gold: 2,
+      tierXp: 5,
     });
     showJpView("grid");
   }
@@ -19175,15 +20143,19 @@ document.addEventListener("DOMContentLoaded", () => {
     renderGojuonGrid();
   });
 
-  // Selector único de modo (#jp-mode-select) — reemplaza los 8 botones
-  // sueltos que había antes (pedido explícito: reducir saturación
-  // visual/"demasiados botones y cuadritos sueltos"). Cada `case` llama
-  // exactamente a la misma función que llamaba su botón viejo — ningún
-  // comportamiento cambió, solo cómo se dispara. Se resetea a "" después
-  // de cada elección para que quede como un menú de acciones (no un
-  // <select> con "valor actual" que hay que recordar cuál era).
-  jpModeSelect.addEventListener("change", () => {
-    const mode = jpModeSelect.value;
+  // Pestañas de contenido (#jp-content-tabs) + acciones rápidas
+  // (#jp-quick-actions) — reemplazan el <select> único que había antes
+  // (que a su vez había reemplazado 8 botones sueltos, pedido explícito
+  // de "reducir saturación visual"). Un solo listener `click` delegado
+  // para ambos contenedores en vez de un `change` de <select> — cada
+  // `case` llama exactamente a la misma función que llamaba el <select>/
+  // los botones viejos, ningún comportamiento cambió, solo CÓMO se
+  // dispara (clic directo en una pestaña/botón visible en vez de abrir un
+  // dropdown escondido).
+  function handleJpModeTrigger(event) {
+    const btn = event.target.closest("[data-mode]");
+    if (!btn) return;
+    const mode = btn.dataset.mode;
     switch (mode) {
       case "general-practice":
         startJpPractice(getKanaList(jpScript));
@@ -19211,8 +20183,9 @@ document.addEventListener("DOMContentLoaded", () => {
         showJpView("yoon");
         break;
     }
-    jpModeSelect.value = "";
-  });
+  }
+  jpQuickActions.addEventListener("click", handleJpModeTrigger);
+  jpContentTabs.addEventListener("click", handleJpModeTrigger);
 
   jpRowsEl.addEventListener("click", (event) => {
     const target = event.target.closest("[data-row-practice], .jp-kana-btn");
