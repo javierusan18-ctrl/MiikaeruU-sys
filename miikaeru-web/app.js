@@ -1461,6 +1461,17 @@ const I18N = {
     jpLevelLockedBadge: "🔒 Nivel {level}",
     jpTierUnlockedN4: "🎉 ¡Desbloqueaste N4! Tu nivel de Nihongo ya te permite estudiar ese contenido.",
     jpTierUnlockedN3: "🎉 ¡Desbloqueaste N3! Tu nivel de Nihongo ya te permite estudiar ese contenido.",
+    jpRoadmapOpenBtn: "🗺️ Mapa de Progreso",
+    jpRoadmapM1: "Inicio del Camino",
+    jpRoadmapM2: "Primeros Pasos",
+    jpRoadmapM3: "Cazador Novato",
+    jpRoadmapM4: "Guardián en Formación",
+    jpRoadmapM5: "N4 Desbloqueado",
+    jpRoadmapM6: "Comandante",
+    jpRoadmapM7: "N3 Desbloqueado",
+    jpRoadmapM8: "Maestría",
+    jpRoadmapComingSoon: "Próximamente",
+    jpRoadmapGoToTier: "Toca para explorar",
     appJapanesePlaceholder: "El módulo Japonés AI Coach está en desarrollo. Pronto vas a poder practicarlo aquí.",
     appAddedMessage: "Más módulos estarán disponibles próximamente en Apps & Módulos.",
     appCalendarName: "Calendario & Eventos",
@@ -2422,6 +2433,17 @@ const I18N = {
     jpLevelLockedBadge: "🔒 Level {level}",
     jpTierUnlockedN4: "🎉 You unlocked N4! Your Nihongo level now lets you study that content.",
     jpTierUnlockedN3: "🎉 You unlocked N3! Your Nihongo level now lets you study that content.",
+    jpRoadmapOpenBtn: "🗺️ Progress Map",
+    jpRoadmapM1: "Start of the Path",
+    jpRoadmapM2: "First Steps",
+    jpRoadmapM3: "Novice Hunter",
+    jpRoadmapM4: "Guardian in Training",
+    jpRoadmapM5: "N4 Unlocked",
+    jpRoadmapM6: "Commander",
+    jpRoadmapM7: "N3 Unlocked",
+    jpRoadmapM8: "Mastery",
+    jpRoadmapComingSoon: "Coming soon",
+    jpRoadmapGoToTier: "Tap to explore",
     appJapanesePlaceholder: "The Japanese AI Coach module is under development. You'll be able to practice here soon.",
     appAddedMessage: "More modules will be available soon in Apps & Modules.",
     appCalendarName: "Calendar & Events",
@@ -3383,6 +3405,17 @@ const I18N = {
     jpLevelLockedBadge: "🔒 レベル{level}",
     jpTierUnlockedN4: "🎉 N4を解放しました！日本語レベルでその内容を勉強できるようになりました。",
     jpTierUnlockedN3: "🎉 N3を解放しました！日本語レベルでその内容を勉強できるようになりました。",
+    jpRoadmapOpenBtn: "🗺️ 進捗マップ",
+    jpRoadmapM1: "旅の始まり",
+    jpRoadmapM2: "最初の一歩",
+    jpRoadmapM3: "新米ハンター",
+    jpRoadmapM4: "修行中の守護者",
+    jpRoadmapM5: "N4解放",
+    jpRoadmapM6: "指揮官",
+    jpRoadmapM7: "N3解放",
+    jpRoadmapM8: "マスタリー",
+    jpRoadmapComingSoon: "近日公開",
+    jpRoadmapGoToTier: "タップして見る",
     appJapanesePlaceholder: "日本語AIコーチモジュールは開発中です。もうすぐここで練習できるようになります。",
     appAddedMessage: "アプリ&モジュールに、もうすぐ新しいモジュールが追加されます。",
     appCalendarName: "カレンダー&イベント",
@@ -10741,6 +10774,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const jpViewVocabWords = document.getElementById("jp-view-vocab-words");
   const jpViewGrammar = document.getElementById("jp-view-grammar");
   const jpViewYoon = document.getElementById("jp-view-yoon");
+  const jpViewRoadmap = document.getElementById("jp-view-roadmap");
   const jpViewConversations = document.getElementById("jp-view-conversations");
   const jpViewMiniQuiz = document.getElementById("jp-view-mini-quiz");
   const jpViewLevelExam = document.getElementById("jp-view-level-exam");
@@ -10766,6 +10800,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const jpYoonBackBtn = document.getElementById("jp-yoon-back-btn");
   const jpYoonGrid = document.getElementById("jp-yoon-grid");
   const jpYoonQuizStartBtn = document.getElementById("jp-yoon-quiz-start-btn");
+
+  const jpRoadmapBackBtn = document.getElementById("jp-roadmap-back-btn");
+  const jpRoadmapTrack = document.getElementById("jp-roadmap-track");
 
   const jpConversationsBackBtn = document.getElementById("jp-conversations-back-btn");
   const jpConversationSceneGrid = document.getElementById("jp-conversation-scene-grid");
@@ -19077,6 +19114,7 @@ document.addEventListener("DOMContentLoaded", () => {
     jpViewVocabWords.hidden = view !== "vocab-words";
     jpViewGrammar.hidden = view !== "grammar";
     jpViewYoon.hidden = view !== "yoon";
+    jpViewRoadmap.hidden = view !== "roadmap";
     jpViewConversations.hidden = view !== "conversations";
     jpViewMiniQuiz.hidden = view !== "mini-quiz";
     jpViewLevelExam.hidden = view !== "level-exam";
@@ -19090,6 +19128,7 @@ document.addEventListener("DOMContentLoaded", () => {
       saveJpContinue({ type: "grammar" });
     }
     if (view === "yoon") renderYoonGrid();
+    if (view === "roadmap") renderJpRoadmap();
     if (view === "conversations") openConversationSceneGrid();
     updateJpFloatingBackBtn();
   }
@@ -19371,6 +19410,32 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   let jpActiveLevel = "n5";
 
+  // ---------------- Mapa de Progreso (evolución de personajes) ----------------
+  // Pedido explícito: un "camino sinuoso" con nodos numerados y candados que
+  // muestre la evolución de Miikaeru (y la aparición de Metrakaela/Demiure en
+  // tramos avanzados) atada al nivel INTERNO de Nihongo (jpLevel), no al
+  // nivel general de la cuenta. Reutiliza imágenes REALES ya existentes en
+  // MIIKAERU_SKINS/METRAKAELA_GALLERY/DEMIURE_GALLERY (verificadas contra
+  // disco) — este mapa define sus PROPIOS umbrales de jpLevel (no reusa
+  // nivelRequerido tal cual, que está calibrado para el nivel general vía
+  // skinUnlocked()). Los nodos 21 y 41 coinciden a propósito con
+  // JP_LEVEL_CONTENT.n4/n3.unlockLevel — no son arbitrarios, son los mismos
+  // hitos que ya gobiernan el desbloqueo real de N4/N3, así que el mapa
+  // sirve además de atajo real (ver renderJpRoadmap() más abajo: un clic en
+  // esos dos nodos cambia jpActiveLevel y navega a Vocabulario).
+  // `companionSrc` es la marca de agua secundaria (Metrakaela/Demiure) que
+  // aparece junto al nodo en los tramos avanzados, pedido explícito.
+  const JP_ROADMAP_MILESTONES = [
+    { level: 1, titleKey: "jpRoadmapM1", src: "assets/skins/Mascotas/mikaeru_skin_cachorro_dormido.png" },
+    { level: 5, titleKey: "jpRoadmapM2", src: "assets/skins/Miikaeruu/mikaeru_idle_chakras.png" },
+    { level: 10, titleKey: "jpRoadmapM3", src: "assets/skins/Miikaeruu/mikaeru_skin_cazador_neon.png" },
+    { level: 15, titleKey: "jpRoadmapM4", src: "assets/skins/Miikaeruu/mikaeru_skin_guardian_templo.png" },
+    { level: 21, titleKey: "jpRoadmapM5", src: "assets/skins/Miikaeruu/mikaeru_skin_soberano_estelar.png", tier: "n4" },
+    { level: 30, titleKey: "jpRoadmapM6", src: "assets/skins/Miikaeruu/mikaeru_skin_comandante_ejercito.png", companionSrc: "assets/skins/Metrakaela_NoviaAiDeMiikaeruu/metrakaela_madre_rosas.png" },
+    { level: 41, titleKey: "jpRoadmapM7", src: "assets/skins/Miikaeruu/mikaeru_skin_heraldo_rugiente.png", tier: "n3", companionSrc: "assets/skins/Demiure_Drako/demiure_draconiano.png" },
+    { level: 50, titleKey: "jpRoadmapM8", src: "assets/skins/Miikaeruu/mikaeru_skin_deidad_meditante.png", companionSrc: "assets/skins/Demiure_Drako/Gemini_Generated_Image_dbkzu3dbkzu3dbkz.png" },
+  ];
+
   function getJpVocabCategories() {
     return JP_LEVEL_CONTENT[jpActiveLevel].vocab;
   }
@@ -19419,8 +19484,115 @@ document.addEventListener("DOMContentLoaded", () => {
       btn.classList.toggle("jp-level-btn--locked", !unlocked);
       badge.textContent = unlocked ? "" : t("jpLevelLockedBadge").replace("{level}", JP_LEVEL_CONTENT[key].unlockLevel);
     });
+    // Si el Mapa de Progreso está abierto cuando sube el nivel interno de
+    // Nihongo (ej. justo después de un level-up en grantJpXP()), se
+    // refresca en vivo — mismo criterio que el resto del módulo, sin
+    // esperar a que el usuario salga y vuelva a entrar.
+    if (jpViewRoadmap && !jpViewRoadmap.hidden) renderJpRoadmap();
   }
   renderJpTierLocks();
+
+  // Construye el camino sinuoso de nodos numerados (ver
+  // JP_ROADMAP_MILESTONES arriba) — pedido explícito: evolución visual de
+  // personajes atada al nivel INTERNO de Nihongo, con candados y nodos
+  // numerados, mismo lenguaje visual "atenuado + 🔒" que ya usan las
+  // tarjetas de N4/N3 (ver applyJpCardLock()) y los tiles de Kanji.
+  function renderJpRoadmap() {
+    if (!jpRoadmapTrack) return;
+    jpRoadmapTrack.innerHTML = "";
+    const jpLevel = state.pillars.aprendizaje.jpLevel;
+
+    JP_ROADMAP_MILESTONES.forEach((milestone) => {
+      const unlocked = jpLevel >= milestone.level;
+      const node = document.createElement("button");
+      node.type = "button";
+      node.className = "jp-roadmap__node" + (unlocked ? "" : " jp-roadmap__node--locked");
+
+      const portraitWrap = document.createElement("div");
+      portraitWrap.className = "jp-roadmap__portrait-wrap";
+
+      // Marca de agua de personaje secundario (Metrakaela/Demiure en los
+      // tramos avanzados) — puramente decorativa, va DETRÁS del retrato
+      // principal (ver z-index en style.css) y nunca lleva alt textual
+      // real para no confundir lectores de pantalla con contenido que no
+      // aporta información nueva.
+      if (milestone.companionSrc) {
+        const companion = document.createElement("img");
+        companion.className = "jp-roadmap__companion";
+        companion.src = milestone.companionSrc;
+        companion.alt = "";
+        portraitWrap.appendChild(companion);
+      }
+
+      const portrait = document.createElement("img");
+      portrait.className = "jp-roadmap__portrait";
+      portrait.src = milestone.src;
+      portrait.alt = t(milestone.titleKey);
+      portraitWrap.appendChild(portrait);
+
+      if (!unlocked) {
+        const lock = document.createElement("span");
+        lock.className = "jp-roadmap__lock";
+        lock.textContent = "🔒";
+        portraitWrap.appendChild(lock);
+      }
+
+      node.appendChild(portraitWrap);
+
+      const levelBadge = document.createElement("span");
+      levelBadge.className = "jp-roadmap__level";
+      levelBadge.textContent = `Nv. ${milestone.level}`;
+      node.appendChild(levelBadge);
+
+      const title = document.createElement("span");
+      title.className = "jp-roadmap__title";
+      title.textContent = t(milestone.titleKey);
+      node.appendChild(title);
+
+      if (!unlocked) {
+        const badge = document.createElement("span");
+        badge.className = "jp-roadmap__badge";
+        badge.textContent = t("jpLevelLockedBadge").replace("{level}", milestone.level);
+        node.appendChild(badge);
+        node.addEventListener("click", () => notifyJpLocked(milestone.level));
+      } else if (milestone.tier) {
+        // Nodos 21/41: además de decorativos, son un atajo real — un clic
+        // cambia jpActiveLevel y navega directo al Vocabulario del tier
+        // que el usuario acaba de desbloquear (mismos umbrales que
+        // JP_LEVEL_CONTENT, ver comentario junto a JP_ROADMAP_MILESTONES).
+        const badge = document.createElement("span");
+        badge.className = "jp-roadmap__badge jp-roadmap__badge--action";
+        badge.textContent = t("jpRoadmapGoToTier");
+        node.appendChild(badge);
+        node.addEventListener("click", () => {
+          jpActiveLevel = milestone.tier;
+          Array.from(jpLevelToggle.querySelectorAll(".jp-level-btn")).forEach((b) => {
+            b.classList.toggle("jp-level-btn--active", b.dataset.level === milestone.tier);
+          });
+          showJpView("vocab");
+        });
+      }
+
+      jpRoadmapTrack.appendChild(node);
+    });
+
+    // Nodo final "Próximamente" — mismo criterio que N2/N1: visible pero
+    // inerte (disabled real), deja claro que el camino sigue creciendo
+    // sin prometer un desbloqueo que todavía no existe.
+    const comingSoon = document.createElement("button");
+    comingSoon.type = "button";
+    comingSoon.className = "jp-roadmap__node jp-roadmap__node--locked jp-roadmap__node--future";
+    comingSoon.disabled = true;
+    const csLock = document.createElement("span");
+    csLock.className = "jp-roadmap__lock";
+    csLock.textContent = "🔒";
+    comingSoon.appendChild(csLock);
+    const csTitle = document.createElement("span");
+    csTitle.className = "jp-roadmap__title";
+    csTitle.textContent = t("jpRoadmapComingSoon");
+    comingSoon.appendChild(csTitle);
+    jpRoadmapTrack.appendChild(comingSoon);
+  }
 
   // Selector N5/N4/N3 (#jp-level-toggle en index.html) — el click ya lee
   // btn.dataset.level de forma genérica, así que soporta cualquier nivel
@@ -19991,6 +20163,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   jpYoonBackBtn.addEventListener("click", () => showJpView("grid"));
   jpYoonQuizStartBtn.addEventListener("click", () => startMiniQuiz(buildYoonQuizItems(), "yoon", "yoon"));
+
+  jpRoadmapBackBtn.addEventListener("click", () => showJpView("grid"));
 
   // ---------------- Conversaciones Situacionales (N5_CONVERSATION_SCENES) ----------------
   // `activeConversationReader` guarda el handle {detener} que devuelve
@@ -20922,6 +21096,9 @@ document.addEventListener("DOMContentLoaded", () => {
         break;
       case "yoon":
         showJpView("yoon");
+        break;
+      case "roadmap":
+        showJpView("roadmap");
         break;
     }
   }

@@ -5895,6 +5895,190 @@ body.miikaeru-anim-off .cyber-tile[data-forward*="bossfight"] {
   color: var(--text-secondary);
 }
 
+/* ==================== Mapa de Progreso: camino sinuoso ====================
+   Pedido explícito: evolución visual de personajes (Miikaeru/Metrakaela/
+   Demiure) a lo largo de un camino de nodos numerados, atada al nivel
+   INTERNO de Nihongo (ver JP_ROADMAP_MILESTONES/renderJpRoadmap() en
+   app.js). Fondo de grilla neón adaptado de .city-map__grid (mismo
+   patrón punteado + glow radial, ver arriba en este archivo) en un
+   contenedor vertical; los nodos alternan izquierda/derecha por índice
+   para el efecto "sinuoso/escalonado" sin necesitar SVG ni coordenadas
+   manuales — más robusto ante distintos tamaños de pantalla. */
+.jp-roadmap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 32px 16px;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  background-color: #050912;
+  background-image:
+    linear-gradient(rgba(0, 240, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.1) 1px, transparent 1px),
+    radial-gradient(circle at 50% 20%, rgba(0, 240, 255, 0.1), transparent 60%);
+  background-size: 32px 32px, 32px 32px, 100% 100%;
+}
+
+/* Línea conectora punteada entre nodos consecutivos. */
+.jp-roadmap__node:not(:first-child)::before {
+  content: "";
+  width: 2px;
+  height: 22px;
+  background: repeating-linear-gradient(to bottom, rgba(0, 240, 255, 0.5) 0, rgba(0, 240, 255, 0.5) 4px, transparent 4px, transparent 8px);
+}
+
+.jp-roadmap__node {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 168px;
+  padding: 14px 10px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.jp-roadmap__node:hover {
+  border-color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+  transform: translateY(-2px);
+}
+
+/* Alternancia izquierda/derecha por índice — mismo truco que ya usa
+   .city-map__node para alternar color cian/magenta, acá para alternar
+   posición y lograr el zigzag. */
+.jp-roadmap__node:nth-child(odd) {
+  align-self: flex-start;
+  margin-left: 6%;
+}
+
+.jp-roadmap__node:nth-child(even) {
+  align-self: flex-end;
+  margin-right: 6%;
+  border-color: rgba(255, 46, 154, 0.35);
+}
+
+.jp-roadmap__node:nth-child(even):hover {
+  border-color: var(--neon-magenta);
+  box-shadow: 0 0 12px rgba(255, 46, 154, 0.35), 0 0 2px rgba(255, 46, 154, 0.6);
+}
+
+.jp-roadmap__portrait-wrap {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid rgba(0, 240, 255, 0.4);
+  flex-shrink: 0;
+}
+
+.jp-roadmap__portrait {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Marca de agua de personaje secundario (Metrakaela/Demiure en los
+   tramos avanzados) — pedido explícito "tipo marca de agua... sin
+   saturar la pantalla": opacidad baja + desaturado parcial, detrás del
+   retrato principal, nunca interactiva. */
+.jp-roadmap__companion {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.18;
+  filter: grayscale(0.4);
+  pointer-events: none;
+}
+
+.jp-roadmap__lock {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  background: rgba(5, 9, 18, 0.55);
+}
+
+.jp-roadmap__level {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--neon-cyan);
+  text-shadow: var(--shadow-neon-cyan);
+}
+
+.jp-roadmap__title {
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.jp-roadmap__badge {
+  font-size: 0.6rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.3px;
+}
+
+.jp-roadmap__badge--action {
+  color: var(--neon-green);
+  text-shadow: var(--shadow-neon-green);
+}
+
+/* Mismo criterio "visible pero atenuado" ya establecido para candados
+   (ver .jp-vocab-cat-card--locked/.jp-kana-btn--locked más abajo en este
+   archivo) — reutilizado tal cual, no un lenguaje visual nuevo. */
+.jp-roadmap__node--locked {
+  opacity: 0.4;
+  filter: grayscale(0.85);
+  cursor: not-allowed;
+}
+
+.jp-roadmap__node--locked:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.jp-roadmap__node--future {
+  width: 96px;
+  padding: 18px 10px;
+}
+
+.jp-roadmap__node--future .jp-roadmap__lock {
+  position: static;
+  background: none;
+  font-size: 1.8rem;
+}
+
+/* Mobile Lite: el zigzag izquierda/derecha se aplana a una sola columna
+   centrada — mismo criterio "sin overflow horizontal" que ya sigue el
+   resto del módulo en pantallas angostas. */
+@media (max-width: 600px) {
+  .jp-roadmap__node:nth-child(odd),
+  .jp-roadmap__node:nth-child(even) {
+    align-self: center;
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+    max-width: 220px;
+  }
+}
+
 .jp-vocab-words__title {
   font-size: 1rem;
   color: var(--neon-cyan);
@@ -11057,6 +11241,7 @@ button:active,
   .jp-config-mode-btn,
   .jp-script-btn,
   .jp-tab-btn,
+  .jp-roadmap__node,
   .finanzas-tab,
   .habits-tab,
   .workout-weekday-btn,

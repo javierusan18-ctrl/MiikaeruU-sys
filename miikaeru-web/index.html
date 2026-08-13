@@ -2051,6 +2051,14 @@
             <button type="button" class="btn-register jp-general-btn" data-mode="general-practice" data-i18n="jpGeneralPractice">🎯 Práctica General</button>
             <button type="button" class="btn-register jp-general-btn" data-mode="level-exam" data-i18n="jpLevelExamOpenBtn">📝 Examen de Nivel</button>
             <button type="button" class="btn-register jp-general-btn" data-mode="hanzi-writer" data-i18n="jpHanziWriterOpenBtn">✍️ Trazos Reales</button>
+            <!-- Mapa de Progreso: pedido explícito de un "camino sinuoso"
+                 con evolución de personajes atada al nivel INTERNO de
+                 Nihongo (jpLevel) — ver JP_ROADMAP_MILESTONES/
+                 renderJpRoadmap() en app.js. Vive en acciones rápidas (no
+                 en las pestañas de contenido) porque, como Práctica
+                 General/Examen/Trazos, no depende de qué nivel N5/N4/N3
+                 esté elegido arriba — muestra el camino completo siempre. -->
+            <button type="button" class="btn-register jp-general-btn" data-mode="roadmap" data-i18n="jpRoadmapOpenBtn">🗺️ Mapa de Progreso</button>
           </div>
         </div>
         <!-- Pestañas de contenido: navegan el currículum del nivel activo
@@ -2224,6 +2232,17 @@
           <!-- combos renderizados por app.js -->
         </div>
         <button type="button" class="btn-register jp-general-btn" id="jp-yoon-quiz-start-btn" data-i18n="jpYoonQuizStart">🎯 Quiz de Yōon</button>
+      </div>
+
+      <!-- Sub-vista: Mapa de Progreso — camino sinuoso con la evolución de
+           personajes (JP_ROADMAP_MILESTONES/renderJpRoadmap() en app.js)
+           atada al nivel INTERNO de Nihongo. Nodos numerados con candado
+           dinámico, mismo criterio visual que el resto del módulo. -->
+      <div class="jp-view" id="jp-view-roadmap" hidden>
+        <button type="button" class="btn-jp-back" id="jp-roadmap-back-btn" data-i18n="jpBackToGrid">← Volver</button>
+        <div class="jp-roadmap" id="jp-roadmap-track">
+          <!-- nodos renderizados por app.js (renderJpRoadmap) -->
+        </div>
       </div>
 
       <!-- Sub-vista: Conversaciones Situacionales (N5_CONVERSATION_SCENES
