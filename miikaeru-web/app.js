@@ -1583,6 +1583,37 @@ const I18N = {
     jpWorldGrammarExamNode: "📝 Examen de Gramática",
     jpWorldConversationExamNode: "🎧 Examen de Conversación",
     jpConvQuizUnavailableJa: "🈁 El examen de conversación no está disponible con la interfaz en 日本語 (no hay traducción de apoyo que evaluar).",
+    jpVoiceChatOpenBtn: "Conversación de Voz con IA",
+    voiceChatTitle: "🎙️ Conversación de Voz con IA",
+    voiceChatPickerSubtitle: "Elige un escenario y tu nivel — la IA responde en personaje, en voz, y te da feedback breve si detecta un error.",
+    voiceChatBackBtn: "← Elegir otro escenario",
+    voiceChatMicTitle: "Hablar",
+    voiceChatTextPlaceholder: "O escribe tu respuesta en japonés...",
+    voiceChatSendBtn: "Enviar",
+    voiceChatMicUnsupported: "Tu navegador no soporta reconocimiento de voz — usa el campo de texto de arriba.",
+    voiceChatEndBtn: "🏁 Finalizar sesión",
+    voiceChatThinking: "🤔 Pensando...",
+    voiceChatSpeaking: "🔊 Hablando...",
+    voiceChatListening: "🎤 Escuchando...",
+    voiceChatError: "⚠️ No se pudo conectar con la IA. Intenta de nuevo.",
+    voiceChatMicDenied: "🚫 Permiso de micrófono denegado — actívalo en la configuración del navegador, o usa el campo de texto.",
+    voiceChatMicNoSpeech: "🔇 No se detectó voz — intenta de nuevo o usa el campo de texto.",
+    voiceChatMicError: "⚠️ Error del micrófono — usa el campo de texto.",
+    voiceChatVictoryTitle: "🎉 ¡Buena práctica!",
+    voiceScenarioFactoryTitle: "Fábrica: Instrucciones y Avería",
+    voiceScenarioFactoryDesc: "Un compañero te explica una tarea o una máquina que falló.",
+    voiceScenarioMistakeTitle: "Reportar un Error al Jefe",
+    voiceScenarioMistakeDesc: "Le contás a tu jefe un error que cometiste en el trabajo.",
+    voiceScenarioMeetingTitle: "Reunión de Coordinación",
+    voiceScenarioMeetingDesc: "Coordinás tareas con un colega para hoy o esta semana.",
+    voiceScenarioTrainingTitle: "Capacitación de un Sistema Nuevo",
+    voiceScenarioTrainingDesc: "Un instructor te enseña a usar un sistema nuevo de la empresa.",
+    voiceScenarioRestaurantTitle: "Restaurante: Pedir Comida",
+    voiceScenarioRestaurantDesc: "Pedís comida y bebida como cliente en un restaurante.",
+    voiceScenarioDoctorTitle: "Consulta Médica",
+    voiceScenarioDoctorDesc: "Le describís tus síntomas a un médico.",
+    voiceScenarioApartmentTitle: "Buscar Departamento",
+    voiceScenarioApartmentDesc: "Hablás con un agente inmobiliario sobre departamentos disponibles.",
     appJapanesePlaceholder: "El módulo Japonés AI Coach está en desarrollo. Pronto vas a poder practicarlo aquí.",
     appAddedMessage: "Más módulos estarán disponibles próximamente en Apps & Módulos.",
     appCalendarName: "Calendario & Eventos",
@@ -2577,6 +2608,37 @@ const I18N = {
     jpWorldGrammarExamNode: "📝 Grammar Exam",
     jpWorldConversationExamNode: "🎧 Conversation Exam",
     jpConvQuizUnavailableJa: "🈁 The conversation exam isn't available with the interface in 日本語 (there's no supporting translation to test against).",
+    jpVoiceChatOpenBtn: "AI Voice Conversation",
+    voiceChatTitle: "🎙️ AI Voice Conversation",
+    voiceChatPickerSubtitle: "Pick a scenario and your level — the AI stays in character, speaks out loud, and gives brief feedback if it catches a mistake.",
+    voiceChatBackBtn: "← Choose another scenario",
+    voiceChatMicTitle: "Speak",
+    voiceChatTextPlaceholder: "Or type your reply in Japanese...",
+    voiceChatSendBtn: "Send",
+    voiceChatMicUnsupported: "Your browser doesn't support speech recognition — use the text field above.",
+    voiceChatEndBtn: "🏁 End session",
+    voiceChatThinking: "🤔 Thinking...",
+    voiceChatSpeaking: "🔊 Speaking...",
+    voiceChatListening: "🎤 Listening...",
+    voiceChatError: "⚠️ Couldn't reach the AI. Try again.",
+    voiceChatMicDenied: "🚫 Microphone permission denied — enable it in your browser settings, or use the text field.",
+    voiceChatMicNoSpeech: "🔇 No speech detected — try again or use the text field.",
+    voiceChatMicError: "⚠️ Microphone error — use the text field.",
+    voiceChatVictoryTitle: "🎉 Great practice!",
+    voiceScenarioFactoryTitle: "Factory: Instructions & Breakdown",
+    voiceScenarioFactoryDesc: "A coworker explains a task or a machine that broke down.",
+    voiceScenarioMistakeTitle: "Reporting a Mistake to Your Boss",
+    voiceScenarioMistakeDesc: "You tell your boss about a mistake you made at work.",
+    voiceScenarioMeetingTitle: "Task Coordination Meeting",
+    voiceScenarioMeetingDesc: "You coordinate tasks with a coworker for today or this week.",
+    voiceScenarioTrainingTitle: "New System Training",
+    voiceScenarioTrainingDesc: "An instructor teaches you how to use a new company system.",
+    voiceScenarioRestaurantTitle: "Restaurant: Ordering Food",
+    voiceScenarioRestaurantDesc: "You order food and drinks as a customer at a restaurant.",
+    voiceScenarioDoctorTitle: "Doctor's Visit",
+    voiceScenarioDoctorDesc: "You describe your symptoms to a doctor.",
+    voiceScenarioApartmentTitle: "Apartment Hunting",
+    voiceScenarioApartmentDesc: "You talk to a real estate agent about available apartments.",
     appJapanesePlaceholder: "The Japanese AI Coach module is under development. You'll be able to practice here soon.",
     appAddedMessage: "More modules will be available soon in Apps & Modules.",
     appCalendarName: "Calendar & Events",
@@ -3571,6 +3633,37 @@ const I18N = {
     jpWorldGrammarExamNode: "📝 文法試験",
     jpWorldConversationExamNode: "🎧 会話試験",
     jpConvQuizUnavailableJa: "🈁 インターフェースが日本語の場合、会話試験は利用できません（判定に使う翻訳がありません）。",
+    jpVoiceChatOpenBtn: "AI音声会話",
+    voiceChatTitle: "🎙️ AI音声会話",
+    voiceChatPickerSubtitle: "シナリオとレベルを選んでください。AIが役になりきって声で答え、間違いがあれば短いフィードバックをくれます。",
+    voiceChatBackBtn: "← 別のシナリオを選ぶ",
+    voiceChatMicTitle: "話す",
+    voiceChatTextPlaceholder: "または日本語で返信を入力...",
+    voiceChatSendBtn: "送信",
+    voiceChatMicUnsupported: "お使いのブラウザは音声認識に対応していません — 上のテキスト欄を使ってください。",
+    voiceChatEndBtn: "🏁 セッション終了",
+    voiceChatThinking: "🤔 考え中...",
+    voiceChatSpeaking: "🔊 話しています...",
+    voiceChatListening: "🎤 聞いています...",
+    voiceChatError: "⚠️ AIに接続できませんでした。もう一度お試しください。",
+    voiceChatMicDenied: "🚫 マイクの許可が拒否されました — ブラウザの設定で有効にするか、テキスト欄を使ってください。",
+    voiceChatMicNoSpeech: "🔇 音声が検出されませんでした — もう一度試すか、テキスト欄を使ってください。",
+    voiceChatMicError: "⚠️ マイクエラー — テキスト欄を使ってください。",
+    voiceChatVictoryTitle: "🎉 よく練習しました！",
+    voiceScenarioFactoryTitle: "工場：指示と故障",
+    voiceScenarioFactoryDesc: "同僚が作業や故障した機械について説明します。",
+    voiceScenarioMistakeTitle: "上司へのミス報告",
+    voiceScenarioMistakeDesc: "仕事で起きたミスを上司に報告します。",
+    voiceScenarioMeetingTitle: "タスク調整ミーティング",
+    voiceScenarioMeetingDesc: "同僚と今日・今週のタスクを調整します。",
+    voiceScenarioTrainingTitle: "新システムの研修",
+    voiceScenarioTrainingDesc: "指導者が会社の新しいシステムの使い方を教えます。",
+    voiceScenarioRestaurantTitle: "レストラン：注文する",
+    voiceScenarioRestaurantDesc: "レストランで客として料理や飲み物を注文します。",
+    voiceScenarioDoctorTitle: "診察",
+    voiceScenarioDoctorDesc: "医師に症状を説明します。",
+    voiceScenarioApartmentTitle: "部屋探し",
+    voiceScenarioApartmentDesc: "不動産業者と空いている部屋について話します。",
     appJapanesePlaceholder: "日本語AIコーチモジュールは開発中です。もうすぐここで練習できるようになります。",
     appAddedMessage: "アプリ&モジュールに、もうすぐ新しいモジュールが追加されます。",
     appCalendarName: "カレンダー&イベント",
@@ -11242,6 +11335,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const jpFreeRoamToggleBtn = document.getElementById("jp-freeroam-toggle-btn");
   const jpDictShortcutBtn = document.getElementById("jp-dict-shortcut-btn");
   const jpHanziShortcutBtn = document.getElementById("jp-hanzi-shortcut-btn");
+  const jpVoiceChatShortcutBtn = document.getElementById("jp-voicechat-shortcut-btn");
+
+  // ---------------- Conversación por Voz con IA (roleplay N5/N4/N3) ----------------
+  const voiceChatModal = document.getElementById("voice-chat-modal");
+  const voiceChatModalClose = document.getElementById("voice-chat-modal-close");
+  const voiceChatPicker = document.getElementById("voice-chat-picker");
+  const voiceChatSession = document.getElementById("voice-chat-session");
+  const voiceChatLevelToggle = document.getElementById("voice-chat-level-toggle");
+  const voiceChatScenarioGrid = document.getElementById("voice-chat-scenario-grid");
+  const voiceChatBackBtn = document.getElementById("voice-chat-back-btn");
+  const voiceChatSessionTitle = document.getElementById("voice-chat-session-title");
+  const voiceChatTranscript = document.getElementById("voice-chat-transcript");
+  const voiceChatStatus = document.getElementById("voice-chat-status");
+  const voiceChatMicBtn = document.getElementById("voice-chat-mic-btn");
+  const voiceChatMicHint = document.getElementById("voice-chat-mic-hint");
+  const voiceChatTextForm = document.getElementById("voice-chat-text-form");
+  const voiceChatTextInput = document.getElementById("voice-chat-text-input");
+  const voiceChatEndBtn = document.getElementById("voice-chat-end-btn");
 
   const jpConversationsBackBtn = document.getElementById("jp-conversations-back-btn");
   const jpConversationSceneGrid = document.getElementById("jp-conversation-scene-grid");
@@ -19668,6 +19779,376 @@ document.addEventListener("DOMContentLoaded", () => {
       showJpView("roadmap");
     });
   }
+  if (jpVoiceChatShortcutBtn) jpVoiceChatShortcutBtn.addEventListener("click", openVoiceChatModal);
+
+  // ==================== Conversación por Voz con IA ====================
+  // Roleplay hablado N5/N4/N3 — a diferencia de TODO el resto de Nihongo
+  // (contenido curado a mano), acá la respuesta la genera un LLM real
+  // server-side (ver api/ai-conversation.js: la API key nunca puede vivir
+  // acá). Este bloque solo maneja: datos de escenario (metadata de UI,
+  // la PERSONA completa vive server-side por seguridad — ver comentario
+  // en ai-conversation.js), STT (mismo patrón que startConversationListening()
+  // más arriba, "no fake features": sin soporte real, el mic queda
+  // disabled con pista visible, el campo de texto sigue 100% funcional),
+  // TTS (reusa speakKana() tal cual — pese al nombre, ya es genérico para
+  // cualquier texto japonés, no solo un carácter suelto) y el turno de
+  // ida y vuelta con el endpoint nuevo.
+  //
+  // Frases de apertura pre-escritas por escenario+nivel (no se llama al
+  // LLM para arrancar — gratis y confiable) — deben coincidir en `id` con
+  // SCENARIO_PERSONAS de api/ai-conversation.js.
+  const JP_VOICE_SCENARIOS = [
+    {
+      id: "factoryVoice",
+      icon: "🏭",
+      titleKey: "voiceScenarioFactoryTitle",
+      descKey: "voiceScenarioFactoryDesc",
+      openers: {
+        n5: "こんにちは。今日はこの機械を使います。",
+        n4: "おはようございます。今日の作業を説明しますね。まず、この部品を確認してください。",
+        n3: "お疲れ様です。今日は新しいラインの担当をお願いします。まず全体の流れを説明しますね。",
+      },
+    },
+    {
+      id: "reportMistake",
+      icon: "😓",
+      titleKey: "voiceScenarioMistakeTitle",
+      descKey: "voiceScenarioMistakeDesc",
+      openers: {
+        n5: "どうしましたか。",
+        n4: "顔色が悪いですね。何かありましたか。",
+        n3: "何か報告することがあるみたいですね。聞かせてください。",
+      },
+    },
+    {
+      id: "teamMeeting",
+      icon: "🗂️",
+      titleKey: "voiceScenarioMeetingTitle",
+      descKey: "voiceScenarioMeetingDesc",
+      openers: {
+        n5: "今日は何をしますか。",
+        n4: "今日のタスクを確認しましょう。誰が何をしますか。",
+        n3: "それでは、今週のタスク分担を決めましょうか。",
+      },
+    },
+    {
+      id: "systemTraining",
+      icon: "🖥️",
+      titleKey: "voiceScenarioTrainingTitle",
+      descKey: "voiceScenarioTrainingDesc",
+      openers: {
+        n5: "これは新しいシステムです。",
+        n4: "今日は新しいシステムの使い方を説明します。準備はいいですか。",
+        n3: "本日は新システムの操作研修を行います。まずログイン方法から始めましょう。",
+      },
+    },
+    {
+      id: "restaurant",
+      icon: "🍜",
+      titleKey: "voiceScenarioRestaurantTitle",
+      descKey: "voiceScenarioRestaurantDesc",
+      openers: {
+        n5: "いらっしゃいませ。何にしますか。",
+        n4: "いらっしゃいませ。ご注文はお決まりですか。",
+        n3: "いらっしゃいませ。本日のおすすめは天ぷら定食です。いかがなさいますか。",
+      },
+    },
+    {
+      id: "doctorVisit",
+      icon: "🏥",
+      titleKey: "voiceScenarioDoctorTitle",
+      descKey: "voiceScenarioDoctorDesc",
+      openers: {
+        n5: "どうしましたか。",
+        n4: "こんにちは。今日はどうされましたか。",
+        n3: "こんにちは、どうぞおかけください。今日はどのような症状でいらっしゃいましたか。",
+      },
+    },
+    {
+      id: "apartmentHunt",
+      icon: "🏠",
+      titleKey: "voiceScenarioApartmentTitle",
+      descKey: "voiceScenarioApartmentDesc",
+      openers: {
+        n5: "どんな部屋がいいですか。",
+        n4: "いらっしゃいませ。どんなお部屋をお探しですか。",
+        n3: "本日はご来店ありがとうございます。ご希望の条件を伺ってもよろしいですか。",
+      },
+    },
+  ];
+
+  let voiceChatLevel = "n5";
+  let voiceChatScenario = null;
+  let voiceChatHistory = []; // [{role:"user"|"assistant", text}]
+  let voiceChatBusy = false;
+
+  function showVoiceChatView(view) {
+    voiceChatPicker.hidden = view !== "picker";
+    voiceChatSession.hidden = view !== "session";
+  }
+
+  function renderVoiceChatScenarioGrid() {
+    if (!voiceChatScenarioGrid) return;
+    voiceChatScenarioGrid.innerHTML = "";
+    JP_VOICE_SCENARIOS.forEach((scenario) => {
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className = "voice-chat-scenario-card";
+      const icon = document.createElement("span");
+      icon.className = "voice-chat-scenario-card__icon";
+      icon.textContent = scenario.icon;
+      const title = document.createElement("span");
+      title.className = "voice-chat-scenario-card__title";
+      title.textContent = t(scenario.titleKey);
+      const desc = document.createElement("span");
+      desc.className = "voice-chat-scenario-card__desc";
+      desc.textContent = t(scenario.descKey);
+      card.append(icon, title, desc);
+      card.addEventListener("click", () => startVoiceConversation(scenario));
+      voiceChatScenarioGrid.appendChild(card);
+    });
+  }
+
+  function openVoiceChatModal() {
+    voiceChatModal.hidden = false;
+    showVoiceChatView("picker");
+    renderVoiceChatScenarioGrid();
+  }
+  function closeVoiceChatModal() {
+    voiceChatModal.hidden = true;
+    stopVoiceChatListening();
+    window.speechSynthesis && window.speechSynthesis.cancel();
+  }
+
+  if (voiceChatLevelToggle) {
+    voiceChatLevelToggle.addEventListener("click", (event) => {
+      const btn = event.target.closest(".jp-level-btn");
+      if (!btn) return;
+      voiceChatLevel = btn.dataset.level;
+      Array.from(voiceChatLevelToggle.querySelectorAll(".jp-level-btn")).forEach((b) => {
+        b.classList.toggle("jp-level-btn--active", b === btn);
+      });
+    });
+  }
+
+  function setVoiceChatStatus(text) {
+    if (!voiceChatStatus) return;
+    voiceChatStatus.hidden = !text;
+    voiceChatStatus.textContent = text || "";
+  }
+
+  function setVoiceChatBusy(busy) {
+    voiceChatBusy = busy;
+    if (voiceChatMicBtn) voiceChatMicBtn.disabled = busy || !VoiceChatRecognitionCtor;
+    if (voiceChatTextInput) voiceChatTextInput.disabled = busy;
+  }
+
+  // Una burbuja por turno — `kind` es "user"/"npc"/"system" (system =
+  // avisos de error, sin botón de audio). La burbuja de feedback (💡) es
+  // una burbuja HERMANA aparte, más chica, solo cuando el modelo detectó
+  // algo que corregir (ver parseModelReply() en api/ai-conversation.js).
+  function appendVoiceChatBubble(kind, text, feedback) {
+    const bubble = document.createElement("div");
+    bubble.className = `voice-chat-bubble voice-chat-bubble--${kind}`;
+    const textEl = document.createElement("p");
+    textEl.className = "voice-chat-bubble__text";
+    textEl.textContent = text;
+    bubble.appendChild(textEl);
+    if (kind === "npc") {
+      const speakBtn = document.createElement("button");
+      speakBtn.type = "button";
+      speakBtn.className = "voice-chat-bubble__speak";
+      speakBtn.textContent = "🔊";
+      speakBtn.setAttribute("aria-label", t("jpListen"));
+      speakBtn.addEventListener("click", () => speakKana(text));
+      bubble.appendChild(speakBtn);
+    }
+    voiceChatTranscript.appendChild(bubble);
+    if (feedback) {
+      const fbBubble = document.createElement("div");
+      fbBubble.className = "voice-chat-bubble voice-chat-bubble--feedback";
+      fbBubble.textContent = `💡 ${feedback}`;
+      voiceChatTranscript.appendChild(fbBubble);
+    }
+    voiceChatTranscript.scrollTop = voiceChatTranscript.scrollHeight;
+  }
+
+  function startVoiceConversation(scenario) {
+    voiceChatScenario = scenario;
+    voiceChatHistory = [];
+    voiceChatTranscript.innerHTML = "";
+    voiceChatSessionTitle.textContent = `${scenario.icon} ${t(scenario.titleKey)}`;
+    showVoiceChatView("session");
+    setVoiceChatStatus(null);
+    const opener = scenario.openers[voiceChatLevel] || scenario.openers.n5;
+    appendVoiceChatBubble("npc", opener, null);
+    voiceChatHistory.push({ role: "assistant", text: opener });
+    speakKana(opener);
+  }
+
+  async function sendVoiceChatMessage(userText) {
+    if (!userText.trim() || voiceChatBusy || !voiceChatScenario) return;
+    const historyForRequest = voiceChatHistory.slice();
+    appendVoiceChatBubble("user", userText, null);
+    voiceChatHistory.push({ role: "user", text: userText });
+    setVoiceChatBusy(true);
+    setVoiceChatStatus(t("voiceChatThinking"));
+    try {
+      const res = await fetch("/api/ai-conversation", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          scenarioId: voiceChatScenario.id,
+          level: voiceChatLevel,
+          interfaceLanguage: currentLanguage,
+          history: historyForRequest,
+          userMessage: userText,
+        }),
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok || !data || !data.ok) {
+        setVoiceChatStatus(null);
+        appendVoiceChatBubble("system", t("voiceChatError"), null);
+        return;
+      }
+      voiceChatHistory.push({ role: "assistant", text: data.reply });
+      appendVoiceChatBubble("npc", data.reply, data.feedback);
+      setVoiceChatStatus(t("voiceChatSpeaking"));
+      await speakKana(data.reply);
+      setVoiceChatStatus(null);
+    } catch (err) {
+      setVoiceChatStatus(null);
+      appendVoiceChatBubble("system", t("voiceChatError"), null);
+    } finally {
+      setVoiceChatBusy(false);
+    }
+  }
+
+  if (voiceChatTextForm) {
+    voiceChatTextForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const text = voiceChatTextInput.value.trim();
+      if (!text) return;
+      voiceChatTextInput.value = "";
+      sendVoiceChatMessage(text);
+    });
+  }
+
+  // STT — mismo patrón/criterio "no fake features" que
+  // startConversationListening() más arriba (Modo Conversación): se
+  // detecta UNA vez, y si no hay soporte real el botón queda disabled
+  // con una pista visible en vez de simular reconocimiento.
+  const VoiceChatRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition || null;
+  let voiceChatRecognition = null;
+  let voiceChatListening = false;
+
+  function stopVoiceChatListening() {
+    if (voiceChatRecognition) {
+      try {
+        voiceChatRecognition.stop();
+      } catch (err) {
+        // noop — stop() puede tirar si ya estaba detenido
+      }
+    }
+    voiceChatListening = false;
+    if (voiceChatMicBtn) voiceChatMicBtn.classList.remove("voice-chat-mic-btn--listening");
+  }
+
+  function startVoiceChatListening() {
+    if (!VoiceChatRecognitionCtor || voiceChatBusy) return;
+    if (voiceChatListening) {
+      stopVoiceChatListening();
+      return;
+    }
+    const recognition = new VoiceChatRecognitionCtor();
+    recognition.lang = "ja-JP";
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    recognition.continuous = false;
+
+    recognition.onresult = (event) => {
+      const transcript =
+        event.results && event.results[0] && event.results[0][0] ? event.results[0][0].transcript : "";
+      if (transcript.trim()) sendVoiceChatMessage(transcript);
+    };
+    recognition.onerror = (event) => {
+      stopVoiceChatListening();
+      const code = event && event.error;
+      setVoiceChatStatus(
+        code === "not-allowed" || code === "permission-denied"
+          ? t("voiceChatMicDenied")
+          : code === "no-speech"
+          ? t("voiceChatMicNoSpeech")
+          : t("voiceChatMicError")
+      );
+    };
+    recognition.onend = () => {
+      if (voiceChatListening) stopVoiceChatListening();
+    };
+
+    voiceChatRecognition = recognition;
+    voiceChatListening = true;
+    if (voiceChatMicBtn) voiceChatMicBtn.classList.add("voice-chat-mic-btn--listening");
+    setVoiceChatStatus(t("voiceChatListening"));
+    try {
+      recognition.start();
+    } catch (err) {
+      stopVoiceChatListening();
+      setVoiceChatStatus(t("voiceChatMicError"));
+    }
+  }
+
+  if (voiceChatMicBtn) voiceChatMicBtn.addEventListener("click", startVoiceChatListening);
+  if (!VoiceChatRecognitionCtor) {
+    if (voiceChatMicBtn) voiceChatMicBtn.disabled = true;
+    if (voiceChatMicHint) voiceChatMicHint.hidden = false;
+  }
+
+  // Fin de sesión: recompensa FIJA (no por turno, evita sobre-ingeniería)
+  // solo si hubo al menos un intercambio real — abrir y cerrar sin decir
+  // nada no debería otorgar nada. Progreso guardado bajo un namespace
+  // nuevo (mismo store que vocab/gramática, sin cambio de esquema).
+  function endVoiceChatSession() {
+    stopVoiceChatListening();
+    window.speechSynthesis && window.speechSynthesis.cancel();
+    const scenario = voiceChatScenario;
+    const hadExchange = voiceChatHistory.some((turn) => turn.role === "user");
+    voiceChatModal.hidden = true;
+    voiceChatScenario = null;
+    showVoiceChatView("picker");
+    if (scenario && hadExchange) {
+      addGold(5);
+      grantXP(20);
+      grantJpXP(6);
+      saveN5Progress(`voicechat:${scenario.id}:${voiceChatLevel}`, 1, 1);
+      showJpVictoryModal({
+        title: t("voiceChatVictoryTitle"),
+        subtitle: `${scenario.icon} ${t(scenario.titleKey)} · ${voiceChatLevel.toUpperCase()}`,
+        xp: 20,
+        gold: 5,
+        tierXp: 6,
+      });
+    }
+  }
+
+  if (voiceChatEndBtn) voiceChatEndBtn.addEventListener("click", endVoiceChatSession);
+  if (voiceChatBackBtn) {
+    voiceChatBackBtn.addEventListener("click", () => {
+      stopVoiceChatListening();
+      window.speechSynthesis && window.speechSynthesis.cancel();
+      voiceChatScenario = null;
+      showVoiceChatView("picker");
+    });
+  }
+  if (voiceChatModalClose) voiceChatModalClose.addEventListener("click", closeVoiceChatModal);
+  if (voiceChatModal) {
+    voiceChatModal.addEventListener("click", (event) => {
+      if (event.target === voiceChatModal) closeVoiceChatModal();
+    });
+  }
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && voiceChatModal && !voiceChatModal.hidden) closeVoiceChatModal();
+  });
   if (jpWorldContentBackBtn) jpWorldContentBackBtn.addEventListener("click", jpBack);
 
   // ---------------- "Continuar donde lo dejaste" / recomendación de repaso ----------------

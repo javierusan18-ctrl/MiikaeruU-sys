@@ -7902,6 +7902,257 @@ body.miikaeru-anim-off .cyber-tile[data-forward*="bossfight"] {
   box-shadow: 0 0 12px rgba(255, 46, 154, 0.5);
 }
 
+/* ==================== Conversación por Voz con IA ====================
+   Modal propio (no anidado en #japanese-modal), mismo criterio que
+   .modal--hanzi-writer — roleplay hablado con un LLM real vía
+   api/ai-conversation.js (ver JP_VOICE_SCENARIOS/openVoiceChatModal()
+   en app.js). Reusa los tokens de color ya establecidos (--neon-cyan/
+   --neon-magenta/--neon-green) en vez de inventar una paleta nueva. */
+.modal--voice-chat {
+  max-width: 640px;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 44px 26px 26px;
+  text-align: left;
+  position: relative;
+}
+
+.voice-chat-view {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.voice-chat-scenario-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.voice-chat-scenario-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(0, 240, 255, 0.25);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-primary);
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.voice-chat-scenario-card:hover {
+  border-color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+  transform: translateY(-2px);
+}
+
+.voice-chat-scenario-card__icon {
+  font-size: 1.6rem;
+}
+
+.voice-chat-scenario-card__title {
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--neon-cyan);
+}
+
+.voice-chat-scenario-card__desc {
+  font-size: 0.74rem;
+  color: var(--text-secondary);
+  line-height: 1.35;
+}
+
+.voice-chat-session__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.voice-chat-session__scenario {
+  font-weight: 700;
+  color: var(--neon-cyan);
+  font-size: 0.9rem;
+}
+
+.voice-chat-transcript {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-height: 220px;
+  max-height: 42vh;
+  overflow-y: auto;
+  padding: 10px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(0, 240, 255, 0.15);
+  background: rgba(5, 9, 18, 0.4);
+}
+
+/* Burbujas: usuario a la derecha, NPC a la izquierda — mismo lenguaje
+   visual neón que el resto (borde + texto cian para NPC, verde para el
+   usuario), la burbuja de feedback es más chica y ambar, siempre debajo
+   de la burbuja NPC a la que corresponde. */
+.voice-chat-bubble {
+  max-width: 82%;
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  font-size: 0.82rem;
+  line-height: 1.4;
+  position: relative;
+}
+
+.voice-chat-bubble--npc {
+  align-self: flex-start;
+  background: rgba(0, 240, 255, 0.08);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  color: var(--text-primary);
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.voice-chat-bubble--user {
+  align-self: flex-end;
+  background: rgba(0, 255, 156, 0.1);
+  border: 1px solid rgba(0, 255, 156, 0.35);
+  color: var(--text-primary);
+}
+
+.voice-chat-bubble--system {
+  align-self: center;
+  background: rgba(255, 46, 154, 0.08);
+  border: 1px solid rgba(255, 46, 154, 0.3);
+  color: var(--neon-magenta);
+  font-size: 0.76rem;
+  text-align: center;
+}
+
+.voice-chat-bubble--feedback {
+  align-self: flex-start;
+  background: rgba(255, 183, 0, 0.08);
+  border: 1px solid rgba(255, 183, 0, 0.3);
+  color: var(--neon-gold);
+  font-size: 0.72rem;
+  max-width: 82%;
+}
+
+.voice-chat-bubble__text {
+  flex: 1;
+}
+
+.voice-chat-bubble__speak {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: var(--neon-cyan);
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0;
+  line-height: 1;
+}
+
+.voice-chat-status {
+  font-size: 0.76rem;
+  color: var(--neon-cyan);
+  text-align: center;
+  margin: 0;
+}
+
+.voice-chat-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.voice-chat-mic-btn {
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 2px solid var(--neon-cyan);
+  background: rgba(0, 240, 255, 0.08);
+  color: var(--neon-cyan);
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.voice-chat-mic-btn:hover:not(:disabled) {
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.voice-chat-mic-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.voice-chat-mic-btn--listening {
+  background: var(--neon-magenta);
+  border-color: var(--neon-magenta);
+  color: #1a0410;
+  box-shadow: 0 0 16px rgba(255, 46, 154, 0.6);
+  animation: voiceChatMicPulse 1.2s ease-in-out infinite;
+}
+
+@keyframes voiceChatMicPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+.voice-chat-text-form {
+  flex: 1;
+  display: flex;
+  gap: 8px;
+}
+
+.voice-chat-text-form input {
+  flex: 1;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-primary);
+  font-size: 0.82rem;
+}
+
+.voice-chat-mic-hint {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  text-align: center;
+  margin: -6px 0 0;
+}
+
+.voice-chat-end-btn {
+  align-self: center;
+}
+
+@media (max-width: 600px) {
+  .modal--voice-chat {
+    width: 100vw;
+    height: 100vh;
+    max-width: 100vw;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+  .voice-chat-scenario-grid {
+    grid-template-columns: 1fr;
+  }
+  .voice-chat-bubble {
+    max-width: 92%;
+  }
+}
+
 .modal--hanzi-writer {
   max-width: 640px;
   max-height: 88vh;

@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260814-2" />
+  <link rel="stylesheet" href="style.css?v=20260814-3" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -1989,6 +1989,7 @@
            ocupadas (✕ cerrar, ⚙️ config arriba-derecha; ← volver
            arriba-izquierda). -->
       <div class="jp-floating-side-stack">
+        <button type="button" class="btn-jp-floating-side" id="jp-voicechat-shortcut-btn" data-i18n-title="jpVoiceChatOpenBtn" title="Conversación de Voz con IA" aria-label="Conversación de Voz con IA">🎙️</button>
         <button type="button" class="btn-jp-floating-side" id="jp-freeroam-toggle-btn" data-i18n-title="jpFreeRoamTitle" title="Modo Libre" aria-label="Modo Libre">🔓</button>
         <button type="button" class="btn-jp-floating-side" id="jp-hanzi-shortcut-btn" data-i18n-title="jpHanziWriterOpenBtn" title="Trazos Reales" aria-label="Trazos Reales">✍️</button>
         <button type="button" class="btn-jp-floating-side" id="jp-dict-shortcut-btn" data-i18n-title="jpDictShortcutTitle" title="Diccionario" aria-label="Diccionario">📚</button>
@@ -2496,6 +2497,58 @@
        comparten el mismo dataset real (fetchHanziStrokeData(), KanjiVG) —
        ver comentario junto a esa función en app.js. Se abre desde el
        botón [✍️ Trazos Reales] dentro del modal Japonés. -->
+  <!-- MODAL: Conversación por Voz con IA — roleplay de japonés hablado.
+       Modal propio (no anidado dentro de #japanese-modal), mismo criterio
+       que #hanzi-writer-modal: es un modo completamente distinto (chat en
+       vivo con un LLM real vía api/ai-conversation.js), no un nodo más del
+       Mapa de Mundos. Se abre desde el botón [🎙️] flotante lateral dentro
+       de Nihongo. 2 sub-vistas: selección de escenario+nivel, y la sesión
+       de chat en sí (ver JP_VOICE_SCENARIOS/openVoiceChatModal() en app.js). -->
+  <div class="modal-overlay" id="voice-chat-modal" hidden>
+    <div class="modal modal--voice-chat glass">
+      <button type="button" class="btn-modal-close" id="voice-chat-modal-close" aria-label="Cerrar">✕</button>
+      <h3 class="modal__title" data-i18n="voiceChatTitle">🎙️ Conversación de Voz con IA</h3>
+
+      <!-- Sub-vista 1: elegir escenario + nivel -->
+      <div class="voice-chat-view" id="voice-chat-picker">
+        <p class="modal__subtitle" data-i18n="voiceChatPickerSubtitle">Elige un escenario y tu nivel — la IA responde en personaje, en voz, y te da feedback breve si detecta un error.</p>
+        <div class="jp-level-toggle" id="voice-chat-level-toggle">
+          <button type="button" class="jp-level-btn jp-level-btn--active" data-level="n5">N5</button>
+          <button type="button" class="jp-level-btn" data-level="n4">N4</button>
+          <button type="button" class="jp-level-btn" data-level="n3">N3</button>
+        </div>
+        <div class="voice-chat-scenario-grid" id="voice-chat-scenario-grid">
+          <!-- tarjetas renderizadas por app.js (renderVoiceChatScenarioGrid) -->
+        </div>
+      </div>
+
+      <!-- Sub-vista 2: sesión de chat en vivo -->
+      <div class="voice-chat-view" id="voice-chat-session" hidden>
+        <div class="voice-chat-session__header">
+          <button type="button" class="btn-jp-back" id="voice-chat-back-btn" data-i18n="voiceChatBackBtn">← Elegir otro escenario</button>
+          <span class="voice-chat-session__scenario" id="voice-chat-session-title"></span>
+        </div>
+
+        <div class="voice-chat-transcript" id="voice-chat-transcript">
+          <!-- burbujas renderizadas por app.js -->
+        </div>
+
+        <p class="voice-chat-status" id="voice-chat-status" hidden></p>
+
+        <div class="voice-chat-controls">
+          <button type="button" class="voice-chat-mic-btn" id="voice-chat-mic-btn" data-i18n-title="voiceChatMicTitle" title="Hablar" aria-label="Hablar">🎤</button>
+          <form id="voice-chat-text-form" class="voice-chat-text-form" autocomplete="off">
+            <input type="text" id="voice-chat-text-input" data-i18n-placeholder="voiceChatTextPlaceholder" placeholder="O escribe tu respuesta en japonés..." />
+            <button type="submit" class="btn-register" data-i18n="voiceChatSendBtn">Enviar</button>
+          </form>
+        </div>
+        <p class="voice-chat-mic-hint" id="voice-chat-mic-hint" hidden data-i18n="voiceChatMicUnsupported">Tu navegador no soporta reconocimiento de voz — usa el campo de texto de arriba.</p>
+
+        <button type="button" class="btn-register voice-chat-end-btn" id="voice-chat-end-btn" data-i18n="voiceChatEndBtn">🏁 Finalizar sesión</button>
+      </div>
+    </div>
+  </div>
+
   <div class="modal-overlay" id="hanzi-writer-modal" hidden>
     <div class="modal modal--hanzi-writer glass">
       <button type="button" class="btn-modal-close" id="hanzi-writer-modal-close" aria-label="Cerrar">✕</button>
@@ -3307,7 +3360,7 @@
        etiquetas <script> no importa en la práctica — se carga acá antes
        igual, por prolijidad. -->
   <script src="floatingWindow.js?v=20260811-6"></script>
-  <script src="app.js?v=20260814-5"></script>
+  <script src="app.js?v=20260814-6"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de
