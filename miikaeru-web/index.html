@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260815-1" />
+  <link rel="stylesheet" href="style.css?v=20260815-6" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -3037,6 +3037,7 @@
         <button type="button" class="admin-panel-tab" data-admin-tab="users" data-i18n="adminPanelTabUsers">👥 Usuarios</button>
         <button type="button" class="admin-panel-tab" data-admin-tab="metrics" data-i18n="adminPanelTabMetrics">📊 Métricas</button>
         <button type="button" class="admin-panel-tab" data-admin-tab="photos" data-i18n="adminPanelTabPhotos">📸 Fotos</button>
+        <button type="button" class="admin-panel-tab" data-admin-tab="wallpapers" data-i18n="adminPanelTabWallpapers">🖼️ Fondos</button>
         <button type="button" class="admin-panel-tab" data-admin-tab="database" data-i18n="adminPanelTabDatabase">🗄️ Base de Datos</button>
         <button type="button" class="admin-panel-tab" data-admin-tab="admins" data-i18n="adminPanelTabAdmins">🔑 Administradores</button>
       </div>
@@ -3227,6 +3228,20 @@
           Pega la URL de una imagen para cada personaje y guarda — se refleja al instante en la pantalla de elección de Héroe.
         </p>
         <div class="admin-photos-rows" id="admin-photos-rows"></div>
+      </div>
+
+      <!-- Pestaña: Fondos — por defecto cada ventana carga un fondo
+           aleatorio del pool de arte ya existente (WALLPAPER_POOL en
+           app.js); acá el Admin puede fijar uno concreto por ventana
+           (del mismo pool, pegando una URL propia, o subiendo una imagen
+           desde su galería) o volver a "Aleatorio". Mismo mecanismo
+           local+Supabase que la pestaña Fotos (`wallpapers`, ver
+           renderAdminWallpapersTab() en app.js). -->
+      <div id="admin-panel-tab-wallpapers" hidden>
+        <p class="admin-panel__status admin-panel__status--hint" data-i18n="adminWallpapersHint">
+          Por defecto cada ventana muestra un fondo aleatorio. Elige uno fijo del menú, pega una URL, o sube una imagen desde tu galería — "Aleatorio" vuelve a la rotación por defecto.
+        </p>
+        <div class="admin-photos-rows admin-wallpapers-rows" id="admin-wallpapers-rows"></div>
       </div>
 
       <!-- Pestaña: Base de Datos — diagnóstico visible de /api/init-db
@@ -3563,7 +3578,7 @@
        etiquetas <script> no importa en la práctica — se carga acá antes
        igual, por prolijidad. -->
   <script src="floatingWindow.js?v=20260811-6"></script>
-  <script src="app.js?v=20260815-2"></script>
+  <script src="app.js?v=20260815-5"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de

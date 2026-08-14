@@ -106,14 +106,31 @@ html, body {
   height: 100%;
 }
 
-/* Fondo global (assets/bg_main.png): capas radiales cian/verde arriba de
-   la imagen para el tinte cyberpunk de siempre, y un degradado oscuro
-   debajo de todo para que ningún panel pierda contraste — la imagen es
-   `fixed` para que no se desplace con el scroll de la página. */
+/* Fondo global: capas radiales cian/verde arriba de la imagen para el
+   tinte cyberpunk de siempre, y un degradado oscuro debajo de todo para
+   que ningún panel pierda contraste — la imagen es `fixed` para que no
+   se desplace con el scroll de la página. La última capa es una CSS
+   custom property en vez de la url() fija de antes: applyWindowWallpaper()
+   (app.js, ver "Fondos de Pantalla / Wallpapers dinámicos") la fija a un
+   fondo elegido al azar del pool por sesión, o al fijo que haya elegido
+   el Admin — con var() sin definir (JS todavía no corrió, o algo salió
+   mal) cae exactamente al mismo assets/bg_main.png de siempre, cero
+   regresión visual. */
 body {
   font-family: var(--font-main);
   color: var(--text-primary);
-  background:
+  background-color: rgba(7, 9, 15, 0.94);
+  /* Fondo por defecto — applyWindowWallpaper() (app.js, "Fondos de
+     Pantalla / Wallpapers dinámicos") lo SOBRESCRIBE por completo vía
+     estilo inline (background-image) apenas la app carga, con el mismo
+     tinte de acá + el fondo elegido al azar del pool o el fijo del
+     Admin. Se probó primero con una CSS custom property (var() en el
+     shorthand/longhand referenciando --window-wallpaper) pero en
+     pruebas reales terminaba en background-image vacío pese a sintaxis
+     válida — el inline directo de abajo es el que sí funciona
+     consistentemente, así que esta regla queda como el respaldo
+     estático de siempre (si JS todavía no corrió, o algo salió mal). */
+  background-image:
     radial-gradient(circle at 15% 10%, rgba(0, 240, 255, 0.08), transparent 40%),
     radial-gradient(circle at 85% 90%, rgba(0, 255, 156, 0.07), transparent 45%),
     linear-gradient(180deg, rgba(9, 12, 20, 0.88) 0%, rgba(7, 9, 15, 0.94) 100%),
@@ -6772,6 +6789,13 @@ body.miikaeru-anim-off .cyber-tile[data-forward*="bossfight"] {
 
 /* ===================== MODAL: REGISTRO DE OPERADOR ===================== */
 
+/* Fondo por defecto: solo el tinte semitransparente de siempre, sin
+   ninguna imagen (el body transparenta por detrás). Para las "ventanas"
+   listadas en WALLPAPER_WINDOWS, applyWindowWallpaper() (app.js) agrega
+   una imagen vía estilo inline (background-image) al abrirse, en capas
+   sobre el MISMO tinte — ver comentario junto a `body` más arriba sobre
+   por qué es inline y no una CSS custom property. Los modales que NUNCA
+   reciben esa llamada (la mayoría) se quedan exactamente como están acá. */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -6781,6 +6805,8 @@ body.miikaeru-anim-off .cyber-tile[data-forward*="bossfight"] {
   justify-content: center;
   padding: 20px;
   background: rgba(5, 7, 12, 0.75);
+  background-size: cover;
+  background-position: center;
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
 }
@@ -9539,6 +9565,53 @@ body.miikaeru-anim-off .cyber-tile[data-forward*="bossfight"] {
     width: 100%;
     flex-basis: 100%;
   }
+}
+
+/* Fila de Fondos: además de preview/nombre/input/guardar (reusados TAL
+   CUAL de .admin-photos-row de arriba), suma un <select> del pool y un
+   botón de subida — se agrupan en su propio wrap para envolver en
+   pantallas chicas sin desarmar el resto de la fila. */
+.admin-wallpapers-row {
+  flex-wrap: wrap;
+}
+
+.admin-wallpapers-row__fields {
+  display: flex;
+  flex: 1;
+  min-width: 220px;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.admin-wallpapers-row__select {
+  flex: 1;
+  min-width: 120px;
+  cursor: pointer;
+}
+
+/* Clase propia completa (no comparte .admin-photos-row__save con el
+   botón de Guardar real — ver comentario junto a uploadBtn.className en
+   app.js sobre por qué). Mismas medidas/forma que ese botón, distinto
+   color para diferenciarlo visualmente. */
+.admin-wallpapers-row__upload-btn {
+  flex-shrink: 0;
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-color: var(--neon-cyan);
+  color: var(--neon-cyan);
+  background: rgba(0, 240, 255, 0.08);
+  border-width: 1px;
+  border-style: solid;
+}
+
+.admin-wallpapers-row__upload-btn:hover {
+  background: var(--neon-cyan);
+  color: #04121a;
+  box-shadow: var(--shadow-neon-cyan);
 }
 
 .modal--city-map {

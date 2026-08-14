@@ -157,6 +157,19 @@ const SCHEMA_STATEMENTS = [
     image_url text not null,
     updated_at timestamptz not null default now()
   )`,
+  // wallpapers: respaldo en la nube de los fondos que el SUPER_ADMIN fija
+  // desde el Panel de Administrador → "🖼️ Fondos" para cada ventana de la
+  // app (ver WALLPAPER_WINDOWS en app.js) — MISMO criterio exacto que
+  // hero_avatars de arriba: localStorage sigue siendo la fuente de
+  // verdad LOCAL (instantánea), esta tabla es best-effort para que el
+  // fondo elegido también llegue a otros dispositivos. `window_id` es la
+  // clave ("dashboard" | "bossfight" | "japanese" | "spanish" | ...);
+  // sin fila para un window_id = ese window sigue en modo aleatorio.
+  `create table if not exists public.wallpapers (
+    window_id text primary key,
+    image_src text not null,
+    updated_at timestamptz not null default now()
+  )`,
   // transactions: respaldo en la nube del ledger de negocios (Finanzas →
   // Servicio/Venta, ver businessLedger en app.js) — la tabla que
   // faltaba y hacía fallar tanto syncTransactionToSupabase() (el upsert
@@ -248,6 +261,7 @@ const SCHEMA_STATEMENTS = [
   `alter table public.app_friend_messages enable row level security`,
   `alter table public.player_progress enable row level security`,
   `alter table public.hero_avatars enable row level security`,
+  `alter table public.wallpapers enable row level security`,
   `alter table public.transactions enable row level security`,
   `alter table public.feedback enable row level security`,
   `alter table public.app_squads enable row level security`,
@@ -278,6 +292,8 @@ const SCHEMA_STATEMENTS = [
   `create policy "anon full access player_progress" on public.player_progress for all using (true) with check (true)`,
   `drop policy if exists "anon full access hero_avatars" on public.hero_avatars`,
   `create policy "anon full access hero_avatars" on public.hero_avatars for all using (true) with check (true)`,
+  `drop policy if exists "anon full access wallpapers" on public.wallpapers`,
+  `create policy "anon full access wallpapers" on public.wallpapers for all using (true) with check (true)`,
   `drop policy if exists "anon full access transactions" on public.transactions`,
   `create policy "anon full access transactions" on public.transactions for all using (true) with check (true)`,
   // feedback es la EXCEPCIÓN a "anon full access" de este bloque, a

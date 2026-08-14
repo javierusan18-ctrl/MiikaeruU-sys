@@ -1323,6 +1323,21 @@ const I18N = {
     metricsNetworkError: "⚠️ Error de red al conectar con Supabase.",
     adminPanelTabPhotos: "📸 Fotos",
     adminPhotosHint: "Pega la URL de una imagen para cada personaje y guarda — se refleja al instante en la pantalla de elección de Héroe.",
+    adminPanelTabWallpapers: "🖼️ Fondos",
+    adminWallpapersHint: "Por defecto cada ventana muestra un fondo aleatorio. Elige uno fijo del menú, pega una URL, o sube una imagen desde tu galería — \"Aleatorio\" vuelve a la rotación por defecto.",
+    wallpaperWinDashboard: "Escritorio Principal",
+    wallpaperWinBossfight: "Boss Fight",
+    wallpaperWinJapanese: "Nihongo",
+    wallpaperWinSpanish: "Español",
+    wallpaperWinLang: "English / Português",
+    wallpaperWinCalendar: "Calendario",
+    wallpaperWinTemplo: "Templo",
+    wallpaperWinVoicechat: "Conversación de Voz",
+    wallpaperWinMiikapass: "Miika Pass",
+    wallpaperRandomOption: "🎲 Aleatorio",
+    wallpaperUrlPlaceholder: "Pega una URL de imagen...",
+    wallpaperUploadBtn: "📁 Subir",
+    wallpaperUploadTooBig: "Esa imagen pesa demasiado (máximo 2 MB) — probá con una más liviana.",
     adminPhotosUrlPlaceholder: "https://...",
     adminPhotosSaveBtn: "Guardar",
     adminPanelTabDatabase: "🗄️ Base de Datos",
@@ -2458,6 +2473,21 @@ const I18N = {
     metricsNetworkError: "⚠️ Network error connecting to Supabase.",
     adminPanelTabPhotos: "📸 Photos",
     adminPhotosHint: "Paste an image URL for each character and save — reflected instantly on the Hero selection screen.",
+    adminPanelTabWallpapers: "🖼️ Wallpapers",
+    adminWallpapersHint: "By default every window shows a random background. Pick a fixed one from the menu, paste a URL, or upload an image from your gallery — \"Random\" goes back to the default rotation.",
+    wallpaperWinDashboard: "Main Dashboard",
+    wallpaperWinBossfight: "Boss Fight",
+    wallpaperWinJapanese: "Nihongo",
+    wallpaperWinSpanish: "Español",
+    wallpaperWinLang: "English / Português",
+    wallpaperWinCalendar: "Calendar",
+    wallpaperWinTemplo: "Templo",
+    wallpaperWinVoicechat: "Voice Conversation",
+    wallpaperWinMiikapass: "Miika Pass",
+    wallpaperRandomOption: "🎲 Random",
+    wallpaperUrlPlaceholder: "Paste an image URL...",
+    wallpaperUploadBtn: "📁 Upload",
+    wallpaperUploadTooBig: "That image is too large (max 2 MB) — try a lighter one.",
     adminPhotosUrlPlaceholder: "https://...",
     adminPhotosSaveBtn: "Save",
     adminPanelTabDatabase: "🗄️ Database",
@@ -3593,6 +3623,21 @@ const I18N = {
     metricsNetworkError: "⚠️ Supabaseへの接続でネットワークエラーが発生しました。",
     adminPanelTabPhotos: "📸 写真",
     adminPhotosHint: "各キャラクターの画像URLを貼り付けて保存してください — ヒーロー選択画面に即反映されます。",
+    adminPanelTabWallpapers: "🖼️ 背景",
+    adminWallpapersHint: "デフォルトでは各ウィンドウにランダムな背景が表示されます。メニューから固定の背景を選ぶか、URLを貼り付けるか、ギャラリーから画像をアップロードしてください — 「ランダム」でデフォルトのローテーションに戻ります。",
+    wallpaperWinDashboard: "メインダッシュボード",
+    wallpaperWinBossfight: "ボスファイト",
+    wallpaperWinJapanese: "日本語",
+    wallpaperWinSpanish: "スペイン語",
+    wallpaperWinLang: "English / Português",
+    wallpaperWinCalendar: "カレンダー",
+    wallpaperWinTemplo: "神殿",
+    wallpaperWinVoicechat: "音声会話",
+    wallpaperWinMiikapass: "ミーカパス",
+    wallpaperRandomOption: "🎲 ランダム",
+    wallpaperUrlPlaceholder: "画像のURLを貼り付け...",
+    wallpaperUploadBtn: "📁 アップロード",
+    wallpaperUploadTooBig: "この画像は大きすぎます（最大2MB）— もっと軽い画像を試してください。",
     adminPhotosUrlPlaceholder: "https://...",
     adminPhotosSaveBtn: "保存",
     adminPanelTabDatabase: "🗄️ データベース",
@@ -12344,6 +12389,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const adminPanelTabUsers = document.getElementById("admin-panel-tab-users");
   const adminPanelTabMetrics = document.getElementById("admin-panel-tab-metrics");
   const adminPanelTabPhotos = document.getElementById("admin-panel-tab-photos");
+  const adminPanelTabWallpapers = document.getElementById("admin-panel-tab-wallpapers");
   const adminPanelRefreshBtn = document.getElementById("admin-panel-refresh-btn");
   const adminPanelExportBtn = document.getElementById("admin-panel-export-btn");
   const adminPanelStatus = document.getElementById("admin-panel-status");
@@ -13787,9 +13833,310 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // ---- Panel de Administrador → pestaña "🖼️ Fondos" ----
+  // Misma infraestructura que Fotos de arriba, con 3 formas de fijar un
+  // fondo por ventana (mutuamente excluyentes en la fila, la última que
+  // se toca gana): elegir del pool ya existente (dropdown), pegar una
+  // URL propia, o subir una imagen desde la galería del Admin
+  // (FileReader → data URL, mismo patrón ya usado en Auditoría de
+  // Nómina/Declaración de Impuestos — ver taxEntryEvidenceInput). Tope
+  // de tamaño en la subida: una imagen de varios MB en base64 infla
+  // tanto localStorage como la fila de Postgres sin necesidad real para
+  // un fondo de pantalla.
+  const adminWallpaperRows = document.getElementById("admin-wallpapers-rows");
+  const MAX_WALLPAPER_UPLOAD_BYTES = 2 * 1024 * 1024;
+
+  function renderAdminWallpapersTab() {
+    if (!adminWallpaperRows) return;
+    adminWallpaperRows.innerHTML = "";
+    const overrides = loadWallpaperOverrides();
+
+    WALLPAPER_WINDOWS.forEach((win) => {
+      const row = document.createElement("div");
+      row.className = "admin-photos-row admin-wallpapers-row";
+
+      const preview = document.createElement("img");
+      preview.className = "admin-photos-row__preview";
+      preview.src = resolveWallpaperFor(win.id);
+      preview.alt = t(win.labelKey);
+      row.appendChild(preview);
+
+      const name = document.createElement("span");
+      name.className = "admin-photos-row__name";
+      name.textContent = t(win.labelKey);
+      row.appendChild(name);
+
+      const fieldsWrap = document.createElement("div");
+      fieldsWrap.className = "admin-wallpapers-row__fields";
+
+      const select = document.createElement("select");
+      select.className = "admin-photos-row__input admin-wallpapers-row__select";
+      const randomOpt = document.createElement("option");
+      randomOpt.value = "";
+      randomOpt.textContent = t("wallpaperRandomOption");
+      select.appendChild(randomOpt);
+      WALLPAPER_POOL.forEach((src) => {
+        const opt = document.createElement("option");
+        opt.value = src;
+        opt.textContent = src.split("/").pop();
+        select.appendChild(opt);
+      });
+      const currentOverride = overrides[win.id] || "";
+      select.value = WALLPAPER_POOL.includes(currentOverride) ? currentOverride : "";
+      fieldsWrap.appendChild(select);
+
+      const urlInput = document.createElement("input");
+      urlInput.type = "text";
+      urlInput.className = "admin-photos-row__input";
+      urlInput.placeholder = t("wallpaperUrlPlaceholder");
+      urlInput.value = currentOverride && !WALLPAPER_POOL.includes(currentOverride) ? currentOverride : "";
+      fieldsWrap.appendChild(urlInput);
+      row.appendChild(fieldsWrap);
+
+      // Elegir del dropdown limpia la URL pegada/subida y viceversa —
+      // evita que queden dos fuentes distintas "cargadas" a la vez sin
+      // que quede claro cuál gana al guardar.
+      select.addEventListener("change", () => {
+        if (select.value) urlInput.value = "";
+      });
+      urlInput.addEventListener("input", () => {
+        if (urlInput.value.trim()) select.value = "";
+      });
+
+      const uploadInput = document.createElement("input");
+      uploadInput.type = "file";
+      uploadInput.accept = "image/*";
+      uploadInput.className = "admin-wallpapers-row__upload-input";
+      uploadInput.hidden = true;
+      uploadInput.addEventListener("change", () => {
+        const file = uploadInput.files[0];
+        if (!file) return;
+        if (file.size > MAX_WALLPAPER_UPLOAD_BYTES) {
+          setAvatarSpeech(t("wallpaperUploadTooBig"));
+          uploadInput.value = "";
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = () => {
+          urlInput.value = reader.result;
+          select.value = "";
+        };
+        reader.readAsDataURL(file);
+      });
+
+      const uploadBtn = document.createElement("button");
+      uploadBtn.type = "button";
+      // Clase PROPIA, sin compartir "admin-photos-row__save" con el botón
+      // de Guardar real — compartirla hacía que cualquier
+      // querySelector(".admin-photos-row__save") sobre la fila (incluida
+      // la del propio botón de Guardar, que viene DESPUÉS en el DOM)
+      // encontrara este de subir primero por error.
+      uploadBtn.className = "admin-wallpapers-row__upload-btn";
+      uploadBtn.textContent = t("wallpaperUploadBtn");
+      uploadBtn.addEventListener("click", () => uploadInput.click());
+      row.append(uploadBtn, uploadInput);
+
+      const saveBtn = document.createElement("button");
+      saveBtn.type = "button";
+      saveBtn.className = "admin-photos-row__save";
+      saveBtn.textContent = t("adminPhotosSaveBtn");
+      saveBtn.addEventListener("click", () => {
+        const chosen = select.value || urlInput.value.trim() || null;
+        saveWallpaperOverrideLocal(win.id, chosen);
+        syncWallpaperOverrideToSupabase(win.id, chosen);
+        applyWindowWallpaper(win.target(), win.id);
+        preview.src = resolveWallpaperFor(win.id);
+      });
+      row.appendChild(saveBtn);
+
+      adminWallpaperRows.appendChild(row);
+    });
+  }
+
   renderCharacterSelectCards();
   renderHeaderHeroAvatar();
   fetchHeroAvatarOverridesFromSupabase();
+
+  // ---- Fondos de Pantalla / Wallpapers dinámicos ----
+  // Pedido explícito: "cada ventana debe cargar un fondo aleatorio" por
+  // defecto, con override fijo opcional (Panel de Administrador → 🖼️
+  // Fondos, más abajo junto a renderAdminPhotosTab()). Mismo criterio
+  // local-first + Supabase best-effort que Hero Avatars arriba
+  // (WALLPAPER_OVERRIDES_KEY en localStorage es la fuente de verdad
+  // inmediata; `wallpapers` en Supabase es respaldo para otros
+  // dispositivos) — la única diferencia real es que acá, SIN override,
+  // no cae a un valor fijo único: sortea uno del pool (ver
+  // pickSessionWallpaper()), estable durante toda la sesión para no
+  // "parpadear" a una imagen distinta cada vez que la misma ventana se
+  // vuelve a abrir.
+  //
+  // Solo assets YA COMMITEADOS al repo (nada de assets/skins/
+  // Anubis_HijaDeDemiure/, agregados sin commitear todavía por otra
+  // sesión en este mismo repo compartido) — evita fondos rotos si ese
+  // commit nunca llega a pasar.
+  const WALLPAPER_POOL = [
+    "assets/bg_main.png",
+    "assets/bg_login.png",
+    "assets/bg_state_idle.png",
+    "assets/bg_state_meditation.png",
+    "assets/avatar_idle.png",
+    "assets/avatar_meditating.png",
+    "assets/avatar_boss_mode.png",
+    "assets/skins/Miikaeruu/mikaeru_familia_portada.png",
+    "assets/skins/Miikaeruu/mikaeru_idle_chakras.png",
+    "assets/skins/Miikaeruu/mikaeru_sacrificio_despertar.png",
+    "assets/skins/Miikaeruu/mikaeru_skin_cazador_neon.png",
+    "assets/skins/Miikaeruu/mikaeru_skin_soberano_estelar.png",
+    "assets/skins/Miikaeruu/mikaeru_skin_guardian_templo.png",
+    "assets/skins/Miikaeruu/mikaeru_skin_comandante_ejercito.png",
+    "assets/skins/Miikaeruu/mikaeru_skin_deidad_meditante.png",
+    "assets/skins/Miikaeruu/mikaeru_skin_heraldo_rugiente.png",
+    "assets/skins/Miikaeruu/Gemini_Generated_Image_7ag41v7ag41v7ag4.png",
+    "assets/skins/Mascotas/mikaeru_cachorro_cosmico_wakai.png",
+    "assets/skins/Mascotas/mikaeru_skin_cachorro_dormido.png",
+    "assets/skins/Mascotas/mikaeru_skin_cachorro_galactico.png",
+    "assets/skins/Ateneea_HijaDeMiikaeruu/Gemini_Generated_Image_upapz1upapz1upap.png",
+    "assets/skins/Ateneea_HijaDeMiikaeruu/Gemini_Generated_Image_9z70xq9z70xq9z70.png",
+    "assets/skins/Ateneea_HijaDeMiikaeruu/Gemini_Generated_Image_nua7qmnua7qmnua7.png",
+    "assets/skins/Ateneea_HijaDeMiikaeruu/Gemini_Generated_Image_h91sesh91sesh91s.png",
+    "assets/skins/Metatron_HijoDeMiikaeruu/Gemini_Generated_Image_c4h52pc4h52pc4h5.png",
+    "assets/skins/Metatron_HijoDeMiikaeruu/Gemini_Generated_Image_e1ujfte1ujfte1uj.png",
+    "assets/skins/Metrakaela_NoviaAiDeMiikaeruu/metrakaela_madre_rosas.png",
+    "assets/skins/Demiure_Drako/demiure_draconiano.png",
+    "assets/skins/Demiure_Drako/Gemini_Generated_Image_dbkzu3dbkzu3dbkz.png",
+    "assets/skins/Azathoth_HijoDeDemiure/descarga.png",
+    "assets/skins/Valeria_primeraEsposaDeMiikaeruu_MamaBiologicaDeLosHijos/metrakaela_guerrera.png",
+    "assets/skins/FoTosGrupales/Gemini_Generated_Image_y0pokwy0pokwy0po.png",
+    "assets/skins/FoTosGrupales/Gemini_Generated_Image_jxiasljxiasljxia.png",
+  ];
+
+  // Cada ventana con fondo propio — `target()` resuelve el elemento
+  // recién en el momento de aplicar el fondo (no al declarar este
+  // array), así el orden de declaración de los DOM refs de arriba no
+  // importa. `dashboard` es especial: no es una ventana que "se abre",
+  // el fondo se aplica UNA vez al cargar la app (ver el final de este
+  // bloque) sobre `document.body`.
+  const WALLPAPER_WINDOWS = [
+    { id: "dashboard", labelKey: "wallpaperWinDashboard", target: () => document.body },
+    { id: "bossfight", labelKey: "wallpaperWinBossfight", target: () => bossfightModal },
+    { id: "japanese", labelKey: "wallpaperWinJapanese", target: () => japaneseModal },
+    { id: "spanish", labelKey: "wallpaperWinSpanish", target: () => spanishModal },
+    { id: "lang", labelKey: "wallpaperWinLang", target: () => langModal },
+    { id: "calendar", labelKey: "wallpaperWinCalendar", target: () => calendarModal },
+    { id: "templo", labelKey: "wallpaperWinTemplo", target: () => temploModal },
+    { id: "voicechat", labelKey: "wallpaperWinVoicechat", target: () => voiceChatModal },
+    { id: "miikapass", labelKey: "wallpaperWinMiikapass", target: () => miikaPassModal },
+  ];
+
+  const WALLPAPER_OVERRIDES_KEY = "miikaeru_wallpaper_overrides";
+
+  function loadWallpaperOverrides() {
+    try {
+      return JSON.parse(localStorage.getItem(WALLPAPER_OVERRIDES_KEY)) || {};
+    } catch (err) {
+      return {};
+    }
+  }
+
+  function saveWallpaperOverrideLocal(windowId, src) {
+    const overrides = loadWallpaperOverrides();
+    if (src) overrides[windowId] = src;
+    else delete overrides[windowId];
+    localStorage.setItem(WALLPAPER_OVERRIDES_KEY, JSON.stringify(overrides));
+  }
+
+  function syncWallpaperOverrideToSupabase(windowId, src) {
+    if (!supabaseClient) return;
+    if (!src) {
+      supabaseClient
+        .from("wallpapers")
+        .delete()
+        .eq("window_id", windowId)
+        .then(({ error }) => {
+          if (error) console.warn("Wallpapers: no se pudo borrar en Supabase:", error.message);
+        })
+        .catch((err) => console.warn("Wallpapers: fallo de red al borrar:", err));
+      return;
+    }
+    supabaseClient
+      .from("wallpapers")
+      .upsert({ window_id: windowId, image_src: src, updated_at: new Date().toISOString() })
+      .then(({ error }) => {
+        if (error) console.warn("Wallpapers: no se pudo sincronizar con Supabase:", error.message);
+      })
+      .catch((err) => console.warn("Wallpapers: fallo de red al sincronizar:", err));
+  }
+
+  async function fetchWallpaperOverridesFromSupabase() {
+    if (!supabaseClient) return;
+    try {
+      const { data, error } = await supabaseClient.from("wallpapers").select("window_id, image_src");
+      if (error || !data) return;
+      const overrides = loadWallpaperOverrides();
+      data.forEach((row) => {
+        if (row.image_src) overrides[row.window_id] = row.image_src;
+      });
+      localStorage.setItem(WALLPAPER_OVERRIDES_KEY, JSON.stringify(overrides));
+      applyAllWallpapers();
+      if (adminPanelTabWallpapers && !adminPanelTabWallpapers.hidden) renderAdminWallpapersTab();
+    } catch (err) {
+      console.warn("Wallpapers: no se pudo sincronizar desde Supabase:", err);
+    }
+  }
+
+  // Elegido UNA vez por ventana por carga de página (estable durante la
+  // sesión, sin "parpadeo" al reabrir la misma ventana varias veces).
+  const sessionWallpaperPicks = {};
+  function pickSessionWallpaper(windowId) {
+    if (!sessionWallpaperPicks[windowId]) {
+      sessionWallpaperPicks[windowId] = WALLPAPER_POOL[Math.floor(Math.random() * WALLPAPER_POOL.length)];
+    }
+    return sessionWallpaperPicks[windowId];
+  }
+
+  function resolveWallpaperFor(windowId) {
+    const overrides = loadWallpaperOverrides();
+    return overrides[windowId] || pickSessionWallpaper(windowId);
+  }
+
+  // Aplica el fondo como una CSS custom property (--window-wallpaper) en
+  // vez de pisar toda la propiedad `background` — así el resto del CSS
+  // (gradientes de tinte, blur, glass) sigue intacto sin tener que
+  // replicarlo acá en JS, ver la capa `var(--window-wallpaper, ...)` en
+  // style.css (.modal-overlay / body).
+  // Mismo tinte que ya tenía cada superficie en su CSS original (ver
+  // comentario junto a `body`/.modal-overlay en style.css) — se
+  // reconstruye acá en vez de leerlo del CSS porque terminamos fijando
+  // el `background-image` completo vía estilo inline, no una CSS custom
+  // property: en pruebas reales, un var() referenciado desde una hoja de
+  // estilo EXTERNA pero definido vía estilo inline no terminaba de
+  // resolver (computed background-image quedaba vacío pese a sintaxis
+  // válida) — fijar el string completo inline sí funciona de forma
+  // consistente, así que ese es el mecanismo real.
+  const WALLPAPER_TINT_LAYERS = {
+    dashboard:
+      'radial-gradient(circle at 15% 10%, rgba(0, 240, 255, 0.08), transparent 40%), ' +
+      "radial-gradient(circle at 85% 90%, rgba(0, 255, 156, 0.07), transparent 45%), " +
+      "linear-gradient(180deg, rgba(9, 12, 20, 0.88) 0%, rgba(7, 9, 15, 0.94) 100%)",
+    default: "linear-gradient(rgba(5, 7, 12, 0.75), rgba(5, 7, 12, 0.75))",
+  };
+
+  function applyWindowWallpaper(el, windowId) {
+    if (!el) return;
+    const src = resolveWallpaperFor(windowId);
+    if (!src) {
+      el.style.backgroundImage = "";
+      return;
+    }
+    const tint = WALLPAPER_TINT_LAYERS[windowId] || WALLPAPER_TINT_LAYERS.default;
+    el.style.backgroundImage = `${tint}, url("${src}")`;
+    el.style.backgroundSize = "cover";
+    el.style.backgroundPosition = "center";
+  }
+
+  function applyAllWallpapers() {
+    WALLPAPER_WINDOWS.forEach((win) => applyWindowWallpaper(win.target(), win.id));
+  }
 
   // El Modal de Lore / Cuento Interactivo (se abre al hacer click en el
   // avatar/León) vive en su propio módulo, storyEngine.js — mismo patrón
@@ -14044,6 +14391,7 @@ document.addEventListener("DOMContentLoaded", () => {
     adminPanelTabUsers.hidden = target !== "users";
     if (adminPanelTabMetrics) adminPanelTabMetrics.hidden = target !== "metrics";
     if (adminPanelTabPhotos) adminPanelTabPhotos.hidden = target !== "photos";
+    if (adminPanelTabWallpapers) adminPanelTabWallpapers.hidden = target !== "wallpapers";
     if (adminPanelTabDatabase) adminPanelTabDatabase.hidden = target !== "database";
     if (adminPanelTabAdmins) adminPanelTabAdmins.hidden = target !== "admins";
     if (target === "inspector") fetchInspectorFeedback();
@@ -14057,6 +14405,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     if (target === "metrics") fetchAdminMetrics();
     if (target === "photos") renderAdminPhotosTab();
+    if (target === "wallpapers") renderAdminWallpapersTab();
     if (target === "database") checkDatabaseStatus();
     if (target === "admins") fetchAdminAccounts();
   }
@@ -15704,6 +16053,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function openTemploModal() {
     activePillar = "templo";
+    applyWindowWallpaper(temploModal, "templo");
     temploModal.hidden = false;
     showTemploTab(activeTemploTab);
   }
@@ -19767,12 +20117,24 @@ document.addEventListener("DOMContentLoaded", () => {
     window.speechSynthesis && window.speechSynthesis.cancel();
   }
 
+  // English/Português comparten un solo modal (langModal) bajo appKeys
+  // distintos — se normalizan al mismo windowId "lang" (la única fila
+  // que existe para ese modal en el Panel de Administrador → Fondos).
+  // Karaoke no tiene entrada en WALLPAPER_WINDOWS a propósito (usa
+  // #app-placeholder-modal, compartido con cualquier otro "próximamente"
+  // futuro — atarle un override fijo ahí confundiría fondos entre
+  // features sin relación); igual recibe su propio fondo aleatorio de
+  // sesión bajo el id "karaoke" tal cual, solo que sin fila propia en el
+  // panel de Admin.
+  const APP_MODAL_WALLPAPER_ID = { english: "lang", portuguese: "lang" };
+
   function openAppModal(appKey) {
     const app = APP_MODULES[appKey];
     if (!app) return;
 
     closeAllAppModals();
     syncActiveAppCard(appKey);
+    applyWindowWallpaper(app.modal(), APP_MODAL_WALLPAPER_ID[appKey] || appKey);
     app.modal().hidden = false;
     if (app.onOpen) app.onOpen();
   }
@@ -20810,6 +21172,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   miikaPassBtn.addEventListener("click", () => {
     closeAllAppModals();
+    applyWindowWallpaper(miikaPassModal, "miikapass");
     renderMiikaPass();
     miikaPassModal.hidden = false;
   });
@@ -21678,6 +22041,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (voiceChatTextInput) {
       voiceChatTextInput.placeholder = t(voiceChatLanguage === "es" ? "voiceChatTextPlaceholderEs" : "voiceChatTextPlaceholder");
     }
+    applyWindowWallpaper(voiceChatModal, "voicechat");
     voiceChatModal.hidden = false;
     showVoiceChatView("picker");
     renderVoiceChatLevelToggle();
@@ -24868,6 +25232,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function openSpanishModule() {
     closeAllAppModals();
+    applyWindowWallpaper(spanishModal, "spanish");
     spanishModal.hidden = false;
     esNavStack = [];
     showEsView("world-map");
@@ -26850,6 +27215,15 @@ document.addEventListener("DOMContentLoaded", () => {
   refreshNegocioSuggestions();
   updateNegocioGananciaPreview();
   applyLanguage(currentLanguage);
+  // Fondo de pantalla del dashboard (body) — el resto de las "ventanas"
+  // reciben el suyo recién al abrirse (ver applyWindowWallpaper() más
+  // arriba), pero el body ya está visible desde el primer frame, así que
+  // se aplica acá una sola vez al cargar. fetchWallpaperOverridesFromSupabase()
+  // ya vuelve a llamar a applyAllWallpapers() si trae algo nuevo de otro
+  // dispositivo, así que no hace falta repetir esta línea ahí.
+  applyWindowWallpaper(document.body, "dashboard");
+  fetchWallpaperOverridesFromSupabase();
+
   // Solo resalta la tarjeta del último módulo activo — no reabre su
   // modal automáticamente (sería una ventana emergente no solicitada
   // apenas carga la página).
