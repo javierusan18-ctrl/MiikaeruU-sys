@@ -8047,6 +8047,29 @@ body.miikaeru-anim-off .cyber-tile[data-forward*="bossfight"] {
   max-width: 82%;
 }
 
+/* Botón de reintentar dentro de la burbuja de error cálida (ver
+   appendVoiceChatFailureBubble() en app.js) — reenvía el último mensaje
+   que falló con un solo toque, sin volver a escribir/hablar. */
+.voice-chat-bubble__retry {
+  display: block;
+  margin-top: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--neon-magenta);
+  background: rgba(255, 46, 154, 0.1);
+  color: var(--neon-magenta);
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.voice-chat-bubble__retry:hover {
+  background: var(--neon-magenta);
+  color: #1a0410;
+  box-shadow: 0 0 12px rgba(255, 46, 154, 0.5);
+}
+
 .voice-chat-bubble__text {
   flex: 1;
 }

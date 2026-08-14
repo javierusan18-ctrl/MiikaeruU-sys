@@ -1595,7 +1595,8 @@ const I18N = {
     voiceChatThinking: "🤔 Pensando...",
     voiceChatSpeaking: "🔊 Hablando...",
     voiceChatListening: "🎤 Escuchando...",
-    voiceChatError: "⚠️ No se pudo conectar con la IA. Intenta de nuevo.",
+    voiceChatErrorWarm: "🦁 Se cortó la señal un segundo... ¿Puedes intentarlo de nuevo? Tu conversación sigue guardada.",
+    voiceChatRetryBtn: "🔄 Reintentar",
     voiceChatMicDenied: "🚫 Permiso de micrófono denegado — actívalo en la configuración del navegador, o usa el campo de texto.",
     voiceChatMicNoSpeech: "🔇 No se detectó voz — intenta de nuevo o usa el campo de texto.",
     voiceChatMicError: "⚠️ Error del micrófono — usa el campo de texto.",
@@ -2620,7 +2621,8 @@ const I18N = {
     voiceChatThinking: "🤔 Thinking...",
     voiceChatSpeaking: "🔊 Speaking...",
     voiceChatListening: "🎤 Listening...",
-    voiceChatError: "⚠️ Couldn't reach the AI. Try again.",
+    voiceChatErrorWarm: "🦁 The signal dropped for a second... want to try again? Your conversation is still saved.",
+    voiceChatRetryBtn: "🔄 Retry",
     voiceChatMicDenied: "🚫 Microphone permission denied — enable it in your browser settings, or use the text field.",
     voiceChatMicNoSpeech: "🔇 No speech detected — try again or use the text field.",
     voiceChatMicError: "⚠️ Microphone error — use the text field.",
@@ -3645,7 +3647,8 @@ const I18N = {
     voiceChatThinking: "🤔 考え中...",
     voiceChatSpeaking: "🔊 話しています...",
     voiceChatListening: "🎤 聞いています...",
-    voiceChatError: "⚠️ AIに接続できませんでした。もう一度お試しください。",
+    voiceChatErrorWarm: "🦁 一瞬、通信が切れちゃったみたい…もう一度試してみる？会話はちゃんと保存されてるよ。",
+    voiceChatRetryBtn: "🔄 再試行",
     voiceChatMicDenied: "🚫 マイクの許可が拒否されました — ブラウザの設定で有効にするか、テキスト欄を使ってください。",
     voiceChatMicNoSpeech: "🔇 音声が検出されませんでした — もう一度試すか、テキスト欄を使ってください。",
     voiceChatMicError: "⚠️ マイクエラー — テキスト欄を使ってください。",
@@ -8170,20 +8173,36 @@ function elegirVozJaponesaAppJs() {
   return cachedJaVoiceAppJs;
 }
 
+// Tope de seguridad por oración — la Web Speech API a veces NUNCA dispara
+// ni "onend" ni "onerror" (bug real, no solo teórico: pasa si la pestaña
+// pierde el foco de audio, si la voz elegida quedó en un estado raro,
+// etc.). Sin esto, un caller que hace `await speakKana(...)` (como el
+// módulo de Conversación por Voz con IA) podía quedarse colgado para
+// siempre esperando una promesa que nunca resuelve — la app entera se
+// sentía "congelada" aunque el bug real vivía acá, no en el llamador.
+const JP_SPEECH_UTTERANCE_TIMEOUT_MS = 8000;
+
 async function speakKana(char) {
   if (!("speechSynthesis" in window) || !char) return;
   window.speechSynthesis.cancel(); // corta cualquier lectura anterior en curso
   const oraciones = speakKanaSentences(char);
   for (let i = 0; i < oraciones.length; i++) {
     await new Promise((resolve) => {
+      let settled = false;
+      const finish = () => {
+        if (settled) return;
+        settled = true;
+        resolve();
+      };
       const utterance = new SpeechSynthesisUtterance(oraciones[i]);
       utterance.lang = "ja-JP";
       utterance.rate = 0.8; // pedido explícito: voz pausada y natural (rango 0.75-0.85)
       const voz = elegirVozJaponesaAppJs();
       if (voz) utterance.voice = voz;
-      utterance.onend = resolve;
-      utterance.onerror = resolve;
+      utterance.onend = finish;
+      utterance.onerror = finish;
       window.speechSynthesis.speak(utterance);
+      setTimeout(finish, JP_SPEECH_UTTERANCE_TIMEOUT_MS);
     });
     // Pequeña pausa entre oraciones — mismo criterio que readerEngine.js
     // (pausaEntreOraciones()), evita que el audio suene atropellado.
@@ -19986,13 +20005,63 @@ document.addEventListener("DOMContentLoaded", () => {
     speakKana(opener);
   }
 
+  // Tope de la llamada de red — sin esto, un fetch() colgado (API caída,
+  // red lenta) podía dejar la pantalla "Pensando..." para siempre. 20s es
+  // generoso para una respuesta corta de roleplay pero corta antes de que
+  // el usuario sienta que la app se rompió.
+  const VOICE_CHAT_FETCH_TIMEOUT_MS = 20000;
+  let voiceChatLastFailedText = null;
+
+  // Habla la respuesta de la IA SIN bloquear el turno — antes esto se
+  // esperaba con `await` dentro de sendVoiceChatMessage(), así que si
+  // speakKana() se colgaba (ver JP_SPEECH_UTTERANCE_TIMEOUT_MS más arriba,
+  // ese mismo bug), toda la conversación quedaba congelada aunque la
+  // respuesta de texto ya había llegado bien. Ahora el usuario puede
+  // seguir escribiendo/hablando de inmediato mientras la IA todavía se
+  // está escuchando — el audio nuevo corta al anterior solo si hace falta
+  // (speakKana() ya hace speechSynthesis.cancel() al arrancar).
+  function speakVoiceChatReplySafely(text) {
+    setVoiceChatStatus(t("voiceChatSpeaking"));
+    const clearIfStillSpeaking = () => {
+      if (voiceChatStatus && voiceChatStatus.textContent === t("voiceChatSpeaking")) setVoiceChatStatus(null);
+    };
+    Promise.resolve(speakKana(text)).then(clearIfStillSpeaking, clearIfStillSpeaking);
+  }
+
+  // Burbuja de error CÁLIDA (pedido explícito: nunca un fallo técnico
+  // frío) con un botón de reintentar que reenvía el ÚLTIMO mensaje que
+  // falló, sin que el usuario tenga que volver a escribir/hablar.
+  function appendVoiceChatFailureBubble() {
+    const bubble = document.createElement("div");
+    bubble.className = "voice-chat-bubble voice-chat-bubble--system";
+    const textEl = document.createElement("p");
+    textEl.className = "voice-chat-bubble__text";
+    textEl.textContent = t("voiceChatErrorWarm");
+    bubble.appendChild(textEl);
+    const retryBtn = document.createElement("button");
+    retryBtn.type = "button";
+    retryBtn.className = "voice-chat-bubble__retry";
+    retryBtn.textContent = t("voiceChatRetryBtn");
+    retryBtn.addEventListener("click", () => {
+      bubble.remove();
+      if (voiceChatLastFailedText) sendVoiceChatMessage(voiceChatLastFailedText);
+    });
+    bubble.appendChild(retryBtn);
+    voiceChatTranscript.appendChild(bubble);
+    voiceChatTranscript.scrollTop = voiceChatTranscript.scrollHeight;
+  }
+
   async function sendVoiceChatMessage(userText) {
     if (!userText.trim() || voiceChatBusy || !voiceChatScenario) return;
     const historyForRequest = voiceChatHistory.slice();
     appendVoiceChatBubble("user", userText, null);
     voiceChatHistory.push({ role: "user", text: userText });
+    voiceChatLastFailedText = null;
     setVoiceChatBusy(true);
     setVoiceChatStatus(t("voiceChatThinking"));
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), VOICE_CHAT_FETCH_TIMEOUT_MS);
     try {
       const res = await fetch("/api/ai-conversation", {
         method: "POST",
@@ -20004,22 +20073,29 @@ document.addEventListener("DOMContentLoaded", () => {
           history: historyForRequest,
           userMessage: userText,
         }),
+        signal: controller.signal,
       });
       const data = await res.json().catch(() => null);
-      if (!res.ok || !data || !data.ok) {
-        setVoiceChatStatus(null);
-        appendVoiceChatBubble("system", t("voiceChatError"), null);
-        return;
+      if (!res.ok || !data || !data.ok || !data.reply) {
+        throw new Error((data && data.error) || "bad_response");
       }
       voiceChatHistory.push({ role: "assistant", text: data.reply });
       appendVoiceChatBubble("npc", data.reply, data.feedback);
-      setVoiceChatStatus(t("voiceChatSpeaking"));
-      await speakKana(data.reply);
-      setVoiceChatStatus(null);
+      speakVoiceChatReplySafely(data.reply); // fire-and-forget, ver comentario arriba
     } catch (err) {
-      setVoiceChatStatus(null);
-      appendVoiceChatBubble("system", t("voiceChatError"), null);
+      // Saca el turno de usuario "huérfano" del historial que se manda al
+      // LLM (el servidor nunca llegó a procesarlo) — la burbuja visible en
+      // pantalla queda igual, el usuario no pierde lo que escribió/dijo.
+      voiceChatHistory.pop();
+      voiceChatLastFailedText = userText;
+      appendVoiceChatFailureBubble();
     } finally {
+      // finally SIEMPRE corre (éxito, error de red, timeout del
+      // AbortController, excepción de cualquier tipo) — esta es la
+      // garantía real de que el mic/campo de texto nunca quedan
+      // bloqueados para siempre, sin importar qué haya fallado.
+      clearTimeout(timeoutId);
+      setVoiceChatStatus(null);
       setVoiceChatBusy(false);
     }
   }

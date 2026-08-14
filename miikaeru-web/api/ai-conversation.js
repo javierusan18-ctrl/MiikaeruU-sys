@@ -28,6 +28,12 @@ const DEFAULT_MODEL = "claude-haiku-4-5-20251001";
 const MAX_HISTORY_TURNS = 24;
 const MAX_TOKENS = 300;
 const MAX_MESSAGE_LENGTH = 500;
+// Tope de la llamada a Anthropic — sin esto, si la API upstream se cuelga
+// (no cae con un error, simplemente nunca responde), esta función podía
+// quedar corriendo hasta el límite propio de Vercel (mucho más largo, y
+// con un mensaje de error genérico/feo) en vez de fallar rápido y limpio
+// para que el cliente pueda reintentar de inmediato.
+const ANTHROPIC_TIMEOUT_MS = 18000;
 
 // Persona de cada escenario — el ÚNICO lugar donde vive esta
 // descripción (ver comentario de arriba). Debe tener una entrada por
@@ -92,7 +98,8 @@ function buildSystemPrompt(scenarioId, level, interfaceLanguage) {
     persona.setting,
     levelGuidance,
     "Respondé SIEMPRE en japonés natural (con algo de kanji apropiado al nivel), en 1-3 oraciones cortas — nunca un párrafo largo, esto es una conversación hablada, no un ensayo.",
-    `Si el mensaje del estudiante tiene un error de gramática o vocabulario notable, dale una corrección MUY breve (una frase) en ${feedbackLang}. Si no hay ningún error real, o el error es mínimo/normal para su nivel, no corrijas nada.`,
+    `Si el mensaje del estudiante tiene un error de gramática, vocabulario o pronunciación notable, dale una corrección breve, CÁLIDA y alentadora (nunca fría ni tipo "está mal") en ${feedbackLang} — mostrá SIEMPRE la forma correcta como ejemplo, con el patrón "No es así exactamente, se dice/escribe mejor así: [forma correcta]". Si no hay ningún error real, o el error es mínimo/normal para su nivel, no corrijas nada (FEEDBACK: ninguna).`,
+    "El texto del estudiante puede venir transcrito por voz (reconocimiento de voz del navegador), así que a veces va a llegar cortado, con palabras raras o sin sentido por un error de transcripción — en ESE caso no digas que no entendiste de forma seca ni rompas el personaje: reaccioná de forma natural y amable pidiendo que repita, como lo haría una persona real en esa situación (ej. \"すみません、もう一度お願いできますか。\"), y seguí el hilo del escenario sin cortar el flujo de la conversación.",
     "Formato de respuesta OBLIGATORIO, exactamente estas 2 líneas, sin nada más antes ni después:",
     "REPLY: <tu respuesta en japonés, en personaje>",
     `FEEDBACK: <corrección breve en ${feedbackLang}, o la palabra "ninguna" si no hay nada que corregir>`,
@@ -160,6 +167,8 @@ module.exports = async function handler(req, res) {
   const model = (process.env.ANTHROPIC_MODEL || "").trim() || DEFAULT_MODEL;
   const systemPrompt = buildSystemPrompt(scenarioId, level, interfaceLanguage);
 
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), ANTHROPIC_TIMEOUT_MS);
   try {
     const anthropicRes = await fetch(ANTHROPIC_API_URL, {
       method: "POST",
@@ -174,6 +183,7 @@ module.exports = async function handler(req, res) {
         system: systemPrompt,
         messages,
       }),
+      signal: controller.signal,
     });
 
     if (!anthropicRes.ok) {
@@ -191,9 +201,22 @@ module.exports = async function handler(req, res) {
     }
 
     const { reply, feedback } = parseModelReply(rawText);
+    // Defensa extra: si por algún motivo el modelo no respetó el formato
+    // REPLY:/FEEDBACK: Y el fallback de parseModelReply() también dio
+    // vacío, no se manda una burbuja en blanco al cliente — se trata
+    // igual que cualquier otra falla del LLM (el cliente ya sabe
+    // reaccionar a eso de forma cálida, ver appendVoiceChatFailureBubble()
+    // en app.js).
+    if (!reply || !reply.trim()) {
+      res.status(502).json({ ok: false, error: "empty_reply" });
+      return;
+    }
     res.status(200).json({ ok: true, reply, feedback });
   } catch (err) {
-    console.error("ai-conversation falló:", err);
-    res.status(500).json({ ok: false, error: "server_error", detail: err.message });
+    const timedOut = err && err.name === "AbortError";
+    console.error("ai-conversation falló:", timedOut ? "timeout" : err.message);
+    res.status(timedOut ? 504 : 500).json({ ok: false, error: timedOut ? "timeout" : "server_error", detail: timedOut ? "Anthropic no respondió a tiempo." : err.message });
+  } finally {
+    clearTimeout(timeoutId);
   }
 };
