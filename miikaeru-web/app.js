@@ -55,36 +55,78 @@ const lastPillarMessage = {};
 // dock resaltar con el efecto de parpadeo neón) — así ambos coinciden
 // siempre en la misma intención detectada, sin duplicar la lista de
 // palabras clave en dos lugares.
+// Lista ampliada (pedido explícito: el chat se sentía "cerrado" a solo
+// Finanzas/Físico/Espiritual y se bloqueaba con cualquier otro tema, ej.
+// idiomas). Se corrigen también dos dockTarget desactualizados que
+// apuntaban a selectores que ya no existen desde la fusión de Físico +
+// Espiritual en el Templo (ver #pillar-btn--templo en index.html) —
+// pulseDockGlow() los ignoraba en silencio (`if (!target) return;`), así
+// que el ícono nunca llegaba a resaltar para esos dos intents.
 const CHAT_GUIDE_INTENTS = [
   {
     id: "finanzas",
-    keywords: ["mejorar mis finanzas", "mejorar finanzas", "control de gastos", "control de mis gastos", "controlar mis gastos", "finanzas", "presupuesto", "ahorrar"],
+    keywords: ["mejorar mis finanzas", "mejorar finanzas", "control de gastos", "control de mis gastos", "controlar mis gastos", "finanzas", "presupuesto", "ahorrar", "mi negocio", "administrar mi negocio"],
     dockTarget: '.pillar-btn[data-pillar="finanzas"]',
     reply: "¡Perfecto! Lo primero es llevar un control de tus gastos para plantear tus estrategias. En la sección Finanzas tienes un formulario para hacer tu balance general. Mira este icono:",
   },
   {
     id: "fisico",
-    keywords: ["mejorar mi fisico", "mejorar mi físico", "estado fisico", "estado físico", "hacer ejercicio", "entrenar mi cuerpo"],
-    dockTarget: '.pillar-btn[data-pillar="fisico"]',
-    reply: "¡Vamos! Registra tu energía y actividad del día en Estado Físico para que tu HP refleje tu progreso real. Mira este icono:",
+    keywords: ["mejorar mi fisico", "mejorar mi físico", "estado fisico", "estado físico", "hacer ejercicio", "entrenar mi cuerpo", "rutina de entrenamiento", "quiero entrenar"],
+    dockTarget: '.pillar-btn[data-pillar="templo"]',
+    reply: "¡Vamos! En el Templo, pestaña Ejercicios y Rutinas, registra tu energía y actividad del día para que tu progreso real quede reflejado. Mira este icono:",
   },
   {
     id: "espiritual",
-    keywords: ["estado espiritual", "quiero meditar", "meditación", "meditacion", "oracion", "oración"],
-    dockTarget: '.pillar-btn[data-pillar="espiritual"]',
-    reply: "Tómate un momento para tu Estado Espiritual: ahí encuentras tu espacio de meditación y devoción diaria. Mira este icono:",
+    keywords: ["estado espiritual", "quiero meditar", "meditación", "meditacion", "oracion", "oración", "mi espiritu", "mi espíritu"],
+    dockTarget: '.pillar-btn[data-pillar="templo"]',
+    reply: "Tómate un momento: en el Templo, pestaña Espíritu, encuentras tu espacio de meditación y devoción diaria. Mira este icono:",
   },
   {
-    id: "japones",
-    keywords: ["aprender japones", "aprender japonés", "practicar kanji", "hiragana", "katakana"],
+    id: "nutricion",
+    keywords: ["nutricion", "nutrición", "alimentacion", "alimentación", "que debo comer", "qué debo comer", "comida saludable", "mi dieta"],
+    dockTarget: '.pillar-btn[data-pillar="templo"]',
+    reply: "En el Templo, pestaña Nutrición, tienes guía por objetivo (bajar de peso, ganar masa, definición) y un registro diario de comidas. Mira este icono:",
+  },
+  {
+    id: "biosync",
+    keywords: ["biosync", "bio-sync", "ritmo cardiaco", "ritmo cardíaco", "pulsaciones", "frecuencia cardiaca", "frecuencia cardíaca", "mis pulsaciones"],
+    dockTarget: '.pillar-btn[data-pillar="templo"]',
+    reply: "El Templo, pestaña Bio-Sync, te deja registrar tus pulsaciones (a mano o por Bluetooth) y ver tu historial. Mira este icono:",
+  },
+  {
+    id: "idiomas",
+    keywords: [
+      "aprender japones", "aprender japonés", "practicar kanji", "hiragana", "katakana", "nihongo",
+      "aprender idiomas", "quiero aprender un idioma", "aprender ingles", "aprender inglés",
+      "aprender portugues", "aprender portugués", "vocabulario", "gramatica", "gramática", "jlpt",
+      "nivel n5", "nivel n4", "nivel n3",
+    ],
     dockTarget: '.app-card[data-app="japanese"]',
-    reply: "¡Genial! En el módulo de Japonés tienes Práctica de Trazos y Modo Examen para avanzar con Kanji, Hiragana y Katakana. Mira este icono:",
+    reply: "¡Genial! En Idiomas tienes Japonés (con Práctica de Trazos y Modo Examen para Kanji/Hiragana/Katakana, niveles N5 a N3), además de Inglés y Portugués con vocabulario, gramática y conversaciones. Mira este icono:",
   },
   {
     id: "habits",
-    keywords: ["quiero registrar mi entrenamiento", "registrar mi entrenamiento", "registrar mi rutina", "mis habitos de hoy", "mis hábitos de hoy", "mi racha", "rutina de ejercicios"],
+    keywords: ["quiero registrar mi entrenamiento", "registrar mi entrenamiento", "registrar mi rutina", "mis habitos de hoy", "mis hábitos de hoy", "mi racha", "rutina de ejercicios", "mis habitos", "mis hábitos"],
     dockTarget: '.app-card[data-app="habits"]',
-    reply: "¡Así se hace! En Hábitos & Rachas puedes marcar tus hábitos del día y registrar tu rutina de ejercicios (series, repeticiones y peso). Mira este icono:",
+    reply: "¡Así se hace! En Hábitos & Rachas puedes marcar tus hábitos del día y ver tu racha actual. Mira este icono:",
+  },
+  {
+    id: "calendario",
+    keywords: ["calendario", "mi agenda", "recordatorio", "recordatorios", "agendar", "que tengo hoy", "qué tengo hoy"],
+    dockTarget: '.app-card[data-app="calendar"]',
+    reply: "Tu Calendario te deja anotar eventos y recordatorios para no perder de vista nada importante. Mira este icono:",
+  },
+  {
+    id: "bossfight",
+    keywords: ["boss fight", "quiero pelear", "el jefe", "minijuego", "modo combate"],
+    dockTarget: '.app-card[data-app="bossfight"]',
+    reply: "La Boss Fight te espera cuando quieras poner a prueba tu progreso en un combate 2D. Mira este icono:",
+  },
+  {
+    id: "karaoke",
+    keywords: ["karaoke", "quiero cantar", "cantar una cancion", "cantar una canción"],
+    dockTarget: '.app-card[data-app="karaoke"]',
+    reply: "En Karaoke puedes soltar la voz un rato — un buen descanso entre pilares. Mira este icono:",
   },
 ];
 
@@ -141,10 +183,57 @@ const defaultAIAdapter = {
       return "Cada meta que agregas al Garage se desbloquea al subir de rango. Sigue avanzando.";
     }
 
+    // Saludo/small talk libre — antes cualquier cosa fuera de los pilares
+    // caía directo al genérico "Elige Finanzas, Físico o Espiritual",
+    // pedido explícito de eliminar esa sensación de menú cerrado.
+    if (
+      text.includes("hola") || text.includes("buenos dias") || text.includes("buenos días") ||
+      text.includes("buenas tardes") || text.includes("buenas noches") || text === "buenas" ||
+      text.includes("como estas") || text.includes("cómo estás") || text.includes("que tal")
+    ) {
+      const greetings = [
+        "¡Hola, Operador! ¿En qué te acompaño hoy?",
+        "Aquí estoy. Cuéntame qué tienes en mente.",
+        "Bienvenido de vuelta al núcleo. ¿Cómo vamos?",
+      ];
+      return greetings[Math.floor(Math.random() * greetings.length)];
+    }
+
+    // Consejos generales / productividad — pedido explícito: Miikaeru debe
+    // poder dar tips y orientación personalizada, no solo redirigir a un
+    // pilar. Rota igual que los bancos de finanzas/fisico/espiritual.
+    if (
+      text.includes("consejo") || text.includes("tip") || text.includes("productiv") ||
+      text.includes("como me organizo") || text.includes("cómo me organizo") ||
+      text.includes("ayudame a organizar") || text.includes("ayúdame a organizar")
+    ) {
+      const productivityTips = [
+        "Divide tu día en bloques de 25 minutos de enfoque total y descansa 5 entre cada uno — rendirás más con menos desgaste.",
+        "Escribe tus 3 prioridades reales de hoy antes de abrir cualquier otra cosa. Lo demás puede esperar.",
+        "Un hábito pequeño y constante vence a un esfuerzo grande y esporádico. Empieza chico, pero no faltes ni un día.",
+        "Revisa tu progreso una vez por semana, no cada hora — la ansiedad por el resultado inmediato drena más energía que el trabajo mismo.",
+      ];
+      return productivityTips[Math.floor(Math.random() * productivityTips.length)];
+    }
+
+    // "¿Qué puedes hacer?" — respuesta factual (no rotada) con un resumen
+    // real de los módulos actuales, para que nunca más se sienta bloqueado
+    // ante un tema que no encaja en los intents de arriba.
+    if (
+      text.includes("que puedes hacer") || text.includes("qué puedes hacer") ||
+      text.includes("como funciona esto") || text.includes("cómo funciona esto") ||
+      text.includes("que puedo hacer aqui") || text.includes("qué puedo hacer aquí") ||
+      text.includes("ayuda") || text === "menu" || text === "menú"
+    ) {
+      return "Soy Miikaeru, tu guía en este núcleo. Puedo acompañarte en Finanzas, el Templo (ejercicio, Bio-Sync, nutrición y espíritu), Idiomas (japonés, inglés, portugués), Hábitos y Rachas, tu Calendario, la Boss Fight, Karaoke — o simplemente conversar contigo y darte un consejo. Cuéntame qué necesitas.";
+    }
+
+    // Genérico final: ya no encierra al Operador en 3 opciones fijas — lo
+    // invita a seguir contando qué necesita, sea lo que sea.
     const generic = [
-      "Anotado en el núcleo Miikaeru. Cuéntame qué quieres mejorar y te guío al módulo correcto.",
-      "Registrado en el núcleo Miikaeru. ¿Qué pilar quieres entrenar hoy?",
-      "Estoy contigo, operador. Elige Finanzas, Físico o Espiritual para avanzar.",
+      "Anotado en el núcleo Miikaeru. Cuéntame más — estoy para ayudarte con lo que necesites.",
+      "Registrado en el núcleo Miikaeru. ¿Qué te gustaría hacer o saber?",
+      "Estoy contigo, Operador. Sigue contándome y te oriento por donde haga falta.",
     ];
     return generic[Math.floor(Math.random() * generic.length)];
   },
