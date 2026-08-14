@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260814-4" />
+  <link rel="stylesheet" href="style.css?v=20260815-1" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -304,14 +304,10 @@
           <span class="cyber-tile__icon">⚔️</span>
           <span class="cyber-tile__label" data-i18n="appBossFightName">Boss Fight</span>
         </button>
-        <button type="button" class="cyber-tile cyber-tile--magenta" data-forward='.app-card[data-app="japanese"]'>
-          <span class="cyber-tile__icon">🌐</span>
-          <span class="cyber-tile__label" data-i18n="appJapaneseName">Japonés AI Coach</span>
-        </button>
-        <button type="button" class="cyber-tile cyber-tile--green" data-forward='.app-card[data-app="habits"]'>
-          <span class="cyber-tile__icon">📈</span>
-          <span class="cyber-tile__label" data-i18n="appHabitsName">Tracker de Hábitos</span>
-        </button>
+        <!-- Idiomas y Hábitos ya no tienen tarjeta/tile propia: viven
+             dentro de Aprendizaje (🧠) y Templo (⛩️) respectivamente, cuyos
+             tiles ya están arriba — evita el ícono 🌐 duplicado que tenía
+             antes (Idiomas vs. Expansión de Territorio, ver tile de abajo). -->
         <button type="button" class="cyber-tile cyber-tile--blue" data-forward='.app-card[data-app="calendar"]'>
           <span class="cyber-tile__icon">📅</span>
           <span class="cyber-tile__label" data-i18n="appCalendarName">Calendario &amp; Eventos</span>
@@ -736,22 +732,17 @@
           <span class="app-card__name" data-i18n="appBossFightName">Boss Fight</span>
           <span class="panel__tag" id="minigame-status" data-i18n="bossStatusStandby">standby</span>
         </button>
-        <!-- Renombrado a "Idiomas" (antes "Japonés AI Coach") — pedido
-             explícito de convertirlo en un selector de idiomas con
-             espacio para más adelante. data-app="japanese" NO cambia (la
-             lógica de app.js sigue clave por ese string); solo cambia la
-             etiqueta visible. Abre #language-select-modal primero (ver
-             más abajo), que a su vez encadena al flujo intacto de
-             siempre (#jp-config-modal → #japanese-modal) al elegir 日本語. -->
-        <button type="button" class="app-card" data-app="japanese" data-i18n-title="appJapaneseName" title="Idiomas">
-          <span class="app-card__icon">🌐</span>
-          <span class="app-card__name" data-i18n="appJapaneseName">Idiomas</span>
-          <span class="app-card__status app-card__status--new" data-i18n="appStatusNew">Nuevo</span>
-        </button>
-        <button type="button" class="app-card" data-app="habits" data-i18n-title="appHabitsName" title="Tracker de Hábitos">
-          <span class="app-card__icon">📈</span>
-          <span class="app-card__name" data-i18n="appHabitsName">Tracker de Hábitos</span>
-        </button>
+        <!-- "Idiomas" (data-app="japanese") se retiró como tarjeta fija del
+             App Hub — ahora vive dentro del pilar Aprendizaje/🧠 "Cerebro"
+             (ver #aprendizaje-panel), pedido explícito de reorganización.
+             La lógica APP_MODULES.japanese/selectApp("japanese") sigue
+             100% intacta: se sigue usando para el acceso directo opcional
+             que un usuario puede "fijar" desde #language-select-modal (ver
+             renderPinnedShortcuts() en app.js) — por eso este bloque de
+             comentario reemplaza la tarjeta en vez de borrar su lógica.
+
+             "Tracker de Hábitos" (data-app="habits") también se retiró:
+             ahora es una pestaña dentro de Templo/⛩️ (ver #templo-modal). -->
         <button type="button" class="app-card" data-app="calendar" data-i18n-title="appCalendarName" title="Calendario &amp; Eventos">
           <span class="app-card__icon">📅</span>
           <span class="app-card__name" data-i18n="appCalendarName">Calendario &amp; Eventos</span>
@@ -1116,8 +1107,23 @@
            lanzamiento, en vez de ocultarlas o dejar el panel vacío. -->
       <div class="aprendizaje-panel" id="aprendizaje-panel" hidden>
         <h3 data-i18n="aprendizajeTitle">🧠 Aprendizaje</h3>
+
+        <!-- Idiomas (Nihongo/English/Português) — antes tarjeta suelta del
+             App Hub, ahora reubicado acá adentro (pedido explícito:
+             "en la sección del Cerebro debe ir el módulo general de
+             Idiomas"). Reusa openLanguageSelectModal() sin ningún cambio
+             de lógica, solo un nuevo punto de entrada. -->
+        <button type="button" class="aprendizaje-idiomas-btn" id="aprendizaje-idiomas-btn">
+          <span class="aprendizaje-idiomas-btn__icon">🗣️</span>
+          <span class="aprendizaje-idiomas-btn__text">
+            <strong data-i18n="aprendizajeIdiomasTitle">Idiomas</strong>
+            <small data-i18n="aprendizajeIdiomasHint">Nihongo, English, Português — practica y sube de nivel</small>
+          </span>
+          <span class="aprendizaje-idiomas-btn__arrow" aria-hidden="true">→</span>
+        </button>
+
         <p class="aprendizaje-panel__hint" data-i18n="aprendizajeHint">
-          Este pilar está en construcción. Pronto vas a poder registrar tu progreso de aprendizaje aquí.
+          Más adelante vas a poder registrar acá el resto de tu progreso de aprendizaje.
         </p>
 
         <div class="course-grid" id="course-grid">
@@ -1566,26 +1572,11 @@
   <!-- MODAL: HÁBITOS & RACHAS — antes tenía una 2da pestaña "Rutina de
        Ejercicios" que se mudó entera a #templo-modal (ver Templo más
        abajo); esta queda con un solo contenido, sin chrome de pestañas. -->
-  <div class="modal-overlay" id="habits-modal" hidden>
-    <div class="modal modal--app modal--habits glass">
-      <button type="button" class="btn-modal-close" id="habits-modal-close" aria-label="Cerrar">✕</button>
-      <h2 class="modal-app__title" data-i18n="appHabitsName">Hábitos &amp; Rachas</h2>
-
-      <div class="habits-tab-panel" id="habits-tab-daily">
-        <div class="habits-streak" id="habits-streak">
-          <span class="habits-streak__icon">🔥</span>
-          <span class="habits-streak__value" id="habits-streak-value">0</span>
-          <span class="habits-streak__label" data-i18n="habitsStreakLabel">días de racha</span>
-        </div>
-
-        <div class="habits-grid" id="habits-grid">
-          <!-- tarjetas de hábito renderizadas por app.js -->
-        </div>
-
-        <p class="habits-hint" data-i18n="habitsHint">Completa los 5 hábitos hoy para sumar a tu racha.</p>
-      </div>
-    </div>
-  </div>
+  <!-- Hábitos y Rachas: el antiguo #habits-modal standalone se retiró —
+       su contenido (#habits-streak/#habits-grid, mismos IDs) ahora vive
+       como pestaña dentro de #templo-modal (ver "Pestaña: Hábitos" más
+       abajo), pedido explícito de agrupar todo lo de rutina/disciplina
+       personal bajo el Templo. -->
 
   <!-- MODAL: TEMPLO — fusión de Ejercicios/Rutinas, Bio-Sync, Nutrición y
        Estado Espiritual en un solo espacio holístico (pedido explícito),
@@ -1605,6 +1596,12 @@
         <button type="button" class="templo-tab" data-templo-tab="biosync" data-i18n="temploTabBiosync">❤️ Bio-Sync</button>
         <button type="button" class="templo-tab" data-templo-tab="nutricion" data-i18n="temploTabNutricion">🥗 Nutrición</button>
         <button type="button" class="templo-tab" data-templo-tab="espiritu" data-i18n="temploTabEspiritu">🧭 Espíritu</button>
+        <!-- Hábitos y Rachas: antes módulo propio del App Hub (#habits-modal),
+             ahora integrado acá — pedido explícito de agrupar todo lo
+             relacionado a rutina personal/disciplina bajo un mismo techo
+             (Templo). Mismo criterio ya aplicado a Ejercicios/Bio-Sync/
+             Nutrición/Espíritu: cero cambio de lógica, solo de ubicación. -->
+        <button type="button" class="templo-tab" data-templo-tab="habitos" data-i18n="temploTabHabitos">📈 Hábitos</button>
       </div>
 
       <!-- Pestaña: Ejercicios y Rutinas — fusión de la antigua herramienta
@@ -1792,13 +1789,31 @@
           </div>
         </div>
       </div>
+
+      <!-- Pestaña: Hábitos — contenido íntegro del ex-#habits-modal (mismo
+           #habits-streak/#habits-grid, cero cambio de IDs para que
+           renderHabitsStreak()/renderHabitsGrid()/toggleHabit() en app.js
+           sigan funcionando sin tocar una línea de esa lógica). -->
+      <div class="templo-tab-panel" id="templo-tab-habitos" hidden>
+        <div class="habits-streak" id="habits-streak">
+          <span class="habits-streak__icon">🔥</span>
+          <span class="habits-streak__value" id="habits-streak-value">0</span>
+          <span class="habits-streak__label" data-i18n="habitsStreakLabel">días de racha</span>
+        </div>
+
+        <div class="habits-grid" id="habits-grid">
+          <!-- tarjetas de hábito renderizadas por app.js -->
+        </div>
+
+        <p class="habits-hint" data-i18n="habitsHint">Completa los 5 hábitos hoy para sumar a tu racha.</p>
+      </div>
     </div>
   </div>
 
   <!-- MODAL: SESIÓN DE RUTINA ESTRUCTURADA — pedido explícito de un
        "panel grande, detallado y envolvente a pantalla completa". Se
        abre desde una tarjeta de #routine-category-grid (ver
-       openWorkoutSession() en app.js), por encima de #habits-modal
+       openWorkoutSession() en app.js), por encima de #templo-modal
        (mismo mecanismo de capas que #jp-victory-modal: se abre después
        en el DOM, con su propio z-index más alto). Fullscreen real en
        celular (ver .modal--workout-session en la media query Mobile
@@ -1851,21 +1866,37 @@
   <div class="modal-overlay" id="language-select-modal" hidden>
     <div class="modal glass modal--language-select">
       <button type="button" class="btn-modal-close" id="language-select-modal-close" aria-label="Cerrar">✕</button>
-      <h2 class="modal-app__title" data-i18n="languageSelectTitle">🌐 Elige un Idioma</h2>
+      <h2 class="modal-app__title" data-i18n="languageSelectTitle">🗣️ Elige un Idioma</h2>
 
+      <!-- Acceso Directo al Escritorio: el 📌 de cada tarjeta activa
+           (ja/en/pt) fija/quita un acceso directo real en el App Hub
+           (#app-grid), para quien use un idioma seguido y no quiera pasar
+           siempre por Cerebro → Idiomas — ver renderPinnedShortcuts()/
+           togglePinnedShortcut() en app.js. Es un botón HERMANO de la
+           tarjeta (no anidado adentro — <button> dentro de <button> es
+           HTML inválido), posicionado encima con CSS. -->
       <div class="language-select-grid" id="language-select-grid">
-        <button type="button" class="language-select-card" id="language-select-ja">
-          <span class="language-select-card__icon">🇯🇵</span>
-          <span class="language-select-card__name">日本語 Nihongo</span>
-        </button>
-        <button type="button" class="language-select-card" id="language-select-en">
-          <span class="language-select-card__icon">🇺🇸</span>
-          <span class="language-select-card__name">English</span>
-        </button>
-        <button type="button" class="language-select-card" id="language-select-pt">
-          <span class="language-select-card__icon">🇧🇷</span>
-          <span class="language-select-card__name">Português</span>
-        </button>
+        <div class="language-select-card-wrap">
+          <button type="button" class="language-select-card" id="language-select-ja">
+            <span class="language-select-card__icon">🇯🇵</span>
+            <span class="language-select-card__name">日本語 Nihongo</span>
+          </button>
+          <button type="button" class="language-select-card__pin" data-pin-id="japanese" data-i18n-title="pinShortcutBtn" title="Fijar acceso directo">📌</button>
+        </div>
+        <div class="language-select-card-wrap">
+          <button type="button" class="language-select-card" id="language-select-en">
+            <span class="language-select-card__icon">🇺🇸</span>
+            <span class="language-select-card__name">English</span>
+          </button>
+          <button type="button" class="language-select-card__pin" data-pin-id="english" data-i18n-title="pinShortcutBtn" title="Fijar acceso directo">📌</button>
+        </div>
+        <div class="language-select-card-wrap">
+          <button type="button" class="language-select-card" id="language-select-pt">
+            <span class="language-select-card__icon">🇧🇷</span>
+            <span class="language-select-card__name">Português</span>
+          </button>
+          <button type="button" class="language-select-card__pin" data-pin-id="portuguese" data-i18n-title="pinShortcutBtn" title="Fijar acceso directo">📌</button>
+        </div>
         <button type="button" class="language-select-card" disabled>
           <span class="language-select-card__icon">🇨🇳</span>
           <span class="language-select-card__name">中文 Chino</span>
@@ -3360,7 +3391,7 @@
        etiquetas <script> no importa en la práctica — se carga acá antes
        igual, por prolijidad. -->
   <script src="floatingWindow.js?v=20260811-6"></script>
-  <script src="app.js?v=20260814-7"></script>
+  <script src="app.js?v=20260815-1"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de

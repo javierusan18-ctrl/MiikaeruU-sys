@@ -4897,6 +4897,60 @@ body.miikaeru-anim-off .cyber-tile[data-forward*="bossfight"] {
    propio: a diferencia de un "Próximamente" simple, acá se quiere que
    se sienta como un anuncio llamativo de lanzamiento, no una tarjeta
    apagada sin más. */
+/* Idiomas dentro de Aprendizaje/"Cerebro" (🧠) — botón CTA a todo ancho,
+   arriba de la vitrina de cursos (.course-grid), ya que a diferencia de
+   esos placeholders esto SÍ abre contenido real (openLanguageSelectModal()). */
+.aprendizaje-idiomas-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 16px;
+  margin-top: 14px;
+  text-align: left;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(0, 229, 255, 0.4);
+  background: rgba(0, 229, 255, 0.06);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.aprendizaje-idiomas-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.aprendizaje-idiomas-btn__icon {
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
+
+.aprendizaje-idiomas-btn__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.aprendizaje-idiomas-btn__text strong {
+  font-size: 0.88rem;
+  letter-spacing: 0.3px;
+}
+
+.aprendizaje-idiomas-btn__text small {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  line-height: 1.3;
+}
+
+.aprendizaje-idiomas-btn__arrow {
+  font-size: 1.1rem;
+  color: var(--neon-cyan);
+  flex-shrink: 0;
+}
+
 .course-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -5033,6 +5087,62 @@ body.miikaeru-anim-off .cyber-tile[data-forward*="bossfight"] {
 .language-select-card:disabled .language-select-card__icon,
 .language-select-card:disabled .language-select-card__name {
   filter: grayscale(0.7) brightness(0.75);
+}
+
+/* Acceso Directo al Escritorio (📌): wrapper de posición + el botón de
+   fijar/desfijar en sí, superpuesto a la tarjeta como hermano (nunca
+   anidado — <button> dentro de <button> es HTML inválido). */
+.language-select-card-wrap {
+  position: relative;
+}
+
+.language-select-card-wrap .language-select-card {
+  width: 100%;
+}
+
+.language-select-card__pin {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  border-radius: 50%;
+  border: 1px solid rgba(124, 147, 173, 0.35);
+  background: rgba(10, 14, 22, 0.65);
+  color: var(--text-secondary);
+  cursor: pointer;
+  opacity: 0.6;
+  transition: all 0.2s ease;
+}
+
+.language-select-card__pin:hover {
+  opacity: 1;
+  border-color: var(--neon-gold);
+  transform: scale(1.08);
+}
+
+.language-select-card__pin--active {
+  opacity: 1;
+  border-color: var(--neon-gold);
+  color: var(--neon-gold);
+  background: rgba(255, 183, 0, 0.15);
+  box-shadow: 0 0 10px rgba(255, 183, 0, 0.5);
+}
+
+/* Tarjeta dinámica de acceso directo dentro de #app-grid — mismo
+   .app-card de siempre, con un acento dorado sutil para distinguirla de
+   las fijas del HTML (Boss Fight/Calendario/Karaoke). */
+.app-card--pinned {
+  border-color: rgba(255, 183, 0, 0.4);
+}
+
+.app-card--pinned:hover {
+  border-color: var(--neon-gold);
+  box-shadow: 0 0 12px rgba(255, 183, 0, 0.4);
 }
 
 .language-select-card__badge {

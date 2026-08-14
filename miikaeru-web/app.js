@@ -101,14 +101,14 @@ const CHAT_GUIDE_INTENTS = [
       "aprender portugues", "aprender portugués", "vocabulario", "gramatica", "gramática", "jlpt",
       "nivel n5", "nivel n4", "nivel n3",
     ],
-    dockTarget: '.app-card[data-app="japanese"]',
-    reply: "¡Genial! En Idiomas tienes Japonés (con Práctica de Trazos y Modo Examen para Kanji/Hiragana/Katakana, niveles N5 a N3), además de Inglés y Portugués con vocabulario, gramática y conversaciones. Mira este icono:",
+    dockTarget: '.pillar-btn[data-pillar="aprendizaje"]',
+    reply: "¡Genial! Dentro de Cerebro (🧠) tienes Idiomas: Japonés (con Práctica de Trazos y Modo Examen para Kanji/Hiragana/Katakana, niveles N5 a N3), además de Inglés y Portugués con vocabulario, gramática y conversaciones. Mira este icono:",
   },
   {
     id: "habits",
     keywords: ["quiero registrar mi entrenamiento", "registrar mi entrenamiento", "registrar mi rutina", "mis habitos de hoy", "mis hábitos de hoy", "mi racha", "rutina de ejercicios", "mis habitos", "mis hábitos"],
-    dockTarget: '.app-card[data-app="habits"]',
-    reply: "¡Así se hace! En Hábitos & Rachas puedes marcar tus hábitos del día y ver tu racha actual. Mira este icono:",
+    dockTarget: '.pillar-btn[data-pillar="templo"]',
+    reply: "¡Así se hace! Dentro del Templo (⛩️), pestaña Hábitos, puedes marcar tus hábitos del día y ver tu racha actual. Mira este icono:",
   },
   {
     id: "calendario",
@@ -1168,6 +1168,7 @@ const I18N = {
     temploTabBiosync: "❤️ Bio-Sync",
     temploTabNutricion: "🥗 Nutrición",
     temploTabEspiritu: "🧭 Espíritu",
+    temploTabHabitos: "📈 Hábitos",
     nutriGoalSectionTitle: "🎯 Elige tu Meta",
     nutriGoalActiveBadge: "Meta Activa",
     nutriLogSectionTitle: "📋 Registro Diario",
@@ -1187,7 +1188,9 @@ const I18N = {
     nutriGoalCutTitle: "Definición",
     nutriGoalCutDesc: "Mantén un déficit calórico moderado mientras conservas proteína alta (2.0-2.2 g/kg) para minimizar la pérdida de músculo. Sigue entrenando fuerza durante la definición — es la señal que le dice al cuerpo qué tejido conservar. Los carbohidratos alrededor del entrenamiento ayudan a mantener el rendimiento incluso en déficit. Ten paciencia: una definición sostenible es más lenta que las dietas extremas, pero se mantiene en el tiempo.",
     aprendizajeTitle: "🧠 Aprendizaje",
-    aprendizajeHint: "Este pilar está en construcción. Pronto vas a poder registrar tu progreso de aprendizaje aquí.",
+    aprendizajeIdiomasTitle: "Idiomas",
+    aprendizajeIdiomasHint: "Nihongo, English, Português — practica y sube de nivel",
+    aprendizajeHint: "Más adelante vas a poder registrar acá el resto de tu progreso de aprendizaje.",
     courseAiName: "Sistemas con Inteligencia Artificial",
     courseAiDesc: "Fundamentos de IA, modelos de lenguaje y automatización aplicada a negocios reales.",
     courseEnglishName: "Inglés Técnico",
@@ -1543,7 +1546,9 @@ const I18N = {
     appsAddBtn: "+ Agregar App",
     appBossFightName: "Boss Fight",
     appJapaneseName: "Idiomas",
-    languageSelectTitle: "🌐 Elige un Idioma",
+    languageSelectTitle: "🗣️ Elige un Idioma",
+    pinShortcutBtn: "Fijar acceso directo",
+    unpinShortcutBtn: "Quitar acceso directo",
     appHabitsName: "Hábitos & Rachas",
     appStatusNew: "Nuevo",
     appStatusComingSoon: "Próximamente",
@@ -2194,6 +2199,7 @@ const I18N = {
     temploTabBiosync: "❤️ Bio-Sync",
     temploTabNutricion: "🥗 Nutrition",
     temploTabEspiritu: "🧭 Spirit",
+    temploTabHabitos: "📈 Habits",
     nutriGoalSectionTitle: "🎯 Choose Your Goal",
     nutriGoalActiveBadge: "Active Goal",
     nutriLogSectionTitle: "📋 Daily Log",
@@ -2213,7 +2219,9 @@ const I18N = {
     nutriGoalCutTitle: "Cutting",
     nutriGoalCutDesc: "Keep a moderate caloric deficit while maintaining high protein (2.0-2.2 g/kg) to minimize muscle loss. Keep strength training during a cut — it's the signal that tells your body which tissue to keep. Carbs around your workouts help maintain performance even in a deficit. Be patient: a sustainable cut is slower than crash diets, but it actually sticks.",
     aprendizajeTitle: "🧠 Learning",
-    aprendizajeHint: "This pillar is under construction. Soon you'll be able to track your learning progress here.",
+    aprendizajeIdiomasTitle: "Languages",
+    aprendizajeIdiomasHint: "Nihongo, English, Português — practice and level up",
+    aprendizajeHint: "Soon you'll be able to track the rest of your learning progress here too.",
     courseAiName: "AI Systems",
     courseAiDesc: "AI fundamentals, language models, and automation applied to real businesses.",
     courseEnglishName: "Technical English",
@@ -2569,7 +2577,9 @@ const I18N = {
     appsAddBtn: "+ Add App",
     appBossFightName: "Boss Fight",
     appJapaneseName: "Languages",
-    languageSelectTitle: "🌐 Choose a Language",
+    languageSelectTitle: "🗣️ Choose a Language",
+    pinShortcutBtn: "Pin as shortcut",
+    unpinShortcutBtn: "Remove shortcut",
     appHabitsName: "Habits & Streaks",
     appStatusNew: "New",
     appStatusComingSoon: "Coming soon",
@@ -3220,6 +3230,7 @@ const I18N = {
     temploTabBiosync: "❤️ バイオシンク",
     temploTabNutricion: "🥗 栄養",
     temploTabEspiritu: "🧭 精神",
+    temploTabHabitos: "📈 習慣",
     nutriGoalSectionTitle: "🎯 目標を選ぶ",
     nutriGoalActiveBadge: "選択中の目標",
     nutriLogSectionTitle: "📋 デイリー記録",
@@ -3239,7 +3250,9 @@ const I18N = {
     nutriGoalCutTitle: "減脂・絞り込み",
     nutriGoalCutDesc: "筋肉量の減少を最小限に抑えるため、高いタンパク質摂取（体重1kgあたり2.0〜2.2g）を維持しながら適度なカロリー不足を保ちましょう。減量期も筋力トレーニングを続けることが、体にどの組織を残すべきかを伝える合図になります。トレーニング前後の炭水化物摂取は、カロリー不足の中でもパフォーマンスの維持に役立ちます。焦らずに — 持続可能な減脂は極端なダイエットより時間がかかりますが、その分リバウンドしにくいです。",
     aprendizajeTitle: "🧠 学習",
-    aprendizajeHint: "この柱は現在準備中です。もうすぐここで学習の進捗を記録できるようになります。",
+    aprendizajeIdiomasTitle: "言語",
+    aprendizajeIdiomasHint: "日本語・English・Português — 練習してレベルアップ",
+    aprendizajeHint: "近いうちに、ここで学習の進捗の残りも記録できるようになります。",
     courseAiName: "AIシステム",
     courseAiDesc: "AIの基礎、言語モデル、実際のビジネスに応用する自動化。",
     courseEnglishName: "テクニカル英語",
@@ -3595,7 +3608,9 @@ const I18N = {
     appsAddBtn: "+ アプリを追加",
     appBossFightName: "ボスファイト",
     appJapaneseName: "言語",
-    languageSelectTitle: "🌐 言語を選択",
+    languageSelectTitle: "🗣️ 言語を選択",
+    pinShortcutBtn: "ショートカットに固定",
+    unpinShortcutBtn: "ショートカットを解除",
     appHabitsName: "習慣＆連続記録",
     appStatusNew: "新着",
     appStatusComingSoon: "近日公開",
@@ -11109,6 +11124,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const techniqueButtons = document.querySelectorAll(".technique-complete-btn");
 
   const aprendizajePanel = document.getElementById("aprendizaje-panel");
+  const aprendizajeIdiomasBtn = document.getElementById("aprendizaje-idiomas-btn");
 
   // Templo: fusión de Ejercicios/Rutinas, Bio-Sync, Nutrición y Estado
   // Espiritual — reemplaza los antiguos pilares Estado Físico/Estado
@@ -11122,6 +11138,7 @@ document.addEventListener("DOMContentLoaded", () => {
     biosync: document.getElementById("templo-tab-biosync"),
     nutricion: document.getElementById("templo-tab-nutricion"),
     espiritu: document.getElementById("templo-tab-espiritu"),
+    habitos: document.getElementById("templo-tab-habitos"),
   };
   const nutritionContent = document.getElementById("nutrition-content");
 
@@ -11148,8 +11165,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const bossfightModalClose = document.getElementById("bossfight-modal-close");
   const calendarModal = document.getElementById("calendar-modal");
   const calendarModalClose = document.getElementById("calendar-modal-close");
-  const habitsModal = document.getElementById("habits-modal");
-  const habitsModalClose = document.getElementById("habits-modal-close");
   // Placeholder "próximamente" genérico — hoy solo lo usa Karaoke (Hábitos
   // ya tiene módulo real, ver más abajo).
   const appPlaceholderModal = document.getElementById("app-placeholder-modal");
@@ -11158,9 +11173,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const appPlaceholderTitle = document.getElementById("app-placeholder-title");
   const appPlaceholderText = document.getElementById("app-placeholder-text");
 
-  // Módulo Hábitos & Rachas (ya no tiene pestaña de Rutina de Ejercicios,
-  // ver Templo más abajo)
-  const habitsTabDaily = document.getElementById("habits-tab-daily");
+  // Hábitos & Rachas: ahora es la pestaña "habitos" de Templo (ver
+  // temploTabPanels arriba), mismos IDs internos de siempre.
   const habitsStreakValue = document.getElementById("habits-streak-value");
   const habitsGrid = document.getElementById("habits-grid");
   const workoutPlanEl = document.getElementById("workout-plan");
@@ -11226,6 +11240,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const languageSelectModal = document.getElementById("language-select-modal");
   const languageSelectModalClose = document.getElementById("language-select-modal-close");
+  const languageSelectGrid = document.getElementById("language-select-grid");
   const languageSelectJaBtn = document.getElementById("language-select-ja");
   const languageSelectEnBtn = document.getElementById("language-select-en");
   const languageSelectPtBtn = document.getElementById("language-select-pt");
@@ -13957,16 +13972,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Igual que arriba: si hay un módulo placeholder "próximamente" activo
-    // (Hábitos o Karaoke comparten el mismo modal — ver APP_MODULES), su
+    // (hoy solo Karaoke usa #app-placeholder-modal — ver APP_MODULES), su
     // ícono/título/texto se escribieron dinámicamente (no tienen
     // [data-i18n] porque dependen de qué app esté seleccionada) — se
     // vuelve a correr su mismo onOpen() para retraducirlos. applyLanguage()
     // solo se llama después de que APP_MODULES/activeApp ya existen (al
     // final del script y desde el listener de #language-select).
     const activeAppInfo = APP_MODULES[activeApp];
-    if (activeApp === "habits" || activeApp === "karaoke") {
+    if (activeApp === "karaoke" && activeAppInfo) {
       activeAppInfo.onOpen();
     }
+    // Los accesos directos fijados (📌) también se dibujan a mano (mismo
+    // motivo que arriba: nombre viene de PINNABLE_SHORTCUT_META, no de
+    // [data-i18n] estático) — se reconstruyen para que su etiqueta
+    // cambie de idioma sin necesidad de fijar/desfijar de nuevo.
+    renderPinnedShortcuts();
     // Las etiquetas "Fila X" de la cuadrícula Gojuon también se generan
     // dinámicamente (formatGojuonRowLabel usa currentLanguage) — se
     // reconstruye aunque la sub-vista visible sea trazo/quiz, para que
@@ -14012,6 +14032,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (activePillar === "templo") {
         closeTemploModal();
       } else {
+        bumpUsage(pillar);
         closePillarModal();
         openTemploModal();
       }
@@ -14032,6 +14053,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    bumpUsage(pillar);
     hideAllPillarPanels();
     target.hidden = false;
     pillarModal.hidden = false;
@@ -14046,6 +14068,15 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && !pillarModal.hidden) closePillarModal();
+  });
+
+  // Idiomas ahora vive DENTRO del pilar Aprendizaje ("Cerebro") — este
+  // botón cierra el panel chico y encadena al selector de idiomas de
+  // siempre (#language-select-modal → jp-config-modal/lang-modal), cero
+  // cambios en esa lógica ya probada, solo un nuevo punto de entrada.
+  aprendizajeIdiomasBtn.addEventListener("click", () => {
+    closePillarModal();
+    openLanguageSelectModal();
   });
 
   // ---- Templo: modal grande independiente (no usa #pillar-modal) ----
@@ -14067,6 +14098,9 @@ document.addEventListener("DOMContentLoaded", () => {
       renderBiometricsHistory();
     } else if (tab === "nutricion") {
       renderNutritionTab();
+    } else if (tab === "habitos") {
+      renderHabitsStreak();
+      renderHabitsGrid();
     }
     // "espiritu" no necesita render dinámico al abrir — su estado
     // (SPIRITUAL_STATES) ya se refleja en el HUD, y el timer de
@@ -18223,16 +18257,12 @@ document.addEventListener("DOMContentLoaded", () => {
       modal: () => langModal,
       onOpen: () => openLangModuleView(),
     },
-    habits: {
-      modal: () => habitsModal,
-      onOpen: () => {
-        renderHabitsStreak();
-        renderHabitsGrid();
-      },
-    },
+    // Hábitos ya no es un módulo del App Hub — es la pestaña "habitos" de
+    // Templo (ver togglePillarPanel()/runTemploTabOpenEffects() más
+    // arriba), pedido explícito de reorganización.
+    //
     // Karaoke sigue siendo "próximamente" — usa el placeholder genérico
-    // (ver #app-placeholder-modal, index.html). Hábitos ya tiene su
-    // propio módulo real arriba, así que dejó de compartir este modal.
+    // (ver #app-placeholder-modal, index.html).
     karaoke: {
       modal: () => appPlaceholderModal,
       onOpen: () => {
@@ -18252,7 +18282,7 @@ document.addEventListener("DOMContentLoaded", () => {
     },
   };
 
-  const ALL_APP_MODALS = [bossfightModal, japaneseModal, langModal, calendarModal, habitsModal, appPlaceholderModal, miikaPassModal];
+  const ALL_APP_MODALS = [bossfightModal, japaneseModal, langModal, calendarModal, appPlaceholderModal, miikaPassModal];
 
   let activeApp = loadActiveApp();
 
@@ -18286,6 +18316,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function selectApp(appKey) {
     if (!APP_MODULES[appKey]) return;
 
+    bumpUsage(appKey);
+
     // Japonés/English/Português no se recuerdan como "módulo activo"
     // persistente (son modales de consulta puntual detrás de
     // #language-select-modal, no tendría sentido auto-resaltar la
@@ -18301,17 +18333,28 @@ document.addEventListener("DOMContentLoaded", () => {
   appGrid.addEventListener("click", (event) => {
     const card = event.target.closest(".app-card");
     if (!card) return;
+    const appKey = card.dataset.app;
+    // Acceso Directo fijado (📌 desde #language-select-modal, ver más
+    // abajo): va DIRECTO al módulo, sin pasar por el selector de idioma
+    // — ese salto directo es justamente el punto de haberlo fijado.
+    if (card.dataset.pinned === "true") {
+      if (appKey === "japanese") selectApp("japanese");
+      else openLangModule(appKey);
+      return;
+    }
     // "Idiomas" (antes Japonés) ya no abre su modal directo: primero
     // pasa por #language-select-modal (elegir idioma — hoy solo 日本語
     // está activo) y de ahí a #jp-config-modal (idioma de interfaz +
     // modo Práctica/Examen) — elegir un modo ahí es lo que realmente
     // llama a selectApp("japanese"). Flujo interno sin cambios, solo
-    // gana un paso previo.
-    if (card.dataset.app === "japanese") {
+    // gana un paso previo. (Ya no hay tarjeta estática "japanese" en el
+    // HTML — solo puede llegar acá vía la de arriba — pero se deja el
+    // caso por si alguna vez vuelve a haber una.)
+    if (appKey === "japanese") {
       openLanguageSelectModal();
       return;
     }
-    selectApp(card.dataset.app);
+    selectApp(appKey);
   });
 
   // Tablero de comando central (#cyber-grid, ver index.html) — grilla
@@ -18334,6 +18377,133 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // ---------------- Accesos Directos (📌) + Orden por Uso ----------------
+  // Pedido explícito: (1) sub-módulos importantes como Nihongo/English/
+  // Português pueden fijarse como acceso directo real en el App Hub
+  // (#app-grid) desde #language-select-modal (ver 📌 en cada tarjeta,
+  // index.html); (2) los íconos de #pillars/#app-grid/#cyber-grid deben
+  // subir de posición solos cuanto más se usan. Ninguna de las dos cosas
+  // es progreso de juego real (XP/oro/nivel) — vive en localStorage
+  // plano, aparte de `state`, igual criterio que ACTIVE_APP_KEY de arriba.
+  const PINNED_SHORTCUTS_KEY = scopedKey("miikaeru_pinned_shortcuts", activeProfileId);
+  const NAV_USAGE_COUNTS_KEY = scopedKey("miikaeru_nav_usage_counts", activeProfileId);
+
+  function loadPinnedShortcuts() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(PINNED_SHORTCUTS_KEY) || "[]");
+      return Array.isArray(raw) ? raw : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function savePinnedShortcuts(list) {
+    localStorage.setItem(PINNED_SHORTCUTS_KEY, JSON.stringify(list));
+  }
+
+  // Metadata mínima para dibujar la tarjeta dinámica de acceso directo —
+  // APP_MODULES no sirve acá porque no guarda ícono/nombre (eso vive solo
+  // en el HTML estático de las tarjetas normales del App Hub).
+  const PINNABLE_SHORTCUT_META = {
+    japanese: { icon: "🗣️", nameKey: "appJapaneseName" },
+    english: { icon: "🇺🇸", nameKey: "langNameEnglish" },
+    portuguese: { icon: "🇧🇷", nameKey: "langNamePortuguese" },
+  };
+
+  function togglePinnedShortcut(id) {
+    if (!PINNABLE_SHORTCUT_META[id]) return;
+    const list = loadPinnedShortcuts();
+    const idx = list.indexOf(id);
+    if (idx === -1) list.push(id); else list.splice(idx, 1);
+    savePinnedShortcuts(list);
+    renderPinnedShortcuts();
+    syncLanguageSelectPinButtons();
+  }
+
+  function syncLanguageSelectPinButtons() {
+    const pinned = loadPinnedShortcuts();
+    languageSelectGrid.querySelectorAll(".language-select-card__pin").forEach((btn) => {
+      const active = pinned.includes(btn.dataset.pinId);
+      btn.classList.toggle("language-select-card__pin--active", active);
+      btn.title = t(active ? "unpinShortcutBtn" : "pinShortcutBtn");
+    });
+  }
+
+  languageSelectGrid.addEventListener("click", (event) => {
+    const pinBtn = event.target.closest(".language-select-card__pin");
+    if (!pinBtn) return;
+    event.stopPropagation();
+    togglePinnedShortcut(pinBtn.dataset.pinId);
+  });
+
+  // Reconstruye SOLO las tarjetas dinámicas (.app-card--pinned) — las
+  // estáticas del HTML (Boss Fight/Calendario/Karaoke) nunca se tocan acá.
+  function renderPinnedShortcuts() {
+    appGrid.querySelectorAll(".app-card--pinned").forEach((card) => card.remove());
+    loadPinnedShortcuts().forEach((id) => {
+      const meta = PINNABLE_SHORTCUT_META[id];
+      if (!meta) return;
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className = "app-card app-card--pinned";
+      card.dataset.app = id;
+      card.dataset.pinned = "true";
+      card.title = t(meta.nameKey);
+      const icon = document.createElement("span");
+      icon.className = "app-card__icon";
+      icon.textContent = meta.icon;
+      const name = document.createElement("span");
+      name.className = "app-card__name";
+      name.textContent = t(meta.nameKey);
+      card.append(icon, name);
+      appGrid.prepend(card);
+    });
+    reorderNavByUsage();
+  }
+
+  function loadNavUsageCounts() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(NAV_USAGE_COUNTS_KEY) || "{}");
+      return raw && typeof raw === "object" && !Array.isArray(raw) ? raw : {};
+    } catch {
+      return {};
+    }
+  }
+
+  function bumpUsage(id) {
+    const counts = loadNavUsageCounts();
+    counts[id] = (counts[id] || 0) + 1;
+    localStorage.setItem(NAV_USAGE_COUNTS_KEY, JSON.stringify(counts));
+    reorderNavByUsage();
+  }
+
+  // Reordena los hijos de un contenedor de más a menos usado. sort() es
+  // estable en todos los motores modernos, así que los empates (0 usos,
+  // la inmensa mayoría la primera vez) conservan el orden original del
+  // HTML — nada "salta" sin motivo. container.appendChild() sobre un
+  // nodo que YA es hijo lo MUEVE al final en vez de duplicarlo, por eso
+  // alcanza con reinsertar todo en el orden ya calculado.
+  function sortContainerByUsage(container, selector, getId) {
+    if (!container) return;
+    const counts = loadNavUsageCounts();
+    const items = Array.from(container.querySelectorAll(selector));
+    items.sort((a, b) => (counts[getId(b)] || 0) - (counts[getId(a)] || 0));
+    items.forEach((el) => container.appendChild(el));
+  }
+
+  const CYBER_TILE_FORWARD_ID_RE = /data-(?:pillar|app)="([^"]+)"/;
+
+  function reorderNavByUsage() {
+    sortContainerByUsage(pillarsEl, ".pillar-btn", (el) => el.dataset.pillar);
+    sortContainerByUsage(appGrid, ".app-card", (el) => el.dataset.app);
+    if (cyberGrid) {
+      sortContainerByUsage(cyberGrid, ".cyber-tile", (el) => {
+        const match = el.dataset.forward.match(CYBER_TILE_FORWARD_ID_RE);
+        return match ? match[1] : el.dataset.forward;
+      });
+    }
+  }
+
   addAppBtn.addEventListener("click", () => {
     addMessage({ author: "SISTEMA", text: t("appAddedMessage"), variant: "system" });
   });
@@ -18342,7 +18512,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // todas las ventanas, ya que closeAllAppModals() es idempotente (cerrar
   // "todas" cuando solo una está abierta es seguro y más simple que una
   // función de cierre casi idéntica por cada una).
-  [bossfightModal, calendarModal, habitsModal, appPlaceholderModal, japaneseModal, langModal, miikaPassModal].forEach((modal) => {
+  [bossfightModal, calendarModal, appPlaceholderModal, japaneseModal, langModal, miikaPassModal].forEach((modal) => {
     modal.addEventListener("click", (event) => {
       if (event.target === modal) closeAllAppModals();
     });
@@ -18350,7 +18520,6 @@ document.addEventListener("DOMContentLoaded", () => {
   [
     [bossfightModalClose, bossfightModal],
     [calendarModalClose, calendarModal],
-    [habitsModalClose, habitsModal],
     [appPlaceholderModalClose, appPlaceholderModal],
     [japaneseModalClose, japaneseModal],
     [langModalClose, langModal],
@@ -22833,6 +23002,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // directo al flujo existente sin tocarlo (openJpConfigModal()).
   function openLanguageSelectModal() {
     languageSelectModal.hidden = false;
+    syncLanguageSelectPinButtons();
   }
 
   function closeLanguageSelectModal() {
@@ -24364,6 +24534,12 @@ document.addEventListener("DOMContentLoaded", () => {
   // modal automáticamente (sería una ventana emergente no solicitada
   // apenas carga la página).
   syncActiveAppCard(activeApp);
+  // Accesos directos fijados (📌) y orden por frecuencia de uso — ambos
+  // persistidos en localStorage, se restauran tal cual quedaron la
+  // última vez que se usó la app (ver bloque "Accesos Directos + Orden
+  // por Uso" más abajo). renderPinnedShortcuts() ya llama a
+  // reorderNavByUsage() al final, así que alcanza con esta sola línea.
+  renderPinnedShortcuts();
 
   // Ventanas flotantes (drag/resize/minimize/maximize) — ver
   // floatingWindow.js. Gateadas al mismo ancho de pantalla donde cada
