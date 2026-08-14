@@ -6103,6 +6103,182 @@ body.miikaeru-anim-off .cyber-tile[data-forward*="bossfight"] {
   }
 }
 
+/* ==================== Mapa de Mundos: arquitectura de navegación ====================
+   Rediseño estructural pedido explícito. Las 3 vistas de mapa (Mapa de
+   Mundos, Mapa de Contenido de un Mundo, y "Nivel de Miikaeru" cosmético)
+   comparten el MISMO contenedor `.jp-roadmap` (fondo de grilla neón +
+   flex-shrink:0, ver arriba) y las mismas clases de nodo — acá solo se
+   agregan las piezas nuevas: el glifo de texto/emoji (alternativa al
+   retrato de imagen), los modificadores de nodo de mundo/portal de
+   examen/repaso vía Modo Libre, la pila de accesos flotantes laterales,
+   y las barras de progreso por bloque. */
+
+/* Glifo de texto/emoji como contenido principal del nodo (Mundos usan
+   esto en vez de <img> — no hay retrato por fila de kana/kanji/gramática/
+   conversación). Reusa el mismo círculo `.jp-roadmap__portrait-wrap`. */
+.jp-roadmap__glyph {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--neon-cyan);
+  text-shadow: var(--shadow-neon-cyan);
+}
+
+/* Nodo de Mundo (Mapa de Mundos): borde más grueso/prominente que un nodo
+   de contenido normal, para que se lea como "puerta de entrada" a un
+   mapa propio. */
+.jp-roadmap__node--world .jp-roadmap__portrait-wrap {
+  border-width: 3px;
+}
+
+/* Nodo de Examen de Nivel: estilo "portal", distinto del lenguaje visual
+   de personaje/glifo — magenta en vez de cian, para que se distinga a
+   simple vista como el mecanismo de desbloqueo, no un mundo más. */
+.jp-roadmap__node--exam-gate .jp-roadmap__portrait-wrap {
+  border-color: var(--neon-magenta);
+  box-shadow: 0 0 12px rgba(255, 46, 154, 0.35), 0 0 2px rgba(255, 46, 154, 0.6);
+}
+.jp-roadmap__node--exam-gate .jp-roadmap__glyph {
+  color: var(--neon-magenta);
+  text-shadow: 0 0 8px rgba(255, 46, 154, 0.7);
+}
+.jp-roadmap__node--exam-gate .jp-roadmap__badge--action {
+  color: var(--neon-magenta);
+  text-shadow: 0 0 8px rgba(255, 46, 154, 0.7);
+}
+
+/* Nodo desbloqueado vía "Modo Libre" (no por progreso real) — tinte
+   ámbar/violeta distinto del cian normal de "desbloqueado real", pedido
+   explícito para que el usuario siempre sepa que está en modo repaso. */
+.jp-roadmap__node--freeroam .jp-roadmap__portrait-wrap {
+  border-color: #b98cff;
+  box-shadow: 0 0 12px rgba(185, 140, 255, 0.4), 0 0 2px rgba(185, 140, 255, 0.6);
+}
+.jp-roadmap__node--freeroam .jp-roadmap__glyph {
+  color: #b98cff;
+  text-shadow: 0 0 8px rgba(185, 140, 255, 0.6);
+}
+.jp-roadmap__node--freeroam .jp-roadmap__badge--action {
+  color: #b98cff;
+  text-shadow: 0 0 8px rgba(185, 140, 255, 0.6);
+}
+
+/* Pila de accesos flotantes laterales (Modo Libre / Trazos Reales /
+   Diccionario) — mismo círculo 44px + blur + borde neón que
+   .btn-jp-floating-back, apilados verticalmente abajo-derecha (las otras
+   3 esquinas del modal ya están ocupadas: ✕ cerrar y ⚙️ config
+   arriba-derecha, ← volver arriba-izquierda). */
+.jp-floating-side-stack {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn-jp-floating-side {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  background: rgba(10, 14, 26, 0.75);
+  backdrop-filter: blur(6px);
+  color: var(--neon-cyan);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+}
+
+.btn-jp-floating-side:hover {
+  background: rgba(0, 240, 255, 0.15);
+}
+
+/* Modo Libre activo — mismo tinte ámbar/violeta que los nodos que
+   desbloquea, para que el propio botón confirme visualmente el estado. */
+.btn-jp-floating-side--active {
+  border-color: #b98cff;
+  color: #b98cff;
+  background: rgba(185, 140, 255, 0.18);
+  box-shadow: 0 0 12px rgba(185, 140, 255, 0.5);
+}
+
+/* Barras de progreso por bloque (N5/N4/N3) — pedido explícito. Calca el
+   patrón visual ya existente .xp-bar/.xp-bar__fill (ver arriba en este
+   archivo) en vez de inventar un componente nuevo. */
+.jp-tier-progress-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.jp-tier-progress-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.jp-tier-progress-bar__label {
+  width: 26px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.jp-tier-progress-bar__track {
+  position: relative;
+  flex: 1;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(0, 240, 255, 0.25);
+  overflow: hidden;
+}
+
+.jp-tier-progress-bar__fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--neon-green), var(--neon-cyan));
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
+  transition: width 0.4s ease;
+}
+
+.jp-tier-progress-bar__pct {
+  width: 34px;
+  text-align: right;
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 600px) {
+  .jp-roadmap__glyph {
+    font-size: 1.3rem;
+  }
+  .jp-floating-side-stack {
+    right: 10px;
+    bottom: 10px;
+    gap: 8px;
+  }
+  .btn-jp-floating-side {
+    width: 40px;
+    height: 40px;
+    font-size: 1.05rem;
+  }
+}
+
 .jp-vocab-words__title {
   font-size: 1rem;
   color: var(--neon-cyan);

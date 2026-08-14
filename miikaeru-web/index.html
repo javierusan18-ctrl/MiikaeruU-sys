@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260814-1" />
+  <link rel="stylesheet" href="style.css?v=20260814-2" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -1981,55 +1981,91 @@
            solo en la grilla principal, que ya no tiene a dónde volver. -->
       <button type="button" class="btn-jp-floating-back" id="jp-floating-back-btn" data-i18n-title="jpFloatingBackTitle" title="Volver atrás" aria-label="Volver atrás" hidden>←</button>
 
-      <!-- Sub-vista 1: cuadrícula Gojuon, elegir fila o práctica general -->
-      <div class="jp-view" id="jp-view-grid">
+      <!-- Accesos laterales flotantes (pedido explícito: "Modo Libre" +
+           "Trazos Reales" a un costado, funcionales desde cualquier mapa).
+           Se agrega Diccionario porque Vocabulario dejó de tener pestaña
+           propia en el menú (ver rediseño de Mapa de Mundos, app.js). Pila
+           vertical fija abajo-derecha: las otras 3 esquinas ya están
+           ocupadas (✕ cerrar, ⚙️ config arriba-derecha; ← volver
+           arriba-izquierda). -->
+      <div class="jp-floating-side-stack">
+        <button type="button" class="btn-jp-floating-side" id="jp-freeroam-toggle-btn" data-i18n-title="jpFreeRoamTitle" title="Modo Libre" aria-label="Modo Libre">🔓</button>
+        <button type="button" class="btn-jp-floating-side" id="jp-hanzi-shortcut-btn" data-i18n-title="jpHanziWriterOpenBtn" title="Trazos Reales" aria-label="Trazos Reales">✍️</button>
+        <button type="button" class="btn-jp-floating-side" id="jp-dict-shortcut-btn" data-i18n-title="jpDictShortcutTitle" title="Diccionario" aria-label="Diccionario">📚</button>
+      </div>
+
+      <!-- Mapa de Mundos: NUEVA vista de entrada del módulo (reemplaza a
+           #jp-view-grid, retirada más abajo — se deja su marcado en el DOM
+           permanentemente hidden en vez de borrarlo de una, ver comentario
+           junto a ese div). Cada nodo es un mundo completo (ver JP_WORLDS/
+           renderJpWorldMap() en app.js) + un nodo especial de Examen de
+           Nivel. Reusa el MISMO motor visual del camino curvo SVG
+           (renderMapPath(), generalizado a partir de lo que antes era
+           renderJpRoadmap() en exclusiva). -->
+      <div class="jp-view" id="jp-view-world-map">
+        <!-- Barras de progreso por bloque — pedido explícito. Rellenadas
+             por renderJpTierProgressBars() (app.js) vía [data-tier-fill]/
+             [data-tier-pct]; el track+fill reutiliza el patrón visual ya
+             existente .xp-bar/.xp-bar__fill (ver style.css), nada nuevo
+             que inventar visualmente. -->
+        <div class="jp-tier-progress-bars" id="jp-tier-progress-bars">
+          <div class="jp-tier-progress-bar">
+            <span class="jp-tier-progress-bar__label" data-i18n="jpTierProgressN5">N5</span>
+            <div class="jp-tier-progress-bar__track"><div class="jp-tier-progress-bar__fill" data-tier-fill="n5"></div></div>
+            <span class="jp-tier-progress-bar__pct" data-tier-pct="n5">0%</span>
+          </div>
+          <div class="jp-tier-progress-bar">
+            <span class="jp-tier-progress-bar__label" data-i18n="jpTierProgressN4">N4</span>
+            <div class="jp-tier-progress-bar__track"><div class="jp-tier-progress-bar__fill" data-tier-fill="n4"></div></div>
+            <span class="jp-tier-progress-bar__pct" data-tier-pct="n4">0%</span>
+          </div>
+          <div class="jp-tier-progress-bar">
+            <span class="jp-tier-progress-bar__label" data-i18n="jpTierProgressN3">N3</span>
+            <div class="jp-tier-progress-bar__track"><div class="jp-tier-progress-bar__fill" data-tier-fill="n3"></div></div>
+            <span class="jp-tier-progress-bar__pct" data-tier-pct="n3">0%</span>
+          </div>
+        </div>
+        <!-- Insignia hacia "Nivel de Miikaeru" (antes "Mapa de Progreso",
+             la evolución cosmética 1-50 — ver JP_ROADMAP_MILESTONES en
+             app.js, sin cambios funcionales, solo re-etiquetada). -->
+        <button type="button" class="btn-register jp-general-btn" id="jp-roadmap-entry-btn" data-i18n="jpMiikaeruLevelBtn">🌱 Nivel de Miikaeru</button>
+        <!-- Tarjeta de "Continuar donde lo dejaste" — se mudó acá desde la
+             vieja grilla principal (ver renderJpContinueCard()/
+             JP_CONTINUE_KEY en app.js, sin cambios). -->
+        <div class="jp-continue-card" id="jp-continue-card" hidden></div>
+        <div class="jp-roadmap" id="jp-world-map-track">
+          <!-- nodos renderizados por app.js (renderJpWorldMap) -->
+        </div>
+      </div>
+
+      <!-- Mapa de Contenido de un Mundo: se abre al tocar un nodo del Mapa
+           de Mundos. Nodos = filas de kana / chunks de kanji / puntos de
+           gramática / escenas de conversación del mundo activo (ver
+           renderJpWorldContentMap() en app.js). -->
+      <div class="jp-view" id="jp-view-world-content" hidden>
+        <button type="button" class="btn-jp-back" id="jp-world-content-back-btn" data-i18n="jpBackToGrid">← Volver</button>
+        <h3 class="jp-vocab-words__title" id="jp-world-content-title"></h3>
+        <div class="jp-roadmap" id="jp-world-content-track">
+          <!-- nodos renderizados por app.js (renderJpWorldContentMap) -->
+        </div>
+      </div>
+
+      <!-- Sub-vista 1 (RETIRADA): la vieja cuadrícula Gojuon + pestañas
+           plana, reemplazada por el Mapa de Mundos de arriba. Se deja el
+           marcado en el DOM permanentemente `hidden` (nunca se le llama
+           desde showJpView) en vez de borrarlo de una — da margen para
+           confirmar que nada más depende de #jp-rows/#jp-script-toggle
+           antes de borrar esto y renderGojuonGrid() del todo en un commit
+           de limpieza posterior. -->
+      <div class="jp-view" id="jp-view-grid" hidden>
         <!-- "Volver" claro y accesible al menú principal — antes esta
              pantalla (a diferencia de TODAS las demás sub-vistas del
              módulo) no tenía ningún botón de regreso, solo el [✕] chico
              de la esquina. Pedido explícito, más relevante ahora que el
              módulo pasa a pantalla completa en celular. -->
         <button type="button" class="btn-jp-back" id="jp-grid-back-btn" data-i18n="jpBackToMenu">← Volver al Menú</button>
-        <!-- Selector de nivel JLPT: N5/N4/N3 ya tienen contenido real
-             (Vocabulario/Gramática/Conversaciones — ver N4_VOCAB_CATEGORIES/
-             N3_VOCAB_CATEGORIES y análogos en app.js, cableado vía
-             #jp-level-toggle click handler). Trazos/Examen de Nivel siguen
-             ligados solo a KANJI_N5 (alcance documentado en app.js, sin
-             cambios). N4/N3 son SIEMPRE elegibles (sin `disabled`) — igual
-             que el selector de script Hiragana/Katakana/Kanji, donde el
-             candado real vive en cada TARJETA de contenido, no en la
-             pestaña (mismo criterio visual "visible pero bloqueado" que ya
-             usan los tiles de Kanji: se puede entrar a mirar N4/N3, pero
-             sus categorías/puntos de gramática/escenas aparecen atenuados
-             con 🔒 hasta cruzar el nivel interno de Nihongo — ver
-             renderN5VocabCategories()/renderN5GrammarList()/
-             renderConversationSceneGrid() en app.js). El badge (ej.
-             "🔒 Nivel 21") lo pone renderJpTierLocks() en runtime según
-             JP_LEVEL_CONTENT.unlockLevel. N2/N1 SÍ se muestran a propósito
-             (no se ocultan) para que quede claro que el currículum va a
-             seguir creciendo — mismo criterio visual "grayscale + opacity"
-             que los tiers bloqueados de Miika Pass, con badge
-             "Próximamente" (appStatusComingSoon) ESTÁTICO y `disabled`
-             real (esos SÍ siguen sin contenido real detrás, fuera de
-             alcance). -->
-        <div class="jp-level-toggle" id="jp-level-toggle">
-          <button type="button" class="jp-level-btn jp-level-btn--active" data-level="n5">N5</button>
-          <button type="button" class="jp-level-btn jp-level-btn--locked" data-level="n4">
-            N4
-            <span class="jp-level-btn__badge" id="jp-level-badge-n4"></span>
-          </button>
-          <button type="button" class="jp-level-btn jp-level-btn--locked" data-level="n3">
-            N3
-            <span class="jp-level-btn__badge" id="jp-level-badge-n3"></span>
-          </button>
-          <button type="button" class="jp-level-btn jp-level-btn--locked" disabled>
-            N2
-            <span class="jp-level-btn__badge" data-i18n="appStatusComingSoon">Próximamente</span>
-          </button>
-          <button type="button" class="jp-level-btn jp-level-btn--locked" disabled>
-            N1
-            <span class="jp-level-btn__badge" data-i18n="appStatusComingSoon">Próximamente</span>
-          </button>
-        </div>
+        <!-- #jp-level-toggle se mudó a #jp-view-vocab (ahora es el acceso
+             lateral de Diccionario) — ver rediseño de Mapa de Mundos. -->
         <div class="jp-grid-toolbar">
           <div class="jp-script-toggle" id="jp-script-toggle">
             <button type="button" class="jp-script-btn jp-script-btn--active" data-script="hiragana" data-i18n="jpScriptHiragana">Hiragana</button>
@@ -2074,15 +2110,7 @@
           <button type="button" class="jp-tab-btn" data-mode="particles" data-i18n="jpParticlesOpenBtn">🧩 Partículas</button>
           <button type="button" class="jp-tab-btn" data-mode="yoon" data-i18n="jpYoonOpenBtn">🈴 Yōon</button>
         </div>
-        <!-- Tarjeta de "Continuar donde lo dejaste" / recomendación de
-             repaso — pedido explícito: guiar al usuario a su siguiente
-             paso sin que tenga que buscar por dónde empezar, y mostrar
-             una recomendación automática cuando reprueba el Examen de
-             Nivel. Un solo componente cubre los dos casos (ver
-             renderJpContinueCard()/JP_CONTINUE_KEY en app.js) — arranca
-             oculta y solo aparece si hay algo real guardado (ni
-             placeholder ni estado vacío falso). -->
-        <div class="jp-continue-card" id="jp-continue-card" hidden></div>
+        <!-- #jp-continue-card se mudó a #jp-view-world-map. -->
         <div class="jp-rows" id="jp-rows">
           <!-- filas del Gojuon renderizadas por app.js (renderGojuonGrid) -->
         </div>
@@ -2177,6 +2205,38 @@
            categoría -> quiz de opción múltiple de esa categoría. -->
       <div class="jp-view" id="jp-view-vocab" hidden>
         <button type="button" class="btn-jp-back" id="jp-vocab-back-btn" data-i18n="jpBackToGrid">← Volver</button>
+        <!-- Selector de nivel JLPT: N5/N4/N3 ya tienen contenido real
+             (Vocabulario/Gramática/Conversaciones — ver N4_VOCAB_CATEGORIES/
+             N3_VOCAB_CATEGORIES y análogos en app.js, cableado vía
+             #jp-level-toggle click handler). N4/N3 son SIEMPRE elegibles
+             (sin `disabled`) — el candado real vive en cada TARJETA de
+             contenido, no en la pestaña (mismo criterio visual "visible
+             pero bloqueado" que ya usan los tiles de Kanji). El badge (ej.
+             "🔒 Nivel 21") lo pone renderJpTierLocks() en runtime según
+             JP_LEVEL_CONTENT.unlockLevel. N2/N1 se muestran a propósito,
+             estáticos y `disabled` (sin contenido real detrás, fuera de
+             alcance). Reubicado acá (antes vivía en la vieja grilla
+             principal) porque Vocabulario es el único módulo que sigue
+             siendo "consulta libre por nivel" fuera del sistema de mapas. -->
+        <div class="jp-level-toggle" id="jp-level-toggle">
+          <button type="button" class="jp-level-btn jp-level-btn--active" data-level="n5">N5</button>
+          <button type="button" class="jp-level-btn jp-level-btn--locked" data-level="n4">
+            N4
+            <span class="jp-level-btn__badge" id="jp-level-badge-n4"></span>
+          </button>
+          <button type="button" class="jp-level-btn jp-level-btn--locked" data-level="n3">
+            N3
+            <span class="jp-level-btn__badge" id="jp-level-badge-n3"></span>
+          </button>
+          <button type="button" class="jp-level-btn jp-level-btn--locked" disabled>
+            N2
+            <span class="jp-level-btn__badge" data-i18n="appStatusComingSoon">Próximamente</span>
+          </button>
+          <button type="button" class="jp-level-btn jp-level-btn--locked" disabled>
+            N1
+            <span class="jp-level-btn__badge" data-i18n="appStatusComingSoon">Próximamente</span>
+          </button>
+        </div>
         <!-- Buscador de diccionario (ver searchJpDictionary() en app.js):
              busca SIEMPRE en el vocabulario local (N5+N4, ~200 palabras) —
              eso es lo único que se puede prometer como "en tiempo real" de
@@ -3247,7 +3307,7 @@
        etiquetas <script> no importa en la práctica — se carga acá antes
        igual, por prolijidad. -->
   <script src="floatingWindow.js?v=20260811-6"></script>
-  <script src="app.js?v=20260814-1"></script>
+  <script src="app.js?v=20260814-2"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de

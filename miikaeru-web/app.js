@@ -1472,6 +1472,21 @@ const I18N = {
     jpRoadmapM8: "Maestría",
     jpRoadmapComingSoon: "Próximamente",
     jpRoadmapGoToTier: "Toca para explorar",
+    jpWorldHiragana: "あ Hiragana",
+    jpWorldKatakana: "ア Katakana",
+    jpWorldKanjiN5: "字 Kanji N5",
+    jpWorldN5Content: "文 Gramática y Conversación N5",
+    jpWorldN4: "N4",
+    jpWorldN3: "N3",
+    jpWorldExamGate: "🚪 Examen de Nivel",
+    jpWorldExamGateBadge: "Toca para rendir",
+    jpWorldEnterBadge: "Toca para entrar",
+    jpTierProgressN5: "N5",
+    jpTierProgressN4: "N4",
+    jpTierProgressN3: "N3",
+    jpMiikaeruLevelBtn: "🌱 Nivel de Miikaeru",
+    jpFreeRoamTitle: "Modo Libre: repasar todo el mapa sin candados",
+    jpDictShortcutTitle: "Diccionario (Vocabulario N5/N4/N3)",
     appJapanesePlaceholder: "El módulo Japonés AI Coach está en desarrollo. Pronto vas a poder practicarlo aquí.",
     appAddedMessage: "Más módulos estarán disponibles próximamente en Apps & Módulos.",
     appCalendarName: "Calendario & Eventos",
@@ -2444,6 +2459,21 @@ const I18N = {
     jpRoadmapM8: "Mastery",
     jpRoadmapComingSoon: "Coming soon",
     jpRoadmapGoToTier: "Tap to explore",
+    jpWorldHiragana: "あ Hiragana",
+    jpWorldKatakana: "ア Katakana",
+    jpWorldKanjiN5: "字 Kanji N5",
+    jpWorldN5Content: "文 N5 Grammar & Conversation",
+    jpWorldN4: "N4",
+    jpWorldN3: "N3",
+    jpWorldExamGate: "🚪 Level Exam",
+    jpWorldExamGateBadge: "Tap to take it",
+    jpWorldEnterBadge: "Tap to enter",
+    jpTierProgressN5: "N5",
+    jpTierProgressN4: "N4",
+    jpTierProgressN3: "N3",
+    jpMiikaeruLevelBtn: "🌱 Miikaeru's Level",
+    jpFreeRoamTitle: "Free Mode: review the whole map with no locks",
+    jpDictShortcutTitle: "Dictionary (N5/N4/N3 Vocabulary)",
     appJapanesePlaceholder: "The Japanese AI Coach module is under development. You'll be able to practice here soon.",
     appAddedMessage: "More modules will be available soon in Apps & Modules.",
     appCalendarName: "Calendar & Events",
@@ -3416,6 +3446,21 @@ const I18N = {
     jpRoadmapM8: "マスタリー",
     jpRoadmapComingSoon: "近日公開",
     jpRoadmapGoToTier: "タップして見る",
+    jpWorldHiragana: "あ ひらがな",
+    jpWorldKatakana: "ア カタカナ",
+    jpWorldKanjiN5: "字 N5漢字",
+    jpWorldN5Content: "文 N5文法・会話",
+    jpWorldN4: "N4",
+    jpWorldN3: "N3",
+    jpWorldExamGate: "🚪 レベル試験",
+    jpWorldExamGateBadge: "タップして受験",
+    jpWorldEnterBadge: "タップして入る",
+    jpTierProgressN5: "N5",
+    jpTierProgressN4: "N4",
+    jpTierProgressN3: "N3",
+    jpMiikaeruLevelBtn: "🌱 ミイカエルのレベル",
+    jpFreeRoamTitle: "フリーモード：ロックなしで全マップを復習",
+    jpDictShortcutTitle: "辞書（N5/N4/N3語彙）",
     appJapanesePlaceholder: "日本語AIコーチモジュールは開発中です。もうすぐここで練習できるようになります。",
     appAddedMessage: "アプリ&モジュールに、もうすぐ新しいモジュールが追加されます。",
     appCalendarName: "カレンダー&イベント",
@@ -10804,6 +10849,21 @@ document.addEventListener("DOMContentLoaded", () => {
   const jpRoadmapBackBtn = document.getElementById("jp-roadmap-back-btn");
   const jpRoadmapTrack = document.getElementById("jp-roadmap-track");
 
+  // Refs nuevas: arquitectura de Mapa de Mundos (ver JP_WORLDS/
+  // renderJpWorldMap()/renderJpWorldContentMap() más abajo) — reemplaza a
+  // jp-view-grid como vista de entrada del módulo.
+  const jpViewWorldMap = document.getElementById("jp-view-world-map");
+  const jpWorldMapTrack = document.getElementById("jp-world-map-track");
+  const jpTierProgressBars = document.getElementById("jp-tier-progress-bars");
+  const jpRoadmapEntryBtn = document.getElementById("jp-roadmap-entry-btn");
+  const jpViewWorldContent = document.getElementById("jp-view-world-content");
+  const jpWorldContentTrack = document.getElementById("jp-world-content-track");
+  const jpWorldContentTitle = document.getElementById("jp-world-content-title");
+  const jpWorldContentBackBtn = document.getElementById("jp-world-content-back-btn");
+  const jpFreeRoamToggleBtn = document.getElementById("jp-freeroam-toggle-btn");
+  const jpDictShortcutBtn = document.getElementById("jp-dict-shortcut-btn");
+  const jpHanziShortcutBtn = document.getElementById("jp-hanzi-shortcut-btn");
+
   const jpConversationsBackBtn = document.getElementById("jp-conversations-back-btn");
   const jpConversationSceneGrid = document.getElementById("jp-conversation-scene-grid");
   const jpConversationReader = document.getElementById("jp-conversation-reader");
@@ -17634,7 +17694,12 @@ document.addEventListener("DOMContentLoaded", () => {
       modal: () => japaneseModal,
       onOpen: () => {
         updateJpModeBadge();
-        showJpView("grid");
+        // Modo Libre es explícitamente "temporal" (pedido del usuario) —
+        // se resetea cada vez que se abre el módulo, nunca se persiste.
+        jpFreeRoamMode = false;
+        if (jpFreeRoamToggleBtn) jpFreeRoamToggleBtn.classList.remove("btn-jp-floating-side--active");
+        jpNavStack = [];
+        showJpView("world-map");
       },
     },
     // English/Português comparten el MISMO modal (#lang-modal) — cuál de
@@ -19105,8 +19170,43 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Pila de navegación: generaliza el viejo botón "Volver" (que resolvía a
+  // mano 2 niveles de anidamiento con un if encadenado) para soportar un
+  // tercer nivel real (Mapa de Mundos -> Mapa de Contenido del Mundo ->
+  // vista hoja) sin seguir apilando casos especiales. Cada llamada a un
+  // punto de entrada nuevo (nodo de mundo, nodo de contenido, accesos
+  // laterales) hace pushJpBackFrame(restoreFn) ANTES de navegar — jpBack()
+  // desapila y ejecuta ese restoreFn. Los 3 casos especiales que ya
+  // existían (lector de conversación, vocab-words, mini-quiz) se
+  // mantienen intactos por encima de la pila, sin tocarlos.
+  let jpNavStack = [];
+  function pushJpBackFrame(restoreFn) {
+    jpNavStack.push({ restore: restoreFn });
+  }
+  function jpBack() {
+    if (!jpViewConversations.hidden && jpConversationReader && !jpConversationReader.hidden) {
+      openConversationSceneGrid();
+      return;
+    }
+    if (!jpViewVocabWords.hidden) return showJpView("vocab");
+    if (!jpViewMiniQuiz.hidden) return showJpView(miniQuizReturnView);
+    if (jpNavStack.length) {
+      jpNavStack.pop().restore();
+      return;
+    }
+    showJpView("world-map");
+  }
+
+  // Última vista de mapa mostrada (Mapa de Mundos o Mapa de Contenido) —
+  // usada por los accesos laterales flotantes (Diccionario/Trazos) para
+  // saber a cuál de los dos volver, ya que son alcanzables desde ambos
+  // niveles de mapa (pedido explícito).
+  let jpLastMapView = "world-map";
+
   function showJpView(view) {
     jpViewGrid.hidden = view !== "grid";
+    jpViewWorldMap.hidden = view !== "world-map";
+    jpViewWorldContent.hidden = view !== "world-content";
     jpViewPhases.hidden = view !== "phases";
     jpViewExamstroke.hidden = view !== "examstroke";
     jpViewQuiz.hidden = view !== "quiz";
@@ -19122,6 +19222,15 @@ document.addEventListener("DOMContentLoaded", () => {
       renderGojuonGrid();
       renderJpContinueCard();
     }
+    if (view === "world-map") {
+      jpLastMapView = "world-map";
+      renderJpWorldMap();
+      renderJpContinueCard();
+    }
+    if (view === "world-content") {
+      jpLastMapView = "world-content";
+      renderJpWorldContentMap(jpCurrentWorldId);
+    }
     if (view === "vocab") renderN5VocabCategories();
     if (view === "grammar") {
       renderN5GrammarList();
@@ -19134,31 +19243,53 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Botón flotante único de "Volver atrás" (#jp-floating-back-btn) —
-  // visible en cualquier sub-vista salvo la grilla principal (que ya no
-  // tiene a dónde volver). Se llama tras cada showJpView() de arriba, así
-  // que siempre refleja la vista realmente visible en ese momento.
+  // visible en cualquier sub-vista salvo el Mapa de Mundos (que ya no
+  // tiene a dónde volver, reemplaza el rol que tenía jp-view-grid). Se
+  // llama tras cada showJpView() de arriba, así que siempre refleja la
+  // vista realmente visible en ese momento.
   function updateJpFloatingBackBtn() {
-    if (jpFloatingBackBtn) jpFloatingBackBtn.hidden = jpViewGrid.hidden === false;
+    if (jpFloatingBackBtn) jpFloatingBackBtn.hidden = jpViewWorldMap.hidden === false;
   }
 
-  if (jpFloatingBackBtn) {
-    jpFloatingBackBtn.addEventListener("click", () => {
-      // Caso especial: dentro de Conversaciones, primero hay que volver de
-      // la LECTURA de una escena a la grilla de escenas antes de volver al
-      // menú principal — openConversationSceneGrid() ya corta cualquier
-      // audio en curso (ver activeConversationReader.detener() ahí).
-      if (!jpViewConversations.hidden && jpConversationReader && !jpConversationReader.hidden) {
-        openConversationSceneGrid();
-        return;
-      }
-      if (!jpViewVocabWords.hidden) return showJpView("vocab");
-      // Mini-Quiz vuelve a la vista de origen que lo abrió (vocab-words o
-      // grammar), no siempre a la grilla — mismo destino que su propio
-      // botón de "Volver" (jpMiniQuizBackBtn), ver startMiniQuiz().
-      if (!jpViewMiniQuiz.hidden) return showJpView(miniQuizReturnView);
-      showJpView("grid");
+  if (jpFloatingBackBtn) jpFloatingBackBtn.addEventListener("click", jpBack);
+
+  // "Modo Libre" — pedido explícito, ver comentario junto a jpFreeRoamMode
+  // (arriba, junto a JP_WORLDS). Refresca el mapa visible en ese momento
+  // (Mundos o Contenido) para que el efecto se vea al instante, sin salir
+  // y volver a entrar.
+  if (jpFreeRoamToggleBtn) {
+    jpFreeRoamToggleBtn.addEventListener("click", () => {
+      jpFreeRoamMode = !jpFreeRoamMode;
+      jpFreeRoamToggleBtn.classList.toggle("btn-jp-floating-side--active", jpFreeRoamMode);
+      if (!jpViewWorldMap.hidden) renderJpWorldMap();
+      if (!jpViewWorldContent.hidden) renderJpWorldContentMap(jpCurrentWorldId);
     });
   }
+
+  // Accesos laterales flotantes (pedido explícito: "accesos directos
+  // flotantes... visibles desde ambos niveles de mapa"). Diccionario
+  // empuja un frame de vuelta a jpLastMapView (Mundos o Contenido, el que
+  // estuviera abierto al tocarlo) — Trazos Reales es un modal aparte
+  // (#hanzi-writer-modal) con su propio cierre, no necesita pila.
+  if (jpDictShortcutBtn) {
+    jpDictShortcutBtn.addEventListener("click", () => {
+      pushJpBackFrame(() => showJpView(jpLastMapView));
+      showJpView("vocab");
+    });
+  }
+  if (jpHanziShortcutBtn) {
+    jpHanziShortcutBtn.addEventListener("click", () => {
+      renderHanziWriterGrids();
+      hanziWriterModal.hidden = false;
+    });
+  }
+  if (jpRoadmapEntryBtn) {
+    jpRoadmapEntryBtn.addEventListener("click", () => {
+      pushJpBackFrame(() => showJpView("world-map"));
+      showJpView("roadmap");
+    });
+  }
+  if (jpWorldContentBackBtn) jpWorldContentBackBtn.addEventListener("click", jpBack);
 
   // ---------------- "Continuar donde lo dejaste" / recomendación de repaso ----------------
   // Un solo componente (#jp-continue-card, en la grilla principal) cubre
@@ -19442,6 +19573,226 @@ document.addEventListener("DOMContentLoaded", () => {
   // referencia que compartió el usuario.
   const JP_ROADMAP_PATH_X = [50, 76, 58, 24, 42, 74, 56, 26, 50];
 
+  // ---------------- Mapa de Mundos (arquitectura de navegación) ----------------
+  // Rediseño estructural pedido explícito: Nihongo pasa de un menú plano
+  // (grilla + pestañas, jp-view-grid, retirado) a un sistema de MAPAS. El
+  // Mapa de Mundos (jp-view-world-map) es la nueva vista de entrada del
+  // módulo — cada nodo es un "mundo" completo (no un carácter individual)
+  // que, al tocarse, abre SU PROPIO camino curvo de nodos de contenido
+  // (jp-view-world-content, ver renderJpWorldContentMap()). No se inventa
+  // ningún candado mundo-a-mundo nuevo: cada mundo reusa el mecanismo de
+  // bloqueo REAL que ya gobierna su contenido (jpKanaRowUnlockLevel()/
+  // jpYoonRowUnlockLevel() siempre devuelven 1 → Mundos 1-4 nunca están
+  // bloqueados; isNihongoTierUnlocked() → Mundos N4/N3 según el nivel
+  // INTERNO de Nihongo). "Modo Libre" (jpFreeRoamMode, más abajo) es la
+  // única forma de saltarse un candado real, y solo tiene efecto en N4/N3.
+  const JP_WORLD_NODE_X = [50, 76, 58, 24, 42, 74, 56, 26];
+
+  // Trocea KANJI_N5 (107 entradas) en grupos de ~10 — no hay práctica por
+  // fila para Kanji (a diferencia de Gojuon), así que el Mundo 3 necesita
+  // esta segmentación artificial para tener varios nodos en vez de uno solo
+  // gigante. Cada chunk abre la práctica YA EXISTENTE (startJpPractice)
+  // filtrada a esos caracteres — los candados individuales por kanji
+  // (jpKanjiUnlockLevel(), ligados al nivel GENERAL) siguen intactos.
+  const JP_KANJI_CHUNK_SIZE = 10;
+  function jpChunkKanjiList() {
+    const chunks = [];
+    for (let i = 0; i < KANJI_N5.length; i += JP_KANJI_CHUNK_SIZE) {
+      const slice = KANJI_N5.slice(i, i + JP_KANJI_CHUNK_SIZE);
+      chunks.push({ id: `kanji-chunk-${chunks.length}`, chars: slice.map((k) => k.char), startIndex: i, endIndex: i + slice.length - 1 });
+    }
+    return chunks;
+  }
+
+  // Lanza la práctica ya existente (fases/trazo -> quiz, ver
+  // startJpPractice()/showJpItem()) para UNA fila de Gojuon o UN chunk de
+  // Kanji, empujando un frame de "volver" al Mapa de Contenido del Mundo
+  // ANTES de entrar — jpBack() (más abajo) desapila ese frame cuando el
+  // usuario sale de la práctica, sin importar en qué fase quedó.
+  function startJpRowPractice(script, rowId) {
+    jpScript = script;
+    pushJpBackFrame(() => showJpView("world-content"));
+    startJpPractice(getKanaList(script).filter((k) => k.rowId === rowId));
+  }
+  function startJpKanjiChunkPractice(chunk) {
+    jpScript = "kanji";
+    pushJpBackFrame(() => showJpView("world-content"));
+    startJpPractice(getKanaList("kanji").filter((k) => chunk.chars.includes(k.char)));
+  }
+
+  // Abre UN punto de gramática específico dentro de la lista completa
+  // (renderN5GrammarList() no tiene vista propia por punto — a diferencia
+  // de Vocabulario/Conversaciones — así que esto la reutiliza sin cambios
+  // y solo hace scroll + expande la tarjeta correspondiente, identificada
+  // por su índice en el array vía data-grammar-id, ver renderN5GrammarList()).
+  function openJpGrammarPoint(tier, index) {
+    pushJpBackFrame(() => showJpView("world-content"));
+    jpActiveLevel = tier;
+    showJpView("grammar");
+    requestAnimationFrame(() => {
+      const card = jpGrammarList.querySelector(`[data-grammar-id="${index}"]`);
+      if (!card) return;
+      card.scrollIntoView({ behavior: "smooth", block: "center" });
+      const body = card.querySelector(".jp-grammar-card__body");
+      if (body && body.hidden) {
+        body.hidden = false;
+        card.classList.add("jp-grammar-card--open");
+      }
+    });
+  }
+
+  // Abre UNA escena de conversación directo (sin pasar por la grilla
+  // intermedia, cada escena es su propio nodo del mapa) — reusa
+  // showJpView("conversations")/openConversationScene() sin cambios; el
+  // breve paso por la grilla (invisible, la tapa openConversationScene()
+  // en el mismo tick) evita duplicar la lógica de mostrar/ocultar vistas.
+  function openJpConversationFromMap(tier, sceneId) {
+    pushJpBackFrame(() => showJpView("world-content"));
+    jpActiveLevel = tier;
+    showJpView("conversations");
+    openConversationScene(sceneId);
+  }
+
+  const JP_WORLDS = {
+    hiragana: {
+      id: "hiragana",
+      titleKey: "jpWorldHiragana",
+      glyph: "あ",
+      locked: () => false,
+      buildContentStops: () =>
+        GOJUON_ROWS.map((row) => ({
+          glyph: row.hiragana[0],
+          title: formatGojuonRowLabel(row),
+          locked: false,
+          onClick: () => startJpRowPractice("hiragana", row.id),
+        })),
+    },
+    katakana: {
+      id: "katakana",
+      titleKey: "jpWorldKatakana",
+      glyph: "ア",
+      locked: () => false,
+      buildContentStops: () =>
+        GOJUON_ROWS.map((row) => ({
+          glyph: row.katakana[0],
+          title: formatGojuonRowLabel(row),
+          locked: false,
+          onClick: () => startJpRowPractice("katakana", row.id),
+        })).concat([
+          {
+            glyph: "きゃ",
+            title: t("jpYoonOpenBtn"),
+            locked: false,
+            onClick: () => {
+              pushJpBackFrame(() => showJpView("world-content"));
+              showJpView("yoon");
+            },
+          },
+        ]),
+    },
+    "kanji-n5": {
+      id: "kanji-n5",
+      titleKey: "jpWorldKanjiN5",
+      glyph: "字",
+      locked: () => false,
+      buildContentStops: () =>
+        jpChunkKanjiList().map((chunk, i) => ({
+          glyph: chunk.chars[0],
+          title: `${t("jpKanjiN5Title")} ${i + 1}`,
+          sublabel: `${chunk.startIndex + 1}-${chunk.endIndex + 1}`,
+          locked: false,
+          onClick: () => startJpKanjiChunkPractice(chunk),
+        })),
+    },
+    "n5-content": {
+      id: "n5-content",
+      titleKey: "jpWorldN5Content",
+      glyph: "文",
+      locked: () => false,
+      buildContentStops: () => {
+        const grammarStops = N5_GRAMMAR_POINTS.map((point, index) => ({
+          glyph: point.label,
+          title: point.label,
+          locked: false,
+          onClick: () => openJpGrammarPoint("n5", index),
+        }));
+        const conversationStops = N5_CONVERSATION_SCENES.map((scene) => ({
+          glyph: scene.icon,
+          title: t(scene.titleKey),
+          locked: false,
+          onClick: () => openJpConversationFromMap("n5", scene.id),
+        }));
+        const particleStop = {
+          glyph: "🧩",
+          title: t("jpParticlesOpenBtn"),
+          locked: false,
+          onClick: () => {
+            pushJpBackFrame(() => showJpView("world-content"));
+            startMiniQuiz(buildParticleQuizItems(), "world-content", "particles");
+          },
+        };
+        return grammarStops.concat(conversationStops).concat([particleStop]);
+      },
+    },
+    n4: {
+      id: "n4",
+      titleKey: "jpWorldN4",
+      glyph: "N4",
+      locked: () => !isNihongoTierUnlocked("n4"),
+      buildContentStops: () => {
+        const grammarStops = N4_GRAMMAR_POINTS.map((point, index) => ({
+          glyph: point.label,
+          title: point.label,
+          locked: false,
+          onClick: () => openJpGrammarPoint("n4", index),
+        }));
+        const conversationStops = N4_CONVERSATION_SCENES.map((scene) => ({
+          glyph: scene.icon,
+          title: t(scene.titleKey),
+          locked: false,
+          onClick: () => openJpConversationFromMap("n4", scene.id),
+        }));
+        return grammarStops.concat(conversationStops);
+      },
+    },
+    n3: {
+      id: "n3",
+      titleKey: "jpWorldN3",
+      glyph: "N3",
+      locked: () => !isNihongoTierUnlocked("n3"),
+      buildContentStops: () => {
+        const grammarStops = N3_GRAMMAR_POINTS.map((point, index) => ({
+          glyph: point.label,
+          title: point.label,
+          locked: false,
+          onClick: () => openJpGrammarPoint("n3", index),
+        }));
+        const conversationStops = N3_CONVERSATION_SCENES.map((scene) => ({
+          glyph: scene.icon,
+          title: t(scene.titleKey),
+          locked: false,
+          onClick: () => openJpConversationFromMap("n3", scene.id),
+        }));
+        return grammarStops.concat(conversationStops);
+      },
+    },
+  };
+  const JP_WORLD_ORDER = ["hiragana", "katakana", "kanji-n5", "n5-content", "exam-gate", "n4", "n3"];
+
+  let jpCurrentWorldId = "hiragana";
+  // "Modo Libre" (pedido explícito, distinto del "Modo Práctica" ya
+  // existente — ver jpMode/jpConfigModeRow más abajo, ese controla si la
+  // práctica de kana pasa por trazos antes del quiz, esto es de navegación
+  // pura). Desbloquea temporalmente Mundos N4/N3 para repasar sin importar
+  // el nivel INTERNO real — NUNCA muta jpLevel/jpXp/n5ProgressCache ni
+  // llama a grantJpXP(), ver isJpWorldLocked() más abajo, el único punto de
+  // verdad de candado que lo consulta. No se persiste (pedido explícito:
+  // "temporal") — se resetea a false cada vez que se abre el módulo.
+  let jpFreeRoamMode = false;
+  function isJpWorldLocked(world) {
+    return world.locked() && !jpFreeRoamMode;
+  }
+
   function getJpVocabCategories() {
     return JP_LEVEL_CONTENT[jpActiveLevel].vocab;
   }
@@ -19503,38 +19854,48 @@ document.addEventListener("DOMContentLoaded", () => {
   // personajes atada al nivel INTERNO de Nihongo, con candados y nodos
   // numerados, mismo lenguaje visual "atenuado + 🔒" que ya usan las
   // tarjetas de N4/N3 (ver applyJpCardLock()) y los tiles de Kanji.
-  function renderJpRoadmap() {
-    if (!jpRoadmapTrack) return;
-    jpRoadmapTrack.innerHTML = "";
-    const jpLevel = state.pillars.aprendizaje.jpLevel;
-
-    // Todas las paradas del camino, en el MISMO orden que se van a dibujar
-    // de abajo hacia arriba: los 8 hitos reales + el nodo final estático
-    // "Próximamente". Se arma la lista completa primero para poder calcular
-    // la posición (x,y) de cada nodo y trazar la curva SVG que los conecta
-    // antes de crear los elementos del DOM.
-    const stops = JP_ROADMAP_MILESTONES.map((m) => ({ milestone: m, future: false })).concat([{ milestone: null, future: true }]);
+  // Motor genérico del camino curvo — extraído de lo que antes era el
+  // cuerpo entero de renderJpRoadmap() (única fuente del efecto visual
+  // "sendero SVG sinuoso" en toda la app). Ahora lo reutilizan 3 vistas:
+  // el Mapa de Mundos, el Mapa de Contenido de cada mundo, y el "Nivel de
+  // Miikaeru" cosmético original (renderJpRoadmap(), más abajo, queda
+  // como un wrapper delgado sobre esto — cero cambio visual/funcional ahí).
+  //
+  // `stops`: array de paradas, cada una:
+  //   x?: 0-100 (si falta, se genera un zigzag determinístico)
+  //   locked: boolean
+  //   disabled?: boolean (nodo estático, sin click posible — ej. "Próximamente")
+  //   imgSrc?: string (retrato/imagen) | glyph?: string (carácter/emoji)
+  //   companionSrc?: string (marca de agua AL COSTADO, nunca dentro del nodo)
+  //   levelLabel?: string|number (chip numerado superpuesto en la esquina)
+  //   title: string
+  //   sublabel?: string (texto chico bajo el título, ej. candado o rango)
+  //   badgeText?: string (texto de acción cuando está desbloqueado y es clickeable)
+  //   variant?: string (sufijo de clase módificadora, ej. "world"/"exam-gate"/"future")
+  //   extraClass?: string (clase(s) adicionales tal cual, ej. tinte de Modo Libre)
+  //   onClick?: () => void | onLockedClick?: () => void
+  function renderMapPath(trackEl, stops) {
+    if (!trackEl) return;
+    trackEl.innerHTML = "";
     const total = stops.length;
+    if (!total) return;
     const topPad = 7;
     const bottomPad = 7;
     const span = 100 - topPad - bottomPad;
-    // index 0 (nivel más bajo) queda ABAJO (y% alto); el último índice
-    // (nodo "Próximamente") queda ARRIBA (y% bajo) — pedido explícito:
-    // el recorrido avanza de abajo hacia arriba.
+    // index 0 queda ABAJO (y% alto); el último índice queda ARRIBA (y% bajo)
+    // — el recorrido avanza de abajo hacia arriba (pedido explícito).
     const points = stops.map((stop, i) => ({
-      x: JP_ROADMAP_PATH_X[i] ?? 50,
-      y: 100 - bottomPad - (i / (total - 1)) * span,
+      x: stop.x ?? JP_WORLD_NODE_X[i % JP_WORLD_NODE_X.length],
+      y: total === 1 ? 50 : 100 - bottomPad - (i / (total - 1)) * span,
     }));
     // Alto real del contenedor en píxeles — el SVG usa viewBox 0 0 100 100
     // con preserveAspectRatio="none", así que estira sin importar el alto,
     // pero necesitamos un alto fijo para que los nodos (posicionados en %)
     // no queden amontonados ni demasiado separados.
-    jpRoadmapTrack.style.height = `${total * 140 + 40}px`;
+    trackEl.style.height = `${total * 140 + 40}px`;
 
     // Curva suave a través de todos los puntos (técnica estándar: control
-    // Q en el punto actual, destino en el punto medio hacia el siguiente),
-    // imitando el sendero curvo de la captura de referencia sin necesitar
-    // coordenadas manuales por pantalla.
+    // Q en el punto actual, destino en el punto medio hacia el siguiente).
     let pathD = `M ${points[0].x} ${points[0].y}`;
     for (let i = 0; i < points.length - 1; i++) {
       const curr = points[i];
@@ -19555,62 +19916,52 @@ document.addEventListener("DOMContentLoaded", () => {
     pathEl.setAttribute("class", "jp-roadmap__path-line");
     pathEl.setAttribute("d", pathD);
     svg.appendChild(pathEl);
-    jpRoadmapTrack.appendChild(svg);
+    trackEl.appendChild(svg);
 
     stops.forEach((stop, i) => {
       const { x, y } = points[i];
 
-      // Marca de agua de personaje (Metrakaela/Demiure) al COSTADO del
-      // camino — nunca dentro del círculo del nodo — alineada a la altura
-      // de su hito pero desplazada hacia el lado con más espacio libre.
-      if (stop.milestone && stop.milestone.companionSrc) {
+      // Marca de agua de personaje al COSTADO del camino — nunca dentro
+      // del círculo del nodo — alineada a la altura de su parada pero
+      // desplazada hacia el lado con más espacio libre.
+      if (stop.companionSrc) {
         const scenery = document.createElement("img");
         scenery.className = "jp-roadmap__scenery";
-        scenery.src = stop.milestone.companionSrc;
+        scenery.src = stop.companionSrc;
         scenery.alt = "";
         const sceneryX = x > 50 ? Math.max(14, x - 42) : Math.min(86, x + 42);
         scenery.style.left = `${sceneryX}%`;
         scenery.style.top = `${y}%`;
-        jpRoadmapTrack.appendChild(scenery);
+        trackEl.appendChild(scenery);
       }
 
       const node = document.createElement("button");
       node.type = "button";
       node.style.left = `${x}%`;
       node.style.top = `${y}%`;
-
-      if (stop.future) {
-        node.className = "jp-roadmap__node jp-roadmap__node--locked jp-roadmap__node--future";
-        node.disabled = true;
-        const portraitWrap = document.createElement("div");
-        portraitWrap.className = "jp-roadmap__portrait-wrap";
-        const csLock = document.createElement("span");
-        csLock.className = "jp-roadmap__lock";
-        csLock.textContent = "🔒";
-        portraitWrap.appendChild(csLock);
-        node.appendChild(portraitWrap);
-        const csTitle = document.createElement("span");
-        csTitle.className = "jp-roadmap__title";
-        csTitle.textContent = t("jpRoadmapComingSoon");
-        node.appendChild(csTitle);
-        jpRoadmapTrack.appendChild(node);
-        return;
-      }
-
-      const milestone = stop.milestone;
-      const unlocked = jpLevel >= milestone.level;
-      node.className = "jp-roadmap__node" + (unlocked ? "" : " jp-roadmap__node--locked");
+      node.className =
+        "jp-roadmap__node" +
+        (stop.variant ? ` jp-roadmap__node--${stop.variant}` : "") +
+        (stop.extraClass ? ` ${stop.extraClass}` : "") +
+        (stop.locked ? " jp-roadmap__node--locked" : "");
 
       const portraitWrap = document.createElement("div");
       portraitWrap.className = "jp-roadmap__portrait-wrap";
 
-      const portrait = document.createElement("img");
-      portrait.className = "jp-roadmap__portrait";
-      portrait.src = milestone.src;
-      portrait.alt = t(milestone.titleKey);
-      portraitWrap.appendChild(portrait);
+      if (stop.imgSrc) {
+        const img = document.createElement("img");
+        img.className = "jp-roadmap__portrait";
+        img.src = stop.imgSrc;
+        img.alt = stop.title;
+        portraitWrap.appendChild(img);
+      } else if (stop.glyph) {
+        const glyph = document.createElement("span");
+        glyph.className = "jp-roadmap__glyph";
+        glyph.textContent = stop.glyph;
+        portraitWrap.appendChild(glyph);
+      }
 
-      if (!unlocked) {
+      if (stop.locked) {
         const lock = document.createElement("span");
         lock.className = "jp-roadmap__lock";
         lock.textContent = "🔒";
@@ -19619,42 +19970,156 @@ document.addEventListener("DOMContentLoaded", () => {
 
       node.appendChild(portraitWrap);
 
-      const levelBadge = document.createElement("span");
-      levelBadge.className = "jp-roadmap__level";
-      levelBadge.textContent = milestone.level;
-      portraitWrap.appendChild(levelBadge);
+      if (stop.levelLabel !== undefined) {
+        const levelBadge = document.createElement("span");
+        levelBadge.className = "jp-roadmap__level";
+        levelBadge.textContent = stop.levelLabel;
+        portraitWrap.appendChild(levelBadge);
+      }
 
       const title = document.createElement("span");
       title.className = "jp-roadmap__title";
-      title.textContent = t(milestone.titleKey);
+      title.textContent = stop.title;
       node.appendChild(title);
 
-      if (!unlocked) {
-        const badge = document.createElement("span");
-        badge.className = "jp-roadmap__badge";
-        badge.textContent = t("jpLevelLockedBadge").replace("{level}", milestone.level);
-        node.appendChild(badge);
-        node.addEventListener("click", () => notifyJpLocked(milestone.level));
-      } else if (milestone.tier) {
-        // Nodos 21/41: además de decorativos, son un atajo real — un clic
-        // cambia jpActiveLevel y navega directo al Vocabulario del tier
-        // que el usuario acaba de desbloquear (mismos umbrales que
-        // JP_LEVEL_CONTENT, ver comentario junto a JP_ROADMAP_MILESTONES).
-        const badge = document.createElement("span");
-        badge.className = "jp-roadmap__badge jp-roadmap__badge--action";
-        badge.textContent = t("jpRoadmapGoToTier");
-        node.appendChild(badge);
-        node.addEventListener("click", () => {
-          jpActiveLevel = milestone.tier;
-          Array.from(jpLevelToggle.querySelectorAll(".jp-level-btn")).forEach((b) => {
-            b.classList.toggle("jp-level-btn--active", b.dataset.level === milestone.tier);
-          });
-          showJpView("vocab");
-        });
+      if (stop.sublabel) {
+        const sublabel = document.createElement("span");
+        sublabel.className = "jp-roadmap__badge";
+        sublabel.textContent = stop.sublabel;
+        node.appendChild(sublabel);
       }
 
-      jpRoadmapTrack.appendChild(node);
+      if (stop.disabled) {
+        node.disabled = true;
+      } else if (stop.locked) {
+        node.addEventListener("click", () => {
+          if (stop.onLockedClick) stop.onLockedClick();
+        });
+      } else if (stop.onClick) {
+        if (stop.badgeText) {
+          const badge = document.createElement("span");
+          badge.className = "jp-roadmap__badge jp-roadmap__badge--action";
+          badge.textContent = stop.badgeText;
+          node.appendChild(badge);
+        }
+        node.addEventListener("click", stop.onClick);
+      }
+
+      trackEl.appendChild(node);
     });
+  }
+
+  // "Nivel de Miikaeru" (antes "Mapa de Progreso") — evolución cosmética
+  // de personajes atada al nivel INTERNO de Nihongo, sin relación con el
+  // contenido real de estudio. Wrapper delgado sobre renderMapPath(): cero
+  // cambio visual/funcional respecto a la versión anterior, incluyendo los
+  // atajos de los nodos 21/41 (ahora navegan al Mapa de Contenido de
+  // N4/N3 en vez de a Vocabulario, ya que Vocabulario pasó a ser el acceso
+  // lateral de Diccionario — ver openLangModule()... no, ver
+  // jpDictShortcutBtn más abajo).
+  function renderJpRoadmap() {
+    if (!jpRoadmapTrack) return;
+    const jpLevel = state.pillars.aprendizaje.jpLevel;
+    const milestoneStops = JP_ROADMAP_MILESTONES.map((m, i) => {
+      const locked = jpLevel < m.level;
+      return {
+        x: JP_ROADMAP_PATH_X[i],
+        locked,
+        imgSrc: m.src,
+        companionSrc: m.companionSrc,
+        levelLabel: m.level,
+        title: t(m.titleKey),
+        sublabel: locked ? t("jpLevelLockedBadge").replace("{level}", m.level) : undefined,
+        badgeText: !locked && m.tier ? t("jpRoadmapGoToTier") : undefined,
+        onLockedClick: () => notifyJpLocked(m.level),
+        onClick:
+          !locked && m.tier
+            ? () => {
+                jpCurrentWorldId = m.tier;
+                pushJpBackFrame(() => showJpView("roadmap"));
+                showJpView("world-content");
+              }
+            : undefined,
+      };
+    });
+    const comingSoonStop = {
+      x: JP_ROADMAP_PATH_X[JP_ROADMAP_MILESTONES.length] ?? 50,
+      locked: true,
+      disabled: true,
+      variant: "future",
+      title: t("jpRoadmapComingSoon"),
+    };
+    renderMapPath(jpRoadmapTrack, milestoneStops.concat([comingSoonStop]));
+  }
+
+  // Mapa de Mundos — nueva vista de entrada del módulo (ver
+  // APP_MODULES.japanese.onOpen más abajo). Un nodo por mundo (ver
+  // JP_WORLDS más arriba) + un nodo especial de Examen de Nivel (estilo
+  // "portal", no personaje) que sirve como mecanismo real de desbloqueo:
+  // aprobar el examen sube jpLevel vía setJpLevelFloor(), lo que
+  // desbloquea Mundos N4/N3 sin pasar por "Modo Libre".
+  function renderJpWorldMap() {
+    if (!jpWorldMapTrack) return;
+    renderJpTierProgressBars();
+    const stops = JP_WORLD_ORDER.map((key, i) => {
+      const x = JP_WORLD_NODE_X[i % JP_WORLD_NODE_X.length];
+      if (key === "exam-gate") {
+        return {
+          x,
+          glyph: "🚪",
+          variant: "exam-gate",
+          title: t("jpWorldExamGate"),
+          locked: false,
+          badgeText: t("jpWorldExamGateBadge"),
+          onClick: () => {
+            pushJpBackFrame(() => showJpView("world-map"));
+            startJpLevelExam();
+          },
+        };
+      }
+      const world = JP_WORLDS[key];
+      const locked = isJpWorldLocked(world);
+      const freeRoamed = locked === false && world.locked() === true;
+      return {
+        x,
+        glyph: world.glyph,
+        variant: "world",
+        extraClass: freeRoamed ? "jp-roadmap__node--freeroam" : undefined,
+        title: t(world.titleKey),
+        locked,
+        sublabel: locked ? t("jpLevelLockedBadge").replace("{level}", JP_LEVEL_CONTENT[world.id] ? JP_LEVEL_CONTENT[world.id].unlockLevel : 1) : undefined,
+        badgeText: locked ? undefined : t("jpWorldEnterBadge"),
+        onLockedClick: () => notifyJpLocked(JP_LEVEL_CONTENT[world.id] ? JP_LEVEL_CONTENT[world.id].unlockLevel : 1),
+        onClick: locked
+          ? undefined
+          : () => {
+              jpCurrentWorldId = world.id;
+              pushJpBackFrame(() => showJpView("world-map"));
+              showJpView("world-content");
+            },
+      };
+    });
+    renderMapPath(jpWorldMapTrack, stops);
+  }
+
+  // Mapa de Contenido de un Mundo — nodos = filas de kana / chunks de
+  // kanji / puntos de gramática / escenas de conversación (ver
+  // JP_WORLDS[id].buildContentStops()). Los nodos individuales NUNCA
+  // llevan candado propio (el candado real ya se resolvió al nivel del
+  // Mundo, en el Mapa de Mundos) — si el mundo se desbloqueó vía "Modo
+  // Libre" en vez de progreso real, se aplica un tinte visual distinto a
+  // TODOS sus nodos para que quede claro que es repaso, no progreso real.
+  function renderJpWorldContentMap(worldId) {
+    if (!jpWorldContentTrack) return;
+    const world = JP_WORLDS[worldId];
+    if (!world) return;
+    if (jpWorldContentTitle) jpWorldContentTitle.textContent = t(world.titleKey);
+    const freeRoamed = jpFreeRoamMode && world.locked();
+    const stops = world.buildContentStops().map((stop) => ({
+      ...stop,
+      extraClass: freeRoamed ? "jp-roadmap__node--freeroam" : stop.extraClass,
+    }));
+    renderMapPath(jpWorldContentTrack, stops);
   }
 
   // Selector N5/N4/N3 (#jp-level-toggle en index.html) — el click ya lee
@@ -19748,6 +20213,86 @@ document.addEventListener("DOMContentLoaded", () => {
     const record = { id, score, total, completedAt: Date.now() };
     n5ProgressCache[id] = record;
     n5DbPut("progress", record);
+  }
+
+  // ---------------- Barras de progreso por bloque (N5/N4/N3) ----------------
+  // Pedido explícito: "barras de progreso claras... porcentaje completado
+  // de cada gran bloque". Fórmula usando SOLO datos que ya existían más un
+  // agregado barato (ver markJpConversationSeen() más abajo): dominio de
+  // caracteres (mastery, solo N5 tiene kana/kanji), categorías de
+  // vocabulario+gramática completadas (n5ProgressCache, mismo mecanismo de
+  // "✓ Completado" que ya usan las tarjetas) y conversaciones vistas.
+  // jpVocabProgressIdFor()/jpGrammarProgressIdFor() son versiones
+  // parametrizadas por tier de jpVocabProgressId()/jpGrammarProgressId()
+  // (esas dos siguen usando jpActiveLevel implícito, para el tier que el
+  // usuario tiene abierto en Vocabulario/Gramática) — acá se necesita
+  // calcular los 3 tiers a la vez sin importar cuál esté activo.
+  function jpVocabProgressIdFor(tier, catId) {
+    const prefix = JP_LEVEL_CONTENT[tier].progressPrefix;
+    return prefix ? `vocab:${prefix}:${catId}` : `vocab:${catId}`;
+  }
+  function jpGrammarProgressIdFor(tier) {
+    const prefix = JP_LEVEL_CONTENT[tier].progressPrefix;
+    return prefix ? `grammar:${prefix}` : "grammar";
+  }
+  function jpConversationProgressId(tier, sceneId) {
+    const prefix = JP_LEVEL_CONTENT[tier].progressPrefix;
+    return prefix ? `conv:${prefix}:${sceneId}` : `conv:${sceneId}`;
+  }
+  // Marca una escena de conversación como "vista" la primera vez que se
+  // abre — no existía ningún tracking por escena antes de esto. Reusa
+  // TAL CUAL el mismo store de progreso ya existente (n5DbPut("progress"),
+  // saveN5Progress()) con un namespace de id nuevo (`conv:...`), cero
+  // cambio de esquema.
+  function markJpConversationSeen(tier, sceneId) {
+    const id = jpConversationProgressId(tier, sceneId);
+    if (n5ProgressCache[id]) return;
+    saveN5Progress(id, 1, 1);
+    renderJpTierProgressBars();
+  }
+  function jpMasteryProgressFraction(prefixes, total) {
+    if (total <= 0) return 0;
+    const mastery = state.pillars.aprendizaje.mastery;
+    const count = Object.keys(mastery).filter((key) => mastery[key] >= JP_MASTERY_THRESHOLD && prefixes.some((p) => key.startsWith(p))).length;
+    return count / total;
+  }
+  function jpContentProgressFraction(tier) {
+    const content = JP_LEVEL_CONTENT[tier];
+    const vocabDone = content.vocab.filter((cat) => n5ProgressCache[jpVocabProgressIdFor(tier, cat.id)]).length;
+    const grammarDone = n5ProgressCache[jpGrammarProgressIdFor(tier)] ? 1 : 0;
+    const total = content.vocab.length + 1;
+    return total > 0 ? (vocabDone + grammarDone) / total : 0;
+  }
+  function jpConversationProgressFraction(tier) {
+    const content = JP_LEVEL_CONTENT[tier];
+    if (!content.conversations.length) return 0;
+    const seen = content.conversations.filter((scene) => n5ProgressCache[jpConversationProgressId(tier, scene.id)]).length;
+    return seen / content.conversations.length;
+  }
+  // N5 = 199 (46 hiragana + 46 katakana + 107 kanji) — único tier con
+  // componente de kana/kanji; N4/N3 no tienen caracteres propios, solo
+  // vocabulario/gramática/conversaciones.
+  function computeJpTierProgress(tier) {
+    if (tier === "n5") {
+      const kana = jpMasteryProgressFraction(["hiragana:", "katakana:", "kanji:"], 199);
+      const content = jpContentProgressFraction("n5");
+      const conv = jpConversationProgressFraction("n5");
+      return Math.round((0.4 * kana + 0.4 * content + 0.2 * conv) * 100);
+    }
+    const content = jpContentProgressFraction(tier);
+    const conv = jpConversationProgressFraction(tier);
+    return Math.round((0.6 * content + 0.4 * conv) * 100);
+  }
+  function renderJpTierProgressBars() {
+    if (!jpTierProgressBars) return;
+    ["n5", "n4", "n3"].forEach((tier) => {
+      const fill = jpTierProgressBars.querySelector(`[data-tier-fill="${tier}"]`);
+      const label = jpTierProgressBars.querySelector(`[data-tier-pct="${tier}"]`);
+      if (!fill && !label) return;
+      const pct = computeJpTierProgress(tier);
+      if (fill) fill.style.width = `${pct}%`;
+      if (label) label.textContent = `${pct}%`;
+    });
   }
 
   // ---------------- Vocabulario N5 (por categoría) ----------------
@@ -19907,7 +20452,7 @@ document.addEventListener("DOMContentLoaded", () => {
     showJpView("vocab-words");
   }
 
-  jpVocabBackBtn.addEventListener("click", () => showJpView("grid"));
+  jpVocabBackBtn.addEventListener("click", jpBack);
   jpVocabWordsBackBtn.addEventListener("click", () => showJpView("vocab"));
 
   // ---------------- Buscador de Diccionario (local + Jisho best-effort) ----------------
@@ -20055,9 +20600,15 @@ document.addEventListener("DOMContentLoaded", () => {
     if (jpGrammarQuizStartBtn) jpGrammarQuizStartBtn.hidden = jpActiveLevel !== "n5";
 
     const locked = isJpCategoryLocked();
-    getJpGrammarPoints().forEach((point) => {
+    getJpGrammarPoints().forEach((point, index) => {
       const card = document.createElement("div");
       card.className = "jp-grammar-card";
+      // Identificador estable (índice en el array) — no hay ningún campo
+      // `id` real en los puntos de gramática. Usado por
+      // openJpGrammarPoint() (Mapa de Contenido del Mundo N5/N4/N3) para
+      // hacer scroll + expandir la tarjeta correcta sin reconstruir esta
+      // lista completa en una vista aparte.
+      card.dataset.grammarId = index;
 
       const header = document.createElement("div");
       header.className = "jp-grammar-card__header";
@@ -20167,7 +20718,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  jpGrammarBackBtn.addEventListener("click", () => showJpView("grid"));
+  jpGrammarBackBtn.addEventListener("click", jpBack);
 
   // ---------------- Yōon (きゃ/しゃ/etc.) ----------------
   // Tabla de LECTURA — no practicable con trazos reales (ver comentario
@@ -20224,10 +20775,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  jpYoonBackBtn.addEventListener("click", () => showJpView("grid"));
+  jpYoonBackBtn.addEventListener("click", jpBack);
   jpYoonQuizStartBtn.addEventListener("click", () => startMiniQuiz(buildYoonQuizItems(), "yoon", "yoon"));
 
-  jpRoadmapBackBtn.addEventListener("click", () => showJpView("grid"));
+  jpRoadmapBackBtn.addEventListener("click", jpBack);
 
   // ---------------- Conversaciones Situacionales (N5_CONVERSATION_SCENES) ----------------
   // `activeConversationReader` guarda el handle {detener} que devuelve
@@ -20298,6 +20849,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const scene = getJpConversationScenes().find((s) => s.id === sceneId);
     if (!scene) return;
     saveJpContinue({ type: "conversation", sceneId: scene.id });
+    markJpConversationSeen(jpActiveLevel, scene.id);
     jpConversationReaderTitle.textContent = `${scene.icon} ${t(scene.titleKey)}`;
     jpConversationSceneGrid.hidden = true;
     jpConversationReader.hidden = false;
@@ -20308,7 +20860,7 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
-  jpConversationsBackBtn.addEventListener("click", () => showJpView("grid"));
+  jpConversationsBackBtn.addEventListener("click", jpBack);
   jpConversationReaderBackBtn.addEventListener("click", openConversationSceneGrid);
 
   // ---------------- Mini-Quiz genérico (Vocabulario / Gramática) ----------------
@@ -20762,10 +21314,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const failedUnit = jpLevelExamUnitAt(jpLevelExamUnitIndex);
       if (failedUnit && failedUnit.review) saveJpContinue(failedUnit.review);
     }
-    showJpView("grid");
+    jpBack();
   }
 
-  jpLevelExamBackBtn.addEventListener("click", () => showJpView("grid"));
+  jpLevelExamBackBtn.addEventListener("click", jpBack);
   jpLevelExamSpeakBtn.addEventListener("click", () => {
     if (jpLevelExamCurrentItem && jpLevelExamCurrentUnit && isJpExamAudioAllowed(jpLevelExamCurrentUnit.script)) speakKana(jpLevelExamCurrentItem.char);
   });
@@ -21108,7 +21660,7 @@ document.addEventListener("DOMContentLoaded", () => {
       gold: 2,
       tierXp: 5,
     });
-    showJpView("grid");
+    jpBack();
   }
 
   jpScriptToggle.addEventListener("click", (event) => {
@@ -21176,13 +21728,13 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   jpPhasesNextBtn.addEventListener("click", advanceJpQueueOrFinish);
-  jpPhasesBackBtn.addEventListener("click", () => showJpView("grid"));
+  jpPhasesBackBtn.addEventListener("click", jpBack);
   jpPhasesSpeakBtn.addEventListener("click", () => speakKana(jpQueue[jpQueueIndex].char));
 
   jpExamstrokeSkipBtn.addEventListener("click", showJpQuiz);
-  jpExamstrokeBackBtn.addEventListener("click", () => showJpView("grid"));
+  jpExamstrokeBackBtn.addEventListener("click", jpBack);
 
-  jpQuizBackBtn.addEventListener("click", () => showJpView("grid"));
+  jpQuizBackBtn.addEventListener("click", jpBack);
   jpQuizSpeakBtn.addEventListener("click", () => {
     const item = jpQueue[jpQueueIndex];
     if (item && isJpExamAudioAllowed(item.script)) speakKana(item.char);
