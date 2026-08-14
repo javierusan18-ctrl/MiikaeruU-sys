@@ -19435,6 +19435,12 @@ document.addEventListener("DOMContentLoaded", () => {
     { level: 41, titleKey: "jpRoadmapM7", src: "assets/skins/Miikaeruu/mikaeru_skin_heraldo_rugiente.png", tier: "n3", companionSrc: "assets/skins/Demiure_Drako/demiure_draconiano.png" },
     { level: 50, titleKey: "jpRoadmapM8", src: "assets/skins/Miikaeruu/mikaeru_skin_deidad_meditante.png", companionSrc: "assets/skins/Demiure_Drako/Gemini_Generated_Image_dbkzu3dbkzu3dbkz.png" },
   ];
+  // Offset horizontal (0-100, % del ancho del contenedor) de cada nodo del
+  // camino, en el MISMO orden que JP_ROADMAP_MILESTONES + 1 valor extra para
+  // el nodo final "Próximamente". Zigzag amplio e irregular (no una simple
+  // alternancia de 2 columnas) para imitar el sendero curvo de la captura de
+  // referencia que compartió el usuario.
+  const JP_ROADMAP_PATH_X = [50, 76, 58, 24, 42, 74, 56, 26, 50];
 
   function getJpVocabCategories() {
     return JP_LEVEL_CONTENT[jpActiveLevel].vocab;
@@ -19502,27 +19508,101 @@ document.addEventListener("DOMContentLoaded", () => {
     jpRoadmapTrack.innerHTML = "";
     const jpLevel = state.pillars.aprendizaje.jpLevel;
 
-    JP_ROADMAP_MILESTONES.forEach((milestone) => {
-      const unlocked = jpLevel >= milestone.level;
+    // Todas las paradas del camino, en el MISMO orden que se van a dibujar
+    // de abajo hacia arriba: los 8 hitos reales + el nodo final estático
+    // "Próximamente". Se arma la lista completa primero para poder calcular
+    // la posición (x,y) de cada nodo y trazar la curva SVG que los conecta
+    // antes de crear los elementos del DOM.
+    const stops = JP_ROADMAP_MILESTONES.map((m) => ({ milestone: m, future: false })).concat([{ milestone: null, future: true }]);
+    const total = stops.length;
+    const topPad = 7;
+    const bottomPad = 7;
+    const span = 100 - topPad - bottomPad;
+    // index 0 (nivel más bajo) queda ABAJO (y% alto); el último índice
+    // (nodo "Próximamente") queda ARRIBA (y% bajo) — pedido explícito:
+    // el recorrido avanza de abajo hacia arriba.
+    const points = stops.map((stop, i) => ({
+      x: JP_ROADMAP_PATH_X[i] ?? 50,
+      y: 100 - bottomPad - (i / (total - 1)) * span,
+    }));
+    // Alto real del contenedor en píxeles — el SVG usa viewBox 0 0 100 100
+    // con preserveAspectRatio="none", así que estira sin importar el alto,
+    // pero necesitamos un alto fijo para que los nodos (posicionados en %)
+    // no queden amontonados ni demasiado separados.
+    jpRoadmapTrack.style.height = `${total * 140 + 40}px`;
+
+    // Curva suave a través de todos los puntos (técnica estándar: control
+    // Q en el punto actual, destino en el punto medio hacia el siguiente),
+    // imitando el sendero curvo de la captura de referencia sin necesitar
+    // coordenadas manuales por pantalla.
+    let pathD = `M ${points[0].x} ${points[0].y}`;
+    for (let i = 0; i < points.length - 1; i++) {
+      const curr = points[i];
+      const next = points[i + 1];
+      const midX = (curr.x + next.x) / 2;
+      const midY = (curr.y + next.y) / 2;
+      pathD += ` Q ${curr.x} ${curr.y}, ${midX} ${midY}`;
+    }
+    const last = points[points.length - 1];
+    pathD += ` L ${last.x} ${last.y}`;
+
+    const svgNs = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(svgNs, "svg");
+    svg.setAttribute("class", "jp-roadmap__path");
+    svg.setAttribute("viewBox", "0 0 100 100");
+    svg.setAttribute("preserveAspectRatio", "none");
+    const pathEl = document.createElementNS(svgNs, "path");
+    pathEl.setAttribute("class", "jp-roadmap__path-line");
+    pathEl.setAttribute("d", pathD);
+    svg.appendChild(pathEl);
+    jpRoadmapTrack.appendChild(svg);
+
+    stops.forEach((stop, i) => {
+      const { x, y } = points[i];
+
+      // Marca de agua de personaje (Metrakaela/Demiure) al COSTADO del
+      // camino — nunca dentro del círculo del nodo — alineada a la altura
+      // de su hito pero desplazada hacia el lado con más espacio libre.
+      if (stop.milestone && stop.milestone.companionSrc) {
+        const scenery = document.createElement("img");
+        scenery.className = "jp-roadmap__scenery";
+        scenery.src = stop.milestone.companionSrc;
+        scenery.alt = "";
+        const sceneryX = x > 50 ? Math.max(14, x - 42) : Math.min(86, x + 42);
+        scenery.style.left = `${sceneryX}%`;
+        scenery.style.top = `${y}%`;
+        jpRoadmapTrack.appendChild(scenery);
+      }
+
       const node = document.createElement("button");
       node.type = "button";
+      node.style.left = `${x}%`;
+      node.style.top = `${y}%`;
+
+      if (stop.future) {
+        node.className = "jp-roadmap__node jp-roadmap__node--locked jp-roadmap__node--future";
+        node.disabled = true;
+        const portraitWrap = document.createElement("div");
+        portraitWrap.className = "jp-roadmap__portrait-wrap";
+        const csLock = document.createElement("span");
+        csLock.className = "jp-roadmap__lock";
+        csLock.textContent = "🔒";
+        portraitWrap.appendChild(csLock);
+        node.appendChild(portraitWrap);
+        const csTitle = document.createElement("span");
+        csTitle.className = "jp-roadmap__title";
+        csTitle.textContent = t("jpRoadmapComingSoon");
+        node.appendChild(csTitle);
+        jpRoadmapTrack.appendChild(node);
+        return;
+      }
+
+      const milestone = stop.milestone;
+      const unlocked = jpLevel >= milestone.level;
       node.className = "jp-roadmap__node" + (unlocked ? "" : " jp-roadmap__node--locked");
 
       const portraitWrap = document.createElement("div");
       portraitWrap.className = "jp-roadmap__portrait-wrap";
-
-      // Marca de agua de personaje secundario (Metrakaela/Demiure en los
-      // tramos avanzados) — puramente decorativa, va DETRÁS del retrato
-      // principal (ver z-index en style.css) y nunca lleva alt textual
-      // real para no confundir lectores de pantalla con contenido que no
-      // aporta información nueva.
-      if (milestone.companionSrc) {
-        const companion = document.createElement("img");
-        companion.className = "jp-roadmap__companion";
-        companion.src = milestone.companionSrc;
-        companion.alt = "";
-        portraitWrap.appendChild(companion);
-      }
 
       const portrait = document.createElement("img");
       portrait.className = "jp-roadmap__portrait";
@@ -19541,8 +19621,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const levelBadge = document.createElement("span");
       levelBadge.className = "jp-roadmap__level";
-      levelBadge.textContent = `Nv. ${milestone.level}`;
-      node.appendChild(levelBadge);
+      levelBadge.textContent = milestone.level;
+      portraitWrap.appendChild(levelBadge);
 
       const title = document.createElement("span");
       title.className = "jp-roadmap__title";
@@ -19575,23 +19655,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       jpRoadmapTrack.appendChild(node);
     });
-
-    // Nodo final "Próximamente" — mismo criterio que N2/N1: visible pero
-    // inerte (disabled real), deja claro que el camino sigue creciendo
-    // sin prometer un desbloqueo que todavía no existe.
-    const comingSoon = document.createElement("button");
-    comingSoon.type = "button";
-    comingSoon.className = "jp-roadmap__node jp-roadmap__node--locked jp-roadmap__node--future";
-    comingSoon.disabled = true;
-    const csLock = document.createElement("span");
-    csLock.className = "jp-roadmap__lock";
-    csLock.textContent = "🔒";
-    comingSoon.appendChild(csLock);
-    const csTitle = document.createElement("span");
-    csTitle.className = "jp-roadmap__title";
-    csTitle.textContent = t("jpRoadmapComingSoon");
-    comingSoon.appendChild(csTitle);
-    jpRoadmapTrack.appendChild(comingSoon);
   }
 
   // Selector N5/N4/N3 (#jp-level-toggle en index.html) — el click ya lee
