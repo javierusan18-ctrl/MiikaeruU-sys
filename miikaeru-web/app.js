@@ -22637,16 +22637,20 @@ document.addEventListener("DOMContentLoaded", () => {
         switchBtn.addEventListener("click", () => switchProfile(profile.id));
         actions.appendChild(switchBtn);
 
-        // Solo se puede borrar un perfil que NO es el activo (no tiene
-        // sentido borrarte a vos mismo a mitad de sesión) — pedido
-        // explícito del usuario para poder limpiar Sub-Perfiles viejos/
-        // duplicados que hayan quedado en la lista (ver deleteProfile()).
-        const deleteBtn = document.createElement("button");
-        deleteBtn.type = "button";
-        deleteBtn.className = "profile-row__delete-btn";
-        deleteBtn.textContent = t("profileDeleteBtn");
-        deleteBtn.addEventListener("click", () => deleteProfile(profile.id, profile.name));
-        actions.appendChild(deleteBtn);
+        // Solo se puede borrar un perfil que NO es el activo Y que NO es
+        // el Admin Principal (ver isProtectedAdminProfile()) — pedido
+        // explícito: el Admin Principal (Sub-Perfil llamado "Admin" o con
+        // el email del administrador, ADMIN_EMAIL) jamás debe poder
+        // borrarse desde acá, sin excepción. El resto de perfiles
+        // secundarios sí puede limpiarse (ver deleteProfile()).
+        if (!isProtectedAdminProfile(profile)) {
+          const deleteBtn = document.createElement("button");
+          deleteBtn.type = "button";
+          deleteBtn.className = "profile-row__delete-btn";
+          deleteBtn.textContent = t("profileDeleteBtn");
+          deleteBtn.addEventListener("click", () => deleteProfile(profile.id, profile.name));
+          actions.appendChild(deleteBtn);
+        }
 
         row.appendChild(actions);
       }
@@ -22655,15 +22659,31 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Un Sub-Perfil cuenta como "Admin Principal" si su nombre es
+  // literalmente "Admin" (el default histórico, ver ensureActiveProfile())
+  // o coincide con ADMIN_EMAIL (el email real del único administrador
+  // autorizado, ver checkAdminSession() más abajo) — cubre tanto el
+  // Sub-Perfil legacy como uno que alguien haya nombrado con el email a
+  // mano. Comparación case-insensitive para no depender de mayúsculas
+  // exactas.
+  function isProtectedAdminProfile(profile) {
+    if (!profile || !profile.name) return false;
+    const normalized = profile.name.trim().toLowerCase();
+    return normalized === "admin" || normalized === ADMIN_EMAIL.toLowerCase();
+  }
+
   // Borra un Sub-Perfil de verdad: lo saca de la lista Y limpia todas sus
   // claves scopeadas (state, ledger, hábitos, rutina, chat...) — no solo
   // lo oculta. Pedido explícito para poder limpiar perfiles viejos/
   // duplicados/de prueba que se hayan acumulado en un dispositivo (ver
   // PROFILE_SCOPED_KEY_BASES arriba del todo del archivo). Nunca borra el
-  // perfil ACTIVO (switchProfile() primero) para no dejar a la sesión en
-  // curso sin ningún dato al que apuntar.
+  // perfil ACTIVO (switchProfile() primero) ni el Admin Principal (ver
+  // isProtectedAdminProfile()) — este segundo chequeo es defensa en
+  // profundidad además del botón ya oculto en renderProfileList(), por si
+  // esta función se llegara a invocar desde otro lado en el futuro.
   function deleteProfile(profileId, profileName) {
     if (profileId === activeProfileId) return;
+    if (isProtectedAdminProfile({ name: profileName })) return;
     if (!window.confirm(t("profileDeleteConfirm").replace("{name}", profileName))) return;
 
     const profiles = loadUserProfiles().filter((p) => p.id !== profileId);
