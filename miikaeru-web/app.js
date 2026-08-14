@@ -1549,6 +1549,109 @@ const I18N = {
     languageSelectTitle: "🗣️ Elige un Idioma",
     pinShortcutBtn: "Fijar acceso directo",
     unpinShortcutBtn: "Quitar acceso directo",
+
+    // ---- Módulo Español ----
+    esWorldA1: "Español A1",
+    esWorldA2: "Español A2",
+    esWorldB1: "Español B1",
+    esGrammarQuizStart: "🎯 Quiz de Gramática",
+    esConversationsTitle: "Conversaciones Situacionales",
+    esMiniQuizVocabPrompt: "¿Qué significa esta palabra?",
+    esMiniQuizGrammarPrompt: "¿Qué significa esta oración?",
+    esMiniQuizConversationPrompt: "¿Qué significa esta línea?",
+    esVictoryTitlePlacement: "¡Nivel demostrado!",
+    esVictoryTierXpUnit: "Nivel Español",
+    esPlacementFailedHint: "Todavía no llegaste al 70%. Sigue practicando y vuelve a intentarlo cuando quieras.",
+    esTierUnlockedA2: "¡Desbloqueaste el nivel A2 de Español!",
+    esTierUnlockedB1: "¡Desbloqueaste el nivel B1 de Español!",
+
+    esCatGreetings: "Saludos y Cortesía",
+    esCatFamily: "La Familia",
+    esCatFood: "Comida y Bebida",
+    esCatNumbers: "Números y Tiempo",
+    esCatHome: "La Casa y el Hogar",
+    esCatOffice: "En la Oficina",
+    esCatWorkplace: "Herramientas y Fábrica",
+    esCatProfessions: "Trabajo y Profesiones",
+    esCatTravel: "Viajes y Transporte",
+    esCatHealth: "Salud y Cuerpo",
+    esCatShopping: "Ropa y Compras",
+    esCatWeather: "Clima y Naturaleza",
+    esCatTechnology: "Tecnología",
+    esCatBank: "Banco y Dinero",
+    esCatProduction: "Producción y Calidad",
+    esCatHR: "Recursos Humanos",
+    esCatBusiness: "Negocios y Estrategia",
+    esCatLegal: "Legal y Contratos",
+    esCatEnvironment: "Medio Ambiente",
+    esCatEmotions: "Emociones y Personalidad",
+    esCatSociety: "Política y Sociedad",
+    esCatLogistics: "Logística y Cadena de Suministro",
+    esCatLeadership: "Liderazgo y Gestión",
+    esCatCybersecurity: "Seguridad Informática",
+
+    esGramSerEstarTitle: "Ser y Estar",
+    esGramArticulosTitle: "Artículos definidos e indefinidos",
+    esGramGeneroTitle: "Género y número",
+    esGramPresenteArTitle: "Presente de verbos -ar",
+    esGramPresenteErIrTitle: "Presente de verbos -er / -ir",
+    esGramIrregularesTitle: "Verbos irregulares comunes",
+    esGramPronombresTitle: "Pronombres personales",
+    esGramPosesivosTitle: "Adjetivos posesivos",
+    esGramGustarTitle: "El verbo gustar",
+    esGramHayTitle: "El verbo hay",
+    esGramPreposicionesTitle: "Preposiciones básicas",
+    esGramInterrogativosTitle: "Palabras interrogativas",
+    esGramNegacionTitle: "La negación",
+    esGramImperativoTitle: "Imperativo básico",
+    esGramAdjetivosTitle: "Adjetivos calificativos",
+    esGramMuyMuchoTitle: "Muy y mucho",
+    esGramPreteritoRegularTitle: "Pretérito regular",
+    esGramPreteritoIrregularTitle: "Pretérito irregular",
+    esGramImperfectoTitle: "Pretérito imperfecto",
+    esGramPvsITitle: "Pretérito vs. imperfecto",
+    esGramFuturoTitle: "Futuro simple",
+    esGramIrAInfinitivoTitle: "Ir a + infinitivo",
+    esGramComparativosTitle: "Comparativos",
+    esGramReflexivosTitle: "Verbos reflexivos",
+    esGramPorParaTitle: "Por y para",
+    esGramAdverbiosTitle: "Adverbios en -mente",
+    esGramObjetoTitle: "Pronombres de objeto",
+    esGramSeImpersonalTitle: "Se impersonal",
+    esGramCondicionalTitle: "Condicional simple",
+    esGramSubjuntivoIntroTitle: "Introducción al subjuntivo",
+    esGramDesdeHaceTitle: "Desde y hace",
+    esGramSubjuntivoPresenteTitle: "Subjuntivo presente",
+    esGramSubjuntivoDudaTitle: "Subjuntivo con duda",
+    esGramSubjuntivoConjTitle: "Subjuntivo con conjunciones",
+    esGramImperativoNegativoTitle: "Imperativo negativo",
+    esGramPreteritoPerfectoTitle: "Pretérito perfecto compuesto",
+    esGramPluscuamperfectoTitle: "Pluscuamperfecto",
+    esGramVozPasivaTitle: "Voz pasiva",
+    esGramGerundioTitle: "Estar + gerundio",
+    esGramSiTipo1Title: "Condicional real (si + presente)",
+    esGramSiTipo2Title: "Condicional hipotético (si + imperfecto)",
+    esGramEstiloIndirectoTitle: "Estilo indirecto",
+    esGramConectoresTitle: "Conectores del discurso",
+    esGramVerbosPreposicionTitle: "Verbos con preposición fija",
+    esGramFuturoPerfectoTitle: "Futuro perfecto",
+    esGramRelativosTitle: "Pronombres relativos",
+
+    esConvFactoryTitle: "En la Fábrica",
+    esConvMistakeTitle: "Reportar un Error",
+    esConvMeetingTitle: "Reunión de Equipo",
+    esConvRestaurantTitle: "En el Restaurante",
+    esConvHousingTitle: "Buscar Alojamiento",
+    esConvTrainingTitle: "Capacitación de Sistema",
+    esConvDoctorTitle: "Consulta Médica",
+    esConvAirportTitle: "En el Aeropuerto",
+    esConvBankTitle: "En el Banco",
+    esConvQualityTitle: "Control de Calidad",
+    esConvContractTitle: "Negociación de Contrato",
+    esConvEnvironmentTitle: "Debate sobre Medio Ambiente",
+    esConvPerformanceTitle: "Evaluación de Desempeño",
+    esConvLogisticsTitle: "Problema de Logística",
+    esConvCyberTitle: "Incidente de Seguridad",
     appHabitsName: "Hábitos & Rachas",
     appStatusNew: "Nuevo",
     appStatusComingSoon: "Próximamente",
@@ -1594,6 +1697,7 @@ const I18N = {
     voiceChatBackBtn: "← Elegir otro escenario",
     voiceChatMicTitle: "Hablar",
     voiceChatTextPlaceholder: "O escribe tu respuesta en japonés...",
+    voiceChatTextPlaceholderEs: "O escribe tu respuesta en español...",
     voiceChatSendBtn: "Enviar",
     voiceChatMicUnsupported: "Tu navegador no soporta reconocimiento de voz — usa el campo de texto de arriba.",
     voiceChatEndBtn: "🏁 Finalizar sesión",
@@ -2580,6 +2684,109 @@ const I18N = {
     languageSelectTitle: "🗣️ Choose a Language",
     pinShortcutBtn: "Pin as shortcut",
     unpinShortcutBtn: "Remove shortcut",
+
+    // ---- Spanish module ----
+    esWorldA1: "Spanish A1",
+    esWorldA2: "Spanish A2",
+    esWorldB1: "Spanish B1",
+    esGrammarQuizStart: "🎯 Grammar Quiz",
+    esConversationsTitle: "Situational Conversations",
+    esMiniQuizVocabPrompt: "What does this word mean?",
+    esMiniQuizGrammarPrompt: "What does this sentence mean?",
+    esMiniQuizConversationPrompt: "What does this line mean?",
+    esVictoryTitlePlacement: "Level demonstrated!",
+    esVictoryTierXpUnit: "Spanish Level",
+    esPlacementFailedHint: "You didn't quite reach 70% yet. Keep practicing and try again whenever you want.",
+    esTierUnlockedA2: "You unlocked Spanish level A2!",
+    esTierUnlockedB1: "You unlocked Spanish level B1!",
+
+    esCatGreetings: "Greetings & Politeness",
+    esCatFamily: "Family",
+    esCatFood: "Food & Drink",
+    esCatNumbers: "Numbers & Time",
+    esCatHome: "House & Home",
+    esCatOffice: "At the Office",
+    esCatWorkplace: "Tools & Factory",
+    esCatProfessions: "Work & Professions",
+    esCatTravel: "Travel & Transport",
+    esCatHealth: "Health & Body",
+    esCatShopping: "Clothes & Shopping",
+    esCatWeather: "Weather & Nature",
+    esCatTechnology: "Technology",
+    esCatBank: "Bank & Money",
+    esCatProduction: "Production & Quality",
+    esCatHR: "Human Resources",
+    esCatBusiness: "Business & Strategy",
+    esCatLegal: "Legal & Contracts",
+    esCatEnvironment: "Environment",
+    esCatEmotions: "Emotions & Personality",
+    esCatSociety: "Politics & Society",
+    esCatLogistics: "Logistics & Supply Chain",
+    esCatLeadership: "Leadership & Management",
+    esCatCybersecurity: "Cybersecurity",
+
+    esGramSerEstarTitle: "Ser and Estar",
+    esGramArticulosTitle: "Definite and indefinite articles",
+    esGramGeneroTitle: "Gender and number",
+    esGramPresenteArTitle: "Present tense of -ar verbs",
+    esGramPresenteErIrTitle: "Present tense of -er / -ir verbs",
+    esGramIrregularesTitle: "Common irregular verbs",
+    esGramPronombresTitle: "Subject pronouns",
+    esGramPosesivosTitle: "Possessive adjectives",
+    esGramGustarTitle: "The verb gustar",
+    esGramHayTitle: "The verb hay",
+    esGramPreposicionesTitle: "Basic prepositions",
+    esGramInterrogativosTitle: "Question words",
+    esGramNegacionTitle: "Negation",
+    esGramImperativoTitle: "Basic imperative",
+    esGramAdjetivosTitle: "Descriptive adjectives",
+    esGramMuyMuchoTitle: "Muy and mucho",
+    esGramPreteritoRegularTitle: "Regular preterite",
+    esGramPreteritoIrregularTitle: "Irregular preterite",
+    esGramImperfectoTitle: "Imperfect tense",
+    esGramPvsITitle: "Preterite vs. imperfect",
+    esGramFuturoTitle: "Simple future",
+    esGramIrAInfinitivoTitle: "Ir a + infinitive",
+    esGramComparativosTitle: "Comparatives",
+    esGramReflexivosTitle: "Reflexive verbs",
+    esGramPorParaTitle: "Por and para",
+    esGramAdverbiosTitle: "Adverbs in -mente",
+    esGramObjetoTitle: "Object pronouns",
+    esGramSeImpersonalTitle: "Impersonal se",
+    esGramCondicionalTitle: "Simple conditional",
+    esGramSubjuntivoIntroTitle: "Introduction to the subjunctive",
+    esGramDesdeHaceTitle: "Desde and hace",
+    esGramSubjuntivoPresenteTitle: "Present subjunctive",
+    esGramSubjuntivoDudaTitle: "Subjunctive with doubt",
+    esGramSubjuntivoConjTitle: "Subjunctive with conjunctions",
+    esGramImperativoNegativoTitle: "Negative imperative",
+    esGramPreteritoPerfectoTitle: "Present perfect",
+    esGramPluscuamperfectoTitle: "Past perfect",
+    esGramVozPasivaTitle: "Passive voice",
+    esGramGerundioTitle: "Estar + gerund",
+    esGramSiTipo1Title: "Real conditional (si + present)",
+    esGramSiTipo2Title: "Hypothetical conditional (si + imperfect)",
+    esGramEstiloIndirectoTitle: "Reported speech",
+    esGramConectoresTitle: "Discourse connectors",
+    esGramVerbosPreposicionTitle: "Verbs with fixed prepositions",
+    esGramFuturoPerfectoTitle: "Future perfect",
+    esGramRelativosTitle: "Relative pronouns",
+
+    esConvFactoryTitle: "At the Factory",
+    esConvMistakeTitle: "Reporting a Mistake",
+    esConvMeetingTitle: "Team Meeting",
+    esConvRestaurantTitle: "At the Restaurant",
+    esConvHousingTitle: "Looking for Housing",
+    esConvTrainingTitle: "System Training",
+    esConvDoctorTitle: "Doctor's Visit",
+    esConvAirportTitle: "At the Airport",
+    esConvBankTitle: "At the Bank",
+    esConvQualityTitle: "Quality Control",
+    esConvContractTitle: "Contract Negotiation",
+    esConvEnvironmentTitle: "Environment Debate",
+    esConvPerformanceTitle: "Performance Review",
+    esConvLogisticsTitle: "Logistics Problem",
+    esConvCyberTitle: "Cybersecurity Incident",
     appHabitsName: "Habits & Streaks",
     appStatusNew: "New",
     appStatusComingSoon: "Coming soon",
@@ -2625,6 +2832,7 @@ const I18N = {
     voiceChatBackBtn: "← Choose another scenario",
     voiceChatMicTitle: "Speak",
     voiceChatTextPlaceholder: "Or type your reply in Japanese...",
+    voiceChatTextPlaceholderEs: "Or type your reply in Spanish...",
     voiceChatSendBtn: "Send",
     voiceChatMicUnsupported: "Your browser doesn't support speech recognition — use the text field above.",
     voiceChatEndBtn: "🏁 End session",
@@ -3611,6 +3819,109 @@ const I18N = {
     languageSelectTitle: "🗣️ 言語を選択",
     pinShortcutBtn: "ショートカットに固定",
     unpinShortcutBtn: "ショートカットを解除",
+
+    // ---- スペイン語モジュール ----
+    esWorldA1: "スペイン語 A1",
+    esWorldA2: "スペイン語 A2",
+    esWorldB1: "スペイン語 B1",
+    esGrammarQuizStart: "🎯 文法クイズ",
+    esConversationsTitle: "状況別会話",
+    esMiniQuizVocabPrompt: "この単語の意味は？",
+    esMiniQuizGrammarPrompt: "この文の意味は？",
+    esMiniQuizConversationPrompt: "このセリフの意味は？",
+    esVictoryTitlePlacement: "レベル認定！",
+    esVictoryTierXpUnit: "スペイン語レベル",
+    esPlacementFailedHint: "まだ70%に届いていません。練習を続けて、いつでもまた挑戦してください。",
+    esTierUnlockedA2: "スペイン語レベルA2を解放しました！",
+    esTierUnlockedB1: "スペイン語レベルB1を解放しました！",
+
+    esCatGreetings: "挨拶と礼儀",
+    esCatFamily: "家族",
+    esCatFood: "食べ物と飲み物",
+    esCatNumbers: "数字と時間",
+    esCatHome: "家と住まい",
+    esCatOffice: "オフィスで",
+    esCatWorkplace: "道具と工場",
+    esCatProfessions: "仕事と職業",
+    esCatTravel: "旅行と交通",
+    esCatHealth: "健康と体",
+    esCatShopping: "服と買い物",
+    esCatWeather: "天気と自然",
+    esCatTechnology: "テクノロジー",
+    esCatBank: "銀行とお金",
+    esCatProduction: "生産と品質",
+    esCatHR: "人事",
+    esCatBusiness: "ビジネスと戦略",
+    esCatLegal: "法律と契約",
+    esCatEnvironment: "環境",
+    esCatEmotions: "感情と性格",
+    esCatSociety: "政治と社会",
+    esCatLogistics: "物流とサプライチェーン",
+    esCatLeadership: "リーダーシップと管理",
+    esCatCybersecurity: "情報セキュリティ",
+
+    esGramSerEstarTitle: "ser と estar",
+    esGramArticulosTitle: "定冠詞と不定冠詞",
+    esGramGeneroTitle: "性と数",
+    esGramPresenteArTitle: "-ar動詞の現在形",
+    esGramPresenteErIrTitle: "-er / -ir動詞の現在形",
+    esGramIrregularesTitle: "よく使う不規則動詞",
+    esGramPronombresTitle: "主語人称代名詞",
+    esGramPosesivosTitle: "所有形容詞",
+    esGramGustarTitle: "動詞gustar",
+    esGramHayTitle: "動詞hay",
+    esGramPreposicionesTitle: "基本の前置詞",
+    esGramInterrogativosTitle: "疑問詞",
+    esGramNegacionTitle: "否定表現",
+    esGramImperativoTitle: "基本の命令形",
+    esGramAdjetivosTitle: "性質形容詞",
+    esGramMuyMuchoTitle: "muy と mucho",
+    esGramPreteritoRegularTitle: "規則点過去",
+    esGramPreteritoIrregularTitle: "不規則点過去",
+    esGramImperfectoTitle: "線過去",
+    esGramPvsITitle: "点過去 対 線過去",
+    esGramFuturoTitle: "単純未来",
+    esGramIrAInfinitivoTitle: "ir a + 不定詞",
+    esGramComparativosTitle: "比較表現",
+    esGramReflexivosTitle: "再帰動詞",
+    esGramPorParaTitle: "por と para",
+    esGramAdverbiosTitle: "-menteの副詞",
+    esGramObjetoTitle: "目的語代名詞",
+    esGramSeImpersonalTitle: "無人称のse",
+    esGramCondicionalTitle: "単純可能法",
+    esGramSubjuntivoIntroTitle: "接続法入門",
+    esGramDesdeHaceTitle: "desde と hace",
+    esGramSubjuntivoPresenteTitle: "接続法現在",
+    esGramSubjuntivoDudaTitle: "疑いを表す接続法",
+    esGramSubjuntivoConjTitle: "接続詞と接続法",
+    esGramImperativoNegativoTitle: "否定命令形",
+    esGramPreteritoPerfectoTitle: "現在完了",
+    esGramPluscuamperfectoTitle: "過去完了",
+    esGramVozPasivaTitle: "受動態",
+    esGramGerundioTitle: "estar + 現在分詞",
+    esGramSiTipo1Title: "現実的条件文（si+現在）",
+    esGramSiTipo2Title: "仮定的条件文（si+接続法過去）",
+    esGramEstiloIndirectoTitle: "間接話法",
+    esGramConectoresTitle: "談話標識",
+    esGramVerbosPreposicionTitle: "固定前置詞を伴う動詞",
+    esGramFuturoPerfectoTitle: "未来完了",
+    esGramRelativosTitle: "関係代名詞",
+
+    esConvFactoryTitle: "工場にて",
+    esConvMistakeTitle: "ミスを報告する",
+    esConvMeetingTitle: "チームミーティング",
+    esConvRestaurantTitle: "レストランにて",
+    esConvHousingTitle: "住まい探し",
+    esConvTrainingTitle: "システム研修",
+    esConvDoctorTitle: "診察",
+    esConvAirportTitle: "空港にて",
+    esConvBankTitle: "銀行にて",
+    esConvQualityTitle: "品質管理",
+    esConvContractTitle: "契約交渉",
+    esConvEnvironmentTitle: "環境についての討論",
+    esConvPerformanceTitle: "業績評価",
+    esConvLogisticsTitle: "物流トラブル",
+    esConvCyberTitle: "セキュリティインシデント",
     appHabitsName: "習慣＆連続記録",
     appStatusNew: "新着",
     appStatusComingSoon: "近日公開",
@@ -3656,6 +3967,7 @@ const I18N = {
     voiceChatBackBtn: "← 別のシナリオを選ぶ",
     voiceChatMicTitle: "話す",
     voiceChatTextPlaceholder: "または日本語で返信を入力...",
+    voiceChatTextPlaceholderEs: "またはスペイン語で返信を入力...",
     voiceChatSendBtn: "送信",
     voiceChatMicUnsupported: "お使いのブラウザは音声認識に対応していません — 上のテキスト欄を使ってください。",
     voiceChatEndBtn: "🏁 セッション終了",
@@ -9893,7 +10205,11 @@ function defaultState() {
       // mastery: mapa "script:kana" -> veces respondida correctamente
       // (tope JP_MASTERY_THRESHOLD), usado por el módulo Japonés del App
       // Hub para el brillo dorado + estrellas de la cuadrícula Gojuon.
-      aprendizaje: { mastery: {}, jpLevel: 1, jpXp: 0, jpXpToNext: 15 },
+      // esLevel/esXp/esXpToNext: mismo mecanismo de nivel interno que
+      // jpLevel/jpXp/jpXpToNext de arriba, namespace aparte para el
+      // módulo Español (ver ES_LEVEL_CONTENT/grantEsXP() más abajo) —
+      // completamente independiente del progreso de Nihongo.
+      aprendizaje: { mastery: {}, jpLevel: 1, jpXp: 0, jpXpToNext: 15, esLevel: 1, esXp: 0, esXpToNext: 15 },
     },
     // requirements: metas/checklist propias del deseo (ver modal de
     // Requisitos) — completarlas TODAS también desbloquea la tarjeta,
@@ -10582,6 +10898,1074 @@ function persistActiveApp(appKey) {
 }
 
 // ---------------------------------------------------
+// Módulo ESPAÑOL — replica de la arquitectura de Nihongo (mapa de mundos,
+// niveles progresivos, examen de ubicación, práctica conversacional con
+// IA) pero para español como idioma DESTINO, pedido explícito. A
+// diferencia de Nihongo no hay sistema de escritura que aprender (el
+// usuario ya conoce el alfabeto latino), así que no hay mundos de
+// "Hiragana/Katakana/Kanji" equivalentes — el mapa arranca directo en
+// contenido real (gramática + conversación), con Vocabulario como acceso
+// lateral de Diccionario libre, mismo criterio ya usado en Nihongo.
+// Niveles CEFR (A1/A2/B1, el estándar real para español, no JLPT) en vez
+// de N5/N4/N3 — misma profundidad de 3 tiers.
+//
+// meaning/translation solo tienen {en, ja} (nunca `es`) — el contenido
+// YA está en español, así que mostrar una traducción al español sería
+// redundante; con la interfaz en español se oculta la traducción por
+// completo, mismo criterio "nunca traducción de apoyo en el idioma que
+// ya se está estudiando" que usa Nihongo con `ja`.
+// ---------------------------------------------------
+const ES_A1_VOCAB_CATEGORIES = [
+  {
+    id: "greetings",
+    icon: "👋",
+    titleKey: "esCatGreetings",
+    words: [
+      { word: "hola", meaning: { en: "hello", ja: "こんにちは" } },
+      { word: "buenos días", meaning: { en: "good morning", ja: "おはようございます" } },
+      { word: "buenas tardes", meaning: { en: "good afternoon", ja: "こんにちは（午後）" } },
+      { word: "buenas noches", meaning: { en: "good evening / good night", ja: "こんばんは" } },
+      { word: "¿cómo estás?", meaning: { en: "how are you?", ja: "元気ですか" } },
+      { word: "muy bien, gracias", meaning: { en: "very well, thank you", ja: "とても元気です、ありがとう" } },
+      { word: "por favor", meaning: { en: "please", ja: "お願いします" } },
+      { word: "gracias", meaning: { en: "thank you", ja: "ありがとう" } },
+      { word: "de nada", meaning: { en: "you're welcome", ja: "どういたしまして" } },
+      { word: "lo siento", meaning: { en: "I'm sorry", ja: "すみません" } },
+      { word: "permiso", meaning: { en: "excuse me", ja: "失礼します" } },
+      { word: "adiós", meaning: { en: "goodbye", ja: "さようなら" } },
+      { word: "hasta luego", meaning: { en: "see you later", ja: "またね" } },
+      { word: "mucho gusto", meaning: { en: "nice to meet you", ja: "はじめまして" } },
+    ],
+  },
+  {
+    id: "family",
+    icon: "👨‍👩‍👧",
+    titleKey: "esCatFamily",
+    words: [
+      { word: "la familia", meaning: { en: "family", ja: "家族" } },
+      { word: "la madre", meaning: { en: "mother", ja: "母" } },
+      { word: "el padre", meaning: { en: "father", ja: "父" } },
+      { word: "el hijo / la hija", meaning: { en: "son / daughter", ja: "息子・娘" } },
+      { word: "el hermano / la hermana", meaning: { en: "brother / sister", ja: "兄弟・姉妹" } },
+      { word: "el abuelo / la abuela", meaning: { en: "grandfather / grandmother", ja: "祖父・祖母" } },
+      { word: "el esposo / la esposa", meaning: { en: "husband / wife", ja: "夫・妻" } },
+      { word: "el amigo / la amiga", meaning: { en: "friend", ja: "友達" } },
+      { word: "el niño / la niña", meaning: { en: "boy / girl", ja: "男の子・女の子" } },
+      { word: "el bebé", meaning: { en: "baby", ja: "赤ちゃん" } },
+      { word: "los padres", meaning: { en: "parents", ja: "両親" } },
+      { word: "soltero / casado", meaning: { en: "single / married", ja: "独身・既婚" } },
+    ],
+  },
+  {
+    id: "food",
+    icon: "🍽️",
+    titleKey: "esCatFood",
+    words: [
+      { word: "la comida", meaning: { en: "food", ja: "食べ物" } },
+      { word: "el agua", meaning: { en: "water", ja: "水" } },
+      { word: "el pan", meaning: { en: "bread", ja: "パン" } },
+      { word: "el arroz", meaning: { en: "rice", ja: "米・ご飯" } },
+      { word: "la carne", meaning: { en: "meat", ja: "肉" } },
+      { word: "el pescado", meaning: { en: "fish", ja: "魚" } },
+      { word: "la fruta", meaning: { en: "fruit", ja: "果物" } },
+      { word: "la verdura", meaning: { en: "vegetable", ja: "野菜" } },
+      { word: "el café", meaning: { en: "coffee", ja: "コーヒー" } },
+      { word: "el desayuno", meaning: { en: "breakfast", ja: "朝食" } },
+      { word: "el almuerzo", meaning: { en: "lunch", ja: "昼食" } },
+      { word: "la cena", meaning: { en: "dinner", ja: "夕食" } },
+      { word: "tengo hambre", meaning: { en: "I'm hungry", ja: "お腹が空いた" } },
+      { word: "tengo sed", meaning: { en: "I'm thirsty", ja: "喉が渇いた" } },
+    ],
+  },
+  {
+    id: "numbers",
+    icon: "🔢",
+    titleKey: "esCatNumbers",
+    words: [
+      { word: "uno, dos, tres", meaning: { en: "one, two, three", ja: "1、2、3" } },
+      { word: "cuatro, cinco, seis", meaning: { en: "four, five, six", ja: "4、5、6" } },
+      { word: "siete, ocho, nueve", meaning: { en: "seven, eight, nine", ja: "7、8、9" } },
+      { word: "diez", meaning: { en: "ten", ja: "10" } },
+      { word: "veinte", meaning: { en: "twenty", ja: "20" } },
+      { word: "cien", meaning: { en: "one hundred", ja: "100" } },
+      { word: "primero / segundo", meaning: { en: "first / second", ja: "一番目・二番目" } },
+      { word: "la hora", meaning: { en: "the hour / time", ja: "時間" } },
+      { word: "¿qué hora es?", meaning: { en: "what time is it?", ja: "今何時ですか" } },
+      { word: "hoy / mañana / ayer", meaning: { en: "today / tomorrow / yesterday", ja: "今日・明日・昨日" } },
+      { word: "la semana", meaning: { en: "the week", ja: "週" } },
+      { word: "el mes / el año", meaning: { en: "the month / the year", ja: "月・年" } },
+    ],
+  },
+  {
+    id: "home",
+    icon: "🏠",
+    titleKey: "esCatHome",
+    words: [
+      { word: "la casa", meaning: { en: "house", ja: "家" } },
+      { word: "el apartamento", meaning: { en: "apartment", ja: "アパート" } },
+      { word: "la habitación", meaning: { en: "room / bedroom", ja: "部屋" } },
+      { word: "la cocina", meaning: { en: "kitchen", ja: "台所" } },
+      { word: "el baño", meaning: { en: "bathroom", ja: "トイレ・浴室" } },
+      { word: "la puerta", meaning: { en: "door", ja: "ドア" } },
+      { word: "la ventana", meaning: { en: "window", ja: "窓" } },
+      { word: "la mesa", meaning: { en: "table", ja: "テーブル" } },
+      { word: "la silla", meaning: { en: "chair", ja: "椅子" } },
+      { word: "la cama", meaning: { en: "bed", ja: "ベッド" } },
+      { word: "la llave", meaning: { en: "key", ja: "鍵" } },
+      { word: "el alquiler", meaning: { en: "rent", ja: "家賃" } },
+    ],
+  },
+  {
+    id: "office",
+    icon: "🗂️",
+    titleKey: "esCatOffice",
+    words: [
+      { word: "la oficina", meaning: { en: "office", ja: "オフィス" } },
+      { word: "el jefe / la jefa", meaning: { en: "boss", ja: "上司" } },
+      { word: "el compañero / la compañera", meaning: { en: "coworker", ja: "同僚" } },
+      { word: "la reunión", meaning: { en: "meeting", ja: "会議" } },
+      { word: "el correo electrónico", meaning: { en: "email", ja: "メール" } },
+      { word: "la computadora", meaning: { en: "computer", ja: "パソコン" } },
+      { word: "el documento", meaning: { en: "document", ja: "書類" } },
+      { word: "firmar", meaning: { en: "to sign", ja: "サインする" } },
+      { word: "el horario", meaning: { en: "schedule", ja: "スケジュール" } },
+      { word: "la tarea", meaning: { en: "task", ja: "タスク" } },
+      { word: "terminar", meaning: { en: "to finish", ja: "終わる" } },
+      { word: "empezar", meaning: { en: "to start", ja: "始める" } },
+    ],
+  },
+  {
+    id: "workplace",
+    icon: "🏭",
+    titleKey: "esCatWorkplace",
+    words: [
+      { word: "la fábrica", meaning: { en: "factory", ja: "工場" } },
+      { word: "la máquina", meaning: { en: "machine", ja: "機械" } },
+      { word: "la herramienta", meaning: { en: "tool", ja: "道具" } },
+      { word: "el turno", meaning: { en: "shift", ja: "シフト" } },
+      { word: "el descanso", meaning: { en: "break", ja: "休憩" } },
+      { word: "el casco", meaning: { en: "helmet", ja: "ヘルメット" } },
+      { word: "el guante", meaning: { en: "glove", ja: "手袋" } },
+      { word: "peligro", meaning: { en: "danger", ja: "危険" } },
+      { word: "con cuidado", meaning: { en: "carefully", ja: "気をつけて" } },
+      { word: "revisar", meaning: { en: "to check", ja: "確認する" } },
+      { word: "reparar", meaning: { en: "to repair", ja: "修理する" } },
+      { word: "el error", meaning: { en: "mistake", ja: "間違い" } },
+    ],
+  },
+  {
+    id: "professions",
+    icon: "💼",
+    titleKey: "esCatProfessions",
+    words: [
+      { word: "el trabajo", meaning: { en: "work / job", ja: "仕事" } },
+      { word: "trabajar", meaning: { en: "to work", ja: "働く" } },
+      { word: "el médico / la médica", meaning: { en: "doctor", ja: "医者" } },
+      { word: "el profesor / la profesora", meaning: { en: "teacher", ja: "先生" } },
+      { word: "el cocinero / la cocinera", meaning: { en: "cook", ja: "料理人" } },
+      { word: "el conductor / la conductora", meaning: { en: "driver", ja: "運転手" } },
+      { word: "el ingeniero / la ingeniera", meaning: { en: "engineer", ja: "エンジニア" } },
+      { word: "el vendedor / la vendedora", meaning: { en: "salesperson", ja: "販売員" } },
+      { word: "el salario", meaning: { en: "salary", ja: "給料" } },
+      { word: "la empresa", meaning: { en: "company", ja: "会社" } },
+      { word: "el cliente / la clienta", meaning: { en: "customer", ja: "お客さん" } },
+      { word: "buscar empleo", meaning: { en: "to look for a job", ja: "仕事を探す" } },
+    ],
+  },
+];
+
+const ES_A1_GRAMMAR_POINTS = [
+  {
+    id: "ser-estar", label: "ser / estar", titleKey: "esGramSerEstarTitle",
+    pattern: { en: "ser = permanent, estar = temporary/location", ja: "ser＝恒常的、estar＝一時的・場所" },
+    explanation: { en: "Both mean 'to be', but ser is for identity, origin, and permanent traits; estar is for location, temporary states, and feelings.", ja: "どちらも「〜である」ですが、serは正体・出身・恒常的な性質、estarは場所・一時的な状態・気持ちに使います。" },
+    examples: [
+      { es: "Yo soy profesor.", translation: { en: "I am a teacher.", ja: "私は先生です。" } },
+      { es: "Estoy cansado hoy.", translation: { en: "I am tired today.", ja: "今日は疲れています。" } },
+    ],
+  },
+  {
+    id: "articulos", label: "el / la / un / una", titleKey: "esGramArticulosTitle",
+    pattern: { en: "definite: el/la/los/las — indefinite: un/una/unos/unas", ja: "定冠詞：el/la/los/las　不定冠詞：un/una" },
+    explanation: { en: "Every noun has a gender (masculine/feminine) and a number (singular/plural), and the article must match both.", ja: "すべての名詞に性（男性・女性）と数（単数・複数）があり、冠詞はそれに合わせます。" },
+    examples: [
+      { es: "El libro está en la mesa.", translation: { en: "The book is on the table.", ja: "本はテーブルの上にあります。" } },
+      { es: "Necesito un vaso de agua.", translation: { en: "I need a glass of water.", ja: "水を一杯ください。" } },
+    ],
+  },
+  {
+    id: "genero-numero", label: "género y número", titleKey: "esGramGeneroTitle",
+    pattern: { en: "-o → masculine, -a → feminine (usually) — add -s/-es for plural", ja: "-o→男性、-a→女性（通常）　複数形は-s/-esを追加" },
+    explanation: { en: "Adjectives agree in gender and number with the noun they describe, unlike English.", ja: "英語と違い、形容詞は名詞の性と数に一致させます。" },
+    examples: [
+      { es: "Las casas son bonitas.", translation: { en: "The houses are pretty.", ja: "家々はきれいです。" } },
+      { es: "El niño es alto.", translation: { en: "The boy is tall.", ja: "その男の子は背が高いです。" } },
+    ],
+  },
+  {
+    id: "presente-ar", label: "presente -ar", titleKey: "esGramPresenteArTitle",
+    pattern: { en: "trabajar → trabajo, trabajas, trabaja, trabajamos, trabajan", ja: "trabajar → trabajo, trabajas, trabaja, trabajamos, trabajan" },
+    explanation: { en: "Regular -ar verbs in the present tense drop -ar and add -o/-as/-a/-amos/-an.", ja: "規則的な-ar動詞は現在形で-arを取り、-o/-as/-a/-amos/-anを付けます。" },
+    examples: [
+      { es: "Trabajo en una fábrica.", translation: { en: "I work in a factory.", ja: "私は工場で働いています。" } },
+      { es: "Ella habla español muy bien.", translation: { en: "She speaks Spanish very well.", ja: "彼女はスペイン語がとても上手です。" } },
+    ],
+  },
+  {
+    id: "presente-er-ir", label: "presente -er / -ir", titleKey: "esGramPresenteErIrTitle",
+    pattern: { en: "comer → como, comes, come — vivir → vivo, vives, vive", ja: "comer → como, comes, come　vivir → vivo, vives, vive" },
+    explanation: { en: "-er and -ir verbs share most endings in the present tense, differing mainly in the 'nosotros' form.", ja: "-er動詞と-ir動詞は現在形の語尾がほぼ同じで、「nosotros」の形だけ異なります。" },
+    examples: [
+      { es: "Como arroz todos los días.", translation: { en: "I eat rice every day.", ja: "毎日ご飯を食べます。" } },
+      { es: "Vivimos cerca de la oficina.", translation: { en: "We live near the office.", ja: "私たちはオフィスの近くに住んでいます。" } },
+    ],
+  },
+  {
+    id: "verbos-irregulares", label: "tener / ir / hacer", titleKey: "esGramIrregularesTitle",
+    pattern: { en: "tengo, voy, hago (irregular yo-forms)", ja: "tengo、voy、hago（不規則なyo形）" },
+    explanation: { en: "Some of the most common verbs are irregular, especially in the 'yo' (I) form — they must be memorized individually.", ja: "よく使う動詞の一部は不規則で、特に「yo」（私）の形は個別に覚える必要があります。" },
+    examples: [
+      { es: "Tengo dos hermanos.", translation: { en: "I have two siblings.", ja: "私には兄弟が二人います。" } },
+      { es: "Voy al trabajo en autobús.", translation: { en: "I go to work by bus.", ja: "バスで仕事に行きます。" } },
+    ],
+  },
+  {
+    id: "pronombres", label: "yo / tú / él", titleKey: "esGramPronombresTitle",
+    pattern: { en: "yo, tú, él/ella, nosotros, ellos/ellas", ja: "yo, tú, él/ella, nosotros, ellos/ellas" },
+    explanation: { en: "Subject pronouns are often dropped in Spanish since the verb ending already shows who is speaking.", ja: "動詞の語尾で主語がわかるため、スペイン語では主語代名詞はよく省略されます。" },
+    examples: [
+      { es: "¿Tú trabajas aquí?", translation: { en: "Do you work here?", ja: "あなたはここで働いていますか。" } },
+      { es: "Ellos son mis compañeros.", translation: { en: "They are my coworkers.", ja: "彼らは私の同僚です。" } },
+    ],
+  },
+  {
+    id: "posesivos", label: "mi / tu / su", titleKey: "esGramPosesivosTitle",
+    pattern: { en: "mi(s), tu(s), su(s), nuestro(s)", ja: "mi(s), tu(s), su(s), nuestro(s)" },
+    explanation: { en: "Possessives agree in number (and sometimes gender) with the thing owned, not the owner.", ja: "所有格は所有者ではなく、所有される物の数（時に性）に一致させます。" },
+    examples: [
+      { es: "Mi familia vive en la ciudad.", translation: { en: "My family lives in the city.", ja: "私の家族は都市に住んでいます。" } },
+      { es: "¿Dónde están tus llaves?", translation: { en: "Where are your keys?", ja: "あなたの鍵はどこにありますか。" } },
+    ],
+  },
+  {
+    id: "gustar", label: "me gusta", titleKey: "esGramGustarTitle",
+    pattern: { en: "me gusta / me gustan + noun", ja: "me gusta／me gustan＋名詞" },
+    explanation: { en: "Gustar works backwards from English 'to like' — literally 'it is pleasing to me', so the verb agrees with the thing liked.", ja: "gustarは英語の「好き」と逆で、直訳は「私にとって好ましい」なので、動詞は好きな対象に一致させます。" },
+    examples: [
+      { es: "Me gusta el café.", translation: { en: "I like coffee.", ja: "私はコーヒーが好きです。" } },
+      { es: "Nos gustan las frutas.", translation: { en: "We like fruits.", ja: "私たちは果物が好きです。" } },
+    ],
+  },
+  {
+    id: "hay", label: "hay", titleKey: "esGramHayTitle",
+    pattern: { en: "hay = there is / there are (invariable)", ja: "hay＝〜がある／いる（形は変化しない）" },
+    explanation: { en: "'Hay' never changes form, no matter if what follows is singular or plural.", ja: "「hay」は後に続く語が単数でも複数でも形は変わりません。" },
+    examples: [
+      { es: "Hay una reunión hoy.", translation: { en: "There is a meeting today.", ja: "今日会議があります。" } },
+      { es: "No hay agua en la cocina.", translation: { en: "There is no water in the kitchen.", ja: "台所に水がありません。" } },
+    ],
+  },
+  {
+    id: "preposiciones", label: "en / a / de / con", titleKey: "esGramPreposicionesTitle",
+    pattern: { en: "en (in/on), a (to), de (of/from), con (with)", ja: "en（〜の中に）、a（〜へ）、de（〜の）、con（〜と一緒に）" },
+    explanation: { en: "These four basic prepositions cover most everyday location and relation expressions.", ja: "この4つの基本前置詞で日常の場所・関係表現の多くをカバーできます。" },
+    examples: [
+      { es: "Voy a la oficina con mi compañero.", translation: { en: "I go to the office with my coworker.", ja: "同僚と一緒にオフィスへ行きます。" } },
+      { es: "El documento es de mi jefe.", translation: { en: "The document is my boss's.", ja: "その書類は私の上司のものです。" } },
+    ],
+  },
+  {
+    id: "interrogativos", label: "qué / dónde / cuándo", titleKey: "esGramInterrogativosTitle",
+    pattern: { en: "qué, dónde, cuándo, cómo, quién, por qué", ja: "qué、dónde、cuándo、cómo、quién、por qué" },
+    explanation: { en: "Question words always carry a written accent in Spanish, distinguishing them from similar-looking non-question words.", ja: "疑問詞は常にアクセント記号が付き、似た形の非疑問語と区別されます。" },
+    examples: [
+      { es: "¿Dónde trabajas?", translation: { en: "Where do you work?", ja: "どこで働いていますか。" } },
+      { es: "¿Cuándo es la reunión?", translation: { en: "When is the meeting?", ja: "会議はいつですか。" } },
+    ],
+  },
+  {
+    id: "negacion", label: "no", titleKey: "esGramNegacionTitle",
+    pattern: { en: "no + verb", ja: "no＋動詞" },
+    explanation: { en: "To negate a sentence, simply place 'no' directly before the conjugated verb.", ja: "文を否定するには、活用した動詞の直前に「no」を置くだけです。" },
+    examples: [
+      { es: "No tengo tiempo hoy.", translation: { en: "I don't have time today.", ja: "今日は時間がありません。" } },
+      { es: "Ella no vive aquí.", translation: { en: "She doesn't live here.", ja: "彼女はここに住んでいません。" } },
+    ],
+  },
+  {
+    id: "imperativo", label: "revisa / firme", titleKey: "esGramImperativoTitle",
+    pattern: { en: "informal tú-command vs. formal usted-command", ja: "親しい相手（tú）と丁寧（usted）の命令形" },
+    explanation: { en: "Basic commands are essential in workplace instructions — the formal 'usted' form is common between coworkers who don't know each other well.", ja: "職場の指示には命令形が欠かせません。あまり親しくない同僚同士では丁寧な「usted」形がよく使われます。" },
+    examples: [
+      { es: "Por favor, revise la máquina.", translation: { en: "Please check the machine.", ja: "機械を確認してください。" } },
+      { es: "Firma el documento aquí.", translation: { en: "Sign the document here.", ja: "ここに書類にサインして。" } },
+    ],
+  },
+  {
+    id: "adjetivos", label: "bueno / grande", titleKey: "esGramAdjetivosTitle",
+    pattern: { en: "noun + adjective (usually after the noun)", ja: "名詞＋形容詞（通常は名詞の後）" },
+    explanation: { en: "Unlike English, most Spanish adjectives come after the noun they describe.", ja: "英語と違い、スペイン語の形容詞はほとんど名詞の後に置かれます。" },
+    examples: [
+      { es: "Es un trabajo difícil.", translation: { en: "It's a difficult job.", ja: "それは難しい仕事です。" } },
+      { es: "Tenemos un jefe amable.", translation: { en: "We have a kind boss.", ja: "私たちには優しい上司がいます。" } },
+    ],
+  },
+  {
+    id: "muy-mucho", label: "muy / mucho", titleKey: "esGramMuyMuchoTitle",
+    pattern: { en: "muy + adjective — mucho/a(s) + noun", ja: "muy＋形容詞　mucho/a(s)＋名詞" },
+    explanation: { en: "'Muy' intensifies adjectives and never changes form; 'mucho' modifies nouns and agrees in gender/number.", ja: "「muy」は形容詞を強め、形は変化しません。「mucho」は名詞を修飾し、性・数に一致します。" },
+    examples: [
+      { es: "El trabajo es muy importante.", translation: { en: "The work is very important.", ja: "その仕事はとても重要です。" } },
+      { es: "Hay mucha gente en la oficina.", translation: { en: "There are many people in the office.", ja: "オフィスにはたくさんの人がいます。" } },
+    ],
+  },
+];
+
+const ES_A1_CONVERSATION_SCENES = [
+  {
+    id: "factoryEs", icon: "🏭", titleKey: "esConvFactoryTitle",
+    lineas: [
+      { segments: [{ text: "A: " }, { text: "Buenos días. Hoy vas a usar esta máquina." }], traduccion: { en: "Good morning. Today you'll use this machine.", ja: "おはようございます。今日はこの機械を使います。" } },
+      { segments: [{ text: "B: " }, { text: "De acuerdo. ¿Es peligrosa?" }], traduccion: { en: "Alright. Is it dangerous?", ja: "わかりました。危険ですか。" } },
+      { segments: [{ text: "A: " }, { text: "Un poco. Por favor, usa el casco y los guantes." }], traduccion: { en: "A little. Please wear the helmet and gloves.", ja: "少し。ヘルメットと手袋を使ってください。" } },
+      { segments: [{ text: "B: " }, { text: "Entendido. ¿Qué hago primero?" }], traduccion: { en: "Understood. What do I do first?", ja: "了解しました。最初に何をしますか。" } },
+      { segments: [{ text: "A: " }, { text: "Primero revisa que la máquina esté apagada." }], traduccion: { en: "First check that the machine is turned off.", ja: "まず機械が止まっているか確認してください。" } },
+    ],
+  },
+  {
+    id: "reportMistakeEs", icon: "😓", titleKey: "esConvMistakeTitle",
+    lineas: [
+      { segments: [{ text: "A: " }, { text: "Jefe, tengo que decirle algo." }], traduccion: { en: "Boss, I have to tell you something.", ja: "上司、お伝えしたいことがあります。" } },
+      { segments: [{ text: "B: " }, { text: "Dime, ¿qué pasó?" }], traduccion: { en: "Tell me, what happened?", ja: "教えて、何がありましたか。" } },
+      { segments: [{ text: "A: " }, { text: "Cometí un error en el documento." }], traduccion: { en: "I made a mistake in the document.", ja: "書類で間違いをしてしまいました。" } },
+      { segments: [{ text: "B: " }, { text: "No te preocupes, todos cometemos errores." }], traduccion: { en: "Don't worry, we all make mistakes.", ja: "心配しないで、誰でも間違えます。" } },
+      { segments: [{ text: "A: " }, { text: "Gracias. Lo voy a corregir ahora mismo." }], traduccion: { en: "Thank you. I'll fix it right now.", ja: "ありがとうございます。今すぐ直します。" } },
+    ],
+  },
+  {
+    id: "teamMeetingEs", icon: "🗂️", titleKey: "esConvMeetingTitle",
+    lineas: [
+      { segments: [{ text: "A: " }, { text: "Vamos a revisar las tareas de hoy." }], traduccion: { en: "Let's review today's tasks.", ja: "今日のタスクを確認しましょう。" } },
+      { segments: [{ text: "B: " }, { text: "Yo voy a terminar el reporte." }], traduccion: { en: "I'm going to finish the report.", ja: "私はレポートを終わらせます。" } },
+      { segments: [{ text: "C: " }, { text: "Y yo voy a llamar al cliente." }], traduccion: { en: "And I'm going to call the client.", ja: "私はお客さんに電話します。" } },
+      { segments: [{ text: "A: " }, { text: "Perfecto. ¿A qué hora terminamos?" }], traduccion: { en: "Perfect. What time do we finish?", ja: "完璧です。何時に終わりますか。" } },
+      { segments: [{ text: "B: " }, { text: "Creo que a las cinco de la tarde." }], traduccion: { en: "I think at five in the afternoon.", ja: "午後5時だと思います。" } },
+    ],
+  },
+  {
+    id: "restaurantEs", icon: "🍽️", titleKey: "esConvRestaurantTitle",
+    lineas: [
+      { segments: [{ text: "A: " }, { text: "Buenas tardes, ¿mesa para dos?" }], traduccion: { en: "Good afternoon, table for two?", ja: "こんにちは、二人用のテーブルですか。" } },
+      { segments: [{ text: "B: " }, { text: "Sí, por favor." }], traduccion: { en: "Yes, please.", ja: "はい、お願いします。" } },
+      { segments: [{ text: "A: " }, { text: "¿Qué van a comer?" }], traduccion: { en: "What will you have?", ja: "何を召し上がりますか。" } },
+      { segments: [{ text: "B: " }, { text: "Quiero arroz con pollo y agua, por favor." }], traduccion: { en: "I want rice with chicken and water, please.", ja: "チキンライスと水をお願いします。" } },
+      { segments: [{ text: "A: " }, { text: "Muy bien, en un momento se lo traigo." }], traduccion: { en: "Very well, I'll bring it to you in a moment.", ja: "かしこまりました、すぐお持ちします。" } },
+    ],
+  },
+  {
+    id: "housingEs", icon: "🏠", titleKey: "esConvHousingTitle",
+    lineas: [
+      { segments: [{ text: "A: " }, { text: "Hola, busco un apartamento para alquilar." }], traduccion: { en: "Hi, I'm looking for an apartment to rent.", ja: "こんにちは、賃貸のアパートを探しています。" } },
+      { segments: [{ text: "B: " }, { text: "Tengo uno cerca del centro, con dos habitaciones." }], traduccion: { en: "I have one near downtown, with two bedrooms.", ja: "中心部の近くに、部屋が二つあるものがあります。" } },
+      { segments: [{ text: "A: " }, { text: "¿Cuánto cuesta el alquiler?" }], traduccion: { en: "How much is the rent?", ja: "家賃はいくらですか。" } },
+      { segments: [{ text: "B: " }, { text: "Cuatrocientos dólares al mes." }], traduccion: { en: "Four hundred dollars a month.", ja: "月400ドルです。" } },
+      { segments: [{ text: "A: " }, { text: "Perfecto, ¿puedo verlo hoy?" }], traduccion: { en: "Perfect, can I see it today?", ja: "いいですね、今日見ることはできますか。" } },
+    ],
+  },
+];
+
+const ES_A2_VOCAB_CATEGORIES = [
+  {
+    id: "travel",
+    icon: "✈️",
+    titleKey: "esCatTravel",
+    words: [
+      { word: "el viaje", meaning: { en: "trip", ja: "旅行" } },
+      { word: "el aeropuerto", meaning: { en: "airport", ja: "空港" } },
+      { word: "el vuelo", meaning: { en: "flight", ja: "フライト" } },
+      { word: "la maleta", meaning: { en: "suitcase", ja: "スーツケース" } },
+      { word: "el pasaporte", meaning: { en: "passport", ja: "パスポート" } },
+      { word: "el boleto / billete", meaning: { en: "ticket", ja: "切符" } },
+      { word: "la estación", meaning: { en: "station", ja: "駅" } },
+      { word: "el autobús", meaning: { en: "bus", ja: "バス" } },
+      { word: "el tren", meaning: { en: "train", ja: "電車" } },
+      { word: "la parada", meaning: { en: "stop", ja: "停留所" } },
+      { word: "llegar / salir", meaning: { en: "to arrive / to leave", ja: "到着する・出発する" } },
+      { word: "el retraso", meaning: { en: "delay", ja: "遅れ" } },
+    ],
+  },
+  {
+    id: "health",
+    icon: "🩺",
+    titleKey: "esCatHealth",
+    words: [
+      { word: "la salud", meaning: { en: "health", ja: "健康" } },
+      { word: "el dolor", meaning: { en: "pain", ja: "痛み" } },
+      { word: "la cabeza", meaning: { en: "head", ja: "頭" } },
+      { word: "el estómago", meaning: { en: "stomach", ja: "胃" } },
+      { word: "la espalda", meaning: { en: "back", ja: "背中" } },
+      { word: "la fiebre", meaning: { en: "fever", ja: "熱" } },
+      { word: "la receta médica", meaning: { en: "prescription", ja: "処方箋" } },
+      { word: "la pastilla", meaning: { en: "pill", ja: "錠剤" } },
+      { word: "la clínica", meaning: { en: "clinic", ja: "診療所" } },
+      { word: "el seguro médico", meaning: { en: "health insurance", ja: "健康保険" } },
+      { word: "sentirse mal / bien", meaning: { en: "to feel bad / well", ja: "気分が悪い・良い" } },
+      { word: "descansar", meaning: { en: "to rest", ja: "休む" } },
+    ],
+  },
+  {
+    id: "shopping",
+    icon: "🛍️",
+    titleKey: "esCatShopping",
+    words: [
+      { word: "la tienda", meaning: { en: "store", ja: "店" } },
+      { word: "el precio", meaning: { en: "price", ja: "値段" } },
+      { word: "caro / barato", meaning: { en: "expensive / cheap", ja: "高い・安い" } },
+      { word: "la ropa", meaning: { en: "clothes", ja: "服" } },
+      { word: "la camisa", meaning: { en: "shirt", ja: "シャツ" } },
+      { word: "el pantalón", meaning: { en: "pants", ja: "ズボン" } },
+      { word: "los zapatos", meaning: { en: "shoes", ja: "靴" } },
+      { word: "la talla", meaning: { en: "size", ja: "サイズ" } },
+      { word: "probarse", meaning: { en: "to try on", ja: "試着する" } },
+      { word: "pagar en efectivo", meaning: { en: "to pay cash", ja: "現金で払う" } },
+      { word: "la tarjeta de crédito", meaning: { en: "credit card", ja: "クレジットカード" } },
+      { word: "el descuento", meaning: { en: "discount", ja: "割引" } },
+    ],
+  },
+  {
+    id: "weather",
+    icon: "🌦️",
+    titleKey: "esCatWeather",
+    words: [
+      { word: "el clima", meaning: { en: "weather / climate", ja: "気候・天気" } },
+      { word: "hace calor / frío", meaning: { en: "it's hot / cold", ja: "暑い・寒い" } },
+      { word: "está lloviendo", meaning: { en: "it's raining", ja: "雨が降っている" } },
+      { word: "el sol", meaning: { en: "sun", ja: "太陽" } },
+      { word: "la lluvia", meaning: { en: "rain", ja: "雨" } },
+      { word: "el viento", meaning: { en: "wind", ja: "風" } },
+      { word: "la nube", meaning: { en: "cloud", ja: "雲" } },
+      { word: "la temporada", meaning: { en: "season", ja: "季節" } },
+      { word: "el paraguas", meaning: { en: "umbrella", ja: "傘" } },
+      { word: "la montaña", meaning: { en: "mountain", ja: "山" } },
+      { word: "el río", meaning: { en: "river", ja: "川" } },
+      { word: "el bosque", meaning: { en: "forest", ja: "森" } },
+    ],
+  },
+  {
+    id: "technology",
+    icon: "💻",
+    titleKey: "esCatTechnology",
+    words: [
+      { word: "la contraseña", meaning: { en: "password", ja: "パスワード" } },
+      { word: "el archivo", meaning: { en: "file", ja: "ファイル" } },
+      { word: "guardar", meaning: { en: "to save", ja: "保存する" } },
+      { word: "descargar", meaning: { en: "to download", ja: "ダウンロードする" } },
+      { word: "la impresora", meaning: { en: "printer", ja: "プリンター" } },
+      { word: "imprimir", meaning: { en: "to print", ja: "印刷する" } },
+      { word: "la pantalla", meaning: { en: "screen", ja: "画面" } },
+      { word: "el sistema", meaning: { en: "system", ja: "システム" } },
+      { word: "actualizar", meaning: { en: "to update", ja: "更新する" } },
+      { word: "el internet", meaning: { en: "internet", ja: "インターネット" } },
+      { word: "la conexión", meaning: { en: "connection", ja: "接続" } },
+      { word: "el celular", meaning: { en: "cell phone", ja: "携帯電話" } },
+    ],
+  },
+  {
+    id: "bank",
+    icon: "🏦",
+    titleKey: "esCatBank",
+    words: [
+      { word: "el banco", meaning: { en: "bank", ja: "銀行" } },
+      { word: "la cuenta", meaning: { en: "account", ja: "口座" } },
+      { word: "el dinero", meaning: { en: "money", ja: "お金" } },
+      { word: "ahorrar", meaning: { en: "to save (money)", ja: "貯金する" } },
+      { word: "gastar", meaning: { en: "to spend", ja: "使う（お金を）" } },
+      { word: "el préstamo", meaning: { en: "loan", ja: "ローン" } },
+      { word: "la factura", meaning: { en: "bill / invoice", ja: "請求書" } },
+      { word: "pagar la renta", meaning: { en: "to pay rent", ja: "家賃を払う" } },
+      { word: "el cajero automático", meaning: { en: "ATM", ja: "ATM" } },
+      { word: "transferir", meaning: { en: "to transfer", ja: "送金する" } },
+      { word: "el recibo", meaning: { en: "receipt", ja: "領収書" } },
+      { word: "el presupuesto", meaning: { en: "budget", ja: "予算" } },
+    ],
+  },
+  {
+    id: "production",
+    icon: "📦",
+    titleKey: "esCatProduction",
+    words: [
+      { word: "la producción", meaning: { en: "production", ja: "生産" } },
+      { word: "la calidad", meaning: { en: "quality", ja: "品質" } },
+      { word: "el defecto", meaning: { en: "defect", ja: "欠陥" } },
+      { word: "la línea de producción", meaning: { en: "production line", ja: "生産ライン" } },
+      { word: "el inventario", meaning: { en: "inventory", ja: "在庫" } },
+      { word: "el pedido", meaning: { en: "order", ja: "注文" } },
+      { word: "la entrega", meaning: { en: "delivery", ja: "配達" } },
+      { word: "el embalaje", meaning: { en: "packaging", ja: "梱包" } },
+      { word: "el proveedor", meaning: { en: "supplier", ja: "仕入先" } },
+      { word: "cumplir la meta", meaning: { en: "to meet the goal", ja: "目標を達成する" } },
+      { word: "el control de calidad", meaning: { en: "quality control", ja: "品質管理" } },
+      { word: "rechazar", meaning: { en: "to reject", ja: "却下する" } },
+    ],
+  },
+  {
+    id: "hr",
+    icon: "🧑‍💼",
+    titleKey: "esCatHR",
+    words: [
+      { word: "los recursos humanos", meaning: { en: "human resources", ja: "人事" } },
+      { word: "la entrevista", meaning: { en: "interview", ja: "面接" } },
+      { word: "el contrato de trabajo", meaning: { en: "employment contract", ja: "雇用契約" } },
+      { word: "contratar", meaning: { en: "to hire", ja: "雇う" } },
+      { word: "despedir", meaning: { en: "to fire/lay off", ja: "解雇する" } },
+      { word: "la capacitación", meaning: { en: "training", ja: "研修" } },
+      { word: "las vacaciones", meaning: { en: "vacation", ja: "休暇" } },
+      { word: "el permiso", meaning: { en: "leave / permission", ja: "許可・休暇" } },
+      { word: "la queja", meaning: { en: "complaint", ja: "苦情" } },
+      { word: "el ascenso", meaning: { en: "promotion", ja: "昇進" } },
+      { word: "el beneficio", meaning: { en: "benefit", ja: "福利厚生" } },
+      { word: "renunciar", meaning: { en: "to resign", ja: "辞める" } },
+    ],
+  },
+];
+
+const ES_A2_GRAMMAR_POINTS = [
+  {
+    id: "preterito-regular", label: "pretérito (-é / -í)", titleKey: "esGramPreteritoRegularTitle",
+    pattern: { en: "trabajar → trabajé — comer → comí", ja: "trabajar → trabajé　comer → comí" },
+    explanation: { en: "The preterite describes a completed action in the past, seen as a single finished event.", ja: "点過去は過去に完了した、一つの出来事として捉えられる動作を表します。" },
+    examples: [
+      { es: "Ayer trabajé diez horas.", translation: { en: "Yesterday I worked ten hours.", ja: "昨日10時間働きました。" } },
+      { es: "Comimos en un restaurante nuevo.", translation: { en: "We ate at a new restaurant.", ja: "新しいレストランで食事をしました。" } },
+    ],
+  },
+  {
+    id: "preterito-irregular", label: "pretérito irregular", titleKey: "esGramPreteritoIrregularTitle",
+    pattern: { en: "ir/ser → fui — tener → tuve — hacer → hice", ja: "ir/ser → fui　tener → tuve　hacer → hice" },
+    explanation: { en: "Many common verbs have irregular preterite stems that must be memorized separately from the regular pattern.", ja: "よく使う動詞の多くは点過去で不規則な語幹を持ち、規則活用とは別に覚える必要があります。" },
+    examples: [
+      { es: "Fui al banco esta mañana.", translation: { en: "I went to the bank this morning.", ja: "今朝銀行に行きました。" } },
+      { es: "Tuve una entrevista ayer.", translation: { en: "I had an interview yesterday.", ja: "昨日面接がありました。" } },
+    ],
+  },
+  {
+    id: "imperfecto", label: "imperfecto (-aba / -ía)", titleKey: "esGramImperfectoTitle",
+    pattern: { en: "trabajar → trabajaba — vivir → vivía", ja: "trabajar → trabajaba　vivir → vivía" },
+    explanation: { en: "The imperfect describes ongoing or habitual past actions, without a clear beginning or end.", ja: "線過去は、明確な始まりや終わりのない、継続的・習慣的な過去の動作を表します。" },
+    examples: [
+      { es: "Antes trabajaba en una fábrica.", translation: { en: "I used to work in a factory.", ja: "以前は工場で働いていました。" } },
+      { es: "Cuando era niño, vivía en el campo.", translation: { en: "When I was a child, I lived in the countryside.", ja: "子供の頃、田舎に住んでいました。" } },
+    ],
+  },
+  {
+    id: "preterito-vs-imperfecto", label: "pretérito vs. imperfecto", titleKey: "esGramPvsITitle",
+    pattern: { en: "finished event vs. background/habit", ja: "完了した出来事　対　背景・習慣" },
+    explanation: { en: "Use preterite for the main completed action and imperfect for the background situation surrounding it.", ja: "点過去は完了した主な出来事に、線過去はその背景にある状況に使います。" },
+    examples: [
+      { es: "Llovía cuando salí de la oficina.", translation: { en: "It was raining when I left the office.", ja: "オフィスを出たとき雨が降っていました。" } },
+      { es: "Estaba cansado, pero terminé el trabajo.", translation: { en: "I was tired, but I finished the work.", ja: "疲れていましたが、仕事を終えました。" } },
+    ],
+  },
+  {
+    id: "futuro-simple", label: "futuro simple (-é)", titleKey: "esGramFuturoTitle",
+    pattern: { en: "infinitive + é/ás/á/emos/án", ja: "不定詞＋é/ás/á/emos/án" },
+    explanation: { en: "The simple future is formed by adding endings directly to the infinitive, with no stem change for regular verbs.", ja: "単純未来は不定詞にそのまま語尾を付けて作り、規則動詞では語幹の変化はありません。" },
+    examples: [
+      { es: "Mañana llegaré temprano.", translation: { en: "Tomorrow I'll arrive early.", ja: "明日は早く着きます。" } },
+      { es: "El próximo mes ahorraremos más.", translation: { en: "Next month we'll save more.", ja: "来月はもっと貯金します。" } },
+    ],
+  },
+  {
+    id: "ir-a-infinitivo", label: "ir a + infinitivo", titleKey: "esGramIrAInfinitivoTitle",
+    pattern: { en: "ir (conjugated) + a + infinitive", ja: "ir（活用）＋a＋不定詞" },
+    explanation: { en: "This is the most common way to talk about near-future plans in everyday spoken Spanish.", ja: "日常会話で近い未来の予定を話す最も一般的な言い方です。" },
+    examples: [
+      { es: "Voy a comprar unos zapatos.", translation: { en: "I'm going to buy some shoes.", ja: "靴を買うつもりです。" } },
+      { es: "Vamos a tener una entrevista mañana.", translation: { en: "We're going to have an interview tomorrow.", ja: "明日面接があります。" } },
+    ],
+  },
+  {
+    id: "comparativos", label: "más que / menos que", titleKey: "esGramComparativosTitle",
+    pattern: { en: "más/menos + adj + que — tan + adj + como", ja: "más/menos＋形容詞＋que　tan＋形容詞＋como" },
+    explanation: { en: "Comparisons of superiority/inferiority use más/menos...que; equality uses tan...como.", ja: "優劣の比較にはmás/menos...queを、同等比較にはtan...comoを使います。" },
+    examples: [
+      { es: "Este trabajo es más difícil que el anterior.", translation: { en: "This job is harder than the previous one.", ja: "この仕事は前の仕事より難しいです。" } },
+      { es: "Ella es tan rápida como su compañero.", translation: { en: "She is as fast as her coworker.", ja: "彼女は同僚と同じくらい速いです。" } },
+    ],
+  },
+  {
+    id: "reflexivos", label: "verbos reflexivos", titleKey: "esGramReflexivosTitle",
+    pattern: { en: "me/te/se/nos/se + verb", ja: "me/te/se/nos/se＋動詞" },
+    explanation: { en: "Reflexive verbs are used when the subject performs the action on themselves.", ja: "再帰動詞は、主語が自分自身に対して動作を行うときに使います。" },
+    examples: [
+      { es: "Me levanto a las seis.", translation: { en: "I get up at six.", ja: "6時に起きます。" } },
+      { es: "Se sienten mal por el error.", translation: { en: "They feel bad about the mistake.", ja: "彼らはその間違いを気にしています。" } },
+    ],
+  },
+  {
+    id: "por-para", label: "por / para", titleKey: "esGramPorParaTitle",
+    pattern: { en: "por = cause/through/exchange — para = purpose/destination", ja: "por＝原因・経由・交換　para＝目的・宛先" },
+    explanation: { en: "One of the trickiest distinctions for learners: por looks backward (cause, means), para looks forward (goal, recipient).", ja: "学習者にとって特に難しい区別：porは原因・手段（過去を見る）、paraは目的・宛先（未来を見る）です。" },
+    examples: [
+      { es: "Este regalo es para mi jefe.", translation: { en: "This gift is for my boss.", ja: "このプレゼントは上司へです。" } },
+      { es: "Trabajo por la mañana.", translation: { en: "I work in the morning.", ja: "午前中に働きます。" } },
+    ],
+  },
+  {
+    id: "adverbios-mente", label: "adverbios en -mente", titleKey: "esGramAdverbiosTitle",
+    pattern: { en: "adjective (feminine) + -mente", ja: "形容詞（女性形）＋-mente" },
+    explanation: { en: "Adverbs of manner are formed by adding -mente to the feminine singular form of the adjective.", ja: "様態の副詞は、形容詞の女性単数形に-menteを付けて作ります。" },
+    examples: [
+      { es: "Ella trabaja rápidamente.", translation: { en: "She works quickly.", ja: "彼女は素早く働きます。" } },
+      { es: "Normalmente llego a las ocho.", translation: { en: "I usually arrive at eight.", ja: "普通は8時に着きます。" } },
+    ],
+  },
+  {
+    id: "objeto-pronombres", label: "lo / la / le", titleKey: "esGramObjetoTitle",
+    pattern: { en: "direct: lo/la/los/las — indirect: le/les", ja: "直接目的語：lo/la/los/las　間接目的語：le/les" },
+    explanation: { en: "Object pronouns replace already-mentioned nouns and usually go right before the conjugated verb.", ja: "目的語代名詞はすでに述べた名詞の代わりに使い、通常は活用した動詞の直前に置きます。" },
+    examples: [
+      { es: "El documento, lo firmé ayer.", translation: { en: "The document, I signed it yesterday.", ja: "その書類は昨日サインしました。" } },
+      { es: "Le expliqué el problema al jefe.", translation: { en: "I explained the problem to the boss.", ja: "上司に問題を説明しました。" } },
+    ],
+  },
+  {
+    id: "se-impersonal", label: "se + verbo", titleKey: "esGramSeImpersonalTitle",
+    pattern: { en: "se + 3rd person verb (impersonal / passive)", ja: "se＋三人称動詞（無人称・受動）" },
+    explanation: { en: "Very common in signs and instructions where the subject isn't important — equivalent to English 'one does' or passive voice.", ja: "主語が重要でない標識や指示によく使われ、英語の受動態に相当します。" },
+    examples: [
+      { es: "Se prohíbe fumar aquí.", translation: { en: "Smoking is prohibited here.", ja: "ここは禁煙です。" } },
+      { es: "Se revisan las máquinas cada semana.", translation: { en: "The machines are checked every week.", ja: "機械は毎週点検されます。" } },
+    ],
+  },
+  {
+    id: "condicional", label: "condicional (-ría)", titleKey: "esGramCondicionalTitle",
+    pattern: { en: "infinitive + ía/ías/ía/íamos/ían", ja: "不定詞＋ía/ías/ía/íamos/ían" },
+    explanation: { en: "The conditional is used for polite requests and hypothetical situations.", ja: "可能法は丁寧な依頼や仮定の状況を表すのに使います。" },
+    examples: [
+      { es: "¿Podría ayudarme con esto?", translation: { en: "Could you help me with this?", ja: "これを手伝っていただけますか。" } },
+      { es: "Me gustaría cambiar de horario.", translation: { en: "I would like to change my schedule.", ja: "スケジュールを変更したいです。" } },
+    ],
+  },
+  {
+    id: "subjuntivo-intro", label: "espero que + subjuntivo", titleKey: "esGramSubjuntivoIntroTitle",
+    pattern: { en: "espero/quiero que + subjunctive", ja: "espero/quiero que＋接続法" },
+    explanation: { en: "A first taste of the subjunctive: verbs of hope/wish trigger a special verb form in the following clause.", ja: "接続法の入門：希望を表す動詞は、続く節で特別な動詞の形を要求します。" },
+    examples: [
+      { es: "Espero que todo salga bien.", translation: { en: "I hope everything goes well.", ja: "すべてうまくいくことを願っています。" } },
+      { es: "Quiero que revises el pedido.", translation: { en: "I want you to check the order.", ja: "注文を確認してほしいです。" } },
+    ],
+  },
+  {
+    id: "desde-hace", label: "desde / hace", titleKey: "esGramDesdeHaceTitle",
+    pattern: { en: "trabajo aquí desde 2020 / hace tres años", ja: "trabajo aquí desde 2020／hace tres años" },
+    explanation: { en: "'Desde' marks a starting point, 'hace' expresses a duration of time that has passed.", ja: "「desde」は起点を、「hace」は経過した期間を表します。" },
+    examples: [
+      { es: "Vivo aquí desde el año pasado.", translation: { en: "I've lived here since last year.", ja: "去年からここに住んでいます。" } },
+      { es: "Hace dos años que trabajo en la empresa.", translation: { en: "I've worked at the company for two years.", ja: "この会社で働いて2年になります。" } },
+    ],
+  },
+];
+
+const ES_A2_CONVERSATION_SCENES = [
+  {
+    id: "systemTrainingEs", icon: "🖥️", titleKey: "esConvTrainingTitle",
+    lineas: [
+      { segments: [{ text: "A: " }, { text: "Hoy voy a explicar el sistema nuevo." }], traduccion: { en: "Today I'm going to explain the new system.", ja: "今日は新しいシステムを説明します。" } },
+      { segments: [{ text: "B: " }, { text: "Perfecto, ¿por dónde empezamos?" }], traduccion: { en: "Perfect, where do we start?", ja: "いいですね、どこから始めますか。" } },
+      { segments: [{ text: "A: " }, { text: "Primero necesitas una contraseña nueva." }], traduccion: { en: "First you need a new password.", ja: "まず新しいパスワードが必要です。" } },
+      { segments: [{ text: "B: " }, { text: "¿Y cómo guardo los archivos?" }], traduccion: { en: "And how do I save the files?", ja: "ファイルはどう保存しますか。" } },
+      { segments: [{ text: "A: " }, { text: "Se guardan automáticamente cada cinco minutos." }], traduccion: { en: "They save automatically every five minutes.", ja: "5分ごとに自動的に保存されます。" } },
+    ],
+  },
+  {
+    id: "doctorVisitEs", icon: "🩺", titleKey: "esConvDoctorTitle",
+    lineas: [
+      { segments: [{ text: "A: " }, { text: "Buenos días, ¿qué le pasa?" }], traduccion: { en: "Good morning, what's wrong?", ja: "おはようございます、どうされましたか。" } },
+      { segments: [{ text: "B: " }, { text: "Tengo dolor de cabeza y un poco de fiebre." }], traduccion: { en: "I have a headache and a bit of a fever.", ja: "頭痛と少し熱があります。" } },
+      { segments: [{ text: "A: " }, { text: "¿Desde cuándo se siente así?" }], traduccion: { en: "Since when have you been feeling like this?", ja: "いつからこう感じていますか。" } },
+      { segments: [{ text: "B: " }, { text: "Desde ayer por la noche." }], traduccion: { en: "Since last night.", ja: "昨晩からです。" } },
+      { segments: [{ text: "A: " }, { text: "Le voy a dar una receta. Descanse, por favor." }], traduccion: { en: "I'll give you a prescription. Please rest.", ja: "処方箋をお渡しします。休んでください。" } },
+    ],
+  },
+  {
+    id: "airportEs", icon: "✈️", titleKey: "esConvAirportTitle",
+    lineas: [
+      { segments: [{ text: "A: " }, { text: "Buenas tardes, su pasaporte, por favor." }], traduccion: { en: "Good afternoon, your passport, please.", ja: "こんにちは、パスポートをお願いします。" } },
+      { segments: [{ text: "B: " }, { text: "Aquí está. ¿A qué hora sale el vuelo?" }], traduccion: { en: "Here it is. What time does the flight leave?", ja: "どうぞ。フライトは何時に出発しますか。" } },
+      { segments: [{ text: "A: " }, { text: "Sale a las tres, pero hay un pequeño retraso." }], traduccion: { en: "It leaves at three, but there's a small delay.", ja: "3時に出発しますが、少し遅れがあります。" } },
+      { segments: [{ text: "B: " }, { text: "Entiendo. ¿Dónde pongo mi maleta?" }], traduccion: { en: "I understand. Where do I put my suitcase?", ja: "わかりました。スーツケースはどこに置きますか。" } },
+      { segments: [{ text: "A: " }, { text: "Aquí, por favor. Buen viaje." }], traduccion: { en: "Here, please. Have a good trip.", ja: "ここにお願いします。良い旅を。" } },
+    ],
+  },
+  {
+    id: "bankEs", icon: "🏦", titleKey: "esConvBankTitle",
+    lineas: [
+      { segments: [{ text: "A: " }, { text: "Buenos días, quiero abrir una cuenta." }], traduccion: { en: "Good morning, I want to open an account.", ja: "おはようございます、口座を開きたいです。" } },
+      { segments: [{ text: "B: " }, { text: "Claro, ¿tiene su identificación?" }], traduccion: { en: "Sure, do you have your ID?", ja: "はい、身分証明書はお持ちですか。" } },
+      { segments: [{ text: "A: " }, { text: "Sí, aquí está. También necesito un préstamo." }], traduccion: { en: "Yes, here it is. I also need a loan.", ja: "はい、どうぞ。ローンも必要です。" } },
+      { segments: [{ text: "B: " }, { text: "Bien, ¿cuánto dinero necesita?" }], traduccion: { en: "Okay, how much money do you need?", ja: "わかりました、いくら必要ですか。" } },
+      { segments: [{ text: "A: " }, { text: "Necesito ahorrar y pedir mil dólares." }], traduccion: { en: "I need to save and borrow a thousand dollars.", ja: "貯金もしたいですし、千ドル借りたいです。" } },
+    ],
+  },
+  {
+    id: "qualityControlEs", icon: "📦", titleKey: "esConvQualityTitle",
+    lineas: [
+      { segments: [{ text: "A: " }, { text: "Encontré un defecto en este producto." }], traduccion: { en: "I found a defect in this product.", ja: "この製品に欠陥を見つけました。" } },
+      { segments: [{ text: "B: " }, { text: "¿Podemos rechazar todo el pedido?" }], traduccion: { en: "Can we reject the whole order?", ja: "注文全体を却下できますか。" } },
+      { segments: [{ text: "A: " }, { text: "No, solo esta parte de la línea de producción." }], traduccion: { en: "No, just this part of the production line.", ja: "いいえ、生産ラインのこの部分だけです。" } },
+      { segments: [{ text: "B: " }, { text: "Entiendo. Voy a llamar al proveedor." }], traduccion: { en: "I understand. I'll call the supplier.", ja: "わかりました。仕入先に電話します。" } },
+      { segments: [{ text: "A: " }, { text: "Perfecto, así cumplimos con la calidad." }], traduccion: { en: "Perfect, that way we meet quality standards.", ja: "完璧です、それで品質を保てます。" } },
+    ],
+  },
+];
+
+const ES_B1_VOCAB_CATEGORIES = [
+  {
+    id: "business",
+    icon: "📈",
+    titleKey: "esCatBusiness",
+    words: [
+      { word: "la estrategia", meaning: { en: "strategy", ja: "戦略" } },
+      { word: "el mercado", meaning: { en: "market", ja: "市場" } },
+      { word: "la competencia", meaning: { en: "competition", ja: "競争" } },
+      { word: "la ganancia", meaning: { en: "profit", ja: "利益" } },
+      { word: "la pérdida", meaning: { en: "loss", ja: "損失" } },
+      { word: "la inversión", meaning: { en: "investment", ja: "投資" } },
+      { word: "el objetivo", meaning: { en: "objective/goal", ja: "目標" } },
+      { word: "expandir", meaning: { en: "to expand", ja: "拡大する" } },
+      { word: "el socio", meaning: { en: "business partner", ja: "パートナー" } },
+      { word: "la fusión", meaning: { en: "merger", ja: "合併" } },
+      { word: "negociar", meaning: { en: "to negotiate", ja: "交渉する" } },
+      { word: "el acuerdo", meaning: { en: "agreement", ja: "合意" } },
+    ],
+  },
+  {
+    id: "legal",
+    icon: "⚖️",
+    titleKey: "esCatLegal",
+    words: [
+      { word: "el contrato", meaning: { en: "contract", ja: "契約書" } },
+      { word: "la cláusula", meaning: { en: "clause", ja: "条項" } },
+      { word: "la ley", meaning: { en: "law", ja: "法律" } },
+      { word: "el derecho", meaning: { en: "right", ja: "権利" } },
+      { word: "la obligación", meaning: { en: "obligation", ja: "義務" } },
+      { word: "el incumplimiento", meaning: { en: "breach", ja: "違反" } },
+      { word: "la demanda", meaning: { en: "lawsuit", ja: "訴訟" } },
+      { word: "el abogado", meaning: { en: "lawyer", ja: "弁護士" } },
+      { word: "la responsabilidad", meaning: { en: "liability", ja: "責任" } },
+      { word: "vigente", meaning: { en: "in effect", ja: "有効な" } },
+      { word: "confidencial", meaning: { en: "confidential", ja: "機密の" } },
+      { word: "la garantía", meaning: { en: "warranty", ja: "保証" } },
+    ],
+  },
+  {
+    id: "environment",
+    icon: "🌎",
+    titleKey: "esCatEnvironment",
+    words: [
+      { word: "el medio ambiente", meaning: { en: "environment", ja: "環境" } },
+      { word: "la contaminación", meaning: { en: "pollution", ja: "汚染" } },
+      { word: "el reciclaje", meaning: { en: "recycling", ja: "リサイクル" } },
+      { word: "sostenible", meaning: { en: "sustainable", ja: "持続可能な" } },
+      { word: "los recursos naturales", meaning: { en: "natural resources", ja: "天然資源" } },
+      { word: "el cambio climático", meaning: { en: "climate change", ja: "気候変動" } },
+      { word: "la energía renovable", meaning: { en: "renewable energy", ja: "再生可能エネルギー" } },
+      { word: "reducir", meaning: { en: "to reduce", ja: "減らす" } },
+      { word: "el desperdicio", meaning: { en: "waste", ja: "廃棄物" } },
+      { word: "la huella de carbono", meaning: { en: "carbon footprint", ja: "カーボンフットプリント" } },
+      { word: "proteger", meaning: { en: "to protect", ja: "守る" } },
+      { word: "la especie", meaning: { en: "species", ja: "種" } },
+    ],
+  },
+  {
+    id: "emotions",
+    icon: "🎭",
+    titleKey: "esCatEmotions",
+    words: [
+      { word: "la personalidad", meaning: { en: "personality", ja: "性格" } },
+      { word: "confiado / inseguro", meaning: { en: "confident / insecure", ja: "自信がある・不安な" } },
+      { word: "paciente / impaciente", meaning: { en: "patient / impatient", ja: "忍耐強い・せっかちな" } },
+      { word: "orgulloso", meaning: { en: "proud", ja: "誇りに思う" } },
+      { word: "decepcionado", meaning: { en: "disappointed", ja: "がっかりした" } },
+      { word: "sorprendido", meaning: { en: "surprised", ja: "驚いた" } },
+      { word: "aliviado", meaning: { en: "relieved", ja: "安心した" } },
+      { word: "frustrado", meaning: { en: "frustrated", ja: "苛立った" } },
+      { word: "motivado", meaning: { en: "motivated", ja: "やる気のある" } },
+      { word: "agradecido", meaning: { en: "grateful", ja: "感謝している" } },
+      { word: "sensible", meaning: { en: "sensitive", ja: "繊細な" } },
+      { word: "extrovertido / introvertido", meaning: { en: "extroverted / introverted", ja: "外向的・内向的" } },
+    ],
+  },
+  {
+    id: "society",
+    icon: "🏛️",
+    titleKey: "esCatSociety",
+    words: [
+      { word: "la sociedad", meaning: { en: "society", ja: "社会" } },
+      { word: "el gobierno", meaning: { en: "government", ja: "政府" } },
+      { word: "la comunidad", meaning: { en: "community", ja: "コミュニティ" } },
+      { word: "el ciudadano", meaning: { en: "citizen", ja: "市民" } },
+      { word: "los impuestos", meaning: { en: "taxes", ja: "税金" } },
+      { word: "la educación", meaning: { en: "education", ja: "教育" } },
+      { word: "la desigualdad", meaning: { en: "inequality", ja: "不平等" } },
+      { word: "el desarrollo", meaning: { en: "development", ja: "発展" } },
+      { word: "la opinión pública", meaning: { en: "public opinion", ja: "世論" } },
+      { word: "votar", meaning: { en: "to vote", ja: "投票する" } },
+      { word: "los derechos humanos", meaning: { en: "human rights", ja: "人権" } },
+      { word: "la inmigración", meaning: { en: "immigration", ja: "移民" } },
+    ],
+  },
+  {
+    id: "logistics",
+    icon: "🚚",
+    titleKey: "esCatLogistics",
+    words: [
+      { word: "la cadena de suministro", meaning: { en: "supply chain", ja: "サプライチェーン" } },
+      { word: "el almacén", meaning: { en: "warehouse", ja: "倉庫" } },
+      { word: "el transporte", meaning: { en: "transportation", ja: "輸送" } },
+      { word: "la mercancía", meaning: { en: "merchandise/goods", ja: "商品" } },
+      { word: "el envío", meaning: { en: "shipment", ja: "発送" } },
+      { word: "la aduana", meaning: { en: "customs", ja: "税関" } },
+      { word: "el contenedor", meaning: { en: "container", ja: "コンテナ" } },
+      { word: "la ruta", meaning: { en: "route", ja: "ルート" } },
+      { word: "el plazo de entrega", meaning: { en: "delivery deadline", ja: "納期" } },
+      { word: "el costo de envío", meaning: { en: "shipping cost", ja: "送料" } },
+      { word: "rastrear", meaning: { en: "to track", ja: "追跡する" } },
+      { word: "escasez", meaning: { en: "shortage", ja: "不足" } },
+    ],
+  },
+  {
+    id: "leadership",
+    icon: "👔",
+    titleKey: "esCatLeadership",
+    words: [
+      { word: "el liderazgo", meaning: { en: "leadership", ja: "リーダーシップ" } },
+      { word: "el equipo", meaning: { en: "team", ja: "チーム" } },
+      { word: "delegar", meaning: { en: "to delegate", ja: "委任する" } },
+      { word: "el desempeño", meaning: { en: "performance", ja: "業績・成果" } },
+      { word: "la retroalimentación", meaning: { en: "feedback", ja: "フィードバック" } },
+      { word: "motivar", meaning: { en: "to motivate", ja: "やる気にさせる" } },
+      { word: "la toma de decisiones", meaning: { en: "decision-making", ja: "意思決定" } },
+      { word: "el conflicto", meaning: { en: "conflict", ja: "対立" } },
+      { word: "resolver", meaning: { en: "to resolve", ja: "解決する" } },
+      { word: "la meta a largo plazo", meaning: { en: "long-term goal", ja: "長期目標" } },
+      { word: "supervisar", meaning: { en: "to supervise", ja: "監督する" } },
+      { word: "el logro", meaning: { en: "achievement", ja: "達成" } },
+    ],
+  },
+  {
+    id: "cybersecurity",
+    icon: "🔐",
+    titleKey: "esCatCybersecurity",
+    words: [
+      { word: "la seguridad informática", meaning: { en: "cybersecurity", ja: "情報セキュリティ" } },
+      { word: "el virus", meaning: { en: "virus", ja: "ウイルス" } },
+      { word: "el hackeo", meaning: { en: "hacking", ja: "ハッキング" } },
+      { word: "la brecha de datos", meaning: { en: "data breach", ja: "データ漏洩" } },
+      { word: "el cifrado", meaning: { en: "encryption", ja: "暗号化" } },
+      { word: "la copia de seguridad", meaning: { en: "backup", ja: "バックアップ" } },
+      { word: "sospechoso", meaning: { en: "suspicious", ja: "怪しい" } },
+      { word: "el correo fraudulento", meaning: { en: "phishing email", ja: "フィッシングメール" } },
+      { word: "bloquear", meaning: { en: "to block", ja: "ブロックする" } },
+      { word: "el firewall", meaning: { en: "firewall", ja: "ファイアウォール" } },
+      { word: "la vulnerabilidad", meaning: { en: "vulnerability", ja: "脆弱性" } },
+      { word: "reportar el incidente", meaning: { en: "to report the incident", ja: "インシデントを報告する" } },
+    ],
+  },
+];
+
+const ES_B1_GRAMMAR_POINTS = [
+  {
+    id: "subjuntivo-presente", label: "subjuntivo presente", titleKey: "esGramSubjuntivoPresenteTitle",
+    pattern: { en: "-ar → -e/-es/-e — -er/-ir → -a/-as/-a", ja: "-ar→-e/-es/-e　-er/-ir→-a/-as/-a" },
+    explanation: { en: "The present subjunctive swaps the usual vowel of the indicative endings — -ar verbs use e-endings, -er/-ir verbs use a-endings.", ja: "接続法現在は直説法の語尾の母音を入れ替えます。-ar動詞はe系、-er/-ir動詞はa系の語尾になります。" },
+    examples: [
+      { es: "Es importante que llegues a tiempo.", translation: { en: "It's important that you arrive on time.", ja: "時間通りに着くことが重要です。" } },
+      { es: "Dudo que él tenga razón.", translation: { en: "I doubt he's right.", ja: "彼が正しいとは思えません。" } },
+    ],
+  },
+  {
+    id: "subjuntivo-duda", label: "dudar que / no creer que", titleKey: "esGramSubjuntivoDudaTitle",
+    pattern: { en: "dudar/no creer/no pensar + que + subjunctive", ja: "dudar/no creer/no pensar＋que＋接続法" },
+    explanation: { en: "Expressions of doubt or denial trigger the subjunctive in the following clause, unlike expressions of certainty.", ja: "疑いや否定を表す表現は、続く節で接続法を要求します。確信を表す表現とは異なります。" },
+    examples: [
+      { es: "No creo que el proveedor entregue a tiempo.", translation: { en: "I don't think the supplier will deliver on time.", ja: "仕入先が時間通りに届けるとは思えません。" } },
+      { es: "Dudamos que haya suficiente inventario.", translation: { en: "We doubt there's enough inventory.", ja: "十分な在庫があるとは思えません。" } },
+    ],
+  },
+  {
+    id: "subjuntivo-conjunciones", label: "cuando / para que + subjuntivo", titleKey: "esGramSubjuntivoConjTitle",
+    pattern: { en: "cuando/para que/antes de que + subjunctive (future/uncertain)", ja: "cuando/para que/antes de que＋接続法（未来・不確実）" },
+    explanation: { en: "Certain conjunctions require the subjunctive when referring to a future or uncertain event, not a habitual one.", ja: "一部の接続詞は、未来や不確実な出来事を指すとき接続法を要求します（習慣的な出来事ではありません）。" },
+    examples: [
+      { es: "Te avisaré cuando termine la reunión.", translation: { en: "I'll let you know when the meeting ends.", ja: "会議が終わったらお知らせします。" } },
+      { es: "Trabajamos horas extra para que el cliente esté contento.", translation: { en: "We work overtime so the client is happy.", ja: "お客様に満足していただくために残業しています。" } },
+    ],
+  },
+  {
+    id: "imperativo-negativo", label: "no + subjuntivo (mandato)", titleKey: "esGramImperativoNegativoTitle",
+    pattern: { en: "no + present subjunctive form", ja: "no＋接続法現在形" },
+    explanation: { en: "Negative commands always use the subjunctive form, unlike affirmative commands.", ja: "否定命令は肯定命令と異なり、常に接続法の形を使います。" },
+    examples: [
+      { es: "No firme el contrato todavía.", translation: { en: "Don't sign the contract yet.", ja: "まだ契約書にサインしないでください。" } },
+      { es: "No envíen el pedido sin revisarlo.", translation: { en: "Don't send the order without checking it.", ja: "確認せずに注文を送らないでください。" } },
+    ],
+  },
+  {
+    id: "preterito-perfecto", label: "he trabajado", titleKey: "esGramPreteritoPerfectoTitle",
+    pattern: { en: "haber (present) + past participle", ja: "haber（現在形）＋過去分詞" },
+    explanation: { en: "Describes a recent past action still relevant to the present, common in most of Spain and parts of Latin America.", ja: "現在に関連する最近の過去の出来事を表し、スペインの多くの地域やラテンアメリカの一部でよく使われます。" },
+    examples: [
+      { es: "He revisado todos los documentos.", translation: { en: "I have reviewed all the documents.", ja: "すべての書類を確認しました。" } },
+      { es: "Todavía no hemos recibido el envío.", translation: { en: "We still haven't received the shipment.", ja: "まだ発送物を受け取っていません。" } },
+    ],
+  },
+  {
+    id: "pluscuamperfecto", label: "había trabajado", titleKey: "esGramPluscuamperfectoTitle",
+    pattern: { en: "había/habías... + past participle", ja: "había/habías...＋過去分詞" },
+    explanation: { en: "Describes an action completed before another past action — 'the past of the past'.", ja: "別の過去の出来事より前に完了した動作を表す「過去の過去」です。" },
+    examples: [
+      { es: "Cuando llegué, ya habían resuelto el conflicto.", translation: { en: "When I arrived, they had already resolved the conflict.", ja: "私が着いたとき、すでに対立は解決していました。" } },
+      { es: "Había ahorrado suficiente antes de invertir.", translation: { en: "I had saved enough before investing.", ja: "投資する前に十分に貯金していました。" } },
+    ],
+  },
+  {
+    id: "voz-pasiva", label: "voz pasiva (ser + participio)", titleKey: "esGramVozPasivaTitle",
+    pattern: { en: "ser + past participle (+ por + agent)", ja: "ser＋過去分詞（＋por＋動作主）" },
+    explanation: { en: "The passive voice with ser is more formal and less common in speech than the se-impersonal construction from A2.", ja: "serを使う受動態はより形式的で、A2で学んだse無人称構文より会話ではあまり使われません。" },
+    examples: [
+      { es: "El contrato fue firmado por ambas partes.", translation: { en: "The contract was signed by both parties.", ja: "契約書は両当事者によって署名されました。" } },
+      { es: "La estrategia fue aprobada por la gerencia.", translation: { en: "The strategy was approved by management.", ja: "戦略は経営陣によって承認されました。" } },
+    ],
+  },
+  {
+    id: "gerundio", label: "estar + gerundio", titleKey: "esGramGerundioTitle",
+    pattern: { en: "estar (conjugated) + -ando/-iendo", ja: "estar（活用）＋-ando/-iendo" },
+    explanation: { en: "The present progressive emphasizes an action happening right now, more vivid than the simple present.", ja: "現在進行形は今まさに起きている動作を強調し、単純現在形より生き生きとした表現です。" },
+    examples: [
+      { es: "Estamos negociando un nuevo contrato.", translation: { en: "We are negotiating a new contract.", ja: "新しい契約を交渉しているところです。" } },
+      { es: "El equipo está resolviendo el problema.", translation: { en: "The team is solving the problem.", ja: "チームが問題を解決しているところです。" } },
+    ],
+  },
+  {
+    id: "condicional-si-1", label: "si + presente, futuro", titleKey: "esGramSiTipo1Title",
+    pattern: { en: "si + present indicative, + future/present/command", ja: "si＋直説法現在、＋未来・現在・命令" },
+    explanation: { en: "Real/likely conditions use the present indicative after 'si', never the subjunctive.", ja: "現実的・起こりそうな条件文では、「si」の後は直説法現在を使い、接続法は使いません。" },
+    examples: [
+      { es: "Si terminamos a tiempo, celebraremos.", translation: { en: "If we finish on time, we'll celebrate.", ja: "時間通りに終わったら、お祝いしましょう。" } },
+      { es: "Si hay un problema, avísame.", translation: { en: "If there's a problem, let me know.", ja: "問題があれば教えてください。" } },
+    ],
+  },
+  {
+    id: "condicional-si-2", label: "si + imperfecto, condicional", titleKey: "esGramSiTipo2Title",
+    pattern: { en: "si + imperfect subjunctive, + conditional", ja: "si＋接続法過去、＋可能法" },
+    explanation: { en: "Hypothetical or unlikely conditions use the imperfect subjunctive after 'si', paired with the conditional in the result.", ja: "仮定的・起こりそうにない条件文では、「si」の後に接続法過去を使い、帰結節は可能法になります。" },
+    examples: [
+      { es: "Si tuviera más tiempo, aprendería otro idioma.", translation: { en: "If I had more time, I would learn another language.", ja: "もっと時間があれば、別の言語を学ぶでしょう。" } },
+      { es: "Si fuera el jefe, cambiaría el horario.", translation: { en: "If I were the boss, I would change the schedule.", ja: "もし上司だったら、スケジュールを変えるでしょう。" } },
+    ],
+  },
+  {
+    id: "estilo-indirecto", label: "estilo indirecto", titleKey: "esGramEstiloIndirectoTitle",
+    pattern: { en: "dijo que + (past tense shift)", ja: "dijo que＋（時制の変化）" },
+    explanation: { en: "Reported speech shifts present to imperfect and preterite to pluscuamperfecto, similar to English backshifting.", ja: "間接話法では、現在形は線過去に、点過去は過去完了に変わります。英語の時制の一致と似ています。" },
+    examples: [
+      { es: "Dijo que el pedido llegaría mañana.", translation: { en: "He said the order would arrive tomorrow.", ja: "注文は明日届くと言いました。" } },
+      { es: "Me explicó que había un problema con la cuenta.", translation: { en: "She explained to me that there was a problem with the account.", ja: "口座に問題があると説明してくれました。" } },
+    ],
+  },
+  {
+    id: "conectores", label: "sin embargo / por lo tanto", titleKey: "esGramConectoresTitle",
+    pattern: { en: "sin embargo (however), por lo tanto (therefore), además (moreover)", ja: "sin embargo（しかし）、por lo tanto（したがって）、además（さらに）" },
+    explanation: { en: "Discourse connectors make longer, more sophisticated arguments flow logically — essential for business and formal writing.", ja: "談話標識は、より長く洗練された議論を論理的につなげます。ビジネスや正式な文章に欠かせません。" },
+    examples: [
+      { es: "El costo subió; sin embargo, la calidad mejoró.", translation: { en: "The cost went up; however, the quality improved.", ja: "コストは上がりましたが、品質は向上しました。" } },
+      { es: "No cumplió el plazo; por lo tanto, perdimos el cliente.", translation: { en: "He didn't meet the deadline; therefore, we lost the client.", ja: "納期を守らなかったので、お客様を失いました。" } },
+    ],
+  },
+  {
+    id: "verbos-preposicion", label: "depender de / consistir en", titleKey: "esGramVerbosPreposicionTitle",
+    pattern: { en: "depender de, consistir en, tratarse de, contar con", ja: "depender de、consistir en、tratarse de、contar con" },
+    explanation: { en: "Many Spanish verbs require a fixed preposition that doesn't always match the English equivalent — these must be memorized as chunks.", ja: "多くのスペイン語動詞は固定の前置詞を必要とし、英語の対応語と一致しないこともあります。まとまりとして覚えましょう。" },
+    examples: [
+      { es: "El éxito depende del equipo.", translation: { en: "Success depends on the team.", ja: "成功はチーム次第です。" } },
+      { es: "Contamos contigo para este proyecto.", translation: { en: "We're counting on you for this project.", ja: "このプロジェクトはあなたを頼りにしています。" } },
+    ],
+  },
+  {
+    id: "futuro-perfecto", label: "habré terminado", titleKey: "esGramFuturoPerfectoTitle",
+    pattern: { en: "habré/habrás... + past participle", ja: "habré/habrás...＋過去分詞" },
+    explanation: { en: "Expresses an action that will be completed before a specific point in the future.", ja: "未来のある時点までに完了しているはずの動作を表します。" },
+    examples: [
+      { es: "Para el viernes, habré terminado el reporte.", translation: { en: "By Friday, I will have finished the report.", ja: "金曜日までにレポートを終わらせているでしょう。" } },
+      { es: "Habremos entregado el pedido antes del plazo.", translation: { en: "We will have delivered the order before the deadline.", ja: "納期前に注文を配達しているでしょう。" } },
+    ],
+  },
+  {
+    id: "relativos", label: "que / quien / donde", titleKey: "esGramRelativosTitle",
+    pattern: { en: "que (thing/person), quien (person, formal), donde (place)", ja: "que（物・人）、quien（人、formal）、donde（場所）" },
+    explanation: { en: "Relative clauses let you combine two sentences into one, adding detail without repeating the noun.", ja: "関係節は二つの文を一つにまとめ、名詞を繰り返さずに詳細を加えられます。" },
+    examples: [
+      { es: "El socio con quien negocié es muy profesional.", translation: { en: "The partner with whom I negotiated is very professional.", ja: "交渉した相手はとてもプロフェッショナルです。" } },
+      { es: "La empresa donde trabajo está creciendo.", translation: { en: "The company where I work is growing.", ja: "私が働いている会社は成長しています。" } },
+    ],
+  },
+];
+
+const ES_B1_CONVERSATION_SCENES = [
+  {
+    id: "contractNegotiationEs", icon: "💼", titleKey: "esConvContractTitle",
+    lineas: [
+      { segments: [{ text: "A: " }, { text: "Hemos revisado su propuesta y tenemos algunas dudas." }], traduccion: { en: "We've reviewed your proposal and have a few doubts.", ja: "ご提案を確認しましたが、いくつか疑問があります。" } },
+      { segments: [{ text: "B: " }, { text: "Claro, dígame qué cláusula le preocupa." }], traduccion: { en: "Sure, tell me which clause concerns you.", ja: "はい、どの条項がご心配か教えてください。" } },
+      { segments: [{ text: "A: " }, { text: "El plazo de entrega es muy corto para nosotros." }], traduccion: { en: "The delivery deadline is very short for us.", ja: "納期が私たちには短すぎます。" } },
+      { segments: [{ text: "B: " }, { text: "Entiendo. Si extendemos el plazo, ¿aceptaría el precio actual?" }], traduccion: { en: "I understand. If we extend the deadline, would you accept the current price?", ja: "わかりました。納期を延ばせば、現在の価格を受け入れていただけますか。" } },
+      { segments: [{ text: "A: " }, { text: "Sí, siempre que quede por escrito en el contrato." }], traduccion: { en: "Yes, as long as it's put in writing in the contract.", ja: "はい、契約書に明記していただければ。" } },
+    ],
+  },
+  {
+    id: "environmentDebateEs", icon: "🌎", titleKey: "esConvEnvironmentTitle",
+    lineas: [
+      { segments: [{ text: "A: " }, { text: "Creo que deberíamos invertir en energía renovable." }], traduccion: { en: "I think we should invest in renewable energy.", ja: "再生可能エネルギーに投資すべきだと思います。" } },
+      { segments: [{ text: "B: " }, { text: "Estoy de acuerdo, pero el costo inicial es alto." }], traduccion: { en: "I agree, but the initial cost is high.", ja: "同感ですが、初期費用が高いです。" } },
+      { segments: [{ text: "A: " }, { text: "Sin embargo, reduciría nuestra huella de carbono a largo plazo." }], traduccion: { en: "However, it would reduce our carbon footprint in the long run.", ja: "しかし、長期的にはカーボンフットプリントを減らせます。" } },
+      { segments: [{ text: "B: " }, { text: "Es verdad. Además, mejoraría nuestra imagen pública." }], traduccion: { en: "That's true. Plus, it would improve our public image.", ja: "確かに。それに、世間からのイメージも良くなります。" } },
+      { segments: [{ text: "A: " }, { text: "Entonces propongo que lo presentemos al gobierno." }], traduccion: { en: "So I propose we present it to the government.", ja: "では、それを政府に提案することを提案します。" } },
+    ],
+  },
+  {
+    id: "performanceReviewEs", icon: "👔", titleKey: "esConvPerformanceTitle",
+    lineas: [
+      { segments: [{ text: "A: " }, { text: "Vamos a hablar de tu desempeño este año." }], traduccion: { en: "Let's talk about your performance this year.", ja: "今年のあなたの業績について話しましょう。" } },
+      { segments: [{ text: "B: " }, { text: "Claro, estoy orgulloso de lo que hemos logrado." }], traduccion: { en: "Sure, I'm proud of what we've achieved.", ja: "はい、私たちが達成したことを誇りに思っています。" } },
+      { segments: [{ text: "A: " }, { text: "Tu equipo ha cumplido todas las metas. Buen trabajo." }], traduccion: { en: "Your team has met all the goals. Good job.", ja: "あなたのチームはすべての目標を達成しました。よくやりました。" } },
+      { segments: [{ text: "B: " }, { text: "Gracias. Me gustaría hablar sobre un posible ascenso." }], traduccion: { en: "Thank you. I'd like to talk about a possible promotion.", ja: "ありがとうございます。昇進の可能性について話したいです。" } },
+      { segments: [{ text: "A: " }, { text: "Lo tendré en cuenta para el próximo trimestre." }], traduccion: { en: "I'll keep it in mind for next quarter.", ja: "来四半期に向けて検討します。" } },
+    ],
+  },
+  {
+    id: "logisticsProblemEs", icon: "🚚", titleKey: "esConvLogisticsTitle",
+    lineas: [
+      { segments: [{ text: "A: " }, { text: "Hay escasez de contenedores en el puerto." }], traduccion: { en: "There's a shortage of containers at the port.", ja: "港でコンテナが不足しています。" } },
+      { segments: [{ text: "B: " }, { text: "Eso va a retrasar toda la cadena de suministro." }], traduccion: { en: "That's going to delay the whole supply chain.", ja: "それがサプライチェーン全体を遅らせるでしょう。" } },
+      { segments: [{ text: "A: " }, { text: "¿Podríamos usar una ruta alternativa?" }], traduccion: { en: "Could we use an alternative route?", ja: "代替ルートを使えますか。" } },
+      { segments: [{ text: "B: " }, { text: "Sí, pero el costo de envío sería más alto." }], traduccion: { en: "Yes, but the shipping cost would be higher.", ja: "はい、でも送料が高くなります。" } },
+      { segments: [{ text: "A: " }, { text: "Entiendo. Avisemos al cliente antes de que se entere solo." }], traduccion: { en: "I understand. Let's tell the client before they find out on their own.", ja: "わかりました。お客様が自分で気づく前にお知らせしましょう。" } },
+    ],
+  },
+  {
+    id: "cyberIncidentEs", icon: "🔐", titleKey: "esConvCyberTitle",
+    lineas: [
+      { segments: [{ text: "A: " }, { text: "Recibí un correo fraudulento pidiendo mi contraseña." }], traduccion: { en: "I received a phishing email asking for my password.", ja: "パスワードを求めるフィッシングメールを受け取りました。" } },
+      { segments: [{ text: "B: " }, { text: "Buen trabajo al no responder. Repórtalo de inmediato." }], traduccion: { en: "Good job not replying. Report it immediately.", ja: "返信しなくて正解です。すぐに報告してください。" } },
+      { segments: [{ text: "A: " }, { text: "Ya lo reporté. ¿Debería cambiar mi contraseña?" }], traduccion: { en: "I already reported it. Should I change my password?", ja: "もう報告しました。パスワードを変更すべきですか。" } },
+      { segments: [{ text: "B: " }, { text: "Sí, y activa la verificación en dos pasos." }], traduccion: { en: "Yes, and enable two-factor verification.", ja: "はい、それに二段階認証も有効にしてください。" } },
+      { segments: [{ text: "A: " }, { text: "Entendido. Voy a avisar a todo el equipo también." }], traduccion: { en: "Understood. I'll let the whole team know too.", ja: "了解しました。チーム全員にも知らせます。" } },
+    ],
+  },
+];
+// ---------------------------------------------------
 // DOM + render
 // ---------------------------------------------------
 document.addEventListener("DOMContentLoaded", () => {
@@ -11244,6 +12628,57 @@ document.addEventListener("DOMContentLoaded", () => {
   const languageSelectJaBtn = document.getElementById("language-select-ja");
   const languageSelectEnBtn = document.getElementById("language-select-en");
   const languageSelectPtBtn = document.getElementById("language-select-pt");
+  const languageSelectEsBtn = document.getElementById("language-select-es");
+
+  // ==================== Módulo ESPAÑOL (réplica de Nihongo) ====================
+  const spanishModal = document.getElementById("spanish-modal");
+  const spanishModalClose = document.getElementById("spanish-modal-close");
+  const esFloatingBackBtn = document.getElementById("es-floating-back-btn");
+  const esVoiceChatShortcutBtn = document.getElementById("es-voicechat-shortcut-btn");
+  const esDictShortcutBtn = document.getElementById("es-dict-shortcut-btn");
+
+  const esViewWorldMap = document.getElementById("es-view-world-map");
+  const esWorldMapTrack = document.getElementById("es-world-map-track");
+  const esTierProgressBars = document.getElementById("es-tier-progress-bars");
+
+  const esViewWorldContent = document.getElementById("es-view-world-content");
+  const esWorldContentBackBtn = document.getElementById("es-world-content-back-btn");
+  const esWorldContentTitle = document.getElementById("es-world-content-title");
+  const esWorldContentTrack = document.getElementById("es-world-content-track");
+
+  const esViewVocab = document.getElementById("es-view-vocab");
+  const esVocabBackBtn = document.getElementById("es-vocab-back-btn");
+  const esLevelToggle = document.getElementById("es-level-toggle");
+  const esVocabCatGrid = document.getElementById("es-vocab-cat-grid");
+
+  const esViewVocabWords = document.getElementById("es-view-vocab-words");
+  const esVocabWordsBackBtn = document.getElementById("es-vocab-words-back-btn");
+  const esVocabWordsTitle = document.getElementById("es-vocab-words-title");
+  const esVocabWordsList = document.getElementById("es-vocab-words-list");
+  const esVocabQuizStartBtn = document.getElementById("es-vocab-quiz-start-btn");
+
+  const esViewGrammar = document.getElementById("es-view-grammar");
+  const esGrammarBackBtn = document.getElementById("es-grammar-back-btn");
+  const esGrammarList = document.getElementById("es-grammar-list");
+  const esGrammarQuizStartBtn = document.getElementById("es-grammar-quiz-start-btn");
+
+  const esViewConversations = document.getElementById("es-view-conversations");
+  const esConversationsBackBtn = document.getElementById("es-conversations-back-btn");
+  const esConversationSceneGrid = document.getElementById("es-conversation-scene-grid");
+  const esConversationReader = document.getElementById("es-conversation-reader");
+  const esConversationReaderBackBtn = document.getElementById("es-conversation-reader-back-btn");
+  const esConversationReaderTitle = document.getElementById("es-conversation-reader-title");
+  const esConversationAutoBtn = document.getElementById("es-conversation-auto-btn");
+  const esConversationLines = document.getElementById("es-conversation-lines");
+
+  const esViewMiniQuiz = document.getElementById("es-view-mini-quiz");
+  const esMiniQuizBackBtn = document.getElementById("es-mini-quiz-back-btn");
+  const esMiniQuizPrompt = document.getElementById("es-mini-quiz-prompt");
+  const esMiniQuizChar = document.getElementById("es-mini-quiz-char");
+  const esMiniQuizSpeakBtn = document.getElementById("es-mini-quiz-speak-btn");
+  const esMiniQuizOptions = document.getElementById("es-mini-quiz-options");
+  const esMiniQuizFeedback = document.getElementById("es-mini-quiz-feedback");
+  const esMiniQuizScoreEl = document.getElementById("es-mini-quiz-score");
 
   // Módulo de Idiomas (English/Português) — un solo #lang-modal
   // reutilizado por los dos, ver openLangModule()/showLangView() más
@@ -11301,6 +12736,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const jpVictoryGoldValue = document.getElementById("jp-victory-gold-value");
   const jpVictoryTierXpRow = document.getElementById("jp-victory-tier-xp-row");
   const jpVictoryTierXpValue = document.getElementById("jp-victory-tier-xp-value");
+  const jpVictoryTierXpUnit = document.getElementById("jp-victory-tier-xp-unit");
   const jpVictoryContinueBtn = document.getElementById("jp-victory-continue-btn");
   const jpConfigLanguageRow = document.getElementById("jp-config-language-row");
   const jpConfigModeRow = document.getElementById("jp-config-mode-row");
@@ -13915,6 +15351,34 @@ document.addEventListener("DOMContentLoaded", () => {
       renderJpTierLocks();
       if (a.jpLevel === 21) addMessage({ author: "SISTEMA", text: t("jpTierUnlockedN4"), variant: "system" });
       if (a.jpLevel === 41) addMessage({ author: "SISTEMA", text: t("jpTierUnlockedN3"), variant: "system" });
+    }
+
+    persist();
+  }
+
+  // Espejo de grantJpXP() para el módulo Español — mismo mecanismo de
+  // nivel interno (misma curva JP_XP_GROWTH, reusada tal cual: es una
+  // fórmula genérica de nivel, no específica de Nihongo), namespace
+  // totalmente aparte (esLevel/esXp/esXpToNext) así que nunca interfiere
+  // con el progreso de Nihongo. renderEsTierLocks() se define más abajo,
+  // junto a ES_LEVEL_CONTENT — el hoisting de `function` permite
+  // llamarla acá sin importar el orden de declaración en el archivo.
+  function grantEsXP(amount) {
+    const a = state.pillars.aprendizaje;
+    a.esXp += amount;
+    let levelsGained = 0;
+
+    while (a.esXp >= a.esXpToNext) {
+      a.esXp -= a.esXpToNext;
+      a.esLevel += 1;
+      a.esXpToNext = Math.round(a.esXpToNext * JP_XP_GROWTH);
+      levelsGained += 1;
+    }
+
+    if (levelsGained > 0) {
+      renderEsTierLocks();
+      if (a.esLevel === 21) addMessage({ author: "SISTEMA", text: t("esTierUnlockedA2"), variant: "system" });
+      if (a.esLevel === 41) addMessage({ author: "SISTEMA", text: t("esTierUnlockedB1"), variant: "system" });
     }
 
     persist();
@@ -18282,7 +19746,7 @@ document.addEventListener("DOMContentLoaded", () => {
     },
   };
 
-  const ALL_APP_MODALS = [bossfightModal, japaneseModal, langModal, calendarModal, appPlaceholderModal, miikaPassModal];
+  const ALL_APP_MODALS = [bossfightModal, japaneseModal, spanishModal, langModal, calendarModal, appPlaceholderModal, miikaPassModal];
 
   let activeApp = loadActiveApp();
 
@@ -18512,7 +19976,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // todas las ventanas, ya que closeAllAppModals() es idempotente (cerrar
   // "todas" cuando solo una está abierta es seguro y más simple que una
   // función de cierre casi idéntica por cada una).
-  [bossfightModal, calendarModal, appPlaceholderModal, japaneseModal, langModal, miikaPassModal].forEach((modal) => {
+  [bossfightModal, calendarModal, appPlaceholderModal, japaneseModal, spanishModal, langModal, miikaPassModal].forEach((modal) => {
     modal.addEventListener("click", (event) => {
       if (event.target === modal) closeAllAppModals();
     });
@@ -19650,12 +21114,19 @@ document.addEventListener("DOMContentLoaded", () => {
   // hidden/animateCountUp que la fila de oro: si un llamador no pasa
   // tierXp (ej. la Práctica de Partículas, que no otorga XP de Nihongo),
   // la fila queda oculta sin romper nada.
-  function showJpVictoryModal({ title, subtitle, xp, gold, tierXp }) {
+  // tierXpUnitLabel: generalización mínima para reusar este MISMO modal
+  // desde el módulo Español (ver showEsView()/renderEsMiniQuizItem() más
+  // abajo) — sin esto, la fila de XP interno siempre diría "Nivel
+  // Nihongo" sin importar qué módulo la disparó. Opcional: si se omite,
+  // cae al texto de siempre (jpVictoryTierXpUnit), cero cambio de
+  // comportamiento para los llamadores de Nihongo existentes.
+  function showJpVictoryModal({ title, subtitle, xp, gold, tierXp, tierXpUnitLabel }) {
     jpVictoryTitle.textContent = title;
     jpVictorySubtitle.hidden = !subtitle;
     jpVictorySubtitle.textContent = subtitle || "";
     jpVictoryGoldRow.hidden = !gold;
     jpVictoryTierXpRow.hidden = !tierXp;
+    jpVictoryTierXpUnit.textContent = tierXpUnitLabel || t("jpVictoryTierXpUnit");
     jpVictoryXpValue.textContent = "0";
     jpVictoryGoldValue.textContent = "0";
     jpVictoryTierXpValue.textContent = "0";
@@ -19967,7 +21438,8 @@ document.addEventListener("DOMContentLoaded", () => {
       showJpView("roadmap");
     });
   }
-  if (jpVoiceChatShortcutBtn) jpVoiceChatShortcutBtn.addEventListener("click", openVoiceChatModal);
+  if (jpVoiceChatShortcutBtn) jpVoiceChatShortcutBtn.addEventListener("click", () => openVoiceChatModal("ja"));
+  if (esVoiceChatShortcutBtn) esVoiceChatShortcutBtn.addEventListener("click", () => openVoiceChatModal("es"));
 
   // ==================== Conversación por Voz con IA ====================
   // Roleplay hablado N5/N4/N3 — a diferencia de TODO el resto de Nihongo
@@ -20065,10 +21537,109 @@ document.addEventListener("DOMContentLoaded", () => {
     },
   ];
 
+  // Espejo de JP_VOICE_SCENARIOS para el módulo Español — mismos 7 ids
+  // (deben coincidir con SCENARIO_PERSONAS.es en api/ai-conversation.js)
+  // y mismo titleKey/descKey que sus equivalentes de Nihongo (el texto de
+  // la tarjeta describe la SITUACIÓN, no el idioma — reutilizable tal
+  // cual en los dos módulos). `openers` en niveles CEFR (a1/a2/b1) en vez
+  // de JLPT.
+  const ES_VOICE_SCENARIOS = [
+    {
+      id: "factoryVoice", icon: "🏭", titleKey: "voiceScenarioFactoryTitle", descKey: "voiceScenarioFactoryDesc",
+      openers: {
+        a1: "Hola. Hoy vas a usar esta máquina.",
+        a2: "Buenos días. Te voy a explicar la tarea de hoy. Primero revisa esta pieza.",
+        b1: "Buen día. Hoy vas a encargarte de una línea nueva. Te explico el proceso completo.",
+      },
+    },
+    {
+      id: "reportMistake", icon: "😓", titleKey: "voiceScenarioMistakeTitle", descKey: "voiceScenarioMistakeDesc",
+      openers: {
+        a1: "¿Qué pasó?",
+        a2: "Te noto preocupado. ¿Pasó algo?",
+        b1: "Parece que tienes algo que reportarme. Te escucho.",
+      },
+    },
+    {
+      id: "teamMeeting", icon: "🗂️", titleKey: "voiceScenarioMeetingTitle", descKey: "voiceScenarioMeetingDesc",
+      openers: {
+        a1: "¿Qué vas a hacer hoy?",
+        a2: "Vamos a revisar las tareas de hoy. ¿Quién hace qué?",
+        b1: "Bueno, definamos entre todos las tareas de esta semana.",
+      },
+    },
+    {
+      id: "systemTraining", icon: "🖥️", titleKey: "voiceScenarioTrainingTitle", descKey: "voiceScenarioTrainingDesc",
+      openers: {
+        a1: "Este es el sistema nuevo.",
+        a2: "Hoy te voy a explicar cómo usar el sistema nuevo. ¿Estás listo?",
+        b1: "Vamos a revisar el sistema nuevo a fondo. Avísame si tienes dudas en el camino.",
+      },
+    },
+    {
+      id: "restaurant", icon: "🍽️", titleKey: "voiceScenarioRestaurantTitle", descKey: "voiceScenarioRestaurantDesc",
+      openers: {
+        a1: "Hola, ¿mesa para uno?",
+        a2: "Buenas tardes, ¿qué van a comer hoy?",
+        b1: "Bienvenidos, ¿ya saben qué se les antoja o les recomiendo algo?",
+      },
+    },
+    {
+      id: "doctorVisit", icon: "🩺", titleKey: "voiceScenarioDoctorTitle", descKey: "voiceScenarioDoctorDesc",
+      openers: {
+        a1: "Hola, ¿qué le pasa?",
+        a2: "Buenos días, cuénteme qué síntomas tiene.",
+        b1: "Buenos días, dígame con detalle desde cuándo se siente así.",
+      },
+    },
+    {
+      id: "apartmentHunt", icon: "🏠", titleKey: "voiceScenarioApartmentTitle", descKey: "voiceScenarioApartmentDesc",
+      openers: {
+        a1: "Hola, ¿busca un apartamento?",
+        a2: "Buenas, cuénteme qué tipo de apartamento busca.",
+        b1: "Bienvenido, cuénteme su presupuesto y zona de interés para mostrarle las mejores opciones.",
+      },
+    },
+  ];
+
+  // `voiceChatLanguage` decide TODO lo que varía entre Nihongo/Español en
+  // este módulo compartido: qué banco de escenarios mostrar, qué niveles
+  // aparecen en el toggle, qué voz TTS/locale STT usar, y qué campo
+  // `language` mandarle a /api/ai-conversation (ver openVoiceChatModal()
+  // más abajo). Todo lo demás (transcripción, burbujas, reintentos) es
+  // 100% genérico y no necesitó cambios.
+  let voiceChatLanguage = "ja";
   let voiceChatLevel = "n5";
   let voiceChatScenario = null;
   let voiceChatHistory = []; // [{role:"user"|"assistant", text}]
   let voiceChatBusy = false;
+
+  function activeVoiceScenarios() {
+    return voiceChatLanguage === "es" ? ES_VOICE_SCENARIOS : JP_VOICE_SCENARIOS;
+  }
+
+  const VOICE_CHAT_LEVELS_BY_LANGUAGE = { ja: ["n5", "n4", "n3"], es: ["a1", "a2", "b1"] };
+
+  // Los 3 botones de nivel son SIEMPRE los mismos 3 elementos del DOM —
+  // acá solo se les cambia la etiqueta/data-level según el idioma activo,
+  // en vez de duplicar el toggle completo dos veces en el HTML.
+  function renderVoiceChatLevelToggle() {
+    if (!voiceChatLevelToggle) return;
+    const levels = VOICE_CHAT_LEVELS_BY_LANGUAGE[voiceChatLanguage];
+    Array.from(voiceChatLevelToggle.querySelectorAll(".jp-level-btn")).forEach((btn, i) => {
+      const level = levels[i];
+      btn.dataset.level = level;
+      btn.textContent = level.toUpperCase();
+      btn.classList.toggle("jp-level-btn--active", level === voiceChatLevel);
+    });
+  }
+
+  // Habla en el idioma DESTINO activo — speakKana() (voz ja-JP) para
+  // Nihongo, speakLangText() (mismo helper genérico ya usado por
+  // English/Português) con locale es-ES para Español.
+  function speakVoiceChatText(text) {
+    return voiceChatLanguage === "es" ? speakLangText(text, "es-ES") : speakKana(text);
+  }
 
   function showVoiceChatView(view) {
     voiceChatPicker.hidden = view !== "picker";
@@ -20078,7 +21649,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderVoiceChatScenarioGrid() {
     if (!voiceChatScenarioGrid) return;
     voiceChatScenarioGrid.innerHTML = "";
-    JP_VOICE_SCENARIOS.forEach((scenario) => {
+    activeVoiceScenarios().forEach((scenario) => {
       const card = document.createElement("button");
       card.type = "button";
       card.className = "voice-chat-scenario-card";
@@ -20097,9 +21668,19 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  function openVoiceChatModal() {
+  // `language`: "ja" (Nihongo, default — llamadores existentes que no
+  // pasan nada siguen andando igual) o "es" (Español). Resetea el nivel
+  // al primero de ese idioma cada vez que se abre, para no arrastrar un
+  // nivel del otro idioma (ej. quedar en "n4" al abrir Español).
+  function openVoiceChatModal(language) {
+    voiceChatLanguage = language === "es" ? "es" : "ja";
+    voiceChatLevel = VOICE_CHAT_LEVELS_BY_LANGUAGE[voiceChatLanguage][0];
+    if (voiceChatTextInput) {
+      voiceChatTextInput.placeholder = t(voiceChatLanguage === "es" ? "voiceChatTextPlaceholderEs" : "voiceChatTextPlaceholder");
+    }
     voiceChatModal.hidden = false;
     showVoiceChatView("picker");
+    renderVoiceChatLevelToggle();
     renderVoiceChatScenarioGrid();
   }
   function closeVoiceChatModal() {
@@ -20148,7 +21729,7 @@ document.addEventListener("DOMContentLoaded", () => {
       speakBtn.className = "voice-chat-bubble__speak";
       speakBtn.textContent = "🔊";
       speakBtn.setAttribute("aria-label", t("jpListen"));
-      speakBtn.addEventListener("click", () => speakKana(text));
+      speakBtn.addEventListener("click", () => speakVoiceChatText(text));
       bubble.appendChild(speakBtn);
     }
     voiceChatTranscript.appendChild(bubble);
@@ -20168,10 +21749,11 @@ document.addEventListener("DOMContentLoaded", () => {
     voiceChatSessionTitle.textContent = `${scenario.icon} ${t(scenario.titleKey)}`;
     showVoiceChatView("session");
     setVoiceChatStatus(null);
-    const opener = scenario.openers[voiceChatLevel] || scenario.openers.n5;
+    const defaultLevel = VOICE_CHAT_LEVELS_BY_LANGUAGE[voiceChatLanguage][0];
+    const opener = scenario.openers[voiceChatLevel] || scenario.openers[defaultLevel];
     appendVoiceChatBubble("npc", opener, null);
     voiceChatHistory.push({ role: "assistant", text: opener });
-    speakKana(opener);
+    speakVoiceChatText(opener);
   }
 
   // Tope de la llamada de red — sin esto, un fetch() colgado (API caída,
@@ -20194,7 +21776,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const clearIfStillSpeaking = () => {
       if (voiceChatStatus && voiceChatStatus.textContent === t("voiceChatSpeaking")) setVoiceChatStatus(null);
     };
-    Promise.resolve(speakKana(text)).then(clearIfStillSpeaking, clearIfStillSpeaking);
+    Promise.resolve(speakVoiceChatText(text)).then(clearIfStillSpeaking, clearIfStillSpeaking);
   }
 
   // Burbuja de error CÁLIDA (pedido explícito: nunca un fallo técnico
@@ -20236,6 +21818,7 @@ document.addEventListener("DOMContentLoaded", () => {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
+          language: voiceChatLanguage,
           scenarioId: voiceChatScenario.id,
           level: voiceChatLevel,
           interfaceLanguage: currentLanguage,
@@ -20306,7 +21889,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
     const recognition = new VoiceChatRecognitionCtor();
-    recognition.lang = "ja-JP";
+    recognition.lang = voiceChatLanguage === "es" ? "es-ES" : "ja-JP";
     recognition.interimResults = false;
     recognition.maxAlternatives = 1;
     recognition.continuous = false;
@@ -20364,7 +21947,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (scenario && hadExchange) {
       addGold(5);
       grantXP(20);
-      grantJpXP(6);
+      if (voiceChatLanguage === "es") grantEsXP(6); else grantJpXP(6);
       saveN5Progress(`voicechat:${scenario.id}:${voiceChatLevel}`, 1, 1);
       showJpVictoryModal({
         title: t("voiceChatVictoryTitle"),
@@ -20372,6 +21955,7 @@ document.addEventListener("DOMContentLoaded", () => {
         xp: 20,
         gold: 5,
         tierXp: 6,
+        tierXpUnitLabel: voiceChatLanguage === "es" ? t("esVictoryTierXpUnit") : undefined,
       });
     }
   }
@@ -22558,6 +24142,742 @@ document.addEventListener("DOMContentLoaded", () => {
   jpLevelExamSpeakBtn.addEventListener("click", () => {
     if (jpLevelExamCurrentItem && jpLevelExamCurrentUnit && isJpExamAudioAllowed(jpLevelExamCurrentUnit.script)) speakKana(jpLevelExamCurrentItem.char);
   });
+
+  // ==================== Módulo ESPAÑOL (réplica de Nihongo) ====================
+  // Ver comentario junto a #spanish-modal (index.html) para el resumen de
+  // arquitectura. meaning/translation solo tienen {en, ja} — con la
+  // interfaz en español (caso raro: un hispanohablante usando la interfaz
+  // en español para estudiar español) se cae a `.en` en vez de ocultar la
+  // UI por completo, una decisión de alcance deliberada: es una
+  // combinación de baja probabilidad y una respuesta en inglés de
+  // reserva es un comportamiento aceptable, no roto.
+  function resolveEsMeaning(field) {
+    return field[currentLanguage] || field.en;
+  }
+
+  const ES_LEVEL_CONTENT = {
+    a1: { vocab: ES_A1_VOCAB_CATEGORIES, grammar: ES_A1_GRAMMAR_POINTS, conversations: ES_A1_CONVERSATION_SCENES, progressPrefix: null, unlockLevel: 1 },
+    a2: { vocab: ES_A2_VOCAB_CATEGORIES, grammar: ES_A2_GRAMMAR_POINTS, conversations: ES_A2_CONVERSATION_SCENES, progressPrefix: "a2", unlockLevel: 21 },
+    b1: { vocab: ES_B1_VOCAB_CATEGORIES, grammar: ES_B1_GRAMMAR_POINTS, conversations: ES_B1_CONVERSATION_SCENES, progressPrefix: "b1", unlockLevel: 41 },
+  };
+  let esActiveLevel = "a1";
+
+  function getEsVocabCategories() { return ES_LEVEL_CONTENT[esActiveLevel].vocab; }
+  function getEsGrammarPoints() { return ES_LEVEL_CONTENT[esActiveLevel].grammar; }
+  function getEsConversationScenes() { return ES_LEVEL_CONTENT[esActiveLevel].conversations; }
+  function esVocabProgressId(catId) {
+    const prefix = ES_LEVEL_CONTENT[esActiveLevel].progressPrefix;
+    return prefix ? `es-vocab:${prefix}:${catId}` : `es-vocab:${catId}`;
+  }
+  function esGrammarProgressId() {
+    const prefix = ES_LEVEL_CONTENT[esActiveLevel].progressPrefix;
+    return prefix ? `es-grammar:${prefix}` : "es-grammar";
+  }
+  function esVocabProgressIdFor(tier, catId) {
+    const prefix = ES_LEVEL_CONTENT[tier].progressPrefix;
+    return prefix ? `es-vocab:${prefix}:${catId}` : `es-vocab:${catId}`;
+  }
+  function esGrammarProgressIdFor(tier) {
+    const prefix = ES_LEVEL_CONTENT[tier].progressPrefix;
+    return prefix ? `es-grammar:${prefix}` : "es-grammar";
+  }
+  function esConversationProgressId(tier, sceneId) {
+    const prefix = ES_LEVEL_CONTENT[tier].progressPrefix;
+    return prefix ? `es-conv:${prefix}:${sceneId}` : `es-conv:${sceneId}`;
+  }
+
+  function isSpanishTierUnlocked(levelKey) {
+    return state.pillars.aprendizaje.esLevel >= ES_LEVEL_CONTENT[levelKey].unlockLevel;
+  }
+
+  // Espejo de setJpLevelFloor() — namespace esLevel/esXp/esXpToNext aparte.
+  function setEsLevelFloor(target) {
+    const a = state.pillars.aprendizaje;
+    if (a.esLevel < target) {
+      a.esLevel = target;
+      a.esXp = 0;
+      a.esXpToNext = jpXpToNextForLevel(target);
+      if (target === 21) addMessage({ author: "SISTEMA", text: t("esTierUnlockedA2"), variant: "system" });
+      if (target === 41) addMessage({ author: "SISTEMA", text: t("esTierUnlockedB1"), variant: "system" });
+      persist();
+    }
+    renderEsTierLocks();
+  }
+
+  function renderEsTierLocks() {
+    if (!esLevelToggle) return;
+    ["a2", "b1"].forEach((key) => {
+      const btn = esLevelToggle.querySelector(`[data-level="${key}"]`);
+      const badge = document.getElementById(`es-level-badge-${key}`);
+      if (!btn || !badge) return;
+      const unlocked = isSpanishTierUnlocked(key);
+      btn.classList.toggle("jp-level-btn--locked", !unlocked);
+      badge.textContent = unlocked ? "" : t("jpLevelLockedBadge").replace("{level}", ES_LEVEL_CONTENT[key].unlockLevel);
+    });
+  }
+  renderEsTierLocks();
+
+  // ---- Progreso persistente (mismo store IndexedDB que Nihongo,
+  // "progress", solo un namespace de id distinto — `es-vocab:`/`es-grammar:`/
+  // `es-conv:` en vez de `vocab:`/`grammar:`/`conv:` — para que nunca
+  // colisionen entre los dos módulos). ----
+  let esProgressCache = {};
+  function loadEsProgressCache() {
+    return n5DbGetAll("progress").then((rows) => {
+      esProgressCache = {};
+      rows.forEach((row) => {
+        if (row.id.startsWith("es-")) esProgressCache[row.id] = row;
+      });
+      renderEsVocabCategories();
+      renderEsGrammarList();
+    });
+  }
+  loadEsProgressCache();
+
+  function saveEsProgress(id, score, total) {
+    const prev = esProgressCache[id];
+    if (prev && prev.score >= score) return;
+    const record = { id, score, total, completedAt: Date.now() };
+    esProgressCache[id] = record;
+    n5DbPut("progress", record);
+  }
+
+  function markEsConversationSeen(tier, sceneId) {
+    const id = esConversationProgressId(tier, sceneId);
+    if (esProgressCache[id]) return;
+    saveEsProgress(id, 1, 1);
+    renderEsTierProgressBars();
+  }
+
+  function esContentProgressFraction(tier) {
+    const content = ES_LEVEL_CONTENT[tier];
+    const vocabDone = content.vocab.filter((cat) => esProgressCache[esVocabProgressIdFor(tier, cat.id)]).length;
+    const grammarDone = esProgressCache[esGrammarProgressIdFor(tier)] ? 1 : 0;
+    const total = content.vocab.length + 1;
+    return total > 0 ? (vocabDone + grammarDone) / total : 0;
+  }
+  function esConversationProgressFraction(tier) {
+    const content = ES_LEVEL_CONTENT[tier];
+    if (!content.conversations.length) return 0;
+    const seen = content.conversations.filter((scene) => esProgressCache[esConversationProgressId(tier, scene.id)]).length;
+    return seen / content.conversations.length;
+  }
+  function computeEsTierProgress(tier) {
+    const content = esContentProgressFraction(tier);
+    const conv = esConversationProgressFraction(tier);
+    return Math.round((0.6 * content + 0.4 * conv) * 100);
+  }
+  function renderEsTierProgressBars() {
+    if (!esTierProgressBars) return;
+    ["a1", "a2", "b1"].forEach((tier) => {
+      const fill = esTierProgressBars.querySelector(`[data-tier-fill="${tier}"]`);
+      const label = esTierProgressBars.querySelector(`[data-tier-pct="${tier}"]`);
+      const pct = computeEsTierProgress(tier);
+      if (fill) fill.style.width = `${pct}%`;
+      if (label) label.textContent = `${pct}%`;
+    });
+  }
+
+  // ---- Navegación: mismo patrón de pila que jpNavStack/jpBack/showJpView ----
+  let esNavStack = [];
+  function pushEsBackFrame(restoreFn) { esNavStack.push({ restore: restoreFn }); }
+  function esBack() {
+    if (!esViewConversations.hidden && esConversationReader && !esConversationReader.hidden) {
+      openEsConversationSceneGrid();
+      return;
+    }
+    if (!esViewMiniQuiz.hidden) return showEsView(esMiniQuizReturnView);
+    if (esNavStack.length) {
+      esNavStack.pop().restore();
+      return;
+    }
+    showEsView("world-map");
+  }
+
+  function showEsView(view) {
+    esViewWorldMap.hidden = view !== "world-map";
+    esViewWorldContent.hidden = view !== "world-content";
+    esViewVocab.hidden = view !== "vocab";
+    esViewVocabWords.hidden = view !== "vocab-words";
+    esViewGrammar.hidden = view !== "grammar";
+    esViewConversations.hidden = view !== "conversations";
+    esViewMiniQuiz.hidden = view !== "mini-quiz";
+    if (view === "world-map") renderEsWorldMap();
+    if (view === "world-content") renderEsWorldContentMap(esCurrentWorldId);
+    if (view === "vocab") renderEsVocabCategories();
+    if (view === "grammar") renderEsGrammarList();
+    if (view === "conversations") openEsConversationSceneGrid();
+    if (esFloatingBackBtn) esFloatingBackBtn.hidden = view === "world-map";
+  }
+
+  function openEsGrammarPoint(tier, index) {
+    pushEsBackFrame(() => showEsView("world-content"));
+    esActiveLevel = tier;
+    showEsView("grammar");
+    requestAnimationFrame(() => {
+      const card = esGrammarList.querySelector(`[data-grammar-id="${index}"]`);
+      if (!card) return;
+      card.scrollIntoView({ behavior: "smooth", block: "center" });
+      const body = card.querySelector(".jp-grammar-card__body");
+      if (body && body.hidden) {
+        body.hidden = false;
+        card.classList.add("jp-grammar-card--open");
+      }
+    });
+  }
+
+  function openEsConversationFromMap(tier, sceneId) {
+    pushEsBackFrame(() => showEsView("world-content"));
+    esActiveLevel = tier;
+    showEsView("conversations");
+    openEsConversationScene(sceneId);
+  }
+
+  // ---- Mapa de Mundos: A1 → Examen (desbloquea A2) → A2 → Examen
+  // (desbloquea B1) → B1. Dos exam-gates (no uno solo como Nihongo)
+  // porque acá cada examen es independiente por tier — sin la mecánica
+  // "una sola secuencia larga" del examen adaptativo de Nihongo, más
+  // simple de razonar: aprobar el examen de UN tier desbloquea el
+  // siguiente, punto. ----
+  const ES_EXAM_GATES = {
+    "exam-gate-a1": { fromTier: "a1", toTier: "a2", unlockLevel: 21 },
+    "exam-gate-a2": { fromTier: "a2", toTier: "b1", unlockLevel: 41 },
+  };
+
+  function buildEsWorldContentStops(tier) {
+    const grammarStops = ES_LEVEL_CONTENT[tier].grammar.map((point, index) => ({
+      glyph: point.label,
+      title: point.label,
+      locked: false,
+      onClick: () => openEsGrammarPoint(tier, index),
+    }));
+    const conversationStops = ES_LEVEL_CONTENT[tier].conversations.map((scene) => ({
+      glyph: scene.icon,
+      title: t(scene.titleKey),
+      locked: false,
+      onClick: () => openEsConversationFromMap(tier, scene.id),
+    }));
+    return grammarStops.concat(conversationStops);
+  }
+
+  const ES_WORLDS = {
+    "a1-content": { id: "a1-content", titleKey: "esWorldA1", glyph: "🇪🇸", locked: () => false, buildContentStops: () => buildEsWorldContentStops("a1") },
+    a2: { id: "a2", titleKey: "esWorldA2", glyph: "A2", locked: () => !isSpanishTierUnlocked("a2"), buildContentStops: () => buildEsWorldContentStops("a2") },
+    b1: { id: "b1", titleKey: "esWorldB1", glyph: "B1", locked: () => !isSpanishTierUnlocked("b1"), buildContentStops: () => buildEsWorldContentStops("b1") },
+  };
+  const ES_WORLD_ORDER = ["a1-content", "exam-gate-a1", "a2", "exam-gate-a2", "b1"];
+  let esCurrentWorldId = "a1-content";
+
+  function renderEsWorldMap() {
+    if (!esWorldMapTrack) return;
+    renderEsTierProgressBars();
+    const stops = ES_WORLD_ORDER.map((key, i) => {
+      const x = JP_WORLD_NODE_X[i % JP_WORLD_NODE_X.length];
+      const gate = ES_EXAM_GATES[key];
+      if (gate) {
+        return {
+          x,
+          glyph: "🚪",
+          variant: "exam-gate",
+          title: t("jpWorldExamGate"),
+          locked: false,
+          badgeText: t("jpWorldExamGateBadge"),
+          onClick: () => {
+            pushEsBackFrame(() => showEsView("world-map"));
+            startEsPlacementQuiz(gate.fromTier, gate.unlockLevel);
+          },
+        };
+      }
+      const world = ES_WORLDS[key];
+      const locked = world.locked();
+      return {
+        x,
+        glyph: world.glyph,
+        variant: "world",
+        title: t(world.titleKey),
+        locked,
+        sublabel: locked ? t("jpLevelLockedBadge").replace("{level}", ES_LEVEL_CONTENT[world.id].unlockLevel) : undefined,
+        badgeText: locked ? undefined : t("jpWorldEnterBadge"),
+        onLockedClick: () => notifyJpLocked(ES_LEVEL_CONTENT[world.id].unlockLevel),
+        onClick: locked ? undefined : () => {
+          esCurrentWorldId = world.id;
+          pushEsBackFrame(() => showEsView("world-map"));
+          showEsView("world-content");
+        },
+      };
+    });
+    renderMapPath(esWorldMapTrack, stops);
+  }
+
+  function renderEsWorldContentMap(worldId) {
+    if (!esWorldContentTrack) return;
+    const world = ES_WORLDS[worldId];
+    if (!world) return;
+    if (esWorldContentTitle) esWorldContentTitle.textContent = t(world.titleKey);
+    renderMapPath(esWorldContentTrack, world.buildContentStops());
+  }
+
+  // ---- Diccionario: Vocabulario A1/A2/B1, consulta libre sin candado ----
+  let activeEsCategory = null;
+  function isEsCategoryLocked() {
+    return esActiveLevel !== "a1" && !isSpanishTierUnlocked(esActiveLevel);
+  }
+  function applyEsCardLock(card, lockedClass) {
+    const requiredLevel = ES_LEVEL_CONTENT[esActiveLevel].unlockLevel;
+    card.classList.add(lockedClass);
+    const lock = document.createElement("span");
+    lock.className = "jp-lock-badge";
+    lock.textContent = t("jpLevelLockedBadge").replace("{level}", requiredLevel);
+    card.appendChild(lock);
+    return requiredLevel;
+  }
+
+  function renderEsVocabCategories() {
+    if (!esVocabCatGrid) return;
+    esVocabCatGrid.innerHTML = "";
+    const locked = isEsCategoryLocked();
+    getEsVocabCategories().forEach((cat) => {
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className = "jp-vocab-cat-card";
+
+      const icon = document.createElement("span");
+      icon.className = "jp-vocab-cat-card__icon";
+      icon.textContent = cat.icon;
+
+      const title = document.createElement("span");
+      title.className = "jp-vocab-cat-card__title";
+      title.textContent = t(cat.titleKey);
+
+      const count = document.createElement("span");
+      count.className = "jp-vocab-cat-card__count";
+      count.textContent = `${cat.words.length} ${t("jpVocabWordsCount")}`;
+
+      card.append(icon, title, count);
+
+      const progress = esProgressCache[esVocabProgressId(cat.id)];
+      if (progress) {
+        const badge = document.createElement("span");
+        badge.className = "jp-vocab-cat-card__badge";
+        badge.textContent = `✓ ${progress.score}/${progress.total}`;
+        card.appendChild(badge);
+      }
+
+      if (locked) {
+        const requiredLevel = applyEsCardLock(card, "jp-vocab-cat-card--locked");
+        card.addEventListener("click", () => notifyJpLocked(requiredLevel));
+      } else {
+        card.addEventListener("click", () => openEsVocabWords(cat));
+      }
+      esVocabCatGrid.appendChild(card);
+    });
+  }
+
+  function openEsVocabWords(cat) {
+    activeEsCategory = cat;
+    esVocabWordsTitle.textContent = `${cat.icon} ${t(cat.titleKey)}`;
+    esVocabWordsList.innerHTML = "";
+    cat.words.forEach((word) => {
+      const card = document.createElement("div");
+      card.className = "jp-vocab-card";
+
+      const wordRow = document.createElement("div");
+      wordRow.className = "jp-vocab-card__example-jp-row";
+      const wordEl = document.createElement("span");
+      wordEl.className = "jp-vocab-card__kana";
+      wordEl.textContent = word.word;
+      const audioBtn = document.createElement("button");
+      audioBtn.type = "button";
+      audioBtn.className = "jp-vocab-card__example-audio";
+      audioBtn.setAttribute("aria-label", t("jpListen"));
+      audioBtn.textContent = "🔊";
+      audioBtn.addEventListener("click", () => speakLangText(word.word, "es-ES"));
+      wordRow.append(wordEl, audioBtn);
+      card.appendChild(wordRow);
+
+      const meaning = document.createElement("span");
+      meaning.className = "jp-vocab-card__meaning";
+      meaning.textContent = resolveEsMeaning(word.meaning);
+      card.appendChild(meaning);
+
+      esVocabWordsList.appendChild(card);
+    });
+    esVocabQuizStartBtn.hidden = false;
+    showEsView("vocab-words");
+  }
+
+  // ---- Gramática ----
+  function renderEsGrammarList() {
+    if (!esGrammarList) return;
+    esGrammarList.innerHTML = "";
+    const progress = esProgressCache[esGrammarProgressId()];
+    if (progress) {
+      const banner = document.createElement("div");
+      banner.className = "jp-grammar-progress-banner";
+      banner.textContent = `✓ ${t("jpMiniQuizScore")} ${progress.score}/${progress.total}`;
+      esGrammarList.appendChild(banner);
+    }
+
+    const locked = isEsCategoryLocked();
+    getEsGrammarPoints().forEach((point, index) => {
+      const card = document.createElement("div");
+      card.className = "jp-grammar-card";
+      card.dataset.grammarId = index;
+
+      const header = document.createElement("div");
+      header.className = "jp-grammar-card__header";
+      const label = document.createElement("span");
+      label.className = "jp-grammar-card__label";
+      label.textContent = point.label;
+      header.appendChild(label);
+      const pattern = document.createElement("span");
+      pattern.className = "jp-grammar-card__pattern";
+      pattern.textContent = resolveEsMeaning(point.pattern);
+      header.appendChild(pattern);
+      card.appendChild(header);
+
+      const body = document.createElement("div");
+      body.className = "jp-grammar-card__body";
+      body.hidden = true;
+
+      const explanation = document.createElement("p");
+      explanation.className = "jp-grammar-card__explanation";
+      explanation.textContent = resolveEsMeaning(point.explanation);
+      body.appendChild(explanation);
+
+      point.examples.forEach((ex) => {
+        const exEl = document.createElement("div");
+        exEl.className = "jp-grammar-card__example";
+        const jpRow = document.createElement("div");
+        jpRow.className = "jp-grammar-card__example-jp-row";
+        const esText = document.createElement("p");
+        esText.className = "jp-grammar-card__example-jp";
+        esText.textContent = ex.es;
+        const audioBtn = document.createElement("button");
+        audioBtn.type = "button";
+        audioBtn.className = "jp-grammar-card__example-audio";
+        audioBtn.setAttribute("aria-label", t("jpListen"));
+        audioBtn.textContent = "🔊";
+        audioBtn.addEventListener("click", (event) => {
+          event.stopPropagation();
+          speakLangText(ex.es, "es-ES");
+        });
+        jpRow.append(esText, audioBtn);
+        exEl.appendChild(jpRow);
+        const translation = document.createElement("p");
+        translation.className = "jp-grammar-card__example-translation";
+        translation.textContent = resolveEsMeaning(ex.translation);
+        exEl.appendChild(translation);
+        body.appendChild(exEl);
+      });
+
+      card.appendChild(body);
+      if (locked) {
+        const requiredLevel = applyEsCardLock(card, "jp-grammar-card--locked");
+        card.addEventListener("click", () => notifyJpLocked(requiredLevel));
+      } else {
+        card.addEventListener("click", () => {
+          body.hidden = !body.hidden;
+          card.classList.toggle("jp-grammar-card--open", !body.hidden);
+        });
+      }
+      esGrammarList.appendChild(card);
+    });
+  }
+
+  // ---- Conversaciones (reusa MiikaeruReader.crearLector(), sin furigana) ----
+  let activeEsConversationReader = null;
+  function renderEsConversationSceneGrid() {
+    if (!esConversationSceneGrid) return;
+    esConversationSceneGrid.innerHTML = "";
+    const locked = isEsCategoryLocked();
+    getEsConversationScenes().forEach((scene) => {
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className = "jp-vocab-cat-card";
+      const icon = document.createElement("span");
+      icon.className = "jp-vocab-cat-card__icon";
+      icon.textContent = scene.icon;
+      const title = document.createElement("span");
+      title.className = "jp-vocab-cat-card__title";
+      title.textContent = t(scene.titleKey);
+      const meta = document.createElement("span");
+      meta.className = "jp-vocab-cat-card__count";
+      meta.textContent = `${scene.lineas.length} ${t("jpConvLinesLabel")}`;
+      card.append(icon, title, meta);
+      if (locked) {
+        const requiredLevel = applyEsCardLock(card, "jp-vocab-cat-card--locked");
+        card.addEventListener("click", () => notifyJpLocked(requiredLevel));
+      } else {
+        card.addEventListener("click", () => openEsConversationScene(scene.id));
+      }
+      esConversationSceneGrid.appendChild(card);
+    });
+  }
+
+  function openEsConversationSceneGrid() {
+    if (activeEsConversationReader) {
+      activeEsConversationReader.detener();
+      activeEsConversationReader = null;
+    }
+    esConversationReader.hidden = true;
+    esConversationSceneGrid.hidden = false;
+    renderEsConversationSceneGrid();
+  }
+
+  function resolveEsConversationLineas(scene) {
+    return scene.lineas.map((linea) => ({
+      segments: linea.segments,
+      traduccion: resolveEsMeaning(linea.traduccion),
+    }));
+  }
+
+  function openEsConversationScene(sceneId) {
+    const scene = getEsConversationScenes().find((s) => s.id === sceneId);
+    if (!scene) return;
+    markEsConversationSeen(esActiveLevel, scene.id);
+    esConversationReaderTitle.textContent = `${scene.icon} ${t(scene.titleKey)}`;
+    esConversationSceneGrid.hidden = true;
+    esConversationReader.hidden = false;
+    activeEsConversationReader = window.MiikaeruReader.crearLector(
+      esConversationLines,
+      resolveEsConversationLineas(scene),
+      esConversationAutoBtn
+    );
+  }
+
+  // ---- Selector A1/A2/B1 dentro del Diccionario ----
+  if (esLevelToggle) {
+    const esLevelButtons = Array.from(esLevelToggle.querySelectorAll(".jp-level-btn"));
+    esLevelButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        if (btn.disabled) return;
+        const level = btn.dataset.level;
+        if (!level || level === esActiveLevel) return;
+        esActiveLevel = level;
+        esLevelButtons.forEach((b) => b.classList.toggle("jp-level-btn--active", b === btn));
+        renderEsVocabCategories();
+      });
+    });
+  }
+
+  // ---- Mini-Quiz genérico (Vocabulario / Gramática / Examen de Nivel) ----
+  let esMiniQuizItems = [];
+  let esMiniQuizIndex = 0;
+  let esMiniQuizScore = 0;
+  let esMiniQuizReturnView = "world-map";
+  let esMiniQuizProgressId = null;
+  let esMiniQuizIsPlacement = false;
+  let esMiniQuizPlacementTarget = { fromTier: null, unlockLevel: null };
+
+  function buildEsVocabQuizItems(cat) {
+    const pool = cat.words;
+    return shuffleArrayLocal(pool).map((word) => {
+      const answer = resolveEsMeaning(word.meaning);
+      const distractors = shuffleArrayLocal(pool.filter((w) => w !== word)).slice(0, 3).map((w) => resolveEsMeaning(w.meaning));
+      return {
+        char: word.word,
+        prompt: t("esMiniQuizVocabPrompt"),
+        answer,
+        options: shuffleArrayLocal([answer, ...distractors]),
+      };
+    });
+  }
+
+  function buildEsGrammarComprehensionQuizItems(tier) {
+    const points = ES_LEVEL_CONTENT[tier].grammar;
+    const allExamples = points.flatMap((point) => point.examples.map((ex) => ({ point, ex })));
+    return shuffleArrayLocal(allExamples).map(({ ex }) => {
+      const answer = resolveEsMeaning(ex.translation);
+      const distractors = shuffleArrayLocal(allExamples.filter((e) => e.ex !== ex)).slice(0, 3).map((e) => resolveEsMeaning(e.ex.translation));
+      return {
+        char: ex.es,
+        charReading: null,
+        prompt: t("esMiniQuizGrammarPrompt"),
+        answer,
+        options: shuffleArrayLocal([answer, ...distractors]),
+      };
+    });
+  }
+
+  function buildEsConversationComprehensionQuizItems(tier) {
+    const scenes = ES_LEVEL_CONTENT[tier].conversations;
+    const allLines = scenes.flatMap((scene) =>
+      resolveEsConversationLineas(scene).map((linea, i) => ({
+        es: scene.lineas[i].segments.map((s) => s.text).join(""),
+        traduccion: linea.traduccion,
+      }))
+    );
+    return shuffleArrayLocal(allLines).map((entry) => {
+      const distractors = shuffleArrayLocal(allLines.filter((e) => e !== entry)).slice(0, 3).map((e) => e.traduccion);
+      return {
+        char: entry.es,
+        charReading: null,
+        prompt: t("esMiniQuizConversationPrompt"),
+        answer: entry.traduccion,
+        options: shuffleArrayLocal([entry.traduccion, ...distractors]),
+      };
+    });
+  }
+
+  // Examen de Nivel simplificado: mezcla comprensión de gramática +
+  // significado de vocabulario del tier completo, tope de 20 preguntas
+  // (evita un examen interminable) — aprobar con 70%+ desbloquea el
+  // siguiente tier vía setEsLevelFloor(), ver handleEsMiniQuizAnswer().
+  function buildEsPlacementQuizItems(tier) {
+    const grammarItems = buildEsGrammarComprehensionQuizItems(tier);
+    const vocabPool = ES_LEVEL_CONTENT[tier].vocab.flatMap((cat) => cat.words);
+    const vocabItems = shuffleArrayLocal(vocabPool).slice(0, 15).map((word) => {
+      const answer = resolveEsMeaning(word.meaning);
+      const distractors = shuffleArrayLocal(vocabPool.filter((w) => w !== word)).slice(0, 3).map((w) => resolveEsMeaning(w.meaning));
+      return {
+        char: word.word,
+        charReading: null,
+        prompt: t("esMiniQuizVocabPrompt"),
+        answer,
+        options: shuffleArrayLocal([answer, ...distractors]),
+      };
+    });
+    return shuffleArrayLocal([...grammarItems, ...vocabItems]).slice(0, 20);
+  }
+
+  function startEsMiniQuiz(items, returnView, progressId) {
+    esMiniQuizItems = items;
+    esMiniQuizIndex = 0;
+    esMiniQuizScore = 0;
+    esMiniQuizReturnView = returnView;
+    esMiniQuizProgressId = progressId || null;
+    esMiniQuizIsPlacement = false;
+    showEsView("mini-quiz");
+    renderEsMiniQuizItem();
+  }
+
+  function startEsPlacementQuiz(fromTier, unlockLevel) {
+    esMiniQuizItems = buildEsPlacementQuizItems(fromTier);
+    esMiniQuizIndex = 0;
+    esMiniQuizScore = 0;
+    esMiniQuizReturnView = "world-map";
+    esMiniQuizProgressId = null;
+    esMiniQuizIsPlacement = true;
+    esMiniQuizPlacementTarget = { fromTier, unlockLevel };
+    showEsView("mini-quiz");
+    renderEsMiniQuizItem();
+  }
+
+  function renderEsMiniQuizItem() {
+    if (esMiniQuizIndex >= esMiniQuizItems.length) {
+      const total = esMiniQuizItems.length;
+      const passed = esMiniQuizIsPlacement && total > 0 && esMiniQuizScore / total >= 0.7;
+      esMiniQuizPrompt.textContent = t("jpMiniQuizDone");
+      esMiniQuizChar.textContent = "🎉";
+      esMiniQuizOptions.innerHTML = "";
+      esMiniQuizFeedback.hidden = true;
+      esMiniQuizScoreEl.textContent = `${t("jpMiniQuizScore")} ${esMiniQuizScore}/${total}`;
+
+      if (esMiniQuizIsPlacement) {
+        if (passed) {
+          addGold(10);
+          grantEsXP(15);
+          setEsLevelFloor(esMiniQuizPlacementTarget.unlockLevel);
+          showJpVictoryModal({
+            title: t("esVictoryTitlePlacement"),
+            subtitle: `${t("jpMiniQuizScore")} ${esMiniQuizScore}/${total}`,
+            xp: 0,
+            gold: 10,
+            tierXp: 15,
+            tierXpUnitLabel: t("esVictoryTierXpUnit"),
+          });
+        } else {
+          addGold(2);
+          setAvatarSpeech(t("esPlacementFailedHint"));
+        }
+      } else {
+        addGold(5);
+        grantXP(30);
+        grantEsXP(8);
+        showJpVictoryModal({
+          title: t("jpVictoryTitleMiniQuiz"),
+          subtitle: `${t("jpMiniQuizScore")} ${esMiniQuizScore}/${total}`,
+          xp: 30,
+          gold: 5,
+          tierXp: 8,
+          tierXpUnitLabel: t("esVictoryTierXpUnit"),
+        });
+        if (esMiniQuizProgressId) {
+          saveEsProgress(esMiniQuizProgressId, esMiniQuizScore, total);
+          renderEsVocabCategories();
+          renderEsGrammarList();
+        }
+      }
+      return;
+    }
+    const item = esMiniQuizItems[esMiniQuizIndex];
+    esMiniQuizPrompt.textContent = item.prompt;
+    esMiniQuizChar.textContent = item.char;
+    esMiniQuizFeedback.hidden = true;
+    esMiniQuizScoreEl.textContent = `${esMiniQuizIndex + 1} / ${esMiniQuizItems.length}`;
+
+    esMiniQuizOptions.innerHTML = "";
+    item.options.forEach((option) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "jp-quiz-option-btn";
+      btn.textContent = option;
+      btn.addEventListener("click", () => handleEsMiniQuizAnswer(option, item, btn));
+      esMiniQuizOptions.appendChild(btn);
+    });
+  }
+
+  function handleEsMiniQuizAnswer(selected, item, btn) {
+    const correct = selected === item.answer;
+    if (correct) esMiniQuizScore += 1;
+    esMiniQuizFeedback.hidden = false;
+    esMiniQuizFeedback.textContent = correct ? t("jpQuizCorrect") : `${t("jpQuizIncorrect")} ${item.answer}`;
+    esMiniQuizFeedback.className = `jp-quiz-feedback ${correct ? "jp-quiz-feedback--correct" : "jp-quiz-feedback--incorrect"}`;
+    Array.from(esMiniQuizOptions.children).forEach((b) => { b.disabled = true; });
+    btn.style.borderColor = correct ? "var(--neon-green)" : "var(--neon-magenta)";
+    esMiniQuizIndex += 1;
+    setTimeout(renderEsMiniQuizItem, 900);
+  }
+
+  esVocabBackBtn.addEventListener("click", esBack);
+  esVocabWordsBackBtn.addEventListener("click", () => showEsView("vocab"));
+  esGrammarBackBtn.addEventListener("click", esBack);
+  esConversationsBackBtn.addEventListener("click", esBack);
+  esConversationReaderBackBtn.addEventListener("click", openEsConversationSceneGrid);
+  esWorldContentBackBtn.addEventListener("click", esBack);
+  esMiniQuizBackBtn.addEventListener("click", () => showEsView(esMiniQuizReturnView));
+  esMiniQuizSpeakBtn.addEventListener("click", () => {
+    const item = esMiniQuizItems[esMiniQuizIndex];
+    if (item) speakLangText(item.char, "es-ES");
+  });
+  esVocabQuizStartBtn.addEventListener("click", () => {
+    if (!activeEsCategory) return;
+    startEsMiniQuiz(buildEsVocabQuizItems(activeEsCategory), "vocab-words", esVocabProgressId(activeEsCategory.id));
+  });
+  esGrammarQuizStartBtn.addEventListener("click", () => {
+    startEsMiniQuiz(buildEsGrammarComprehensionQuizItems(esActiveLevel), "grammar", esGrammarProgressId());
+  });
+  if (esFloatingBackBtn) esFloatingBackBtn.addEventListener("click", esBack);
+  if (esDictShortcutBtn) {
+    esDictShortcutBtn.addEventListener("click", () => {
+      pushEsBackFrame(() => showEsView("world-map"));
+      showEsView("vocab");
+    });
+  }
+
+  function openSpanishModule() {
+    closeAllAppModals();
+    spanishModal.hidden = false;
+    esNavStack = [];
+    showEsView("world-map");
+  }
+
+  languageSelectEsBtn.addEventListener("click", () => {
+    closeLanguageSelectModal();
+    openSpanishModule();
+  });
+  spanishModalClose.addEventListener("click", closeAllAppModals);
 
   // Reparte según el modo elegido en #jp-config-modal: Práctica va directo
   // a Fases + Vocabulario (sin evaluación); Examen empieza por la Prueba 1

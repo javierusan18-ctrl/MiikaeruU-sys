@@ -1897,9 +1897,35 @@
           </button>
           <button type="button" class="language-select-card__pin" data-pin-id="portuguese" data-i18n-title="pinShortcutBtn" title="Fijar acceso directo">📌</button>
         </div>
+        <div class="language-select-card-wrap">
+          <button type="button" class="language-select-card" id="language-select-es">
+            <span class="language-select-card__icon">🇪🇸</span>
+            <span class="language-select-card__name">Español</span>
+          </button>
+          <button type="button" class="language-select-card__pin" data-pin-id="spanish" data-i18n-title="pinShortcutBtn" title="Fijar acceso directo">📌</button>
+        </div>
+        <!-- Próximos idiomas: 4 tarjetas "visible pero inerte" (mismo criterio
+             que .mpass-tier--locked/.course-card), pedido explícito de que
+             sean exactamente estas 4 — reemplaza la única tarjeta de 中文
+             que había antes. -->
         <button type="button" class="language-select-card" disabled>
           <span class="language-select-card__icon">🇨🇳</span>
           <span class="language-select-card__name">中文 Chino</span>
+          <span class="language-select-card__badge" data-i18n="courseComingSoonBadge">🚀 Próximamente — Gran Lanzamiento</span>
+        </button>
+        <button type="button" class="language-select-card" disabled>
+          <span class="language-select-card__icon">🇻🇳</span>
+          <span class="language-select-card__name">Tiếng Việt Vietnamita</span>
+          <span class="language-select-card__badge" data-i18n="courseComingSoonBadge">🚀 Próximamente — Gran Lanzamiento</span>
+        </button>
+        <button type="button" class="language-select-card" disabled>
+          <span class="language-select-card__icon">🇷🇺</span>
+          <span class="language-select-card__name">Русский Ruso</span>
+          <span class="language-select-card__badge" data-i18n="courseComingSoonBadge">🚀 Próximamente — Gran Lanzamiento</span>
+        </button>
+        <button type="button" class="language-select-card" disabled>
+          <span class="language-select-card__icon">🇰🇷</span>
+          <span class="language-select-card__name">한국어 Coreano</span>
           <span class="language-select-card__badge" data-i18n="courseComingSoonBadge">🚀 Próximamente — Gran Lanzamiento</span>
         </button>
       </div>
@@ -1981,7 +2007,7 @@
         <div class="jp-victory__reward jp-victory__reward--tier" id="jp-victory-tier-xp-row" hidden>
           <span class="jp-victory__reward-icon">🎓</span>
           <span class="jp-victory__reward-value" id="jp-victory-tier-xp-value">0</span>
-          <span class="jp-victory__reward-unit" data-i18n="jpVictoryTierXpUnit">Nivel Nihongo</span>
+          <span class="jp-victory__reward-unit" id="jp-victory-tier-xp-unit" data-i18n="jpVictoryTierXpUnit">Nivel Nihongo</span>
         </div>
       </div>
       <button type="button" class="btn-register jp-victory__continue-btn" id="jp-victory-continue-btn" data-i18n="jpVictoryContinue">¡Continuar!</button>
@@ -2408,6 +2434,152 @@
           <!-- opciones renderizadas por app.js -->
         </div>
         <p class="jp-quiz-feedback" id="jp-level-exam-feedback" hidden></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ESPAÑOL — réplica de la arquitectura de #japanese-modal
+       (mapa de mundos, niveles CEFR A1/A2/B1, examen de ubicación,
+       Diccionario lateral, Conversación por Voz con IA), pedido
+       explícito de "replicar toda la estructura, temática y diseño".
+       Reutiliza a propósito las MISMAS clases visuales que Nihongo
+       (.jp-view/.jp-roadmap/.jp-vocab-cat-card/.jp-grammar-card/
+       .jp-quiz-option-btn/.reader-line, etc. — son genéricas pese al
+       prefijo "jp", mismo criterio ya usado por #lang-modal más abajo,
+       ver su propio comentario) — cero CSS nuevo para la estructura
+       base. Más liviano que Nihongo en un punto real: no hay sistema de
+       escritura que aprender (alfabeto latino ya conocido), así que no
+       hay mundos de Hiragana/Katakana/Kanji equivalentes — el mapa
+       arranca directo en Gramática+Conversación de cada nivel, con
+       Vocabulario como acceso lateral libre (mismo patrón que Nihongo).
+       El Examen de Nivel tampoco necesita su propio motor adaptativo
+       aparte: reutiliza el mismo mini-quiz genérico de abajo con un
+       modo "colocación" (ver startEsPlacementQuiz() en app.js) que
+       desbloquea el siguiente nivel si el puntaje supera el umbral. -->
+  <div class="modal-overlay" id="spanish-modal" hidden>
+    <div class="modal modal--japanese glass">
+      <button type="button" class="btn-modal-close" id="spanish-modal-close" aria-label="Cerrar">✕</button>
+      <button type="button" class="btn-jp-floating-back" id="es-floating-back-btn" data-i18n-title="jpFloatingBackTitle" title="Volver atrás" aria-label="Volver atrás" hidden>←</button>
+
+      <div class="jp-floating-side-stack">
+        <button type="button" class="btn-jp-floating-side" id="es-voicechat-shortcut-btn" data-i18n-title="jpVoiceChatOpenBtn" title="Conversación de Voz con IA" aria-label="Conversación de Voz con IA">🎙️</button>
+        <button type="button" class="btn-jp-floating-side" id="es-dict-shortcut-btn" data-i18n-title="jpDictShortcutTitle" title="Diccionario" aria-label="Diccionario">📚</button>
+      </div>
+
+      <!-- Mapa de Mundos: A1 (gramática+conversación) → Examen de Nivel →
+           A2 → Examen de Nivel → B1 (ver ES_WORLDS/ES_WORLD_ORDER en
+           app.js). Reusa renderMapPath() TAL CUAL, cero código nuevo de
+           renderizado del camino curvo. -->
+      <div class="jp-view" id="es-view-world-map">
+        <div class="jp-tier-progress-bars" id="es-tier-progress-bars">
+          <div class="jp-tier-progress-bar">
+            <span class="jp-tier-progress-bar__label">A1</span>
+            <div class="jp-tier-progress-bar__track"><div class="jp-tier-progress-bar__fill" data-tier-fill="a1"></div></div>
+            <span class="jp-tier-progress-bar__pct" data-tier-pct="a1">0%</span>
+          </div>
+          <div class="jp-tier-progress-bar">
+            <span class="jp-tier-progress-bar__label">A2</span>
+            <div class="jp-tier-progress-bar__track"><div class="jp-tier-progress-bar__fill" data-tier-fill="a2"></div></div>
+            <span class="jp-tier-progress-bar__pct" data-tier-pct="a2">0%</span>
+          </div>
+          <div class="jp-tier-progress-bar">
+            <span class="jp-tier-progress-bar__label">B1</span>
+            <div class="jp-tier-progress-bar__track"><div class="jp-tier-progress-bar__fill" data-tier-fill="b1"></div></div>
+            <span class="jp-tier-progress-bar__pct" data-tier-pct="b1">0%</span>
+          </div>
+        </div>
+        <div class="jp-roadmap" id="es-world-map-track">
+          <!-- nodos renderizados por app.js (renderEsWorldMap) -->
+        </div>
+      </div>
+
+      <!-- Mapa de Contenido de un Mundo: nodos = puntos de gramática +
+           escenas de conversación del nivel (ver ES_WORLDS[id].buildContentStops()). -->
+      <div class="jp-view" id="es-view-world-content" hidden>
+        <button type="button" class="btn-jp-back" id="es-world-content-back-btn" data-i18n="jpBackToGrid">← Volver</button>
+        <h3 class="jp-vocab-words__title" id="es-world-content-title"></h3>
+        <div class="jp-roadmap" id="es-world-content-track">
+          <!-- nodos renderizados por app.js (renderEsWorldContentMap) -->
+        </div>
+      </div>
+
+      <!-- Diccionario: Vocabulario A1/A2/B1, consulta libre sin candado
+           (mismo criterio que Nihongo — acceso lateral, no un mundo del
+           mapa). -->
+      <div class="jp-view" id="es-view-vocab" hidden>
+        <button type="button" class="btn-jp-back" id="es-vocab-back-btn" data-i18n="jpBackToGrid">← Volver</button>
+        <div class="jp-level-toggle" id="es-level-toggle">
+          <button type="button" class="jp-level-btn jp-level-btn--active" data-level="a1">A1</button>
+          <button type="button" class="jp-level-btn jp-level-btn--locked" data-level="a2">
+            A2
+            <span class="jp-level-btn__badge" id="es-level-badge-a2"></span>
+          </button>
+          <button type="button" class="jp-level-btn jp-level-btn--locked" data-level="b1">
+            B1
+            <span class="jp-level-btn__badge" id="es-level-badge-b1"></span>
+          </button>
+        </div>
+        <div class="jp-vocab-cat-grid" id="es-vocab-cat-grid">
+          <!-- tarjetas de categoría renderizadas por app.js -->
+        </div>
+      </div>
+
+      <div class="jp-view" id="es-view-vocab-words" hidden>
+        <button type="button" class="btn-jp-back" id="es-vocab-words-back-btn" data-i18n="jpBackToVocab">← Volver a Categorías</button>
+        <h3 class="jp-vocab-words__title" id="es-vocab-words-title"></h3>
+        <div class="jp-vocab-words-list" id="es-vocab-words-list">
+          <!-- palabras renderizadas por app.js -->
+        </div>
+        <button type="button" class="btn-register jp-general-btn" id="es-vocab-quiz-start-btn" data-i18n="jpVocabQuizStart">🎯 Quiz de esta categoría</button>
+      </div>
+
+      <div class="jp-view" id="es-view-grammar" hidden>
+        <button type="button" class="btn-jp-back" id="es-grammar-back-btn" data-i18n="jpBackToGrid">← Volver</button>
+        <div class="jp-grammar-list" id="es-grammar-list">
+          <!-- tarjetas de punto gramatical renderizadas por app.js -->
+        </div>
+        <button type="button" class="btn-register jp-general-btn" id="es-grammar-quiz-start-btn" data-i18n="esGrammarQuizStart">🎯 Quiz de Gramática</button>
+      </div>
+
+      <!-- Conversaciones: mismo lector reutilizado por Nihongo
+           (MiikaeruReader.crearLector(), readerEngine.js) — funciona sin
+           furigana (segments sin campo `reading`) porque ya es genérico,
+           no exclusivo de japonés. -->
+      <div class="jp-view" id="es-view-conversations" hidden>
+        <button type="button" class="btn-jp-back" id="es-conversations-back-btn" data-i18n="jpBackToGrid">← Volver</button>
+        <h3 class="payroll-section-title" data-i18n="esConversationsTitle">💬 Conversaciones Situacionales</h3>
+        <div class="jp-vocab-cat-grid" id="es-conversation-scene-grid">
+          <!-- tarjetas de escena renderizadas por app.js -->
+        </div>
+        <div class="jp-conversation-reader" id="es-conversation-reader" hidden>
+          <button type="button" class="btn-jp-back" id="es-conversation-reader-back-btn" data-i18n="jpConvBackToScenes">← Volver a las escenas</button>
+          <h4 class="jp-vocab-words__title" id="es-conversation-reader-title"></h4>
+          <div class="reader-panel">
+            <div class="reader-panel__controls">
+              <button type="button" class="reader-panel__auto-btn" id="es-conversation-auto-btn">▶ Lectura automática</button>
+            </div>
+            <div class="reader-lines" id="es-conversation-lines"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mini-Quiz genérico: Vocabulario/Gramática/Conversación Y el
+           Examen de Nivel (ver comentario junto a #spanish-modal más
+           arriba — el examen reusa esta MISMA vista con un modo especial
+           de "colocación", ver startEsPlacementQuiz()/esMiniQuizIsPlacement
+           en app.js). -->
+      <div class="jp-view" id="es-view-mini-quiz" hidden>
+        <button type="button" class="btn-jp-back" id="es-mini-quiz-back-btn" data-i18n="jpBackToGrid">← Volver</button>
+        <p class="jp-quiz-prompt" id="es-mini-quiz-prompt"></p>
+        <div class="jp-char-row jp-char-row--center">
+          <span class="jp-quiz-char" id="es-mini-quiz-char"></span>
+          <button type="button" class="btn-jp-speak" id="es-mini-quiz-speak-btn" aria-label="Escuchar pronunciación" data-i18n-title="jpListen" title="Escuchar pronunciación">🔊</button>
+        </div>
+        <div class="jp-quiz-options" id="es-mini-quiz-options">
+          <!-- opciones renderizadas por app.js -->
+        </div>
+        <p class="jp-quiz-feedback" id="es-mini-quiz-feedback" hidden></p>
+        <p class="jp-mini-quiz-score" id="es-mini-quiz-score"></p>
       </div>
     </div>
   </div>
@@ -3391,7 +3563,7 @@
        etiquetas <script> no importa en la práctica — se carga acá antes
        igual, por prolijidad. -->
   <script src="floatingWindow.js?v=20260811-6"></script>
-  <script src="app.js?v=20260815-1"></script>
+  <script src="app.js?v=20260815-2"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de
