@@ -1576,6 +1576,13 @@ const I18N = {
     jpMiikaeruLevelBtn: "🌱 Nivel de Miikaeru",
     jpFreeRoamTitle: "Modo Libre: repasar todo el mapa sin candados",
     jpDictShortcutTitle: "Diccionario (Vocabulario N5/N4/N3)",
+    jpKanjiN4Title: "Kanji N4",
+    jpKanjiN3Title: "Kanji N3",
+    jpMiniQuizGrammarMeaningPrompt: "¿Qué significa esta oración?",
+    jpMiniQuizConversationPrompt: "¿Qué significa esta línea del diálogo?",
+    jpWorldGrammarExamNode: "📝 Examen de Gramática",
+    jpWorldConversationExamNode: "🎧 Examen de Conversación",
+    jpConvQuizUnavailableJa: "🈁 El examen de conversación no está disponible con la interfaz en 日本語 (no hay traducción de apoyo que evaluar).",
     appJapanesePlaceholder: "El módulo Japonés AI Coach está en desarrollo. Pronto vas a poder practicarlo aquí.",
     appAddedMessage: "Más módulos estarán disponibles próximamente en Apps & Módulos.",
     appCalendarName: "Calendario & Eventos",
@@ -2563,6 +2570,13 @@ const I18N = {
     jpMiikaeruLevelBtn: "🌱 Miikaeru's Level",
     jpFreeRoamTitle: "Free Mode: review the whole map with no locks",
     jpDictShortcutTitle: "Dictionary (N5/N4/N3 Vocabulary)",
+    jpKanjiN4Title: "N4 Kanji",
+    jpKanjiN3Title: "N3 Kanji",
+    jpMiniQuizGrammarMeaningPrompt: "What does this sentence mean?",
+    jpMiniQuizConversationPrompt: "What does this line of dialogue mean?",
+    jpWorldGrammarExamNode: "📝 Grammar Exam",
+    jpWorldConversationExamNode: "🎧 Conversation Exam",
+    jpConvQuizUnavailableJa: "🈁 The conversation exam isn't available with the interface in 日本語 (there's no supporting translation to test against).",
     appJapanesePlaceholder: "The Japanese AI Coach module is under development. You'll be able to practice here soon.",
     appAddedMessage: "More modules will be available soon in Apps & Modules.",
     appCalendarName: "Calendar & Events",
@@ -3550,6 +3564,13 @@ const I18N = {
     jpMiikaeruLevelBtn: "🌱 ミイカエルのレベル",
     jpFreeRoamTitle: "フリーモード：ロックなしで全マップを復習",
     jpDictShortcutTitle: "辞書（N5/N4/N3語彙）",
+    jpKanjiN4Title: "N4漢字",
+    jpKanjiN3Title: "N3漢字",
+    jpMiniQuizGrammarMeaningPrompt: "この文の意味は何ですか。",
+    jpMiniQuizConversationPrompt: "この会話の意味は何ですか。",
+    jpWorldGrammarExamNode: "📝 文法試験",
+    jpWorldConversationExamNode: "🎧 会話試験",
+    jpConvQuizUnavailableJa: "🈁 インターフェースが日本語の場合、会話試験は利用できません（判定に使う翻訳がありません）。",
     appJapanesePlaceholder: "日本語AIコーチモジュールは開発中です。もうすぐここで練習できるようになります。",
     appAddedMessage: "アプリ&モジュールに、もうすぐ新しいモジュールが追加されます。",
     appCalendarName: "カレンダー&イベント",
@@ -4494,6 +4515,236 @@ const KANJI_N5 = [
   { char: "目", onyomi: "モク", kunyomi: "め", meaning: { es: "ojo", en: "eye", ja: "め" } },
   { char: "耳", onyomi: "ジ", kunyomi: "みみ", meaning: { es: "oreja", en: "ear", ja: "みみ" } },
   { char: "足", onyomi: "ソク", kunyomi: "あし", meaning: { es: "pie / pierna", en: "foot / leg", ja: "あし" } },
+];
+
+// Lista curada de Kanji N4 (~99 entradas) — mismo criterio que KANJI_N5:
+// cobertura real y útil de los kanji N4 más comunes, no la lista oficial
+// JLPT completa (~165-200). Verificado carácter por carácter contra
+// KANJI_N5 para cero solapamiento (ver script de deduplicación).
+const KANJI_N4 = [
+  // Familia
+  { char: "兄", onyomi: "キョウ", kunyomi: "あに", meaning: { es: "hermano mayor", en: "older brother", ja: "あに" } },
+  { char: "姉", onyomi: "シ", kunyomi: "あね", meaning: { es: "hermana mayor", en: "older sister", ja: "あね" } },
+  { char: "妹", onyomi: "マイ", kunyomi: "いもうと", meaning: { es: "hermana menor", en: "younger sister", ja: "いもうと" } },
+  { char: "弟", onyomi: "テイ", kunyomi: "おとうと", meaning: { es: "hermano menor", en: "younger brother", ja: "おとうと" } },
+  { char: "家", onyomi: "カ・ケ", kunyomi: "いえ・や", meaning: { es: "casa / familia", en: "house / family", ja: "いえ" } },
+  { char: "族", onyomi: "ゾク", kunyomi: "—", meaning: { es: "clan / familia", en: "clan / family", ja: "ぞく" } },
+  // Personas / pronombres
+  { char: "彼", onyomi: "ヒ", kunyomi: "かれ", meaning: { es: "él", en: "he / that", ja: "かれ" } },
+  { char: "僕", onyomi: "ボク", kunyomi: "ぼく", meaning: { es: "yo (masculino)", en: "I (male)", ja: "ぼく" } },
+  { char: "君", onyomi: "クン", kunyomi: "きみ", meaning: { es: "tú (informal)", en: "you (informal)", ja: "きみ" } },
+  { char: "方", onyomi: "ホウ", kunyomi: "かた", meaning: { es: "dirección / persona (cortés)", en: "direction / person (polite)", ja: "かた" } },
+  { char: "者", onyomi: "シャ", kunyomi: "もの", meaning: { es: "persona", en: "person", ja: "もの" } },
+  { char: "皆", onyomi: "カイ", kunyomi: "みな", meaning: { es: "todos", en: "everyone", ja: "みな" } },
+  // Cuerpo / salud
+  { char: "体", onyomi: "タイ", kunyomi: "からだ", meaning: { es: "cuerpo", en: "body", ja: "からだ" } },
+  { char: "顔", onyomi: "ガン", kunyomi: "かお", meaning: { es: "cara", en: "face", ja: "かお" } },
+  { char: "声", onyomi: "セイ", kunyomi: "こえ", meaning: { es: "voz", en: "voice", ja: "こえ" } },
+  { char: "心", onyomi: "シン", kunyomi: "こころ", meaning: { es: "corazón / mente", en: "heart / mind", ja: "こころ" } },
+  { char: "元", onyomi: "ゲン", kunyomi: "もと", meaning: { es: "origen", en: "origin / former", ja: "もと" } },
+  { char: "死", onyomi: "シ", kunyomi: "し(ぬ)", meaning: { es: "muerte", en: "death", ja: "しぬ" } },
+  { char: "痛", onyomi: "ツウ", kunyomi: "いた(い)", meaning: { es: "dolor", en: "pain", ja: "いたい" } },
+  // Naturaleza
+  { char: "星", onyomi: "セイ", kunyomi: "ほし", meaning: { es: "estrella", en: "star", ja: "ほし" } },
+  { char: "雪", onyomi: "セツ", kunyomi: "ゆき", meaning: { es: "nieve", en: "snow", ja: "ゆき" } },
+  { char: "風", onyomi: "フウ", kunyomi: "かぜ", meaning: { es: "viento", en: "wind", ja: "かぜ" } },
+  { char: "林", onyomi: "リン", kunyomi: "はやし", meaning: { es: "bosque pequeño", en: "woods", ja: "はやし" } },
+  { char: "森", onyomi: "シン", kunyomi: "もり", meaning: { es: "bosque", en: "forest", ja: "もり" } },
+  { char: "海", onyomi: "カイ", kunyomi: "うみ", meaning: { es: "mar", en: "sea", ja: "うみ" } },
+  { char: "岩", onyomi: "ガン", kunyomi: "いわ", meaning: { es: "roca", en: "rock", ja: "いわ" } },
+  { char: "島", onyomi: "トウ", kunyomi: "しま", meaning: { es: "isla", en: "island", ja: "しま" } },
+  { char: "坂", onyomi: "ハン", kunyomi: "さか", meaning: { es: "cuesta", en: "slope", ja: "さか" } },
+  { char: "池", onyomi: "チ", kunyomi: "いけ", meaning: { es: "estanque", en: "pond", ja: "いけ" } },
+  { char: "湖", onyomi: "コ", kunyomi: "みずうみ", meaning: { es: "lago", en: "lake", ja: "みずうみ" } },
+  { char: "石", onyomi: "セキ", kunyomi: "いし", meaning: { es: "piedra", en: "stone", ja: "いし" } },
+  // Lugares
+  { char: "京", onyomi: "キョウ", kunyomi: "—", meaning: { es: "capital", en: "capital", ja: "きょう" } },
+  { char: "都", onyomi: "ト", kunyomi: "みやこ", meaning: { es: "metrópoli", en: "metropolis", ja: "みやこ" } },
+  { char: "市", onyomi: "シ", kunyomi: "いち", meaning: { es: "ciudad", en: "city", ja: "いち" } },
+  { char: "町", onyomi: "チョウ", kunyomi: "まち", meaning: { es: "pueblo / barrio", en: "town", ja: "まち" } },
+  { char: "村", onyomi: "ソン", kunyomi: "むら", meaning: { es: "aldea", en: "village", ja: "むら" } },
+  { char: "県", onyomi: "ケン", kunyomi: "—", meaning: { es: "prefectura", en: "prefecture", ja: "けん" } },
+  { char: "場", onyomi: "ジョウ", kunyomi: "ば", meaning: { es: "lugar", en: "place", ja: "ば" } },
+  { char: "所", onyomi: "ショ", kunyomi: "ところ", meaning: { es: "lugar", en: "place", ja: "ところ" } },
+  // Verbos
+  { char: "動", onyomi: "ドウ", kunyomi: "うご(く)", meaning: { es: "moverse", en: "move", ja: "うごく" } },
+  { char: "働", onyomi: "ドウ", kunyomi: "はたら(く)", meaning: { es: "trabajar", en: "work", ja: "はたらく" } },
+  { char: "使", onyomi: "シ", kunyomi: "つか(う)", meaning: { es: "usar", en: "use", ja: "つかう" } },
+  { char: "持", onyomi: "ジ", kunyomi: "も(つ)", meaning: { es: "sostener / tener", en: "hold / have", ja: "もつ" } },
+  { char: "待", onyomi: "タイ", kunyomi: "ま(つ)", meaning: { es: "esperar", en: "wait", ja: "まつ" } },
+  { char: "始", onyomi: "シ", kunyomi: "はじ(まる)", meaning: { es: "empezar", en: "begin", ja: "はじまる" } },
+  { char: "終", onyomi: "シュウ", kunyomi: "お(わる)", meaning: { es: "terminar", en: "end", ja: "おわる" } },
+  { char: "同", onyomi: "ドウ", kunyomi: "おな(じ)", meaning: { es: "mismo", en: "same", ja: "おなじ" } },
+  { char: "違", onyomi: "イ", kunyomi: "ちが(う)", meaning: { es: "diferir", en: "differ", ja: "ちがう" } },
+  { char: "別", onyomi: "ベツ", kunyomi: "わか(れる)", meaning: { es: "separar / distinto", en: "separate / different", ja: "わかれる" } },
+  { char: "集", onyomi: "シュウ", kunyomi: "あつ(まる)", meaning: { es: "reunir", en: "gather", ja: "あつまる" } },
+  { char: "決", onyomi: "ケツ", kunyomi: "き(める)", meaning: { es: "decidir", en: "decide", ja: "きめる" } },
+  { char: "伝", onyomi: "デン", kunyomi: "つた(える)", meaning: { es: "transmitir", en: "convey", ja: "つたえる" } },
+  { char: "教", onyomi: "キョウ", kunyomi: "おし(える)", meaning: { es: "enseñar", en: "teach", ja: "おしえる" } },
+  { char: "習", onyomi: "シュウ", kunyomi: "なら(う)", meaning: { es: "aprender", en: "learn", ja: "ならう" } },
+  { char: "覚", onyomi: "カク", kunyomi: "おぼ(える)", meaning: { es: "recordar", en: "remember", ja: "おぼえる" } },
+  { char: "忘", onyomi: "ボウ", kunyomi: "わす(れる)", meaning: { es: "olvidar", en: "forget", ja: "わすれる" } },
+  { char: "通", onyomi: "ツウ", kunyomi: "とお(る)", meaning: { es: "pasar / atravesar", en: "pass through", ja: "とおる" } },
+  { char: "運", onyomi: "ウン", kunyomi: "はこ(ぶ)", meaning: { es: "transportar / suerte", en: "carry / luck", ja: "はこぶ" } },
+  { char: "送", onyomi: "ソウ", kunyomi: "おく(る)", meaning: { es: "enviar", en: "send", ja: "おくる" } },
+  { char: "止", onyomi: "シ", kunyomi: "と(まる)", meaning: { es: "detener", en: "stop", ja: "とまる" } },
+  // Adjetivos / descripciones
+  { char: "悪", onyomi: "アク", kunyomi: "わる(い)", meaning: { es: "malo", en: "bad", ja: "わるい" } },
+  { char: "重", onyomi: "ジュウ", kunyomi: "おも(い)", meaning: { es: "pesado", en: "heavy", ja: "おもい" } },
+  { char: "軽", onyomi: "ケイ", kunyomi: "かる(い)", meaning: { es: "ligero", en: "light (weight)", ja: "かるい" } },
+  { char: "強", onyomi: "キョウ", kunyomi: "つよ(い)", meaning: { es: "fuerte", en: "strong", ja: "つよい" } },
+  { char: "弱", onyomi: "ジャク", kunyomi: "よわ(い)", meaning: { es: "débil", en: "weak", ja: "よわい" } },
+  { char: "深", onyomi: "シン", kunyomi: "ふか(い)", meaning: { es: "profundo", en: "deep", ja: "ふかい" } },
+  { char: "浅", onyomi: "セン", kunyomi: "あさ(い)", meaning: { es: "poco profundo", en: "shallow", ja: "あさい" } },
+  { char: "速", onyomi: "ソク", kunyomi: "はや(い)", meaning: { es: "rápido", en: "fast", ja: "はやい" } },
+  { char: "遅", onyomi: "チ", kunyomi: "おそ(い)", meaning: { es: "lento", en: "slow", ja: "おそい" } },
+  { char: "広", onyomi: "コウ", kunyomi: "ひろ(い)", meaning: { es: "amplio", en: "wide", ja: "ひろい" } },
+  { char: "狭", onyomi: "キョウ", kunyomi: "せま(い)", meaning: { es: "estrecho", en: "narrow", ja: "せまい" } },
+  { char: "太", onyomi: "タイ", kunyomi: "ふと(い)", meaning: { es: "grueso", en: "thick / fat", ja: "ふとい" } },
+  { char: "暗", onyomi: "アン", kunyomi: "くら(い)", meaning: { es: "oscuro", en: "dark", ja: "くらい" } },
+  { char: "明", onyomi: "メイ", kunyomi: "あか(るい)", meaning: { es: "brillante / claro", en: "bright", ja: "あかるい" } },
+  { char: "静", onyomi: "セイ", kunyomi: "しず(か)", meaning: { es: "tranquilo", en: "quiet", ja: "しずか" } },
+  { char: "危", onyomi: "キ", kunyomi: "あぶ(ない)", meaning: { es: "peligroso", en: "dangerous", ja: "あぶない" } },
+  // Trabajo / oficina
+  { char: "業", onyomi: "ギョウ", kunyomi: "—", meaning: { es: "negocio / industria", en: "business / industry", ja: "ぎょう" } },
+  { char: "課", onyomi: "カ", kunyomi: "—", meaning: { es: "sección / lección", en: "section / lesson", ja: "か" } },
+  { char: "係", onyomi: "ケイ", kunyomi: "かかり", meaning: { es: "encargado", en: "person in charge", ja: "かかり" } },
+  { char: "部", onyomi: "ブ", kunyomi: "—", meaning: { es: "departamento / parte", en: "department / part", ja: "ぶ" } },
+  { char: "局", onyomi: "キョク", kunyomi: "—", meaning: { es: "oficina", en: "bureau / office", ja: "きょく" } },
+  { char: "社", onyomi: "シャ", kunyomi: "やしろ", meaning: { es: "empresa", en: "company", ja: "しゃ" } },
+  { char: "員", onyomi: "イン", kunyomi: "—", meaning: { es: "miembro", en: "member", ja: "いん" } },
+  { char: "務", onyomi: "ム", kunyomi: "つと(める)", meaning: { es: "deber / servir", en: "duty / serve", ja: "つとめる" } },
+  { char: "給", onyomi: "キュウ", kunyomi: "—", meaning: { es: "suministro / sueldo", en: "supply / wage", ja: "きゅう" } },
+  { char: "料", onyomi: "リョウ", kunyomi: "—", meaning: { es: "tarifa / material", en: "fee / material", ja: "りょう" } },
+  // Sentimientos
+  { char: "悲", onyomi: "ヒ", kunyomi: "かな(しい)", meaning: { es: "triste", en: "sad", ja: "かなしい" } },
+  { char: "喜", onyomi: "キ", kunyomi: "よろこ(ぶ)", meaning: { es: "alegría", en: "joy", ja: "よろこぶ" } },
+  { char: "楽", onyomi: "ガク・ラク", kunyomi: "たの(しい)", meaning: { es: "divertido / música", en: "fun / music", ja: "たのしい" } },
+  { char: "泣", onyomi: "キュウ", kunyomi: "な(く)", meaning: { es: "llorar", en: "cry", ja: "なく" } },
+  // Cultura / arte
+  { char: "洋", onyomi: "ヨウ", kunyomi: "—", meaning: { es: "océano / estilo occidental", en: "ocean / western", ja: "よう" } },
+  { char: "和", onyomi: "ワ", kunyomi: "やわ(らぐ)", meaning: { es: "armonía / estilo japonés", en: "harmony / Japanese-style", ja: "わ" } },
+  { char: "式", onyomi: "シキ", kunyomi: "—", meaning: { es: "ceremonia / fórmula", en: "ceremony / formula", ja: "しき" } },
+  { char: "美", onyomi: "ビ", kunyomi: "うつく(しい)", meaning: { es: "hermoso", en: "beautiful", ja: "うつくしい" } },
+  { char: "術", onyomi: "ジュツ", kunyomi: "—", meaning: { es: "arte / técnica", en: "art / technique", ja: "じゅつ" } },
+  { char: "音", onyomi: "オン", kunyomi: "おと", meaning: { es: "sonido", en: "sound", ja: "おと" } },
+  { char: "絵", onyomi: "カイ", kunyomi: "え", meaning: { es: "dibujo", en: "picture", ja: "え" } },
+  { char: "写", onyomi: "シャ", kunyomi: "うつ(す)", meaning: { es: "copiar / fotografiar", en: "copy / photograph", ja: "うつす" } },
+  { char: "真", onyomi: "シン", kunyomi: "ま", meaning: { es: "verdadero / foto", en: "true / photo", ja: "ま" } },
+  { char: "画", onyomi: "ガ", kunyomi: "—", meaning: { es: "imagen / trazo", en: "picture / stroke", ja: "が" } },
+];
+
+// Lista curada de Kanji N3 (~100 entradas) — mismo criterio que KANJI_N5/
+// KANJI_N4: cobertura real de los kanji N3 más comunes (conceptos más
+// abstractos: economía, política, sociedad, ciencia — típico del salto
+// N4→N3), no la lista oficial JLPT completa (~370-400). Verificado
+// carácter por carácter contra KANJI_N5 y KANJI_N4 para cero solapamiento.
+const KANJI_N3 = [
+  // Economía
+  { char: "経", onyomi: "ケイ・キョウ", kunyomi: "へ(る)", meaning: { es: "transcurrir / sutra", en: "pass through / sutra", ja: "へる" } },
+  { char: "済", onyomi: "サイ", kunyomi: "す(む)", meaning: { es: "completar / economía", en: "complete / economy", ja: "すむ" } },
+  { char: "資", onyomi: "シ", kunyomi: "—", meaning: { es: "recursos / capital", en: "resources / capital", ja: "し" } },
+  { char: "益", onyomi: "エキ", kunyomi: "—", meaning: { es: "beneficio", en: "profit / benefit", ja: "えき" } },
+  { char: "損", onyomi: "ソン", kunyomi: "そこ(なう)", meaning: { es: "pérdida / daño", en: "loss / damage", ja: "そこなう" } },
+  { char: "価", onyomi: "カ", kunyomi: "あたい", meaning: { es: "valor / precio", en: "value / price", ja: "あたい" } },
+  { char: "値", onyomi: "チ", kunyomi: "ね・あたい", meaning: { es: "valor / precio", en: "value / price", ja: "ね" } },
+  { char: "税", onyomi: "ゼイ", kunyomi: "—", meaning: { es: "impuesto", en: "tax", ja: "ぜい" } },
+  { char: "産", onyomi: "サン", kunyomi: "う(まれる)", meaning: { es: "producir / nacer", en: "give birth / produce", ja: "うまれる" } },
+  { char: "費", onyomi: "ヒ", kunyomi: "つい(やす)", meaning: { es: "gasto", en: "expense", ja: "ついやす" } },
+  // Política / ley
+  { char: "政", onyomi: "セイ", kunyomi: "まつりごと", meaning: { es: "política", en: "politics / government", ja: "せいじ" } },
+  { char: "府", onyomi: "フ", kunyomi: "—", meaning: { es: "gobierno / oficina", en: "government office", ja: "ふ" } },
+  { char: "民", onyomi: "ミン", kunyomi: "たみ", meaning: { es: "pueblo / ciudadano", en: "people / citizens", ja: "たみ" } },
+  { char: "権", onyomi: "ケン", kunyomi: "—", meaning: { es: "derecho / autoridad", en: "right / authority", ja: "けん" } },
+  { char: "議", onyomi: "ギ", kunyomi: "—", meaning: { es: "discusión / deliberación", en: "discussion / deliberation", ja: "ぎ" } },
+  { char: "選", onyomi: "セン", kunyomi: "えら(ぶ)", meaning: { es: "elegir", en: "choose / select", ja: "えらぶ" } },
+  { char: "挙", onyomi: "キョ", kunyomi: "あ(げる)", meaning: { es: "alzar / realizar (elección)", en: "raise / conduct (election)", ja: "あげる" } },
+  { char: "票", onyomi: "ヒョウ", kunyomi: "—", meaning: { es: "voto / boleto", en: "vote / ticket", ja: "ひょう" } },
+  { char: "法", onyomi: "ホウ", kunyomi: "—", meaning: { es: "ley / método", en: "law / method", ja: "ほう" } },
+  { char: "律", onyomi: "リツ", kunyomi: "—", meaning: { es: "ley / ritmo", en: "law / rhythm", ja: "りつ" } },
+  { char: "規", onyomi: "キ", kunyomi: "—", meaning: { es: "norma", en: "regulation / standard", ja: "き" } },
+  { char: "則", onyomi: "ソク", kunyomi: "—", meaning: { es: "regla", en: "rule", ja: "そく" } },
+  { char: "義", onyomi: "ギ", kunyomi: "—", meaning: { es: "justicia / significado", en: "justice / meaning", ja: "ぎ" } },
+  { char: "責", onyomi: "セキ", kunyomi: "せ(める)", meaning: { es: "responsabilidad", en: "responsibility / blame", ja: "せめる" } },
+  { char: "任", onyomi: "ニン", kunyomi: "まか(せる)", meaning: { es: "deber / confiar", en: "duty / entrust", ja: "まかせる" } },
+  // Sociedad
+  { char: "独", onyomi: "ドク", kunyomi: "ひと(り)", meaning: { es: "solo / único", en: "alone / single", ja: "ひとり" } },
+  { char: "個", onyomi: "コ", kunyomi: "—", meaning: { es: "individuo", en: "individual", ja: "こ" } },
+  { char: "団", onyomi: "ダン", kunyomi: "—", meaning: { es: "grupo / organización", en: "group / organization", ja: "だん" } },
+  { char: "協", onyomi: "キョウ", kunyomi: "—", meaning: { es: "cooperar", en: "cooperate", ja: "きょう" } },
+  { char: "力", onyomi: "リョク・リキ", kunyomi: "ちから", meaning: { es: "fuerza", en: "power / strength", ja: "ちから" } },
+  { char: "境", onyomi: "キョウ", kunyomi: "さかい", meaning: { es: "frontera", en: "border / boundary", ja: "さかい" } },
+  { char: "界", onyomi: "カイ", kunyomi: "—", meaning: { es: "mundo / límite", en: "world / boundary", ja: "かい" } },
+  { char: "域", onyomi: "イキ", kunyomi: "—", meaning: { es: "área / región", en: "area / region", ja: "いき" } },
+  { char: "争", onyomi: "ソウ", kunyomi: "あらそ(う)", meaning: { es: "disputar", en: "dispute / compete", ja: "あらそう" } },
+  { char: "戦", onyomi: "セン", kunyomi: "たたか(う)", meaning: { es: "guerra / pelear", en: "war / fight", ja: "たたかう" } },
+  { char: "平", onyomi: "ヘイ・ビョウ", kunyomi: "たい(ら)", meaning: { es: "plano / paz", en: "flat / peace", ja: "たいら" } },
+  { char: "系", onyomi: "ケイ", kunyomi: "—", meaning: { es: "sistema / linaje", en: "system / lineage", ja: "けい" } },
+  // Humano / abstracto
+  { char: "愛", onyomi: "アイ", kunyomi: "—", meaning: { es: "amor", en: "love", ja: "あい" } },
+  { char: "恋", onyomi: "レン", kunyomi: "こい", meaning: { es: "amor romántico", en: "romantic love", ja: "こい" } },
+  { char: "婚", onyomi: "コン", kunyomi: "—", meaning: { es: "matrimonio", en: "marriage", ja: "こん" } },
+  { char: "感", onyomi: "カン", kunyomi: "—", meaning: { es: "sentimiento / sensación", en: "feeling / sensation", ja: "かん" } },
+  { char: "情", onyomi: "ジョウ", kunyomi: "なさ(け)", meaning: { es: "emoción / compasión", en: "emotion / sympathy", ja: "なさけ" } },
+  { char: "精", onyomi: "セイ", kunyomi: "—", meaning: { es: "espíritu / esencia", en: "spirit / essence", ja: "せい" } },
+  { char: "神", onyomi: "シン", kunyomi: "かみ", meaning: { es: "dios / espíritu", en: "god / spirit", ja: "かみ" } },
+  { char: "識", onyomi: "シキ", kunyomi: "—", meaning: { es: "conocimiento / conciencia", en: "knowledge / consciousness", ja: "しき" } },
+  { char: "認", onyomi: "ニン", kunyomi: "みと(める)", meaning: { es: "reconocer", en: "recognize / acknowledge", ja: "みとめる" } },
+  { char: "象", onyomi: "ショウ", kunyomi: "—", meaning: { es: "elefante / fenómeno", en: "elephant / phenomenon", ja: "しょう" } },
+  { char: "現", onyomi: "ゲン", kunyomi: "あらわ(れる)", meaning: { es: "aparecer / actual", en: "appear / present", ja: "あらわれる" } },
+  { char: "表", onyomi: "ヒョウ", kunyomi: "おもて・あらわ(す)", meaning: { es: "superficie / expresar", en: "surface / express", ja: "おもて" } },
+  // Ciencia
+  { char: "究", onyomi: "キュウ", kunyomi: "きわ(める)", meaning: { es: "investigar a fondo", en: "research thoroughly", ja: "きわめる" } },
+  { char: "研", onyomi: "ケン", kunyomi: "と(ぐ)", meaning: { es: "pulir / investigar", en: "polish / research", ja: "とぐ" } },
+  { char: "験", onyomi: "ケン", kunyomi: "—", meaning: { es: "prueba / experiencia", en: "test / experience", ja: "けん" } },
+  { char: "科", onyomi: "カ", kunyomi: "—", meaning: { es: "departamento / materia", en: "department / subject", ja: "か" } },
+  { char: "実", onyomi: "ジツ", kunyomi: "み・じつ", meaning: { es: "realidad / fruto", en: "reality / fruit", ja: "じつ" } },
+  { char: "構", onyomi: "コウ", kunyomi: "かま(える)", meaning: { es: "estructura / preparar", en: "structure / set up", ja: "かまえる" } },
+  { char: "造", onyomi: "ゾウ", kunyomi: "つく(る)", meaning: { es: "construir / fabricar", en: "construct / make", ja: "つくる" } },
+  { char: "論", onyomi: "ロン", kunyomi: "—", meaning: { es: "teoría / argumento", en: "theory / argument", ja: "ろん" } },
+  // Naturaleza / entorno
+  { char: "温", onyomi: "オン", kunyomi: "あたた(かい)", meaning: { es: "cálido", en: "warm", ja: "あたたかい" } },
+  { char: "度", onyomi: "ド", kunyomi: "たび", meaning: { es: "grado / vez", en: "degree / times", ja: "たび" } },
+  { char: "湿", onyomi: "シツ", kunyomi: "しめ(る)", meaning: { es: "húmedo", en: "humid / damp", ja: "しめる" } },
+  { char: "乾", onyomi: "カン", kunyomi: "かわ(く)", meaning: { es: "seco", en: "dry", ja: "かわく" } },
+  { char: "源", onyomi: "ゲン", kunyomi: "みなもと", meaning: { es: "fuente / origen", en: "source / origin", ja: "みなもと" } },
+  { char: "環", onyomi: "カン", kunyomi: "—", meaning: { es: "anillo / rodear", en: "ring / surround", ja: "かん" } },
+  { char: "球", onyomi: "キュウ", kunyomi: "たま", meaning: { es: "pelota / esfera", en: "ball / sphere", ja: "たま" } },
+  // Verbos / cambios
+  { char: "増", onyomi: "ゾウ", kunyomi: "ふ(える)", meaning: { es: "aumentar", en: "increase", ja: "ふえる" } },
+  { char: "減", onyomi: "ゲン", kunyomi: "へ(る)", meaning: { es: "disminuir", en: "decrease", ja: "へる" } },
+  { char: "変", onyomi: "ヘン", kunyomi: "か(わる)", meaning: { es: "cambiar", en: "change", ja: "かわる" } },
+  { char: "続", onyomi: "ゾク", kunyomi: "つづ(く)", meaning: { es: "continuar", en: "continue", ja: "つづく" } },
+  { char: "守", onyomi: "シュ", kunyomi: "まも(る)", meaning: { es: "proteger", en: "protect", ja: "まもる" } },
+  { char: "育", onyomi: "イク", kunyomi: "そだ(つ)", meaning: { es: "criar / crecer", en: "raise / grow", ja: "そだつ" } },
+  { char: "建", onyomi: "ケン", kunyomi: "た(てる)", meaning: { es: "construir", en: "build", ja: "たてる" } },
+  { char: "残", onyomi: "ザン", kunyomi: "のこ(る)", meaning: { es: "quedar / sobrar", en: "remain / leftover", ja: "のこる" } },
+  { char: "直", onyomi: "チョク", kunyomi: "なお(す)", meaning: { es: "arreglar / directo", en: "fix / direct", ja: "なおす" } },
+  { char: "基", onyomi: "キ", kunyomi: "もと(づく)", meaning: { es: "base / fundamento", en: "basis / foundation", ja: "もとづく" } },
+  { char: "準", onyomi: "ジュン", kunyomi: "—", meaning: { es: "estándar / cuasi-", en: "standard / quasi-", ja: "じゅん" } },
+  { char: "標", onyomi: "ヒョウ", kunyomi: "—", meaning: { es: "marca / señal", en: "mark / sign", ja: "ひょう" } },
+  { char: "質", onyomi: "シツ", kunyomi: "—", meaning: { es: "calidad / naturaleza", en: "quality / nature", ja: "しつ" } },
+  { char: "量", onyomi: "リョウ", kunyomi: "はか(る)", meaning: { es: "cantidad / medir", en: "quantity / measure", ja: "はかる" } },
+  { char: "率", onyomi: "リツ", kunyomi: "ひき(いる)", meaning: { es: "tasa / liderar", en: "rate / lead", ja: "ひきいる" } },
+  { char: "効", onyomi: "コウ", kunyomi: "き(く)", meaning: { es: "efecto", en: "effect / efficacy", ja: "きく" } },
+  { char: "果", onyomi: "カ", kunyomi: "は(たす)", meaning: { es: "resultado / fruto", en: "result / fruit", ja: "はたす" } },
+  { char: "状", onyomi: "ジョウ", kunyomi: "—", meaning: { es: "condición / estado", en: "condition / state", ja: "じょう" } },
+  { char: "態", onyomi: "タイ", kunyomi: "—", meaning: { es: "estado / apariencia", en: "state / appearance", ja: "たい" } },
+  { char: "型", onyomi: "ケイ", kunyomi: "かた", meaning: { es: "tipo / modelo", en: "type / model", ja: "かた" } },
+  // Conceptos abstractos avanzados
+  { char: "単", onyomi: "タン", kunyomi: "—", meaning: { es: "simple / único", en: "single / simple", ja: "たん" } },
+  { char: "雑", onyomi: "ザツ", kunyomi: "—", meaning: { es: "misceláneo / desordenado", en: "miscellaneous / rough", ja: "ざつ" } },
+  { char: "常", onyomi: "ジョウ", kunyomi: "つね(に)", meaning: { es: "siempre / normal", en: "always / normal", ja: "つねに" } },
+  { char: "異", onyomi: "イ", kunyomi: "こと(なる)", meaning: { es: "diferente / extraño", en: "different / strange", ja: "ことなる" } },
+  { char: "関", onyomi: "カン", kunyomi: "かか(わる)", meaning: { es: "relacionado / conexión", en: "related / connection", ja: "かかわる" } },
+  { char: "連", onyomi: "レン", kunyomi: "つら(なる)", meaning: { es: "conectar / serie", en: "link / series", ja: "つらなる" } },
+  { char: "絡", onyomi: "ラク", kunyomi: "から(む)", meaning: { es: "entrelazar / contacto", en: "entangle / contact", ja: "からむ" } },
+  { char: "判", onyomi: "ハン", kunyomi: "—", meaning: { es: "juicio / sello", en: "judgment / stamp", ja: "はん" } },
+  { char: "断", onyomi: "ダン", kunyomi: "ことわ(る)", meaning: { es: "decisión / rechazar", en: "decision / refuse", ja: "ことわる" } },
+  { char: "信", onyomi: "シン", kunyomi: "しん(じる)", meaning: { es: "confiar / creer", en: "trust / believe", ja: "しんじる" } },
+  { char: "頼", onyomi: "ライ", kunyomi: "たの(む)", meaning: { es: "confiar / pedir", en: "rely / request", ja: "たのむ" } },
+  { char: "予", onyomi: "ヨ", kunyomi: "あらかじ(め)", meaning: { es: "de antemano", en: "beforehand / advance", ja: "あらかじめ" } },
+  { char: "想", onyomi: "ソウ", kunyomi: "—", meaning: { es: "pensamiento / idea", en: "thought / idea", ja: "そう" } },
 ];
 
 // Palabras Clave por kana (módulo Japonés, Modo Práctica — "Vocabulario
@@ -7284,6 +7535,8 @@ const N3_VOCAB_CATEGORIES = [
 // ---------------------------------------------------
 const N3_GRAMMAR_POINTS = [
   {
+    id: "teoku",
+    label: "〜ておきます",
     pattern: { es: "[Verbo en forma て] おきます", en: "[Verb in て-form] おきます" },
     explanation: {
       es: "Hacer algo POR ADELANTADO, dejándolo preparado para más tarde — implica previsión, no solo la acción en sí.",
@@ -7299,6 +7552,8 @@ const N3_GRAMMAR_POINTS = [
     ],
   },
   {
+    id: "teshimau",
+    label: "〜てしまいます",
     pattern: { es: "[Verbo en forma て] しまいます", en: "[Verb in て-form] しまいます" },
     explanation: {
       es: "Indica que una acción se completó por completo, a menudo con un matiz de lamento, sorpresa o algo irreversible/accidental.",
@@ -7314,6 +7569,8 @@ const N3_GRAMMAR_POINTS = [
     ],
   },
   {
+    id: "bekida",
+    label: "〜べきだ",
     pattern: { es: "[Verbo en forma diccionario] べきだ", en: "[Verb in dictionary form] べきだ" },
     explanation: {
       es: "Expresa lo que ALGUIEN DEBERÍA hacer por deber moral o sentido común — más fuerte que un simple consejo, pero distinto de una obligación legal.",
@@ -7329,6 +7586,8 @@ const N3_GRAMMAR_POINTS = [
     ],
   },
   {
+    id: "kotoninaru",
+    label: "〜ことになる",
     pattern: { es: "[Oración simple] ことになります", en: "[Plain sentence] ことになります" },
     explanation: {
       es: "Describe una decisión o resultado que se dio por circunstancias externas, no por elección directa del hablante — \"resultó que...\".",
@@ -7344,6 +7603,8 @@ const N3_GRAMMAR_POINTS = [
     ],
   },
   {
+    id: "kotonisuru",
+    label: "〜ことにする",
     pattern: { es: "[Oración simple] ことにします", en: "[Plain sentence] ことにします" },
     explanation: {
       es: "El hablante toma una decisión PROPIA y consciente — contraste directo con ことになる del punto anterior.",
@@ -7359,6 +7620,8 @@ const N3_GRAMMAR_POINTS = [
     ],
   },
   {
+    id: "youni",
+    label: "〜ように",
     pattern: { es: "[Verbo potencial/negativo] ように、[Acción]", en: "[Potential/negative verb] ように, [Action]" },
     explanation: {
       es: "Expresa el PROPÓSITO de una acción, especialmente cuando el resultado no es directamente controlable (a diferencia de ～ために, más directo).",
@@ -7374,6 +7637,8 @@ const N3_GRAMMAR_POINTS = [
     ],
   },
   {
+    id: "bakari",
+    label: "〜ばかり",
     pattern: { es: "[Sustantivo] ばかり · [Verbo en forma た] ばかり", en: "[Noun] ばかり · [Verb in た-form] ばかり" },
     explanation: {
       es: "Con sustantivos: \"solo/nada más que\" (exceso de una sola cosa). Con verbo en pasado: \"acabar de hacer algo\" (evento muy reciente).",
@@ -7389,6 +7654,8 @@ const N3_GRAMMAR_POINTS = [
     ],
   },
   {
+    id: "totanni",
+    label: "〜たとたんに",
     pattern: { es: "[Verbo en forma た] とたんに、[Resultado]", en: "[Verb in た-form] とたんに, [Result]" },
     explanation: {
       es: "\"Justo en el instante en que\" ocurrió A, pasó B inmediatamente — el segundo evento es inmediato e inesperado.",
@@ -7404,6 +7671,8 @@ const N3_GRAMMAR_POINTS = [
     ],
   },
   {
+    id: "nitaishite",
+    label: "〜に対して",
     pattern: { es: "[Sustantivo] に対して、[Comentario/Actitud]", en: "[Noun] に対して, [Comment/Attitude]" },
     explanation: {
       es: "Marca hacia QUIÉN o QUÉ se dirige una actitud, sentimiento o acción — más formal y específico que simplemente に.",
@@ -7419,6 +7688,8 @@ const N3_GRAMMAR_POINTS = [
     ],
   },
   {
+    id: "seideokagede",
+    label: "せいで／おかげで",
     pattern: { es: "[Razón mala] せいで · [Razón buena] おかげで", en: "[Bad reason] せいで · [Good reason] おかげで" },
     explanation: {
       es: "Ambas dan la CAUSA de un resultado, pero せいで culpa a algo/alguien de algo MALO, mientras que おかげで agradece algo/alguien por algo BUENO.",
@@ -7434,6 +7705,8 @@ const N3_GRAMMAR_POINTS = [
     ],
   },
   {
+    id: "toiu",
+    label: "〜という",
     pattern: { es: "[Nombre/Oración] という [Sustantivo]", en: "[Name/Sentence] という [Noun]" },
     explanation: {
       es: "Introduce el NOMBRE de algo (\"llamado...\") o cita/referencia lo que alguien dijo u oyó (\"que dice que...\"), sin que el hablante lo confirme como propio.",
@@ -7449,6 +7722,8 @@ const N3_GRAMMAR_POINTS = [
     ],
   },
   {
+    id: "rareru",
+    label: "〜られる／れる",
     pattern: { es: "[Verbo en forma pasiva] られます／れます", en: "[Verb in passive form] られます／れます" },
     explanation: {
       es: "El sujeto de la oración RECIBE la acción en vez de realizarla — útil para hechos objetivos o cuando no importa (o no se sabe) quién hizo la acción.",
@@ -7464,6 +7739,8 @@ const N3_GRAMMAR_POINTS = [
     ],
   },
   {
+    id: "saseru",
+    label: "〜させる",
     pattern: { es: "[Verbo en forma causativa] させます", en: "[Verb in causative form] させます" },
     explanation: {
       es: "El sujeto HACE o PERMITE que otra persona realice una acción — según el contexto, puede ser una orden (hacer que alguien haga algo) o un permiso (dejar que alguien haga algo).",
@@ -7479,6 +7756,8 @@ const N3_GRAMMAR_POINTS = [
     ],
   },
   {
+    id: "nichigainai",
+    label: "〜に違いない",
     pattern: { es: "[Oración simple] に違いない", en: "[Plain sentence] に違いない" },
     explanation: {
       es: "Expresa una conclusión con MUY ALTA certeza basada en evidencia o razonamiento lógico — más fuerte que はず o かもしれません.",
@@ -7724,17 +8003,28 @@ function formatGojuonRowLabel(row) {
 // no desbloqueado por nivel (ver arriba) — así "Práctica General" y la
 // práctica por fila nunca preguntan por algo que la cuadrícula muestra
 // como candado.
+// Kanji N4/N3 (a diferencia de N5) NO llevan candado individual por nivel
+// GENERAL — ya viven detrás del candado de MUNDO completo en el Mapa de
+// Mundos (isNihongoTierUnlocked("n4"/"n3"), salteable con Modo Libre),
+// mismo criterio que ya aplica a los nodos de gramática/conversación de
+// esos mundos. Evita inventar un tercer mecanismo de progresión — ver
+// JP_KANJI_TIER_DATA/isJpWorldLocked() más abajo.
+const JP_KANJI_TIER_DATA = { kanji: KANJI_N5, "kanji-n4": KANJI_N4, "kanji-n3": KANJI_N3 };
 function getKanaList(script) {
-  if (script === "kanji") {
-    return KANJI_N5.filter((k, i) => isJpLevelUnlocked(jpKanjiUnlockLevel(i))).map((k) => ({
-      char: k.char,
-      answer: resolveJpMeaning(k.meaning),
-      rowId: "kanji-n5",
-      script,
-      onyomi: k.onyomi,
-      kunyomi: k.kunyomi,
-      meaning: resolveJpMeaning(k.meaning),
-    }));
+  if (script === "kanji" || script === "kanji-n4" || script === "kanji-n3") {
+    const data = JP_KANJI_TIER_DATA[script];
+    const gateByGeneralLevel = script === "kanji"; // solo Kanji N5 tiene candado individual (comportamiento preexistente, sin cambios)
+    return data
+      .filter((k, i) => !gateByGeneralLevel || isJpLevelUnlocked(jpKanjiUnlockLevel(i)))
+      .map((k) => ({
+        char: k.char,
+        answer: resolveJpMeaning(k.meaning),
+        rowId: script,
+        script,
+        onyomi: k.onyomi,
+        kunyomi: k.kunyomi,
+        meaning: resolveJpMeaning(k.meaning),
+      }));
   }
   const list = [];
   GOJUON_ROWS.forEach((row, rowIndex) => {
@@ -7818,7 +8108,7 @@ async function speakKana(char) {
 // speakKana() en las vistas de práctica (Fases, tarjetas de vocabulario)
 // NO pasan por acá — ahí escuchar es parte de estudiar, no de evaluarse.
 function isJpExamAudioAllowed(script) {
-  if (script === "kanji") return currentLanguage === "ja";
+  if (script.startsWith("kanji")) return currentLanguage === "ja";
   return false;
 }
 
@@ -19519,7 +19809,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // app.js, cacheado por el Service Worker (ver sw.js).
   const N5_DB_NAME = "miikaeru-n5";
   const N5_DB_VERSION = 1;
-  const N5_CONTENT_VERSION = "20260813-1"; // subir cuando cambie vocab/gramática/kanji/kana
+  const N5_CONTENT_VERSION = "20260814-1"; // subir cuando cambie vocab/gramática/kanji/kana
 
   let n5DbPromise = null;
 
@@ -19598,8 +19888,10 @@ document.addEventListener("DOMContentLoaded", () => {
     { id: "kana", data: GOJUON_ROWS },
     { id: "vocab-n4", data: N4_VOCAB_CATEGORIES },
     { id: "grammar-n4", data: N4_GRAMMAR_POINTS },
+    { id: "kanji-n4", data: KANJI_N4 },
     { id: "vocab-n3", data: N3_VOCAB_CATEGORIES },
     { id: "grammar-n3", data: N3_GRAMMAR_POINTS },
+    { id: "kanji-n3", data: KANJI_N3 },
   ];
   function syncN5ContentToIndexedDb() {
     n5DbGetAll("content").then((existing) => {
@@ -19624,9 +19916,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // es también la única fuente de verdad para el bloqueo de N4/N3 del
   // nuevo nivel interno de Nihongo (ver isNihongoTierUnlocked() más abajo).
   const JP_LEVEL_CONTENT = {
-    n5: { vocab: N5_VOCAB_CATEGORIES, grammar: N5_GRAMMAR_POINTS, conversations: N5_CONVERSATION_SCENES, progressPrefix: null, unlockLevel: 1 },
-    n4: { vocab: N4_VOCAB_CATEGORIES, grammar: N4_GRAMMAR_POINTS, conversations: N4_CONVERSATION_SCENES, progressPrefix: "n4", unlockLevel: 21 },
-    n3: { vocab: N3_VOCAB_CATEGORIES, grammar: N3_GRAMMAR_POINTS, conversations: N3_CONVERSATION_SCENES, progressPrefix: "n3", unlockLevel: 41 },
+    n5: { vocab: N5_VOCAB_CATEGORIES, grammar: N5_GRAMMAR_POINTS, conversations: N5_CONVERSATION_SCENES, kanji: KANJI_N5, progressPrefix: null, unlockLevel: 1 },
+    n4: { vocab: N4_VOCAB_CATEGORIES, grammar: N4_GRAMMAR_POINTS, conversations: N4_CONVERSATION_SCENES, kanji: KANJI_N4, progressPrefix: "n4", unlockLevel: 21 },
+    n3: { vocab: N3_VOCAB_CATEGORIES, grammar: N3_GRAMMAR_POINTS, conversations: N3_CONVERSATION_SCENES, kanji: KANJI_N3, progressPrefix: "n3", unlockLevel: 41 },
   };
   let jpActiveLevel = "n5";
 
@@ -19677,17 +19969,19 @@ document.addEventListener("DOMContentLoaded", () => {
   // única forma de saltarse un candado real, y solo tiene efecto en N4/N3.
   const JP_WORLD_NODE_X = [50, 76, 58, 24, 42, 74, 56, 26];
 
-  // Trocea KANJI_N5 (107 entradas) en grupos de ~10 — no hay práctica por
-  // fila para Kanji (a diferencia de Gojuon), así que el Mundo 3 necesita
-  // esta segmentación artificial para tener varios nodos en vez de uno solo
-  // gigante. Cada chunk abre la práctica YA EXISTENTE (startJpPractice)
-  // filtrada a esos caracteres — los candados individuales por kanji
-  // (jpKanjiUnlockLevel(), ligados al nivel GENERAL) siguen intactos.
+  // Trocea un array de kanji (KANJI_N5/N4/N3) en grupos de ~10 — no hay
+  // práctica por fila para Kanji (a diferencia de Gojuon), así que cada
+  // mundo con kanji necesita esta segmentación artificial para tener
+  // varios nodos en vez de uno solo gigante. Cada chunk abre la práctica
+  // YA EXISTENTE (startJpPractice) filtrada a esos caracteres — los
+  // candados individuales por kanji (jpKanjiUnlockLevel(), ligados al
+  // nivel GENERAL) solo aplican a Kanji N5, sin cambios — ver
+  // JP_KANJI_TIER_DATA/getKanaList() más arriba.
   const JP_KANJI_CHUNK_SIZE = 10;
-  function jpChunkKanjiList() {
+  function jpChunkKanjiList(kanjiData) {
     const chunks = [];
-    for (let i = 0; i < KANJI_N5.length; i += JP_KANJI_CHUNK_SIZE) {
-      const slice = KANJI_N5.slice(i, i + JP_KANJI_CHUNK_SIZE);
+    for (let i = 0; i < kanjiData.length; i += JP_KANJI_CHUNK_SIZE) {
+      const slice = kanjiData.slice(i, i + JP_KANJI_CHUNK_SIZE);
       chunks.push({ id: `kanji-chunk-${chunks.length}`, chars: slice.map((k) => k.char), startIndex: i, endIndex: i + slice.length - 1 });
     }
     return chunks;
@@ -19695,18 +19989,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Lanza la práctica ya existente (fases/trazo -> quiz, ver
   // startJpPractice()/showJpItem()) para UNA fila de Gojuon o UN chunk de
-  // Kanji, empujando un frame de "volver" al Mapa de Contenido del Mundo
-  // ANTES de entrar — jpBack() (más abajo) desapila ese frame cuando el
-  // usuario sale de la práctica, sin importar en qué fase quedó.
+  // Kanji (de cualquier tier — `script` es "kanji"/"kanji-n4"/"kanji-n3"),
+  // empujando un frame de "volver" al Mapa de Contenido del Mundo ANTES de
+  // entrar — jpBack() (más abajo) desapila ese frame cuando el usuario
+  // sale de la práctica, sin importar en qué fase quedó.
   function startJpRowPractice(script, rowId) {
     jpScript = script;
     pushJpBackFrame(() => showJpView("world-content"));
     startJpPractice(getKanaList(script).filter((k) => k.rowId === rowId));
   }
-  function startJpKanjiChunkPractice(chunk) {
-    jpScript = "kanji";
+  function startJpKanjiChunkPractice(script, chunk) {
+    jpScript = script;
     pushJpBackFrame(() => showJpView("world-content"));
-    startJpPractice(getKanaList("kanji").filter((k) => chunk.chars.includes(k.char)));
+    startJpPractice(getKanaList(script).filter((k) => chunk.chars.includes(k.char)));
   }
 
   // Abre UN punto de gramática específico dentro de la lista completa
@@ -19740,6 +20035,53 @@ document.addEventListener("DOMContentLoaded", () => {
     jpActiveLevel = tier;
     showJpView("conversations");
     openConversationScene(sceneId);
+  }
+
+  // Nodo de examen de Gramática (por bloque completo, no por punto
+  // individual — mismo patrón ya probado por Vocabulario/Partículas) que
+  // se agrega a los 3 mundos con contenido de gramática. N5 usa el quiz
+  // de partículas ya existente (buildGrammarQuizItems, sin cambios); N4/N3
+  // usan el nuevo examen de comprensión (buildGrammarComprehensionQuizItems(),
+  // definida más abajo junto a startMiniQuiz — el hoisting de `function`
+  // permite llamarla acá sin importar el orden de declaración).
+  function jpGrammarExamStop(tier) {
+    return {
+      glyph: "📝",
+      variant: "exam-gate",
+      title: t("jpWorldGrammarExamNode"),
+      locked: false,
+      badgeText: t("jpWorldExamGateBadge"),
+      onClick: () => {
+        pushJpBackFrame(() => showJpView("world-content"));
+        jpActiveLevel = tier;
+        const items = tier === "n5" ? buildGrammarQuizItems() : buildGrammarComprehensionQuizItems(tier);
+        startMiniQuiz(items, "world-content", jpGrammarProgressIdFor(tier));
+      },
+    };
+  }
+  // Nodo de examen de Conversación — feature enteramente nueva (antes
+  // 100% lectura, cero evaluación, ver comentario junto a
+  // buildConversationComprehensionQuizItems()). Con la interfaz en 日本語
+  // no hay línea usable (mismo criterio que Gramática: nunca traducción
+  // de apoyo estudiando en 日本語) — avisa en vez de abrir un quiz vacío.
+  function jpConversationExamStop(tier) {
+    return {
+      glyph: "🎧",
+      variant: "exam-gate",
+      title: t("jpWorldConversationExamNode"),
+      locked: false,
+      badgeText: t("jpWorldExamGateBadge"),
+      onClick: () => {
+        const items = buildConversationComprehensionQuizItems(tier);
+        if (!items.length) {
+          setAvatarSpeech(t("jpConvQuizUnavailableJa"));
+          return;
+        }
+        pushJpBackFrame(() => showJpView("world-content"));
+        jpActiveLevel = tier;
+        startMiniQuiz(items, "world-content", jpConversationQuizProgressId(tier));
+      },
+    };
   }
 
   const JP_WORLDS = {
@@ -19785,12 +20127,12 @@ document.addEventListener("DOMContentLoaded", () => {
       glyph: "字",
       locked: () => false,
       buildContentStops: () =>
-        jpChunkKanjiList().map((chunk, i) => ({
+        jpChunkKanjiList(KANJI_N5).map((chunk, i) => ({
           glyph: chunk.chars[0],
           title: `${t("jpKanjiN5Title")} ${i + 1}`,
           sublabel: `${chunk.startIndex + 1}-${chunk.endIndex + 1}`,
           locked: false,
-          onClick: () => startJpKanjiChunkPractice(chunk),
+          onClick: () => startJpKanjiChunkPractice("kanji", chunk),
         })),
     },
     "n5-content": {
@@ -19820,7 +20162,7 @@ document.addEventListener("DOMContentLoaded", () => {
             startMiniQuiz(buildParticleQuizItems(), "world-content", "particles");
           },
         };
-        return grammarStops.concat(conversationStops).concat([particleStop]);
+        return grammarStops.concat(conversationStops).concat([particleStop, jpGrammarExamStop("n5"), jpConversationExamStop("n5")]);
       },
     },
     n4: {
@@ -19829,6 +20171,13 @@ document.addEventListener("DOMContentLoaded", () => {
       glyph: "N4",
       locked: () => !isNihongoTierUnlocked("n4"),
       buildContentStops: () => {
+        const kanjiStops = jpChunkKanjiList(KANJI_N4).map((chunk, i) => ({
+          glyph: chunk.chars[0],
+          title: `${t("jpKanjiN4Title")} ${i + 1}`,
+          sublabel: `${chunk.startIndex + 1}-${chunk.endIndex + 1}`,
+          locked: false,
+          onClick: () => startJpKanjiChunkPractice("kanji-n4", chunk),
+        }));
         const grammarStops = N4_GRAMMAR_POINTS.map((point, index) => ({
           glyph: point.label,
           title: point.label,
@@ -19841,7 +20190,7 @@ document.addEventListener("DOMContentLoaded", () => {
           locked: false,
           onClick: () => openJpConversationFromMap("n4", scene.id),
         }));
-        return grammarStops.concat(conversationStops);
+        return kanjiStops.concat(grammarStops).concat(conversationStops).concat([jpGrammarExamStop("n4"), jpConversationExamStop("n4")]);
       },
     },
     n3: {
@@ -19850,6 +20199,13 @@ document.addEventListener("DOMContentLoaded", () => {
       glyph: "N3",
       locked: () => !isNihongoTierUnlocked("n3"),
       buildContentStops: () => {
+        const kanjiStops = jpChunkKanjiList(KANJI_N3).map((chunk, i) => ({
+          glyph: chunk.chars[0],
+          title: `${t("jpKanjiN3Title")} ${i + 1}`,
+          sublabel: `${chunk.startIndex + 1}-${chunk.endIndex + 1}`,
+          locked: false,
+          onClick: () => startJpKanjiChunkPractice("kanji-n3", chunk),
+        }));
         const grammarStops = N3_GRAMMAR_POINTS.map((point, index) => ({
           glyph: point.label,
           title: point.label,
@@ -19862,7 +20218,7 @@ document.addEventListener("DOMContentLoaded", () => {
           locked: false,
           onClick: () => openJpConversationFromMap("n3", scene.id),
         }));
-        return grammarStops.concat(conversationStops);
+        return kanjiStops.concat(grammarStops).concat(conversationStops).concat([jpGrammarExamStop("n3"), jpConversationExamStop("n3")]);
       },
     },
   };
@@ -20681,12 +21037,13 @@ document.addEventListener("DOMContentLoaded", () => {
       jpGrammarList.appendChild(banner);
     }
 
-    // El quiz de Gramática (completar la partícula, ver buildGrammarQuizItems())
-    // solo tiene sentido para los puntos N5 tipo partícula-suelta — los
-    // patrones N4 (condicionales, conjeturas, etc.) no encajan en ese
-    // mecanismo de "blanking", así que el botón se oculta en N4 en vez de
-    // ofrecer un quiz que no correspondería con el contenido mostrado.
-    if (jpGrammarQuizStartBtn) jpGrammarQuizStartBtn.hidden = jpActiveLevel !== "n5";
+    // Pedido explícito: examen de Gramática disponible en N5/N4/N3 por
+    // igual. N5 sigue usando el quiz de partículas (blanking, ver
+    // buildGrammarQuizItems()) — los patrones N4/N3 (multi-carácter, ej.
+    // "〜たら") no encajan en ese mecanismo, así que N4/N3 usan el nuevo
+    // examen de comprensión de significado (buildGrammarComprehensionQuizItems(),
+    // ver su handler más abajo). El botón ya NO se oculta fuera de N5.
+    if (jpGrammarQuizStartBtn) jpGrammarQuizStartBtn.hidden = false;
 
     const locked = isJpCategoryLocked();
     getJpGrammarPoints().forEach((point, index) => {
@@ -21055,6 +21412,68 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Examen de Gramática por comprensión — a diferencia de
+  // buildGrammarQuizItems()/buildParticleQuizItems() (solo N5, esconden
+  // la PARTÍCULA de una oración), este pregunta por el SIGNIFICADO de la
+  // oración de ejemplo completa, usando point.examples[].translation
+  // (campo presente y consistente en N5/N4/N3 por igual) — funciona para
+  // cualquier tier sin depender de `label` corto tipo partícula, que los
+  // patrones N4/N3 (multi-carácter, ej. "〜たら") no tienen de esa forma.
+  // Pedido explícito: exámenes de Gramática también en N4/N3 (no solo N5).
+  function buildGrammarComprehensionQuizItems(tier) {
+    const points = JP_LEVEL_CONTENT[tier].grammar;
+    const allExamples = points.flatMap((point) => point.examples.map((ex) => ({ point, ex })));
+    return shuffleArrayLocal(allExamples).map(({ ex }) => {
+      const answer = resolveField(ex.translation);
+      const distractors = shuffleArrayLocal(allExamples.filter((e) => e.ex !== ex)).slice(0, 3).map((e) => resolveField(e.ex.translation));
+      return {
+        char: ex.jp,
+        charReading: ex.reading,
+        prompt: t("jpMiniQuizGrammarMeaningPrompt"),
+        answer,
+        options: shuffleArrayLocal([answer, ...distractors]),
+      };
+    });
+  }
+
+  // Examen de Conversación — no existía ningún mecanismo de evaluación
+  // para las escenas de conversación (100% lectura + TTS hasta ahora,
+  // ver openConversationScene()/readerEngine.js). Toma cada línea real
+  // de las escenas de la tier, pide reconocer su traducción entre 4
+  // opciones — mismo motor/forma {char,prompt,answer,options} que el
+  // resto de los mini-quiz, reusa resolveConversationLineas() para no
+  // duplicar la resolución de idioma de interfaz. Si la interfaz está en
+  // 日本語 no hay `traduccion` (mismo criterio ya usado en Gramática: nunca
+  // mostrar apoyo en otro idioma estudiando en 日本語) — la lista queda
+  // vacía y el llamador debe avisar en vez de abrir un quiz sin preguntas.
+  function buildConversationComprehensionQuizItems(tier) {
+    const scenes = JP_LEVEL_CONTENT[tier].conversations;
+    const allLines = scenes.flatMap((scene) =>
+      resolveConversationLineas(scene)
+        .map((linea, i) => ({ jp: scene.lineas[i].segments.map((s) => s.text).join(""), traduccion: linea.traduccion }))
+        .filter((l) => l.traduccion)
+    );
+    return shuffleArrayLocal(allLines).map((entry) => {
+      const distractors = shuffleArrayLocal(allLines.filter((e) => e !== entry)).slice(0, 3).map((e) => e.traduccion);
+      return {
+        char: entry.jp,
+        charReading: null,
+        prompt: t("jpMiniQuizConversationPrompt"),
+        answer: entry.traduccion,
+        options: shuffleArrayLocal([entry.traduccion, ...distractors]),
+      };
+    });
+  }
+
+  // Namespace de progreso para el Examen de Conversación — mismo store
+  // (n5DbPut("progress", ...)) que ya usan vocab/grammar, solo un prefijo
+  // de id nuevo (`convquiz:...`), cero cambio de esquema. (jpGrammarProgressIdFor()
+  // ya existe más arriba, junto a jpVocabProgressIdFor() — reusado tal cual.)
+  function jpConversationQuizProgressId(tier) {
+    const prefix = JP_LEVEL_CONTENT[tier].progressPrefix;
+    return prefix ? `convquiz:${prefix}:all` : "convquiz:all";
+  }
+
   function startMiniQuiz(items, returnView, progressId) {
     miniQuizItems = items;
     miniQuizIndex = 0;
@@ -21130,8 +21549,11 @@ document.addEventListener("DOMContentLoaded", () => {
     startMiniQuiz(buildVocabQuizItems(activeN5Category), "vocab-words", jpVocabProgressId(activeN5Category.id));
   });
   jpGrammarQuizStartBtn.addEventListener("click", () => {
-    if (jpActiveLevel !== "n5") return; // ver comentario en renderN5GrammarList(): el quiz solo aplica a puntos-partícula de N5
-    startMiniQuiz(buildGrammarQuizItems(), "grammar", jpGrammarProgressId());
+    if (jpActiveLevel === "n5") {
+      startMiniQuiz(buildGrammarQuizItems(), "grammar", jpGrammarProgressId());
+    } else {
+      startMiniQuiz(buildGrammarComprehensionQuizItems(jpActiveLevel), "grammar", jpGrammarProgressId());
+    }
   });
   jpMiniQuizBackBtn.addEventListener("click", () => showJpView(miniQuizReturnView));
 
@@ -21551,7 +21973,7 @@ document.addEventListener("DOMContentLoaded", () => {
     renderJpPhaseRow(item.char);
     renderVocabSection(item.char, jpVocabSection, jpVocabGrid);
 
-    const isKanji = item.script === "kanji";
+    const isKanji = item.script.startsWith("kanji");
     jpKanjiInfo.hidden = !isKanji;
     if (isKanji) {
       jpKanjiOnyomiEl.textContent = item.onyomi;
@@ -21666,7 +22088,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function showJpQuiz() {
     const item = jpQueue[jpQueueIndex];
     jpQuizChar.textContent = item.char;
-    jpQuizPromptEl.textContent = t(item.script === "kanji" ? "jpQuizPromptMeaning" : "jpQuizPrompt");
+    jpQuizPromptEl.textContent = t(item.script.startsWith("kanji") ? "jpQuizPromptMeaning" : "jpQuizPrompt");
     jpQuizFeedback.hidden = true;
     jpQuizFeedback.className = "jp-quiz-feedback";
 
