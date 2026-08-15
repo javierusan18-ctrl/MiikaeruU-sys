@@ -14014,6 +14014,21 @@ document.addEventListener("DOMContentLoaded", () => {
     "assets/skins/Valeria_primeraEsposaDeMiikaeruu_MamaBiologicaDeLosHijos/metrakaela_guerrera.png",
     "assets/skins/FoTosGrupales/Gemini_Generated_Image_y0pokwy0pokwy0po.png",
     "assets/skins/FoTosGrupales/Gemini_Generated_Image_jxiasljxiasljxia.png",
+    // assets/wallpapers/: fondos que el Administrador subió a mano desde
+    // su PC (carpeta local Descargas/Fondos, pedido explícito) — un
+    // navegador no puede leer una ruta del disco local del usuario en
+    // tiempo real (frontera de seguridad del propio navegador, ninguna
+    // API web lo permite sin que el usuario elija el archivo cada vez),
+    // así que se importaron una vez al repo como el resto de los
+    // assets — mismo mecanismo de siempre a partir de acá.
+    "assets/wallpapers/fondo_admin_01.jpg",
+    "assets/wallpapers/fondo_admin_02.jpg",
+    "assets/wallpapers/fondo_admin_03.jpg",
+    "assets/wallpapers/fondo_admin_04.jpg",
+    "assets/wallpapers/fondo_admin_05.jpg",
+    "assets/wallpapers/fondo_admin_06.jpg",
+    "assets/wallpapers/fondo_admin_07.jpg",
+    "assets/wallpapers/fondo_admin_08.jpg",
   ];
 
   // Cada ventana con fondo propio — `target()` resuelve el elemento
@@ -14134,18 +14149,47 @@ document.addEventListener("DOMContentLoaded", () => {
       'radial-gradient(circle at 15% 10%, rgba(0, 240, 255, 0.08), transparent 40%), ' +
       "radial-gradient(circle at 85% 90%, rgba(0, 255, 156, 0.07), transparent 45%), " +
       "linear-gradient(180deg, rgba(9, 12, 20, 0.88) 0%, rgba(7, 9, 15, 0.94) 100%)",
+    // Mapa de Mundos/Contenido a pantalla completa (pedido explícito
+    // "mayor notoriedad/visibilidad" — el tinte `default` de 0.75 de
+    // opacidad, pensado para asomar apenas DETRÁS de un panel de
+    // vidrio, dejaba la ilustración casi tapada cuando es ELLA el
+    // fondo principal de toda la pantalla): tinte mucho más liviano,
+    // solo lo necesario para que el texto/HUD de los nodos siga
+    // siendo legible encima.
+    "jp-worldmap": "linear-gradient(rgba(4, 6, 11, 0.32), rgba(4, 6, 11, 0.32))",
+    "es-worldmap": "linear-gradient(rgba(4, 6, 11, 0.32), rgba(4, 6, 11, 0.32))",
     default: "linear-gradient(rgba(5, 7, 12, 0.75), rgba(5, 7, 12, 0.75))",
   };
 
+  // Mismo color base que WALLPAPER_FLAT_FALLBACK_COLOR (definido más
+  // abajo) — se reusa acá como `background-color` INLINE detrás de la
+  // imagen (nunca solo `background-image`), por dos motivos reales
+  // encontrados probando en celular:
+  // 1. Varios PNG del pool (retratos/skins) tienen fondo TRANSPARENTE
+  //    (arte recortado de personaje, no una foto de borde a borde) —
+  //    sin un background-color oscuro propio detrás, esa transparencia
+  //    cae al fondo real del elemento, que es el siguiente motivo:
+  // 2. "Mobile Lite" (@media ≤767px, ver style.css) redeclara
+  //    `--glass-bg` a un BLANCO 100% opaco a propósito (arreglo de
+  //    contraste ya existente, ver comentario ahí) — cualquier panel
+  //    `.glass` (como .modal--japanese) hereda ese blanco opaco en
+  //    celular. Sin fijar el color acá, las zonas transparentes del
+  //    PNG (punto 1) mostraban ese blanco en vez del tono oscuro
+  //    esperado — el bug real detrás de "el fondo no se aplica en
+  //    móvil" reportado. Fijar el color INLINE (misma estrategia ya
+  //    probada y documentada en este archivo para background-image)
+  //    gana siempre, sin importar el tema/viewport.
   function applyWindowWallpaper(el, windowId) {
     if (!el) return;
     const src = resolveWallpaperFor(windowId);
     if (!src) {
       el.style.backgroundImage = "";
+      el.style.backgroundColor = "";
       return;
     }
     const tint = WALLPAPER_TINT_LAYERS[windowId] || WALLPAPER_TINT_LAYERS.default;
     el.style.backgroundImage = `${tint}, url("${src}")`;
+    el.style.backgroundColor = WALLPAPER_FLAT_FALLBACK_COLOR[windowId] || WALLPAPER_FLAT_FALLBACK_COLOR.default;
     el.style.backgroundSize = "cover";
     el.style.backgroundPosition = "center";
   }
@@ -14226,7 +14270,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const box = overlayEl.querySelector(".modal--japanese");
     if (!box) return;
     if (isMapView) applyWindowWallpaper(box, windowId);
-    else box.style.backgroundImage = "";
+    else {
+      box.style.backgroundImage = "";
+      box.style.backgroundColor = "";
+    }
   }
 
   // El Modal de Lore / Cuento Interactivo (se abre al hacer click en el
