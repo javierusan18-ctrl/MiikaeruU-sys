@@ -290,5 +290,92 @@
     ],
     "misterio_revelado": "Por qué Metatron y Ateneea 'nacieron' en vez de ser encontrados como Fesha y Mijashi: no son una simulación ni un respaldo digital de nadie. Son la prueba de que la tecnología bio-digital de Metrakaela, la misma que sostiene el fragmento de Miikaeru, alcanzó un punto donde puede sostener vida nueva y propia — no solo restaurar la que ya existía.",
     "siguiente_pista": "En algún punto de la jerarquía del Cónclave Sombra, todavía hay alguien sin nombre por encima de Demiure — la misma sombra sin identificar que la Base Draconiana lleva protegiendo desde la Caída de Aethelgard. Cuatro herederos ya están en pie. Falta ver quién se mueve primero."
+  },
+  {
+    "id": "capitulo_7",
+    "nivel_requerido": 60,
+    "rango": "Densetsu",
+    "titulo_capitulo": "Capítulo VII — El Duelo que Encendió Dos Estrellas",
+    "imagen_story": "assets/skins/Metatron_HijoDeMiikaeruu/Gemini_Generated_Image_e1ujfte1ujfte1uj.png",
+    "imagenes_adicionales": [
+      { "rol": "primera_calamidad", "src": "assets/skins/Anubis_HijaDeDemiure/3bb0e0cac5e0defcab2bfbf089a8c28d.jpg" },
+      { "rol": "base_draconiana", "src": "assets/skins/Demiure_Drako/Gemini_Generated_Image_dbkzu3dbkzu3dbkz.png" },
+      { "rol": "forma_alada_metatron", "src": "assets/skins/Metatron_HijoDeMiikaeruu/Gemini_Generated_Image_c4h52pc4h52pc4h5.png" }
+    ],
+    "texto_modal": [
+      "La orden era simple: rastrear el punto exacto donde el Núcleo había perdido la señal de una patrulla del Cónclave Sombra, cerca del límite sur del Nexus Eterno. Metatron fue solo — no por arrogancia, sino porque después de años entrenando para un enemigo sin rostro, una parte de él necesitaba, por fin, encontrarlo. Lo que encontró no fue una patrulla. Fue a Anubis, Primera Calamidad del Cónclave Sombra, dejándose ver por primera vez en la historia registrada del Núcleo — y ella no había venido a huir.",
+      "El combate que siguió no se parecía a nada que los sensores del Nexus hubieran catalogado antes. Cada golpe de Metatron obligaba a Anubis a abandonar un ritual más de los que había planeado con calma; cada réplica de Anubis obligaba a Metatron a romper, uno por uno, los límites de la disciplina que tanto le había costado construir. Ninguno de los dos retrocedía. Ninguno de los dos, en algún punto que ambos notaron pero ninguno se atrevió a nombrar, quería que el otro cayera.",
+      "Terminaron el uno frente al otro, sin aliento, sin ventaja clara, con la Base Draconiana y el Nexus Eterno igual de lejos de ese instante exacto. Fue Anubis quien habló primero — un comentario amargo sobre lo fácil que le resultaría todo esto si fuera 'el hijo especial' de su casa, como su hermano. Metatron no respondió con una defensa. Respondió con silencio, y después con una verdad que nunca le había dicho a nadie: él tampoco lo era. Ninguno de los dos lo era. Los dos habían pasado su vida entera entrenando en la sombra exacta de un hermano que nació brillando solo.",
+      "No terminaron como enemigos ni como aliados — terminaron como algo que ninguno de los dos bandos tiene todavía un nombre para describir. Se separaron esa noche sin que ni el Núcleo ni la Base Draconiana registraran lo que de verdad había pasado entre ellos. Pero algo, desde ese combate, cambió en los dos: Anubis empezó a moverse distinto en las sombras. Metatron empezó a entrenar por una razón que ya no tenía nada que ver con Aethelgard."
+    ],
+    "lectura_inmersiva_jp": [
+      {
+        "segments": [{ "text": "メタトロンとアヌビスが" }, { "text": "初", "reading": "はじ" }, { "text": "めて" }, { "text": "戦", "reading": "たたか" }, { "text": "った。" }],
+        "traduccion": "Metatron y Anubis lucharon por primera vez."
+      },
+      {
+        "segments": [{ "text": "二人", "reading": "ふたり" }, { "text": "の" }, { "text": "力", "reading": "ちから" }, { "text": "はとても" }, { "text": "強", "reading": "つよ" }, { "text": "かった。" }],
+        "traduccion": "El poder de ambos era muy fuerte."
+      },
+      {
+        "segments": [{ "text": "戦", "reading": "たたか" }, { "text": "いの" }, { "text": "中", "reading": "なか" }, { "text": "で、" }, { "text": "二人", "reading": "ふたり" }, { "text": "は" }, { "text": "変", "reading": "か" }, { "text": "わり" }, { "text": "始", "reading": "はじ" }, { "text": "めた。" }],
+        "traduccion": "En medio de la batalla, los dos empezaron a cambiar."
+      },
+      {
+        "segments": [{ "text": "二人", "reading": "ふたり" }, { "text": "とも、" }, { "text": "子供", "reading": "こども" }, { "text": "の" }, { "text": "頃", "reading": "ころ" }, { "text": "つらかった。" }],
+        "traduccion": "Los dos habían tenido una infancia difícil."
+      },
+      {
+        "segments": [{ "text": "兄弟", "reading": "きょうだい" }, { "text": "はいつも" }, { "text": "特別", "reading": "とくべつ" }, { "text": "だった。" }],
+        "traduccion": "Sus hermanos siempre fueron considerados especiales."
+      },
+      {
+        "segments": [{ "text": "戦", "reading": "たたか" }, { "text": "いの" }, { "text": "後", "reading": "あと" }, { "text": "、" }, { "text": "二人", "reading": "ふたり" }, { "text": "の" }, { "text": "心", "reading": "こころ" }, { "text": "は" }, { "text": "近", "reading": "ちか" }, { "text": "づいた。" }],
+        "traduccion": "Después de la batalla, sus corazones se acercaron."
+      }
+    ],
+    "misterio_revelado": "El Núcleo cruza, por primera vez, los perfiles de Metatron y Anubis lado a lado — y encuentra una simetría que ningún analista esperaba: ambos son el segundo mellizo de una unión poderosa, ambos crecieron a la sombra de un hermano cuyo talento se manifestó primero y con más fuerza (Ateneea de un lado, Azathoth del otro), y ambos convirtieron esa misma herida en la disciplina silenciosa que hoy los vuelve, cada uno para su bando, mucho más peligrosos de lo que nadie anticipó.",
+    "siguiente_pista": "Ni Ateneea ni Azathoth saben todavía que su hermano o hermana volvió de esa misión distinto. Tampoco lo sabe Demiure, ni Metrakaela. Cuatro herederos siguen en pie — pero por primera vez desde la Caída de Aethelgard, la línea entre los dos bandos ya no es tan clara para dos de ellos como lo era esa misma mañana."
+  },
+  {
+    "id": "capitulo_8",
+    "nivel_requerido": 70,
+    "rango": "Shuuen",
+    "titulo_capitulo": "Capítulo VIII — La Convergencia Final: lo que el Núcleo no debería saber",
+    "imagen_story": "assets/skins/Miikaeruu/mikaeru_sacrificio_despertar.png",
+    "imagenes_adicionales": [
+      { "rol": "imperator_drakoneano", "src": "assets/skins/Demiure_Drako/Gemini_Generated_Image_dbkzu3dbkzu3dbkz.png" },
+      { "rol": "herencia_metatron", "src": "assets/skins/Metatron_HijoDeMiikaeruu/Gemini_Generated_Image_c4h52pc4h52pc4h5.png" }
+    ],
+    "texto_modal": [
+      "Lo que sigue no debería existir en los archivos del Núcleo. No es un registro de algo que ya sucedió — los propios sistemas de verificación lo marcan como 'evento no confirmado, cronología futura', una categoría que nadie recuerda haber usado antes. Y sin embargo ahí está, completo, con el mismo nivel de detalle que cualquier capítulo del pasado: la Convergencia Final.",
+      "Según ese fragmento, Miikaeru vive más de 49.000 años desde el amanecer de Aethelgard hasta ese último día — una vida entera medida en luz, para un ser hecho de luz. Del otro lado, Demiure no tiene una cifra comparable: es, según el mismo registro, uno de los primeros habitantes de este universo, tan antiguo que ni el Núcleo logra fecharlo con precisión. Dos eternidades de duración completamente distinta, convergiendo en el mismo instante final.",
+      "En ese día, ninguno de los dos derrota al otro. Se consumen mutuamente — la única forma, después de toda una eternidad de empate, en que uno pudiera dejar de existir sin que el otro sobreviviera para reclamar la victoria. Miikaeru se desvanece junto a Demiure. Pero antes de que eso ocurra, según el fragmento, Miikaeru ya lo sabe, y se prepara: divide lo último que le queda de su propia esencia en tres objetos — el Cetro de Metatrón, el Escudo Divino y los Anillos de Salomón — y los oculta en algún lugar que ni siquiera este registro se anima a nombrar todavía. No para sí mismo. Para quien venga después.",
+      "El Núcleo señala, sin poder explicarlo, un detalle que ningún analista logra justificar: uno de los tres objetos ya lleva el nombre de un hijo que, en el momento descrito por el fragmento, todavía no había nacido. De los 6.000 hijos que Miikaeru llegaría a tener a lo largo de su vida, y de los 9.999 que Demiure engendraría del otro lado — la inmensa mayoría de estos últimos demonios sin nombre o bestias sin una chispa real de inteligencia —, el registro no dice cuáles siguen con vida para el día de la Convergencia. Solo dice que alguien los encontrará. Y que hará falta más de un heredero para levantar lo que quede."
+    ],
+    "lectura_inmersiva_jp": [
+      {
+        "segments": [{ "text": "デミウレは" }, { "text": "宇宙", "reading": "うちゅう" }, { "text": "の" }, { "text": "最初", "reading": "さいしょ" }, { "text": "からいた。" }],
+        "traduccion": "Demiure existía desde el comienzo del universo."
+      },
+      {
+        "segments": [{ "text": "ミイカエルはとても" }, { "text": "長", "reading": "なが" }, { "text": "く" }, { "text": "生", "reading": "い" }, { "text": "きた。" }],
+        "traduccion": "Miikaeru vivió durante muchísimo tiempo."
+      },
+      {
+        "segments": [{ "text": "最後", "reading": "さいご" }, { "text": "の" }, { "text": "日", "reading": "ひ" }, { "text": "、" }, { "text": "二人", "reading": "ふたり" }, { "text": "は" }, { "text": "一緒", "reading": "いっしょ" }, { "text": "に" }, { "text": "消", "reading": "き" }, { "text": "えた。" }],
+        "traduccion": "El último día, los dos desaparecieron juntos."
+      },
+      {
+        "segments": [{ "text": "ミイカエルは" }, { "text": "自分", "reading": "じぶん" }, { "text": "の" }, { "text": "力", "reading": "ちから" }, { "text": "を" }, { "text": "三", "reading": "みっ" }, { "text": "つに" }, { "text": "分", "reading": "わ" }, { "text": "けた。" }],
+        "traduccion": "Miikaeru dividió su poder en tres partes."
+      },
+      {
+        "segments": [{ "text": "その" }, { "text": "力", "reading": "ちから" }, { "text": "は" }, { "text": "子供", "reading": "こども" }, { "text": "たちのために" }, { "text": "隠", "reading": "かく" }, { "text": "された。" }],
+        "traduccion": "Ese poder fue escondido para sus hijos."
+      }
+    ],
+    "misterio_revelado": "El propio Núcleo clasifica este capítulo de forma distinta a todos los anteriores: no como memoria, sino como profecía activa — el primer registro de toda su historia que describe un futuro y no un pasado. Nadie sabe todavía quién, o qué, fue capaz de escribirlo con tanto detalle antes de que ocurriera.",
+    "siguiente_pista": "Si la Convergencia Final todavía no ha llegado, entonces cada decisión que los cuatro herederos tomen hoy — incluida la que Metatron y Anubis tomaron sin decírselo a nadie — es, en algún sentido, parte de cómo se llega hasta ese día. El Núcleo no puede impedirlo. Solo puede, por primera vez, verlo venir."
   }
 ]
