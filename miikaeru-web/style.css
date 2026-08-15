@@ -6070,6 +6070,21 @@ body.miikaeru-anim-off .modal-overlay .modal--japanese {
   background-size: 28px 28px, 28px 28px, 100% 100%, 100% 100%;
 }
 
+/* Bug reportado: en el Mapa de Mundos/Contenido a pantalla completa
+   (ver .jp-map-fullbleed más abajo, junto a .modal--japanese) el fondo
+   elegido se pinta en el .modal--japanese ANCESTRO, pero este mismo
+   .jp-roadmap (el track real de nodos) es una capa INTERMEDIA con su
+   propio background-color SÓLIDO (#050912, ver arriba) — lo tapaba por
+   completo, dejando ver solo la cuadrícula neón oscura y nunca la
+   imagen. Se saca el color sólido SOLO en este caso puntual (el
+   "Nivel de Miikaeru" cosmético, que usa esta misma clase pero NUNCA
+   está en modo fullbleed, no se toca) — la grilla/gradientes de arriba
+   se mantienen, ahora como una textura translúcida ENCIMA del fondo en
+   vez de taparlo, mismo lenguaje visual "HUD neón sobre la imagen". */
+.modal-overlay.jp-map-fullbleed .jp-roadmap {
+  background-color: transparent;
+}
+
 /* Línea del sendero: SVG con viewBox 0 0 100 100 + preserveAspectRatio
    "none" para que las coordenadas porcentuales (x/y) coincidan exacto
    con la posición de cada nodo (ver renderJpRoadmap()), sin importar el
