@@ -3285,6 +3285,23 @@ body.miikaeru-anim-off .cyber-tile[data-forward*="bossfight"] {
   display: none !important;
 }
 
+/* Pedido explícito: con "Animaciones" desactivado, los Fondos de
+   Pantalla (Escritorio + cada ventana + el Mapa de Mundos a pantalla
+   completa, ver applyWindowWallpaper() en app.js) se OCULTAN por
+   completo — interfaz limpia y minimalista, oscuro plano. No hace
+   falta tocar el JS: la imagen la fija applyWindowWallpaper() como
+   background-image inline, y esto la gana con !important, cayendo al
+   background-color plano que cada elemento ya tenía definido de base
+   (rgba(7,9,15,.94) en body, rgba(5,7,12,.75) en .modal-overlay) — al
+   reactivar el switch, la imagen reaparece sola, sin volver a llamar a
+   ninguna función (el inline style nunca se borró, solo dejó de ganarle
+   a esta regla). */
+body.miikaeru-anim-off,
+body.miikaeru-anim-off .modal-overlay,
+body.miikaeru-anim-off .modal-overlay .modal--japanese {
+  background-image: none !important;
+}
+
 .avatar__meta {
   display: flex;
   justify-content: space-between;
@@ -7546,6 +7563,31 @@ body.miikaeru-anim-off .cyber-tile[data-forward*="bossfight"] {
   padding: 44px 30px 30px;
   text-align: left;
   position: relative;
+}
+
+/* Mapa de Mundos/Contenido a pantalla completa (pedido explícito) — a
+   diferencia del resto de las sub-vistas de Nihongo/Español (que se
+   quedan en el panel centrado de siempre), el mapa rompe el límite del
+   modal y ocupa TODO el viewport, en CUALQUIER tamaño de pantalla — no
+   solo en celular, donde ya existía un override parecido para el modal
+   entero (ver más abajo, "Módulo Japonés: pantalla completa en
+   celular"). La clase la togglea JS al entrar/salir de
+   "world-map"/"world-content" (ver showJpView()/showEsView() en
+   app.js). El fondo de este estado lo pone applyWindowWallpaper() vía
+   estilo inline sobre ESTE MISMO .modal--japanese (target de
+   "jp-worldmap"/"es-worldmap" en WALLPAPER_WINDOWS) — administrable
+   desde el Panel de Administrador → Fondos, igual que el resto. */
+.modal-overlay.jp-map-fullbleed {
+  padding: 0;
+}
+.modal-overlay.jp-map-fullbleed .modal--japanese {
+  width: 100vw;
+  height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
+  border-radius: 0;
+  background-size: cover;
+  background-position: center;
 }
 
 /* Módulo de Idiomas (English/Português, #lang-modal) — reutiliza

@@ -1334,6 +1334,8 @@ const I18N = {
     wallpaperWinTemplo: "Templo",
     wallpaperWinVoicechat: "Conversación de Voz",
     wallpaperWinMiikapass: "Miika Pass",
+    wallpaperWinJpWorldMap: "Mapa de Mundos (Nihongo)",
+    wallpaperWinEsWorldMap: "Mapa de Mundos (Español)",
     wallpaperRandomOption: "🎲 Aleatorio",
     wallpaperUrlPlaceholder: "Pega una URL de imagen...",
     wallpaperUploadBtn: "📁 Subir",
@@ -2484,6 +2486,8 @@ const I18N = {
     wallpaperWinTemplo: "Templo",
     wallpaperWinVoicechat: "Voice Conversation",
     wallpaperWinMiikapass: "Miika Pass",
+    wallpaperWinJpWorldMap: "World Map (Nihongo)",
+    wallpaperWinEsWorldMap: "World Map (Español)",
     wallpaperRandomOption: "🎲 Random",
     wallpaperUrlPlaceholder: "Paste an image URL...",
     wallpaperUploadBtn: "📁 Upload",
@@ -3634,6 +3638,8 @@ const I18N = {
     wallpaperWinTemplo: "神殿",
     wallpaperWinVoicechat: "音声会話",
     wallpaperWinMiikapass: "ミーカパス",
+    wallpaperWinJpWorldMap: "世界地図（日本語）",
+    wallpaperWinEsWorldMap: "世界地図（スペイン語）",
     wallpaperRandomOption: "🎲 ランダム",
     wallpaperUrlPlaceholder: "画像のURLを貼り付け...",
     wallpaperUploadBtn: "📁 アップロード",
@@ -14026,6 +14032,16 @@ document.addEventListener("DOMContentLoaded", () => {
     { id: "templo", labelKey: "wallpaperWinTemplo", target: () => temploModal },
     { id: "voicechat", labelKey: "wallpaperWinVoicechat", target: () => voiceChatModal },
     { id: "miikapass", labelKey: "wallpaperWinMiikapass", target: () => miikaPassModal },
+    // Mapa de Mundos/Contenido a pantalla completa (pedido explícito) —
+    // a diferencia de las 9 entradas de arriba (que pintan el
+    // .modal-overlay entero), estas dos pintan el .modal--japanese
+    // INTERNO de cada módulo (target distinto a "japanese"/"spanish" de
+    // arriba a propósito: se aplican/quitan solo mientras esa sub-vista
+    // está activa, ver showJpView()/showEsView() más abajo — el resto
+    // del tiempo ese elemento no tiene ningún fondo propio, cae al glass
+    // de siempre). Mismo mecanismo de guardado/sync que el resto.
+    { id: "jp-worldmap", labelKey: "wallpaperWinJpWorldMap", target: () => japaneseModal && japaneseModal.querySelector(".modal--japanese") },
+    { id: "es-worldmap", labelKey: "wallpaperWinEsWorldMap", target: () => spanishModal && spanishModal.querySelector(".modal--japanese") },
   ];
 
   const WALLPAPER_OVERRIDES_KEY = "miikaeru_wallpaper_overrides";
@@ -14136,6 +14152,81 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function applyAllWallpapers() {
     WALLPAPER_WINDOWS.forEach((win) => applyWindowWallpaper(win.target(), win.id));
+  }
+
+  // Color plano de respaldo cuando se ocultan los fondos (ver
+  // hideAllWallpapers() más abajo) — fijado INLINE a propósito, igual
+  // que background-image arriba: en pruebas reales, el background-color
+  // que estos mismos elementos ya tenían declarado en la hoja de estilos
+  // externa (body/.modal-overlay/.glass) no siempre terminaba de
+  // resolver en el computed style (quedaba en un gris claro por
+  // defecto del navegador en vez del oscuro esperado), pese a estar
+  // bien declarado — mismo síntoma que el bug de background-image ya
+  // documentado, mismo arreglo: fijarlo inline sí funciona siempre.
+  const WALLPAPER_FLAT_FALLBACK_COLOR = {
+    dashboard: "rgba(7, 9, 15, 0.94)",
+    default: "rgba(5, 7, 12, 0.85)",
+  };
+
+  // Ajustes → "Animaciones" desactivado: pedido explícito de que los
+  // Fondos de Pantalla (Escritorio + cada ventana + el Mapa de Mundos a
+  // pantalla completa) se OCULTEN por completo, interfaz oscura plana
+  // — ver applyAnimationsSetting() más abajo, el único llamador. No
+  // borra ninguna preferencia guardada: solo limpia el estilo inline
+  // visible ahora mismo; restoreAllWallpapers() (debajo) lo vuelve a
+  // calcular desde cero al reactivar el switch.
+  function hideAllWallpapers() {
+    WALLPAPER_WINDOWS.forEach((win) => {
+      const el = win.target();
+      if (!el) return;
+      el.style.backgroundImage = "none";
+      el.style.backgroundColor = WALLPAPER_FLAT_FALLBACK_COLOR[win.id] || WALLPAPER_FLAT_FALLBACK_COLOR.default;
+    });
+  }
+
+  // "jp-worldmap"/"es-worldmap" son especiales: a diferencia de las
+  // otras 9 entradas (que pintan el .modal-overlay entero, siempre
+  // vigente mientras esa ventana está abierta), estas dos solo deben
+  // tener fondo mientras la sub-vista del mapa está realmente activa
+  // (ver updateMapFullbleed()) — restaurarlas a ciegas acá pintaría un
+  // fondo "fantasma" detrás de Vocabulario/Gramática si el usuario
+  // reactivó Animaciones estando en otra pestaña del módulo.
+  function restoreAllWallpapers() {
+    WALLPAPER_WINDOWS.forEach((win) => {
+      const el = win.target();
+      if (!el) return;
+      el.style.backgroundColor = "";
+      if (win.id === "jp-worldmap") {
+        const active = japaneseModal && !japaneseModal.hidden && japaneseModal.classList.contains("jp-map-fullbleed");
+        if (active) applyWindowWallpaper(el, win.id);
+        else el.style.backgroundImage = "";
+        return;
+      }
+      if (win.id === "es-worldmap") {
+        const active = spanishModal && !spanishModal.hidden && spanishModal.classList.contains("jp-map-fullbleed");
+        if (active) applyWindowWallpaper(el, win.id);
+        else el.style.backgroundImage = "";
+        return;
+      }
+      applyWindowWallpaper(el, win.id);
+    });
+  }
+
+  // Mapa de Mundos/Contenido a pantalla completa (pedido explícito) —
+  // llamada desde showJpView()/showEsView() cada vez que cambia la
+  // sub-vista visible. `.jp-map-fullbleed` en el .modal-overlay hace que
+  // el .modal--japanese interno ocupe 100vw/100vh (ver style.css); el
+  // fondo de ESE elemento (distinto del fondo general del módulo, ver
+  // "jp-worldmap"/"es-worldmap" en WALLPAPER_WINDOWS) solo se fija
+  // mientras el mapa está visible — se limpia al salir para no dejarlo
+  // pegado detrás de Vocabulario/Gramática/etc.
+  function updateMapFullbleed(overlayEl, windowId, isMapView) {
+    if (!overlayEl) return;
+    overlayEl.classList.toggle("jp-map-fullbleed", isMapView);
+    const box = overlayEl.querySelector(".modal--japanese");
+    if (!box) return;
+    if (isMapView) applyWindowWallpaper(box, windowId);
+    else box.style.backgroundImage = "";
   }
 
   // El Modal de Lore / Cuento Interactivo (se abre al hacer click en el
@@ -21730,6 +21821,7 @@ document.addEventListener("DOMContentLoaded", () => {
     jpViewConversations.hidden = view !== "conversations";
     jpViewMiniQuiz.hidden = view !== "mini-quiz";
     jpViewLevelExam.hidden = view !== "level-exam";
+    updateMapFullbleed(japaneseModal, "jp-worldmap", view === "world-map" || view === "world-content");
     if (view === "grid") {
       renderGojuonGrid();
       renderJpContinueCard();
@@ -24666,6 +24758,7 @@ document.addEventListener("DOMContentLoaded", () => {
     esViewGrammar.hidden = view !== "grammar";
     esViewConversations.hidden = view !== "conversations";
     esViewMiniQuiz.hidden = view !== "mini-quiz";
+    updateMapFullbleed(spanishModal, "es-worldmap", view === "world-map" || view === "world-content");
     if (view === "world-map") renderEsWorldMap();
     if (view === "world-content") renderEsWorldContentMap(esCurrentWorldId);
     if (view === "vocab") renderEsVocabCategories();
@@ -26650,6 +26743,15 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!enabled && bossfightModal && !bossfightModal.hidden) {
       bossfightModal.hidden = true;
     }
+    // Fondos de Pantalla: ocultar/restaurar en código en vez de confiar
+    // solo en la regla CSS body.miikaeru-anim-off (ver style.css) — esa
+    // regla queda como respaldo, pero en pruebas reales el
+    // background-color de fallback de estos mismos elementos no siempre
+    // terminaba de resolver bien solo por CSS (ver comentario junto a
+    // hideAllWallpapers() en el bloque de Fondos de Pantalla, más
+    // arriba), así que esto es lo que garantiza el resultado siempre.
+    if (enabled) restoreAllWallpapers();
+    else hideAllWallpapers();
   }
 
   function openSettingsModal() {
