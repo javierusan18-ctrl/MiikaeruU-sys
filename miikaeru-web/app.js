@@ -1024,6 +1024,7 @@ const I18N = {
     hudBannerPhrase5: "CONVIERTE TUS METAS EN LOGROS",
     online: "ONLINE",
     logout: "Cerrar sesión",
+    introSplashHint: "Toca para entrar",
     masterAuthLoginTitle: "Bienvenido de vuelta",
     masterAuthLoginSubtitle: "Ingresa tu celular y contraseña para desbloquear el núcleo.",
     masterAuthRegisterTitle: "Crea tu Cuenta Principal",
@@ -2176,6 +2177,7 @@ const I18N = {
     hudBannerPhrase5: "TURN YOUR GOALS INTO ACHIEVEMENTS",
     online: "ONLINE",
     logout: "Log out",
+    introSplashHint: "Tap to enter",
     masterAuthLoginTitle: "Welcome back",
     masterAuthLoginSubtitle: "Enter your phone number and password to unlock the core.",
     masterAuthRegisterTitle: "Create your Main Account",
@@ -3328,6 +3330,7 @@ const I18N = {
     hudBannerPhrase5: "目標を達成に変えよう",
     online: "オンライン",
     logout: "ログアウト",
+    introSplashHint: "タップして入る",
     masterAuthLoginTitle: "おかえりなさい",
     masterAuthLoginSubtitle: "電話番号とパスワードを入力してコアのロックを解除してください。",
     masterAuthRegisterTitle: "メインアカウントを作成",
@@ -4751,80 +4754,97 @@ function crossfadeAvatarLayer(layer, src) {
   }, AVATAR_STATE_FADE_MS);
 }
 
-// ---- Video de intro del Núcleo (ventana del León) ----
-// Se reproduce 2 veces exactas al cargar la app y después se oculta,
-// dejando ver #avatar-visual-img — que ya está mostrando el León/skin
-// activo debajo todo el tiempo (ver la línea que llama a esta función),
-// así que no hace falta tocar esa imagen para nada. A propósito NO usa
-// el atributo `loop`: con loop=true el evento "ended" nunca se dispara,
-// y acá necesitamos contar reproducciones para cortar en la segunda.
-function playAvatarIntroVideo() {
-  const video = document.getElementById("avatar-intro-video");
-  if (!video) return;
+// ---- Splash de video a pantalla completa (#intro-splash, ver index.html) ----
+// Lo primero que ve cualquier sesión nueva, por encima incluso del
+// Candado Principal de autenticación (z-index más alto de toda la app,
+// ver style.css). Un toque/click en cualquier parte del splash — o que
+// el video termine solo — lo desvanece y revela la app real, que ya
+// está renderizada debajo todo el tiempo (nunca se oculta ni se
+// retrasa: el splash es pura superposición).
+function initIntroSplash() {
+  const overlay = document.getElementById("intro-splash");
+  if (!overlay) return;
 
-  let resuelto = false;
-  let timeoutId = null;
+  // Ajustes → Animaciones desactivadas: se salta el splash entero, sin
+  // intentar reproducir nada — mismo criterio que usa
+  // applyAnimationsSetting() más abajo en este archivo
+  // (state.settings.animations === false). "Sin retrasos" es literal:
+  // ni siquiera se le da al <video> la chance de empezar a cargar.
+  const animacionesActivas = !state.settings || state.settings.animations !== false;
+  if (!animacionesActivas) {
+    overlay.remove();
+    return;
+  }
 
-  const ocultarVideo = () => {
-    if (resuelto) return;
-    resuelto = true;
-    if (timeoutId) clearTimeout(timeoutId);
-    video.hidden = true;
+  const video = document.getElementById("intro-splash-video");
+  let cerrado = false;
+
+  function cerrarSplash() {
+    if (cerrado) return;
+    cerrado = true;
     video.pause();
-  };
+    overlay.classList.add("intro-splash--fading");
+    // Coincide con la transition de opacity en CSS — recién ahí se
+    // saca del DOM del todo (libera el decoder del video y deja de
+    // interceptar clicks, aunque pointer-events:none ya corta eso
+    // apenas arranca el fade).
+    setTimeout(() => overlay.remove(), 650);
+  }
 
-  // Red de seguridad: si a los 4s el video todavía no arrancó a
-  // reproducirse (archivo faltante en assets/videos/, códec no
-  // soportado, o el <video> se queda con networkState=NETWORK_NO_SOURCE
-  // sin disparar "error" ni rechazar play() — pasa en algunos
-  // navegadores cuando la fuente rota es un <source> hijo en vez de un
-  // src directo), se corta igual. Sin esto, un archivo faltante deja el
-  // cuadro del León vacío/negro para siempre en vez de mostrar la
-  // imagen normal.
-  timeoutId = setTimeout(ocultarVideo, 4000);
-
-  let reproducciones = 0;
-  video.addEventListener("playing", () => {
-    if (timeoutId) clearTimeout(timeoutId);
-  });
-  video.addEventListener("ended", () => {
-    reproducciones += 1;
-    if (reproducciones >= 2) {
-      ocultarVideo();
-      return;
+  // Un solo toque/click en cualquier parte cierra el splash. Si el
+  // audio había arrancado en mute (por bloqueo de autoplay-con-sonido,
+  // ver más abajo), este mismo gesto del usuario lo desbloquea — mismo
+  // toque que además "activa" el audio del resto de la app en
+  // navegadores móviles estrictos (Safari/iOS en particular exige un
+  // gesto real antes de dejar sonar CUALQUIER <video>/<audio>).
+  overlay.addEventListener("click", () => {
+    if (video.muted) {
+      video.muted = false;
+      video.play().catch(() => {});
     }
-    video.currentTime = 0;
-    intentarReproducir();
+    cerrarSplash();
   });
+
+  // Si el video termina de reproducirse solo (no tiene `loop`), se
+  // comporta igual que un toque — nadie queda esperando frente a una
+  // pantalla negra congelada en el último frame.
+  video.addEventListener("ended", cerrarSplash);
 
   // El "error" puede dispararse en el <video> o en su <source> hijo
-  // según el navegador — se escuchan los dos.
-  video.addEventListener("error", ocultarVideo);
-  video.querySelectorAll("source").forEach((source) => source.addEventListener("error", ocultarVideo));
+  // según el navegador.
+  video.addEventListener("error", cerrarSplash);
+  overlay.querySelectorAll("source").forEach((source) => source.addEventListener("error", cerrarSplash));
+  // Red de seguridad: si a los 5s el archivo ni siquiera arrancó a
+  // cargar (falta en assets/videos/, códec no soportado, o queda en
+  // networkState=NETWORK_NO_SOURCE sin disparar "error" — pasa en
+  // algunos navegadores con un <source> roto), se cierra igual. Sin
+  // esto, un archivo faltante deja al Operador trabado detrás de una
+  // pantalla negra para siempre.
+  setTimeout(() => {
+    if (video.readyState === 0) cerrarSplash();
+  }, 5000);
 
-  // play() llamado en el momento exacto de esta función (en medio de
-  // toda la inicialización pesada de DOMContentLoaded) puede rechazar
-  // con un aborto transitorio aunque el video sea válido y esté
-  // muted/playsinline — comprobado a mano: el mismo play() llamado un
-  // instante después funciona sin problema. Un solo reintento, un poco
-  // más tarde (y esperando a "canplay" si todavía no hay datos
-  // suficientes), resuelve el caso real sin inventar reintentos
-  // infinitos — si el segundo intento también falla, recién ahí se
-  // asume que es un bloqueo real de autoplay y se muestra el León.
-  function intentarReproducir(esReintento) {
+  // Intenta reproducir CON audio de entrada, pedido explícito. Casi
+  // ningún navegador permite autoplay con sonido sin gesto previo del
+  // usuario — si rechaza, cae a silencioso para que al menos el video
+  // se vea andando mientras espera el primer toque (que desbloquea
+  // audio y cierra el splash, ver el listener de click de arriba). El
+  // primer intento puede además rechazar por un aborto transitorio
+  // (llamado en medio de la inicialización pesada de DOMContentLoaded,
+  // no por el bloqueo de autoplay en sí) — un solo reintento corto
+  // cubre ese caso real antes de resignarse al silencioso.
+  function intentarConAudio(esReintento) {
+    video.muted = false;
     video.play().catch(() => {
-      if (esReintento) {
-        ocultarVideo();
+      if (!esReintento) {
+        setTimeout(() => intentarConAudio(true), 250);
         return;
       }
-      if (video.readyState >= 3) {
-        setTimeout(() => intentarReproducir(true), 250);
-      } else {
-        video.addEventListener("canplay", () => intentarReproducir(true), { once: true });
-      }
+      video.muted = true;
+      video.play().catch(() => {});
     });
   }
-  intentarReproducir(false);
+  intentarConAudio(false);
 }
 
 // Rastrea el estado "real" activo (a diferencia de AVATAR_STATE_ASSETS,
@@ -10445,6 +10465,12 @@ function loadState() {
 }
 
 let state = loadState();
+
+// Se llama acá, apenas `state` está listo (antes incluso de
+// DOMContentLoaded/toda la inicialización pesada del Hub) — es un
+// splash que se superpone a TODO, así que cuanto antes arranque a
+// cargar/reproducirse, mejor. Ver initIntroSplash() más arriba.
+initIntroSplash();
 
 function persist() {
   // Defensa contra progreso "fantasma": el Nivel nunca baja en este
@@ -27420,7 +27446,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // diseño), así que sin esta línea el retrato fijo del HTML quedaba
   // pisando cualquier skin ya equipado hasta el próximo click manual.
   document.getElementById("avatar-visual-img").src = currentIdleLionSrc();
-  playAvatarIntroVideo();
   startAvatarIdleCarousel();
   // El avatar del Héroe en el Header debe cargarse siempre al iniciar
   // sesión (pedido explícito) — mismo motivo que la línea de arriba: sin
