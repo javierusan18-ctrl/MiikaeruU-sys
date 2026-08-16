@@ -4751,6 +4751,62 @@ function crossfadeAvatarLayer(layer, src) {
   }, AVATAR_STATE_FADE_MS);
 }
 
+// ---- Video de intro del Núcleo (ventana del León) ----
+// Se reproduce 2 veces exactas al cargar la app y después se oculta,
+// dejando ver #avatar-visual-img — que ya está mostrando el León/skin
+// activo debajo todo el tiempo (ver la línea que llama a esta función),
+// así que no hace falta tocar esa imagen para nada. A propósito NO usa
+// el atributo `loop`: con loop=true el evento "ended" nunca se dispara,
+// y acá necesitamos contar reproducciones para cortar en la segunda.
+function playAvatarIntroVideo() {
+  const video = document.getElementById("avatar-intro-video");
+  if (!video) return;
+
+  let resuelto = false;
+  let timeoutId = null;
+
+  const ocultarVideo = () => {
+    if (resuelto) return;
+    resuelto = true;
+    if (timeoutId) clearTimeout(timeoutId);
+    video.hidden = true;
+    video.pause();
+  };
+
+  // Red de seguridad: si a los 4s el video todavía no arrancó a
+  // reproducirse (archivo faltante en assets/videos/, códec no
+  // soportado, o el <video> se queda con networkState=NETWORK_NO_SOURCE
+  // sin disparar "error" ni rechazar play() — pasa en algunos
+  // navegadores cuando la fuente rota es un <source> hijo en vez de un
+  // src directo), se corta igual. Sin esto, un archivo faltante deja el
+  // cuadro del León vacío/negro para siempre en vez de mostrar la
+  // imagen normal.
+  timeoutId = setTimeout(ocultarVideo, 4000);
+
+  let reproducciones = 0;
+  video.addEventListener("playing", () => {
+    if (timeoutId) clearTimeout(timeoutId);
+  });
+  video.addEventListener("ended", () => {
+    reproducciones += 1;
+    if (reproducciones >= 2) {
+      ocultarVideo();
+      return;
+    }
+    video.currentTime = 0;
+    video.play().catch(ocultarVideo);
+  });
+
+  // El "error" puede dispararse en el <video> o en su <source> hijo
+  // según el navegador — se escuchan los dos.
+  video.addEventListener("error", ocultarVideo);
+  video.querySelectorAll("source").forEach((source) => source.addEventListener("error", ocultarVideo));
+
+  // autoplay bloqueado por el navegador (poco común con muted+playsinline,
+  // pero puede pasar) — mismo criterio, no insistir, mostrar el León.
+  video.play().catch(ocultarVideo);
+}
+
 // Rastrea el estado "real" activo (a diferencia de AVATAR_STATE_ASSETS,
 // que es solo el diccionario de datos) — lo necesita el carrusel
 // ambiental de abajo para saber si está seguro rotar el arte del León
@@ -27344,6 +27400,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // diseño), así que sin esta línea el retrato fijo del HTML quedaba
   // pisando cualquier skin ya equipado hasta el próximo click manual.
   document.getElementById("avatar-visual-img").src = currentIdleLionSrc();
+  playAvatarIntroVideo();
   startAvatarIdleCarousel();
   // El avatar del Héroe en el Header debe cargarse siempre al iniciar
   // sesión (pedido explícito) — mismo motivo que la línea de arriba: sin

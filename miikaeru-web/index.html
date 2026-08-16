@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260815-8" />
+  <link rel="stylesheet" href="style.css?v=20260815-10" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -364,6 +364,16 @@
           >
             <img class="layer-bg" src="assets/bg_state_meditation.png" alt="" aria-hidden="true" />
             <img class="layer-props" src="assets/props_floating_rocks.png" alt="" aria-hidden="true" />
+            <!-- Video de intro del Núcleo: reproduce 2 veces en bucle al
+                 cargar la app (ver playAvatarIntroVideo() en app.js) y
+                 después cede el lugar a la imagen de abajo — mismo layer-lion
+                 (posición/tamaño/glow) para que la transición no salte. Si
+                 el archivo todavía no existe en assets/videos/, el <video>
+                 simplemente no carga y playAvatarIntroVideo() muestra la
+                 imagen de una — nunca bloquea el avatar. -->
+            <video id="avatar-intro-video" class="layer-lion" muted playsinline preload="auto" aria-hidden="true">
+              <source src="assets/videos/nucleo-miikaeru.mp4" type="video/mp4" />
+            </video>
             <!-- Sistema de emotes controlado por app.js (AVATAR_EMOTES /
                  playAvatarEmote): la key activa decide qué PNG mostrar. -->
             <img id="avatar-visual-img" class="layer-lion" src="assets/skins/Miikaeruu/mikaeru_idle_chakras.png" alt="Miikaeru the Lion" />
@@ -3578,7 +3588,7 @@
        etiquetas <script> no importa en la práctica — se carga acá antes
        igual, por prolijidad. -->
   <script src="floatingWindow.js?v=20260811-6"></script>
-  <script src="app.js?v=20260815-8"></script>
+  <script src="app.js?v=20260815-10"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de

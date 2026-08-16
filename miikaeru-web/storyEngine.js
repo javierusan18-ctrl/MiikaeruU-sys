@@ -354,7 +354,12 @@ const MiikaeruStoryEngine = (() => {
   function renderizarTabsCapitulos(refs, lista, idActivo, nivel) {
     refs.tabs.innerHTML = "";
     lista.forEach((capitulo) => {
-      const desbloqueado = nivel >= capitulo.nivel_requerido;
+      // Pedido explícito: todo el Lore (capítulos, misterios, pistas y
+      // Lectura Inmersiva) queda desbloqueado desde el primer momento,
+      // sin importar el nivel del Operador — nivel_requerido se sigue
+      // guardando en storyData.json (se muestra como referencia en la
+      // pestaña) pero ya no bloquea nada.
+      const desbloqueado = true;
       const tab = document.createElement("button");
       tab.type = "button";
       tab.className =
@@ -383,7 +388,9 @@ const MiikaeruStoryEngine = (() => {
     const capitulo = capitulos.find((entrada) => entrada.id === idCapitulo);
     if (!capitulo) return; // fallback silencioso: id inexistente, no rompe el modal ya abierto
 
-    const desbloqueado = nivel >= capitulo.nivel_requerido;
+    // Ver mismo comentario en renderizarTabsCapitulos(): Lore 100% libre,
+    // ya no depende del nivel del Operador.
+    const desbloqueado = true;
 
     refs.titulo.textContent = capitulo.titulo_capitulo || "";
     refs.rango.textContent = capitulo.rango ? `${capitulo.rango} · Nv. ${capitulo.nivel_requerido}` : "";

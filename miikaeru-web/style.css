@@ -3217,6 +3217,18 @@ textarea,
      setAvatarState() para cruzar en fade al cambiar de imagen. */
 }
 
+/* Video de intro del Núcleo (ver playAvatarIntroVideo() en app.js):
+   comparte .layer-lion (mismo tamaño/posición/glow que la imagen del
+   León) pero con z-index más alto para quedar ARRIBA de #avatar-visual-img
+   mientras reproduce — así no hace falta ocultar/mostrar la imagen de
+   abajo, que sigue viva y correcta todo el tiempo. Al terminar sus 2
+   reproducciones, playAvatarIntroVideo() le pone `hidden` y el León de
+   abajo queda visible sin ningún salto. */
+#avatar-intro-video {
+  z-index: 4;
+  object-fit: cover;
+}
+
 @keyframes avatar-lion-glow-breathe {
   0%, 100% {
     filter: drop-shadow(0 0 12px var(--avatar-aura-strong))
