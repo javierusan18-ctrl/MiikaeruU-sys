@@ -4794,7 +4794,7 @@ function playAvatarIntroVideo() {
       return;
     }
     video.currentTime = 0;
-    video.play().catch(ocultarVideo);
+    intentarReproducir();
   });
 
   // El "error" puede dispararse en el <video> o en su <source> hijo
@@ -4802,9 +4802,29 @@ function playAvatarIntroVideo() {
   video.addEventListener("error", ocultarVideo);
   video.querySelectorAll("source").forEach((source) => source.addEventListener("error", ocultarVideo));
 
-  // autoplay bloqueado por el navegador (poco común con muted+playsinline,
-  // pero puede pasar) — mismo criterio, no insistir, mostrar el León.
-  video.play().catch(ocultarVideo);
+  // play() llamado en el momento exacto de esta función (en medio de
+  // toda la inicialización pesada de DOMContentLoaded) puede rechazar
+  // con un aborto transitorio aunque el video sea válido y esté
+  // muted/playsinline — comprobado a mano: el mismo play() llamado un
+  // instante después funciona sin problema. Un solo reintento, un poco
+  // más tarde (y esperando a "canplay" si todavía no hay datos
+  // suficientes), resuelve el caso real sin inventar reintentos
+  // infinitos — si el segundo intento también falla, recién ahí se
+  // asume que es un bloqueo real de autoplay y se muestra el León.
+  function intentarReproducir(esReintento) {
+    video.play().catch(() => {
+      if (esReintento) {
+        ocultarVideo();
+        return;
+      }
+      if (video.readyState >= 3) {
+        setTimeout(() => intentarReproducir(true), 250);
+      } else {
+        video.addEventListener("canplay", () => intentarReproducir(true), { once: true });
+      }
+    });
+  }
+  intentarReproducir(false);
 }
 
 // Rastrea el estado "real" activo (a diferencia de AVATAR_STATE_ASSETS,
