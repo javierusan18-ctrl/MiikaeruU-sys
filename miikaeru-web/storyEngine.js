@@ -26,7 +26,6 @@
 const MiikaeruStoryEngine = (() => {
   const DATA_URL = "data/storyData.json";
   const PERSONAJES_URL = "data/loreCharacters.json";
-  const MENSAJE_SIN_DESBLOQUEAR = "Aún no hay registros de lore desbloqueados.";
 
   let capitulos = null;
   let fetchCapitulosEnCurso = null;
@@ -278,13 +277,6 @@ const MiikaeruStoryEngine = (() => {
     return fetchPersonajesEnCurso;
   }
 
-  // El capítulo desbloqueado de mayor nivel_requerido — mismo criterio de
-  // "lo más reciente que ya alcanzaste" que usan los tiers de Miika Pass.
-  function capituloMasAltoDesbloqueado(lista, nivel) {
-    const desbloqueados = lista.filter((capitulo) => nivel >= capitulo.nivel_requerido);
-    if (!desbloqueados.length) return null;
-    return desbloqueados.reduce((mejor, capitulo) => (capitulo.nivel_requerido > mejor.nivel_requerido ? capitulo : mejor));
-  }
 
   // Ruta RELATIVA (tal como viene de storyData.json/loreCharacters.json)
   // de lo que #story-modal-image muestra ahora mismo — separada del
@@ -447,32 +439,16 @@ const MiikaeruStoryEngine = (() => {
     renderizarTabsCapitulos(refs, capitulos, idCapitulo, nivel);
   }
 
-  // Fallback cuando no hay NINGÚN capítulo desbloqueado para el nivel
-  // dado — hoy no debería pasar (el capítulo 1 pide nivel 1, que todo
-  // Operador ya tiene desde el registro), pero queda cubierto por si
-  // algún día se sube un primer capítulo con nivel_requerido > 1, o si
-  // llega un nivel inválido/negativo desde afuera.
-  function mostrarSinDesbloquear(refs) {
-    refs.titulo.textContent = MENSAJE_SIN_DESBLOQUEAR;
-    refs.rango.textContent = "";
-    refs.imagen.hidden = true;
-    refs.galeria.innerHTML = "";
-    refs.cuerpo.innerHTML = "";
-    refs.misterioTexto.textContent = "";
-    refs.pistaTexto.textContent = "";
-    refs.tabs.innerHTML = "";
-  }
-
   function mostrarVistaCapitulos(refs) {
     vistaActual = "capitulos";
     marcarVistaActiva(refs);
     cargarStoryData().then((lista) => {
-      const masAlto = capituloMasAltoDesbloqueado(lista, nivelRecordado);
-      if (!masAlto) {
-        mostrarSinDesbloquear(refs);
-        return;
-      }
-      renderizarCapitulo(refs, masAlto.id, nivelRecordado);
+      if (!lista.length) return;
+      // Lore 100% libre — el capítulo mostrado por defecto es
+      // simplemente el primero de la lista (storyData.json ya viene en
+      // orden narrativo), sin depender del nivel del Operador para nada,
+      // ni siquiera para elegir con cuál abrir el modal.
+      renderizarCapitulo(refs, lista[0].id, nivelRecordado);
     });
   }
 

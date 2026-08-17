@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260815-12" />
+  <link rel="stylesheet" href="style.css?v=20260816-1" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -35,22 +35,6 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
-
-  <!-- SPLASH DE VIDEO A PANTALLA COMPLETA: lo primero que ve cualquier
-       sesión nueva, por encima incluso del Candado Principal de abajo
-       (z-index más alto de toda la app — ver #intro-splash en
-       style.css). Un solo toque/click en cualquier parte (o que el
-       video termine solo) lo desvanece y revela la app real que estaba
-       renderizada debajo todo el tiempo. Ver initIntroSplash() en
-       app.js: se salta por completo si el Operador tiene "Animaciones"
-       desactivado en Ajustes (state.settings.animations === false), y
-       nunca deja al usuario trabado si el archivo de video no carga. -->
-  <div id="intro-splash" role="button" tabindex="0" aria-label="Toca para entrar a Miikaeru">
-    <video id="intro-splash-video" playsinline preload="auto">
-      <source src="assets/videos/nucleo-miikaeru.mp4" type="video/mp4" />
-    </video>
-    <span id="intro-splash-hint" data-i18n="introSplashHint">Toca para entrar</span>
-  </div>
 
   <!-- CANDADO PRINCIPAL: bloquea el acceso a TODA la app hasta que haya
        una sesión de cuenta principal activa (miikaeru_master_account /
@@ -229,11 +213,23 @@
         <span class="hud__admin-zone-label">Admin</span>
         <button type="button" class="hud__admin-zone-btn" id="admin-panel-open-btn" data-i18n-title="adminPanelOpenBtn" title="Panel de Administrador" hidden>🛡️</button>
       </div>
+      <!-- Minimalismo del header (pedido explícito): antes el nombre del
+           Sub-Perfil (píldora dorada, este botón) y el nombre del
+           Operador (píldora cian aparte, #profile-name) vivían como DOS
+           elementos con borde/glow propios apretados uno al lado del
+           otro — misma información de "quién sos", el doble de ruido
+           visual. Ahora #profile-name (mismo id, misma lógica en
+           app.js — profileName.textContent = state.operatorName — cero
+           cambio de JS) vive DENTRO de esta única píldora, como línea
+           secundaria más chica. -->
       <button class="btn-profile-switch" id="profile-switch-btn" type="button" data-i18n-title="profileSwitchBtnTitle" title="Cambiar de perfil">
-        👤 <span id="active-profile-name">Operador</span>
+        👤
+        <span class="btn-profile-switch__names">
+          <span id="active-profile-name">Operador</span>
+          <span class="btn-profile-switch__operator" id="profile-name">Operador</span>
+        </span>
       </button>
       <button class="btn-settings" id="settings-open-btn" type="button" data-i18n-title="settingsBtnTitle" title="Ajustes">⚙️</button>
-      <span class="hud__profile-name" id="profile-name">Operador</span>
       <button class="btn-logout" id="logout-btn" type="button" data-i18n-title="logout" title="Cerrar sesión">⏻</button>
     </div>
   </header>
@@ -383,6 +379,26 @@
             <!-- Sistema de emotes controlado por app.js (AVATAR_EMOTES /
                  playAvatarEmote): la key activa decide qué PNG mostrar. -->
             <img id="avatar-visual-img" class="layer-lion" src="assets/skins/Miikaeruu/mikaeru_idle_chakras.png" alt="Miikaeru the Lion" />
+            <!-- Video de intro DENTRO de la ventana del León (pedido
+                 explícito: ya no a pantalla completa, ver el commit que
+                 se revierte con este cambio) — capa por encima de
+                 .layer-lion, reproduce el clip 2 veces exactas (sin
+                 `loop`, para poder contar "ended" — ver
+                 playAvatarIntroVideo() en app.js) y se desvanece sola,
+                 revelando #avatar-visual-img (que ya está debajo, con el
+                 León/skin activo, durante toda la reproducción).
+                 autoplay+muted+playsinline: reproducción automática sin
+                 gesto del usuario en cualquier navegador móvil moderno. -->
+            <video
+              id="avatar-intro-video"
+              autoplay
+              muted
+              playsinline
+              preload="auto"
+              aria-hidden="true"
+            >
+              <source src="assets/videos/nucleo-miikaeru.mp4" type="video/mp4" />
+            </video>
           </div>
         </div>
 
@@ -3594,7 +3610,7 @@
        etiquetas <script> no importa en la práctica — se carga acá antes
        igual, por prolijidad. -->
   <script src="floatingWindow.js?v=20260811-6"></script>
-  <script src="app.js?v=20260815-12"></script>
+  <script src="app.js?v=20260816-1"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de
@@ -3606,7 +3622,7 @@
        aparte, mismo patrón que MiikaeruHub, cargado después de app.js
        porque app.js llama a window.MiikaeruStoryEngine desde el click
        del avatar/León. -->
-  <script src="storyEngine.js?v=20260808-3"></script>
+  <script src="storyEngine.js?v=20260816-1"></script>
   <!-- Service Worker: estrategia Cache First para assets estáticos (ver
        sw.js) — carga instantánea en visitas repetidas y funcionamiento
        offline. Registro envuelto en try/catch + comprobación de

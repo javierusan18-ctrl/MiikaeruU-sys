@@ -474,14 +474,23 @@ body::before {
   display: block;
 }
 
-.hud__profile-name {
-  font-size: 0.8rem;
-  letter-spacing: 0.5px;
-  color: var(--text-primary);
-  border: 1px solid rgba(0, 240, 255, 0.3);
-  padding: 4px 12px;
-  border-radius: 999px;
-  background: rgba(0, 240, 255, 0.05);
+/* Nombre del Operador — antes su propia píldora con borde/glow cian
+   aparte de .btn-profile-switch (misma info de "quién sos" duplicada en
+   dos elementos con marco propio, uno al lado del otro); ahora vive
+   ADENTRO de esa misma píldora, como línea secundaria más chica y sin
+   marco propio — un solo control en vez de dos, mismo header más
+   despejado (pedido explícito de minimalismo). */
+.btn-profile-switch__names {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.2;
+}
+
+.btn-profile-switch__operator {
+  font-size: 0.62rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.3px;
 }
 
 .btn-logout {
@@ -6843,75 +6852,31 @@ body.miikaeru-anim-off .modal-overlay .modal--japanese {
   -webkit-backdrop-filter: blur(6px);
 }
 
-/* ===================== SPLASH DE VIDEO A PANTALLA COMPLETA =====================
-   Ver #intro-splash en index.html / initIntroSplash() en app.js.
-   z-index MÁS ALTO que cualquier otra cosa en la app — incluido el
-   Candado Principal de abajo (500) — porque es literalmente lo primero
-   que se ve, antes incluso de saber si hay sesión o no. 100dvh (con
-   fallback a 100vh para navegadores viejos) en vez de 100vh a secas:
-   en mobile, 100vh no descuenta la barra de direcciones y deja una
-   franja del fondo real de la página asomando por abajo. */
-#intro-splash {
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  height: 100dvh;
-  z-index: 9999;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  background: #000;
-  overflow: hidden;
-  cursor: pointer;
-  opacity: 1;
-  transition: opacity 0.6s ease;
-}
-
-#intro-splash.intro-splash--fading {
-  opacity: 0;
-  pointer-events: none;
-}
-
-#intro-splash-video {
+/* ===================== VIDEO DE INTRO EN LA VENTANA DEL LEÓN =====================
+   Ver #avatar-intro-video en index.html / playAvatarIntroVideo() en
+   app.js. Capa hermana de .layer-bg/.layer-props/.layer-lion dentro de
+   #avatarStage, por ENCIMA de todas ellas (z-index 4) mientras
+   reproduce — se desvanece sola al terminar la 2da vuelta, revelando el
+   León/skin activo que ya estaba debajo todo el tiempo. A propósito NO
+   comparte la regla .layer-bg/.layer-props/.layer-lion (que aplica el
+   parallax por mouse vía --layer-px/--layer-py): es un video de intro,
+   no una capa de la escena 3D. */
+#avatar-intro-video {
   position: absolute;
   inset: 0;
+  margin: auto;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: var(--radius-md);
+  z-index: 4;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.5s ease;
 }
 
-#intro-splash-hint {
-  position: relative;
-  z-index: 1;
-  margin-bottom: max(2.5rem, env(safe-area-inset-bottom, 0px) + 1.5rem);
-  padding: 0.55em 1.3em;
-  border-radius: 999px;
-  border: 1px solid rgba(0, 240, 255, 0.4);
-  background: rgba(5, 7, 12, 0.55);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  color: #eafcff;
-  font-family: inherit;
-  font-size: 0.9rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  animation: intro-splash-hint-pulse 1.8s ease-in-out infinite;
-}
-
-@keyframes intro-splash-hint-pulse {
-  0%, 100% { opacity: 0.65; transform: translateY(0); }
-  50% { opacity: 1; transform: translateY(-3px); }
-}
-
-/* Mismo criterio que .layer-lion/prefers-reduced-motion más abajo: sin
-   animaciones, initIntroSplash() ya saca #intro-splash del DOM del
-   todo (ver app.js), así que esta regla es solo un respaldo visual por
-   si alguna vez quedara un frame renderizado de más. */
-@media (prefers-reduced-motion: reduce) {
-  #intro-splash-hint {
-    animation: none;
-  }
+#avatar-intro-video.avatar-intro-video--hidden {
+  opacity: 0;
 }
 
 /* ===================== CANDADO PRINCIPAL (autenticación) =====================
@@ -12302,7 +12267,6 @@ button:active,
   .hud__title,
   .hud__logo,
   .stat__value,
-  .hud__profile-name,
   .btn-profile-switch,
   .currency-select,
   .language-select,
@@ -12334,11 +12298,6 @@ button:active,
   .stat__value--spiritual,
   .btn-logout {
     color: #FF2E9A !important;
-  }
-
-  .hud__profile-name {
-    border-color: rgba(0, 240, 255, 0.3) !important;
-    background: rgba(0, 240, 255, 0.08) !important;
   }
 
   .hud {
