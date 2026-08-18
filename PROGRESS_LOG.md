@@ -1816,3 +1816,37 @@ Pedido de 4 puntos "de todo lo conversado": (1) video de intro dentro de la vent
 - 0 errores de JavaScript nuevos en consola en todo el flujo — solo los 404 ya conocidos de infraestructura ausente en local (`/api/init-db`, el `.glb` del avatar 3D).
 
 **Pendiente/nota honesta:** el punto 3 (minimalismo) se resolvió de forma conservadora por no poder verificar visualmente en este entorno — si el resultado en tu navegador real no se siente lo bastante "limpio", decime specíficamente qué parte se ve sobrecargada (con una captura si podés) y lo ajusto puntualmente en vez de adivinar un rediseño completo.
+
+---
+
+## Bloque 68 — Rediseño real de minimalismo: header, docks y animaciones ambientales
+
+El Bloque 67 dejó pendiente "si no se siente lo bastante limpio, decime qué parte" — el usuario confirmó que sí, y pidió un rediseño radical de verdad: limpiar las barras laterales, agrupar/esconder íconos redundantes en menús desplegables, y dar protagonismo absoluto al León y al chat. Esta vez, antes de tocar nada, se leyó el CSS/HTML completo del HUD (no solo los 2 docks que parecían el problema) — y apareció el verdadero tamaño del asunto:
+
+**Diagnóstico real (no visual, por lectura de código):**
+- El header (`.hud__stats`) tiene **10 bloques de estadística individuales** (Nivel, XP, Rango, Racha, Balance Negocio, Brújula, Finanzas+selector, Oro, Diamantes, Idioma+selector) + el botón Miika Pass — cada uno era su PROPIO panel con borde neón + degradé + resplandor interior + `text-shadow` en su valor. 11 placas brillantes compitiendo entre sí en una sola franja.
+- Cada ícono de AMBOS docks (izquierdo y derecho) tenía borde+fondo cian PERMANENTE, encendido todo el tiempo sin importar si el Operador lo estaba mirando.
+- El comentario del propio `#chat-modal` en el media query de escritorio ya documentaba que el ícono 💬 del dock izquierdo "ya no necesita abrir nada en desktop" (el chat es un panel fijo ahí) — quedaba visible de todas formas, un botón fantasma.
+- Cada panel `.glass` respiraba con un pulso de brillo infinito (`neonPulse`), el header de cada panel tenía una barra eléctrica recorriéndolo en bucle (`electricFlow`), y la ventana del León encima sumaba su propio barrido de scanlines (`scanlineSweep`) — hasta 3 animaciones ambientales simultáneas en un mismo panel, repetidas en cada panel de la pantalla a la vez.
+
+**1. Header — de "11 placas brillantes" a una sola franja.** `.hud__stats` pasó a llevar UN marco compartido (borde+fondo sutil); cada `.stat` volvió a ser texto suelto separado por un divisor vertical fino en vez de su propia caja. Se quitó el `text-shadow` de los 7 `.stat__value*` (el color se queda — sigue codificando qué es cada stat — el brillo repetido no). `.hud__title` y `.btn-miika-pass` perdieron su animación de pulso infinito (glow fijo en el título, gradiente estático en el botón).
+
+**2. Docks — íconos sin marco en reposo.** `.hud-dock__icon`/`.pillar-btn`/`.app-card` pasaron de borde+fondo permanente a `border-color`/`background: transparent` por defecto, con el mismo tratamiento de siempre restaurado SOLO en `:hover`/`:focus-visible`. El contenedor del dock perdió su `box-shadow` neón propio (ya alcanza con el borde de vidrio). `#chat-open-btn` se oculta con `display:none` específicamente en el media query de escritorio (≥901px) — sigue 100% visible en mobile/tablet, donde de verdad abre algo.
+
+**3. Dock derecho — Boss Fight/Calendario/Karaoke agrupados en un menú desplegable real.** Se envolvió el `#app-grid` ENTERO (sin tocar un solo hijo suyo) dentro de un `<details class="hud-dock__more">` nativo, con un `<summary>` que se ve como cualquier otro ícono del dock. Verificado ANTES de tocar el HTML que esto era seguro: `sortContainerByUsage()`/`renderPinnedShortcuts()` en `app.js` hacen `appGrid.appendChild()`/`.prepend()` sobre los HIJOS de `#app-grid`, nunca sobre su padre — envolver el contenedor entero no interfiere con esa lógica de reordenamiento por uso ni con el sistema de accesos fijados. Sin JS nuevo: `<details>` maneja abrir/cerrar/teclado solo.
+
+**4. Jerarquía — quietud en el marco, vida en el protagonista.** Se quitaron las 3 animaciones ambientales infinitas (`neonPulse` de `.panel.glass`, `electricFlow` de `.panel__header::before`, `scanlineSweep` de `.scanlines`) de forma app-wide — quedan glow/gradiente/textura FIJOS, sin movimiento. Deliberadamente se dejó intacta `avatar-lion-glow-breathe` (la respiración propia del León) y el scanline-drift exclusivo de la escena del avatar: son las ÚNICAS animaciones ambientales que quedan activas en el HUD principal, a propósito — así el ojo tiene un solo lugar adónde mirar en vez de competir contra el resto de la pantalla. `.app-card--active` (Boss Fight) también perdió su pulso infinito, mismo criterio.
+
+**Riesgo real detectado y evitado durante la propia implementación:** el primer intento fue agregar una regla `.hud-dock .pillar-btn, .hud-dock .app-card { border-color: transparent; background: transparent; }` — pero esa regla, al tener la MISMA especificidad CSS que los selectores `.pillar-btn--finanzas:hover`/etc. (definidos mucho más arriba en el archivo) y aparecer DESPUÉS en la cascada, hubiera ganado el empate y roto el color de hover de los pilares. Se corrigió editando las reglas BASE de `.pillar-btn`/`.app-card` directamente (confirmado por búsqueda en `index.html` que solo se usan dentro de los docks) en vez de agregar una regla nueva en conflicto.
+
+**Pruebas realizadas (navegador real, servidor estático local):**
+- `node --check` en `app.js`: sin errores de sintaxis.
+- Estructura del `<details>` verificada con `outerHTML`/`children`: `#app-grid` sigue con sus 3 hijos originales directos, sin reparentar nada.
+- Click en el `<summary>` abre el flyout (`details.open === true`, `#app-grid` pasa a `position:absolute`); click en la tarjeta Boss Fight DENTRO del flyout abre `#bossfight-modal` correctamente — la delegación de eventos sobrevive el envoltorio.
+- Escritorio (1280px): `#chat-open-btn` en `display:none`, `#chat-modal` sigue `display:flex` (panel fijo intacto), íconos de dock en `border-color:transparent` de reposo.
+- Mobile (390px): `#chat-open-btn` vuelve a `display:flex`, `#cyber-grid` (Tablero de Comando) sigue en `display:grid` — sin regresión en el layout mobile.
+- Confirmado con `getComputedStyle`: `.hud__title`/`.panel--avatar` en `animationName:none`; `#avatar-visual-img` (el León) sigue en `animationName:avatar-lion-glow-breathe` — la jerarquía "quietud alrededor, vida en el protagonista" quedó exactamente como se diseñó.
+- Modal de Lore reverificado tras los cambios de `.panel.glass`: sigue abriendo con los 8 capítulos, sin regresión del Bloque 67.
+- 0 errores de JavaScript nuevos en consola en todo el flujo.
+
+**Pendiente/nota honesta (mismo motivo que el Bloque 67):** sigue sin haber forma de tomar una captura real en este entorno — toda la verificación fue estructural (DOM, computed styles, conteo de elementos), no visual. Si algo puntual todavía se siente recargado en tu pantalla real, decime específicamente qué parte y lo ajusto ahí en vez de reabrir todo el archivo de nuevo.

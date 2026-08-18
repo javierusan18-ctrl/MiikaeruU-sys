@@ -218,34 +218,19 @@ body::before {
    `*, *::before, *::after { text-shadow: none !important; animation:
    none !important; }` para toda la app — el título hereda ese apagado
    sin código adicional, queda con su color sólido cian sin glow ahí. */
+/* Rediseño minimalista (pedido explícito): antes el título "respiraba"
+   con una animación infinita de 4 capas de text-shadow — un adorno
+   permanente compitiendo por atención en la esquina más visible de la
+   pantalla. Glow fijo (sin animación) conserva la identidad neón sin
+   sumarse al ruido visual constante; el protagonismo animado queda
+   reservado para el León (ver avatar-lion-glow-breathe), no para el
+   texto del header. */
 .hud__title {
   font-weight: 700;
   letter-spacing: 2px;
   font-size: 1.1rem;
   color: var(--neon-cyan);
-  text-shadow:
-    0 0 4px rgba(0, 240, 255, 0.9),
-    0 0 10px rgba(0, 240, 255, 0.7),
-    0 0 22px rgba(0, 240, 255, 0.5),
-    0 0 40px rgba(0, 240, 255, 0.25);
-  animation: hudTitlePulse 3.2s ease-in-out infinite;
-}
-
-@keyframes hudTitlePulse {
-  0%, 100% {
-    text-shadow:
-      0 0 4px rgba(0, 240, 255, 0.9),
-      0 0 10px rgba(0, 240, 255, 0.7),
-      0 0 22px rgba(0, 240, 255, 0.5),
-      0 0 40px rgba(0, 240, 255, 0.25);
-  }
-  50% {
-    text-shadow:
-      0 0 6px rgba(0, 240, 255, 1),
-      0 0 14px rgba(0, 240, 255, 0.85),
-      0 0 30px rgba(0, 240, 255, 0.65),
-      0 0 54px rgba(0, 240, 255, 0.35);
-  }
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.45);
 }
 
 .hud__title-accent {
@@ -256,53 +241,67 @@ body::before {
 .hud__stats {
   display: flex;
   align-items: center;
-  gap: 28px;
+  /* gap:0 — cada .stat ya trae su propio padding horizontal (16px) +
+     divisor (border-left), así que un gap adicional acá duplicaría el
+     espaciado entre bloques. */
+  gap: 0;
   flex: 1;
   justify-content: center;
   flex-wrap: wrap;
 }
 
-/* Corrección estética pedida explícitamente: cada bloque de stat vivía
-   como texto suelto directo sobre el fondo semitransparente de .hud —
-   sin borde ni panel propio se leía "inacabado", sobre todo en mobile
-   (donde .hud__stats hace wrap y cada .stat queda solo en su fila,
-   contra el fondo Cyberpunk plano de la página). Se unifica cada uno en
-   su propio panel tecnológico: borde neón sutil + degradé oscuro +
-   resplandor interior, mismo lenguaje visual que .stat__value--rank ya
-   usaba (ahora anidado adentro, se lee como "badge dentro del panel"
-   en vez de quedar duplicado). */
+/* Rediseño minimalista (pedido explícito: "reducir la saturación
+   visual"): antes CADA uno de los 11 bloques de stat era su propio
+   panel con borde neón + degradé + resplandor interior — 11 placas
+   brillantes compitiendo entre sí en una sola franja. Ahora el
+   contenedor entero (.hud__stats) lleva UN solo marco compartido
+   (ver más abajo) y cada .stat vuelve a ser texto suelto adentro,
+   separado por un divisor vertical sutil en vez de su propia caja —
+   la "sensación de terminado" que pedía el comentario original se
+   consigue con el marco del contenedor, no repitiéndolo 11 veces. */
+.hud__stats {
+  padding: 6px 18px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(0, 240, 255, 0.12);
+  background: rgba(4, 10, 20, 0.35);
+}
+
 .stat {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 6px 14px;
-  border-radius: var(--radius-md);
-  border: 1px solid rgba(0, 240, 255, 0.16);
-  background: linear-gradient(135deg, rgba(0, 240, 255, 0.06), rgba(4, 10, 20, 0.55));
-  box-shadow: inset 0 0 14px rgba(0, 240, 255, 0.05);
+  gap: 8px;
+  padding: 4px 16px;
+  border-left: 1px solid rgba(124, 147, 173, 0.18);
+}
+
+.stat:first-child {
+  border-left: none;
+  padding-left: 0;
 }
 
 .stat__label {
-  font-size: 0.7rem;
-  letter-spacing: 1.5px;
+  font-size: 0.66rem;
+  letter-spacing: 1.2px;
   text-transform: uppercase;
   color: var(--text-secondary);
 }
 
+/* Glow quitado de los 7 .stat__value* de abajo (pedido explícito de
+   reducir ruido visual): el color sigue codificando qué es cada stat
+   (cian=nivel, verde=rango, magenta=espiritual/diamantes, dorado=oro,
+   naranja=racha) — eso es información real; el text-shadow encima de
+   los 11 al mismo tiempo era puro adorno repetido. --rank también
+   perdió su pastilla propia (borde+fondo): con el marco compartido
+   nuevo de .hud__stats, una píldora-dentro-de-píldora quedaba
+   inconsistente con el resto de los stats, ahora todos texto plano. */
 .stat__value {
   font-size: 1.05rem;
   font-weight: 700;
   color: var(--neon-cyan);
-  text-shadow: var(--shadow-neon-cyan);
 }
 
 .stat__value--rank {
   color: var(--neon-green);
-  text-shadow: var(--shadow-neon-green);
-  padding: 3px 12px;
-  border: 1px solid rgba(0, 255, 156, 0.4);
-  border-radius: 999px;
-  background: rgba(0, 255, 156, 0.06);
 }
 
 .stat--xp {
@@ -353,7 +352,6 @@ body::before {
 
 .stat__value--spiritual {
   color: var(--neon-magenta);
-  text-shadow: 0 0 10px rgba(255, 46, 154, 0.5);
   font-size: 0.85rem;
 }
 
@@ -417,23 +415,19 @@ body::before {
 
 .stat__value--gold {
   color: var(--neon-gold);
-  text-shadow: 0 0 10px rgba(255, 183, 0, 0.5);
 }
 
 .stat__value--streak {
   color: #ff7a00;
-  text-shadow: 0 0 10px rgba(255, 122, 0, 0.6);
 }
 
 .stat__value--balance-global {
   color: var(--neon-cyan);
-  text-shadow: var(--shadow-neon-cyan);
   font-size: 0.85rem;
 }
 
 .stat__value--diamonds {
   color: var(--neon-magenta);
-  text-shadow: 0 0 10px rgba(255, 46, 154, 0.5);
 }
 
 .hud__profile {
@@ -528,17 +522,11 @@ body::before {
   cursor: pointer;
   clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
   transition: filter 0.2s ease, transform 0.2s ease;
-  animation: mpassBtnPulse 2.6s ease-in-out infinite;
 }
 
 .btn-miika-pass:hover {
   transform: translateY(-1px);
   filter: drop-shadow(0 0 10px rgba(255, 183, 0, 0.7));
-}
-
-@keyframes mpassBtnPulse {
-  0%, 100% { box-shadow: 0 0 6px rgba(255, 183, 0, 0.4); }
-  50% { box-shadow: 0 0 14px rgba(0, 240, 255, 0.6); }
 }
 
 /* Zona Admin del header — reubicada acá desde el Cuadro de Finanzas
@@ -1059,27 +1047,28 @@ body::before {
    libre para otra capa — y modificar el box-shadow de .glass afectaría
    también a los modales, que no son parte de este pedido. filter no
    pisa nada de eso y además respeta el recorte del clip-path. */
+/* Rediseño minimalista (pedido explícito de jerarquía: "protagonismo
+   absoluto a los elementos centrales"): antes CADA panel de vidrio de
+   la app respiraba con un pulso de brillo infinito, propio — sumado al
+   barrido de scanlines de abajo y a la barra eléctrica de
+   .panel__header, un mismo panel podía tener 3 animaciones ambientales
+   corriendo a la vez, y eso se repetía en todos los paneles de la
+   pantalla al mismo tiempo. El marco ahora queda quieto (glow fijo, sin
+   animación) — el único elemento que sigue "vivo" es el propio León
+   (ver avatar-lion-glow-breathe), a propósito: así el ojo sabe adónde
+   mirar en vez de competir contra el resto de la pantalla. */
 .panel.glass {
   clip-path: polygon(0 14px, 14px 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
   border-color: rgba(0, 255, 255, 0.4);
-  animation: neonPulse 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 8px rgba(0, 255, 255, 0.4));
 }
 
-@keyframes neonPulse {
-  0%, 100% {
-    filter: drop-shadow(0 0 6px rgba(0, 255, 255, 0.45));
-  }
-  50% {
-    filter: drop-shadow(0 0 16px rgba(0, 255, 255, 0.85));
-  }
-}
-
-/* Clase reutilizable: líneas de escaneo horizontales sutiles (textura
-   estática tipo monitor CRT) + un haz de luz que barre de arriba a
-   abajo en bucle continuo. Implementada 100% con background-image (dos
-   capas) en vez de un pseudo-elemento — por la misma razón que arriba,
-   no queda ::before/::after libre en los paneles. Al ser solo fondo,
-   tampoco intercepta clics ni el mousemove del parallax del avatar. */
+/* Clase reutilizable (usada solo en la ventana del León): líneas de
+   escaneo horizontales sutiles, ahora ESTÁTICAS — el haz de luz que
+   barría de arriba a abajo en bucle se quitó por el mismo motivo de
+   arriba. La textura de fondo (mucho más discreta, sin movimiento)
+   se queda: es lo que le da su carácter de "visor" sci-fi sin
+   competir por atención. */
 .scanlines {
   background-image:
     repeating-linear-gradient(
@@ -1088,24 +1077,7 @@ body::before {
       rgba(0, 240, 255, 0.05) 1px,
       transparent 1px,
       transparent 3px
-    ),
-    linear-gradient(
-      180deg,
-      transparent 0%,
-      rgba(0, 240, 255, 0.22) 48%,
-      rgba(0, 240, 255, 0.32) 50%,
-      rgba(0, 240, 255, 0.22) 52%,
-      transparent 100%
     );
-  background-repeat: repeat, no-repeat;
-  background-size: 100% 100%, 100% 45%;
-  background-position: 0 0, 0 -50%;
-  animation: scanlineSweep 5s linear infinite;
-}
-
-@keyframes scanlineSweep {
-  0% { background-position: 0 0, 0 -50%; }
-  100% { background-position: 0 0, 0 150%; }
 }
 
 /* Garantiza que ningún elemento interactivo quede accidentalmente
@@ -1128,10 +1100,10 @@ textarea,
   border-bottom: 1px solid rgba(0, 240, 255, 0.15);
 }
 
-/* Barra de "corriente eléctrica": degradado cyan→magenta→cyan que
-   recorre el borde superior del header en bucle. .panel__header no
-   tenía ::before propio (el existente es .panel__header h2::before,
-   sobre el <h2> hijo, distinto elemento) así que este slot está libre. */
+/* Barra superior cyan→magenta→cyan — antes recorría el header en bucle
+   infinito (mismo criterio de arriba: quietud en el marco, movimiento
+   reservado para el León). Degradado fijo: sigue marcando cada
+   cabecera de panel con la misma identidad de color, sin animarse. */
 .panel__header::before {
   content: "";
   position: absolute;
@@ -1140,14 +1112,7 @@ textarea,
   right: 0;
   height: 2px;
   background: linear-gradient(90deg, var(--neon-cyan), var(--neon-magenta), var(--neon-cyan));
-  background-size: 200% 100%;
   pointer-events: none;
-  animation: electricFlow 3s linear infinite;
-}
-
-@keyframes electricFlow {
-  from { background-position: 0% 0%; }
-  to { background-position: -200% 0%; }
 }
 
 .panel__header h2 {
@@ -1869,6 +1834,10 @@ textarea,
   padding: 12px 20px 0;
 }
 
+/* Sin marco/fondo propio en reposo (pedido explícito de minimalismo,
+   mismo criterio que .hud-dock__icon) — solo aparecen en :hover/
+   :focus-visible, vía los modificadores --finanzas/--templo/
+   --aprendizaje de abajo, que ya solo tocaban esos dos estados. */
 .pillar-btn {
   display: flex;
   align-items: center;
@@ -1879,9 +1848,9 @@ textarea,
   letter-spacing: 0.5px;
   border-radius: var(--radius-sm);
   cursor: pointer;
-  background: rgba(255, 255, 255, 0.03);
-  color: var(--text-primary);
-  border: 1px solid rgba(124, 147, 173, 0.3);
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid transparent;
   transition: all 0.2s ease;
 }
 
@@ -3374,6 +3343,8 @@ body.miikaeru-anim-off .modal-overlay .modal--japanese {
   margin: 36px 20px 0;
 }
 
+/* Sin marco/fondo propio en reposo — mismo criterio minimalista que
+   .pillar-btn/.hud-dock__icon. */
 .app-card {
   display: flex;
   flex-direction: column;
@@ -3381,9 +3352,9 @@ body.miikaeru-anim-off .modal-overlay .modal--japanese {
   gap: 6px;
   padding: 12px 8px;
   border-radius: var(--radius-md);
-  border: 1px solid rgba(124, 147, 173, 0.3);
-  background: rgba(255, 255, 255, 0.03);
-  color: var(--text-primary);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-secondary);
   cursor: pointer;
   text-align: center;
   transition: all 0.2s ease;
@@ -3391,19 +3362,19 @@ body.miikaeru-anim-off .modal-overlay .modal--japanese {
 
 .app-card:hover {
   transform: translateY(-2px);
+  color: var(--text-primary);
   border-color: var(--neon-cyan);
   box-shadow: var(--shadow-neon-cyan);
 }
 
+/* Estado "activo" (app en curso): borde+fondo fijos, SIN animación de
+   pulso infinito — pedido explícito de reducir movimiento ambiental
+   simultáneo; el estado ya se distingue por color, no hace falta que
+   además titile todo el tiempo. */
 .app-card--active {
   border-color: var(--neon-green);
   background: rgba(0, 255, 156, 0.06);
-  animation: appCardActivePulse 2.4s ease-in-out infinite;
-}
-
-@keyframes appCardActivePulse {
-  0%, 100% { box-shadow: 0 0 8px rgba(0, 255, 156, 0.2); }
-  50% { box-shadow: 0 0 18px rgba(0, 255, 156, 0.5); }
+  color: var(--text-primary);
 }
 
 .app-card__icon {
@@ -10473,7 +10444,10 @@ body.miikaeru-anim-off .modal-overlay .modal--japanese {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  /* 10px -> 14px: con los íconos ahora sin marco propio (ver
+     .hud-dock__icon más abajo), un poco más de aire entre ellos evita
+     que se lean como una sola mancha continua. */
+  gap: 14px;
   width: 68px;
   padding: 16px 8px;
   border-radius: var(--radius-lg);
@@ -10481,7 +10455,11 @@ body.miikaeru-anim-off .modal-overlay .modal--japanese {
   border: 1px solid var(--glass-border);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  box-shadow: var(--shadow-neon-cyan);
+  /* Rediseño minimalista (pedido explícito): el dock entero ya no
+     "brilla" con el mismo neón que cada ícono de adentro tenía — un
+     contorno de vidrio simple alcanza para leerse como panel propio,
+     sin sumar otra capa de resplandor a la que ya suman los íconos. */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
   position: sticky;
   top: 12px;
   max-height: calc(100vh - 160px);
@@ -10506,6 +10484,14 @@ body.miikaeru-anim-off .modal-overlay .modal--japanese {
   margin: 2px 0;
 }
 
+/* Rediseño minimalista (pedido explícito: "limpia radicalmente las
+   barras laterales"): antes cada ícono era su propio cuadrado con
+   borde+fondo cian PERMANENTE — con 5-8 íconos apilados, dos columnas
+   enteras de placas neón encendidas todo el tiempo, sin importar si el
+   Operador las estaba mirando o no. Ahora el marco/fondo solo aparece
+   en :hover/:focus-visible (ver abajo) — en reposo el dock es solo
+   íconos flotando sobre vidrio, y el color/glow queda reservado para
+   cuando de verdad hay intención de click. */
 .hud-dock__icon {
   width: 48px;
   height: 48px;
@@ -10515,17 +10501,61 @@ body.miikaeru-anim-off .modal-overlay .modal--japanese {
   justify-content: center;
   font-size: 1.3rem;
   border-radius: var(--radius-md);
-  border: 1px solid rgba(0, 240, 255, 0.35);
-  background: rgba(0, 240, 255, 0.06);
-  color: var(--text-primary);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-secondary);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.hud-dock__icon:hover {
+.hud-dock__icon:hover,
+.hud-dock__icon:focus-visible {
+  color: var(--text-primary);
   border-color: var(--neon-cyan);
   box-shadow: var(--shadow-neon-cyan);
   transform: translateY(-2px);
+}
+
+/* Menú desplegable del dock derecho (<details>, ver index.html) — el
+   <summary> se ve idéntico a cualquier otro .hud-dock__icon (comparte la
+   clase), y al abrirse despliega #app-grid como un panel flotante chico
+   en vez de dejar las 3 apps siempre encendidas en la columna. Sin JS
+   propio: el navegador maneja abrir/cerrar/teclado solo. */
+.hud-dock__more {
+  position: relative;
+}
+
+.hud-dock__more > summary {
+  list-style: none;
+}
+
+.hud-dock__more > summary::-webkit-details-marker {
+  display: none;
+}
+
+.hud-dock__more[open] > summary {
+  color: var(--text-primary);
+  border-color: var(--neon-cyan);
+  box-shadow: var(--shadow-neon-cyan);
+}
+
+.hud-dock__more .app-grid {
+  position: absolute;
+  top: 0;
+  /* Se abre hacia la izquierda (adentro de la pantalla) — el dock
+     derecho ya vive pegado al borde, abrir hacia la derecha lo
+     mandaría fuera del viewport. */
+  right: calc(100% + 10px);
+  z-index: 20;
+  flex-direction: row;
+  gap: 8px;
+  padding: 8px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--glass-border);
+  background: var(--bg-elevated);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
 }
 
 /* Chat Guía: parpadeo neón sobre el ícono del dock al que apunta la
@@ -11874,6 +11904,17 @@ body.miikaeru-anim-off .modal-overlay .modal--japanese {
 
   /* Nada que cerrar: es un panel persistente en desktop, no un modal. */
   #chat-modal-close {
+    display: none;
+  }
+
+  /* Minimalismo (pedido explícito): en desktop el chat YA es un panel
+     siempre visible junto al León (ver #chat-modal arriba) — el ícono
+     💬 del dock izquierdo no tiene nada que abrir acá (ya documentado
+     en el comentario de #chat-modal[hidden]), así que dejarlo visible
+     era un botón fantasma ocupando espacio y compitiendo por atención
+     sin cumplir ninguna función. Solo se oculta en este ancho; en
+     mobile/tablet sigue siendo el único acceso real al chat. */
+  #chat-open-btn {
     display: none;
   }
 }

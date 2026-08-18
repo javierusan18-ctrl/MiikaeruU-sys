@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260816-1" />
+  <link rel="stylesheet" href="style.css?v=20260817-1" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -758,34 +758,48 @@
 
       <div class="hud-dock__divider"></div>
 
-      <div class="app-grid" id="app-grid">
-        <button type="button" class="app-card app-card--active" data-app="bossfight" id="app-card-bossfight" data-i18n-title="appBossFightName" title="Boss Fight">
-          <span class="app-card__icon">⚔️</span>
-          <span class="app-card__name" data-i18n="appBossFightName">Boss Fight</span>
-          <span class="panel__tag" id="minigame-status" data-i18n="bossStatusStandby">standby</span>
-        </button>
-        <!-- "Idiomas" (data-app="japanese") se retiró como tarjeta fija del
-             App Hub — ahora vive dentro del pilar Aprendizaje/🧠 "Cerebro"
-             (ver #aprendizaje-panel), pedido explícito de reorganización.
-             La lógica APP_MODULES.japanese/selectApp("japanese") sigue
-             100% intacta: se sigue usando para el acceso directo opcional
-             que un usuario puede "fijar" desde #language-select-modal (ver
-             renderPinnedShortcuts() en app.js) — por eso este bloque de
-             comentario reemplaza la tarjeta en vez de borrar su lógica.
+      <!-- Menú desplegable limpio (pedido explícito: "agrupa iconos
+           redundantes o escóndelos en menús desplegables") — <details>
+           nativo, sin JS propio (el navegador maneja abrir/cerrar solo,
+           con teclado incluido). Envuelve el #app-grid ENTERO tal cual
+           estaba, sin tocar sus hijos ni un pixel de su estructura
+           interna: sortContainerByUsage()/renderPinnedShortcuts() en
+           app.js hacen appGrid.appendChild()/prepend() sobre los HIJOS
+           de #app-grid, nunca sobre su padre — envolver el contenedor
+           por fuera no interfiere con nada de eso. Colapsado por
+           defecto: las 3 apps quedan a un click en vez de siempre
+           encendidas en pantalla. -->
+      <details class="hud-dock__more">
+        <summary class="hud-dock__icon hud-dock__icon--apps" data-i18n-title="dockAppsToggle" title="Apps">▤</summary>
+        <div class="app-grid" id="app-grid">
+          <button type="button" class="app-card app-card--active" data-app="bossfight" id="app-card-bossfight" data-i18n-title="appBossFightName" title="Boss Fight">
+            <span class="app-card__icon">⚔️</span>
+            <span class="app-card__name" data-i18n="appBossFightName">Boss Fight</span>
+            <span class="panel__tag" id="minigame-status" data-i18n="bossStatusStandby">standby</span>
+          </button>
+          <!-- "Idiomas" (data-app="japanese") se retiró como tarjeta fija del
+               App Hub — ahora vive dentro del pilar Aprendizaje/🧠 "Cerebro"
+               (ver #aprendizaje-panel), pedido explícito de reorganización.
+               La lógica APP_MODULES.japanese/selectApp("japanese") sigue
+               100% intacta: se sigue usando para el acceso directo opcional
+               que un usuario puede "fijar" desde #language-select-modal (ver
+               renderPinnedShortcuts() en app.js) — por eso este bloque de
+               comentario reemplaza la tarjeta en vez de borrar su lógica.
 
-             "Tracker de Hábitos" (data-app="habits") también se retiró:
-             ahora es una pestaña dentro de Templo/⛩️ (ver #templo-modal). -->
-        <button type="button" class="app-card" data-app="calendar" data-i18n-title="appCalendarName" title="Calendario &amp; Eventos">
-          <span class="app-card__icon">📅</span>
-          <span class="app-card__name" data-i18n="appCalendarName">Calendario &amp; Eventos</span>
-          <span class="app-card__status app-card__status--new" data-i18n="appStatusNew">Nuevo</span>
-        </button>
-        <button type="button" class="app-card" data-app="karaoke" data-i18n-title="appKaraokeName" title="Karaoke">
-          <span class="app-card__icon">🎤</span>
-          <span class="app-card__name" data-i18n="appKaraokeName">Karaoke</span>
-          <span class="app-card__status app-card__status--new" data-i18n="appStatusComingSoon">Próximamente</span>
-        </button>
-      </div>
+               "Tracker de Hábitos" (data-app="habits") también se retiró:
+               ahora es una pestaña dentro de Templo/⛩️ (ver #templo-modal). -->
+          <button type="button" class="app-card" data-app="calendar" data-i18n-title="appCalendarName" title="Calendario &amp; Eventos">
+            <span class="app-card__icon">📅</span>
+            <span class="app-card__name" data-i18n="appCalendarName">Calendario &amp; Eventos</span>
+            <span class="app-card__status app-card__status--new" data-i18n="appStatusNew">Nuevo</span>
+          </button>
+          <button type="button" class="app-card" data-app="karaoke" data-i18n-title="appKaraokeName" title="Karaoke">
+            <span class="app-card__icon">🎤</span>
+            <span class="app-card__name" data-i18n="appKaraokeName">Karaoke</span>
+            <span class="app-card__status app-card__status--new" data-i18n="appStatusComingSoon">Próximamente</span>
+          </button>
+        </div>
+      </details>
     </aside>
 
   </main>
@@ -3610,7 +3624,7 @@
        etiquetas <script> no importa en la práctica — se carga acá antes
        igual, por prolijidad. -->
   <script src="floatingWindow.js?v=20260811-6"></script>
-  <script src="app.js?v=20260816-1"></script>
+  <script src="app.js?v=20260817-1"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de
