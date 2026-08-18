@@ -23052,14 +23052,33 @@ document.addEventListener("DOMContentLoaded", () => {
       titleKey: "jpWorldKanjiN5",
       glyph: "字",
       locked: () => false,
+      // Bug real encontrado y corregido: a diferencia de Hiragana/Katakana
+      // (100% desbloqueados desde el inicio, ver jpKanaRowUnlockLevel()),
+      // el Kanji N5 SÍ tiene un candado real por nivel (jpKanjiUnlockLevel(),
+      // Niveles 30-83) que getKanaList()/startJpKanjiChunkPractice() ya
+      // aplicaban de verdad — pero el Mapa de Mundos mostraba TODOS los
+      // nodos como `locked: false` sin importar el nivel real. El
+      // Operador veía el nodo abierto, hacía click, y
+      // startJpPractice([]) con la lista vacía (ver `if (!kanaList.length)
+      // return;`) no hacía absolutamente nada — cero feedback, "no me
+      // deja entrar" sin ningún mensaje. Ahora cada chunk calcula su
+      // candado real (según el primer kanji del grupo) y usa el MISMO
+      // patrón `locked`/`onLockedClick` + notifyJpLocked() que ya usan
+      // los demás nodos bloqueados del mapa (ver jp-roadmap__node--locked
+      // más abajo) — candado visible con 🔒 en vez de un botón fantasma.
       buildContentStops: () =>
-        jpChunkKanjiList(KANJI_N5).map((chunk, i) => ({
-          glyph: chunk.chars[0],
-          title: `${t("jpKanjiN5Title")} ${i + 1}`,
-          sublabel: `${chunk.startIndex + 1}-${chunk.endIndex + 1}`,
-          locked: false,
-          onClick: () => startJpKanjiChunkPractice("kanji", chunk),
-        })),
+        jpChunkKanjiList(KANJI_N5).map((chunk, i) => {
+          const requiredLevel = jpKanjiUnlockLevel(chunk.startIndex);
+          const locked = !isJpLevelUnlocked(requiredLevel);
+          return {
+            glyph: chunk.chars[0],
+            title: `${t("jpKanjiN5Title")} ${i + 1}`,
+            sublabel: locked ? `🔒 Nv. ${requiredLevel}` : `${chunk.startIndex + 1}-${chunk.endIndex + 1}`,
+            locked,
+            onLockedClick: locked ? () => notifyJpLocked(requiredLevel) : undefined,
+            onClick: locked ? undefined : () => startJpKanjiChunkPractice("kanji", chunk),
+          };
+        }),
     },
     "n5-content": {
       id: "n5-content",
@@ -27517,6 +27536,29 @@ document.addEventListener("DOMContentLoaded", () => {
       const parsed = parseFloat(raw);
       return Number.isNaN(parsed) ? 100 : parsed;
     };
+    // Tope de "maximizar" — bug real encontrado y corregido: el borde
+    // superior maximizado usaba este mismo tope FIJO de arriba, pero
+    // 100px no alcanza a esquivar el header cuando envuelve a 2 filas
+    // (~153px en anchos intermedios) — el header (position:relative +
+    // z-index:2 propio, hermano de <main>) le gana el apilamiento a
+    // CUALQUIER z-index interno del panel maximizado, así que el botón
+    // de restaurar quedaba geométricamente detrás suyo: visible a
+    // través de su blur, pero un click real nunca lo tocaba
+    // ("maximizar ya no se puede deshacer, no me da acceso a la app").
+    // Acá SÍ vale la pena medir en vivo (a diferencia del tope general
+    // de arriba, que lo evita a propósito): si el header envuelve más
+    // de lo normal, "maximizar" simplemente arranca un poco más abajo
+    // (pierde algo de alto útil) — muy distinto al daño real de un tope
+    // insuficiente, que directamente rompe el click. Clamp a 320px como
+    // techo para que un caso extremo de envoltura no se coma media
+    // pantalla igual.
+    const floatingWindowMaximizeTop = () => {
+      const reference = document.querySelector(".hud-banner") || document.querySelector("header.hud");
+      const measured = reference ? reference.getBoundingClientRect().bottom : NaN;
+      const base = floatingWindowMinTop();
+      if (!Number.isFinite(measured) || measured <= 0) return base;
+      return Math.max(base, Math.min(measured + 12, 320));
+    };
     // Piso de "nacimiento" — usado por TODAS las ventanas flotantes
     // (León, Chat, docks): deben aparecer con más aire bajo el header
     // desde el primer instante (al abrir el Chat, arrastrar el León, o
@@ -27538,6 +27580,7 @@ document.addEventListener("DOMContentLoaded", () => {
         minHeight: 220,
         minTop: floatingWindowMinTop,
         spawnMinTop: floatingWindowSpawnMinTop,
+        maximizeTop: floatingWindowMaximizeTop,
       });
     }
     // #chat-modal ya es el panel fijo "cara a cara con el León" en
@@ -27552,6 +27595,7 @@ document.addEventListener("DOMContentLoaded", () => {
       minHeight: 220,
       minTop: floatingWindowMinTop,
       spawnMinTop: floatingWindowSpawnMinTop,
+      maximizeTop: floatingWindowMaximizeTop,
     });
 
     // Docks laterales de íconos (.hud-dock--left/--right) — pedido
@@ -27575,6 +27619,7 @@ document.addEventListener("DOMContentLoaded", () => {
         minHeight: 200,
         minTop: floatingWindowMinTop,
         spawnMinTop: floatingWindowSpawnMinTop,
+        maximizeTop: floatingWindowMaximizeTop,
       });
     }
     const dockRightEl = document.querySelector(".hud-dock--right");
@@ -27586,6 +27631,7 @@ document.addEventListener("DOMContentLoaded", () => {
         minHeight: 200,
         minTop: floatingWindowMinTop,
         spawnMinTop: floatingWindowSpawnMinTop,
+        maximizeTop: floatingWindowMaximizeTop,
       });
     }
   }

@@ -153,6 +153,20 @@
       // Si no se pasa, cae al mismo tope general de siempre (sin cambio
       // de comportamiento para ventanas que no lo necesitan, ej. docks).
       this._spawnMinTopOption = options.spawnMinTop;
+      // Tope superior SOLO para "maximizar" — bug real encontrado: el
+      // borde superior maximizado usaba el mismo --floating-window-safe-top
+      // fijo (100px) de arrastre/resize, pero ese valor fijo no alcanza
+      // cuando el header real crece a 2 filas (~153px en anchos
+      // intermedios, ver style.css) — el botón de restaurar quedaba
+      // geométricamente DEBAJO del header (que gana el apilamiento por
+      // ser hermano de <main> con z-index propio, sin importar el
+      // z-index interno del panel), visible a través del blur pero
+      // imposible de clickear de verdad: "maximizar ya no se puede
+      // deshacer, no me da acceso a la app". Opcional a propósito — si
+      // no se pasa, toggleMaximize() cae a _getMinTop() de siempre, así
+      // que ventanas que nunca tuvieron este problema (docks, mucho más
+      // angostos que el header) no cambian de comportamiento.
+      this._maximizeTopOption = options.maximizeTop;
 
       this.mode = "docked"; // "docked" | "floating" | "maximized"
       this.minimized = false;
@@ -321,6 +335,15 @@
     _getMinTop() {
       const value = typeof this._minTopOption === "function" ? this._minTopOption() : this._minTopOption;
       return typeof value === "number" && !Number.isNaN(value) ? value : 0;
+    }
+
+    // Tope de "maximizar" — si no se configuró uno propio (maximizeTop),
+    // cae al tope general de siempre (_getMinTop()), así que ventanas
+    // que no lo necesitan (docks) no cambian de comportamiento.
+    _getMaximizeTop() {
+      if (this._maximizeTopOption === undefined) return this._getMinTop();
+      const value = typeof this._maximizeTopOption === "function" ? this._maximizeTopOption() : this._maximizeTopOption;
+      return typeof value === "number" && !Number.isNaN(value) ? value : this._getMinTop();
     }
 
     // Piso de "nacimiento" — si no se configuró uno propio (spawnMinTop),
@@ -687,6 +710,15 @@
         this.el.style.maxWidth = "none";
         this.el.style.maxHeight = "none";
         this.el.style.flex = "none";
+        // Bug real corregido: fija el `top` real (medido en vivo si el
+        // llamador pasó `maximizeTop`, ver _getMaximizeTop()) como estilo
+        // INLINE — gana por especificidad sobre el `top` fijo de
+        // .floating-window--maximized en style.css, que no alcanzaba a
+        // esquivar el header cuando éste crece a 2 filas. Sin esto, los
+        // botones de minimizar/restaurar de la cabecera quedaban
+        // geométricamente debajo del header (visibles a través de su
+        // blur, pero imposibles de clickear de verdad).
+        this.el.style.top = `${this._getMaximizeTop()}px`;
         this.el.classList.add("floating-window--maximized");
         this.el.classList.remove("floating-window--floating");
       }

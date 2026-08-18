@@ -1456,9 +1456,38 @@ textarea,
   cursor: grabbing !important;
 }
 
+/* Bug real encontrado y corregido: el borde superior maximizado (con los
+   botones de minimizar/maximizar) vivía a `top:14px` PAREJO con los
+   otros 3 lados — sin tener en cuenta que el header fijo (.hud) mide
+   bastante más que eso. El header usa position:relative + z-index:2
+   propio; como el panel maximizado vive varios niveles adentro de
+   <main> (que NO tiene su propio z-index), el z-index inline alto del
+   panel (ver toggleMaximize() en floatingWindow.js) queda "atrapado"
+   comparando solo contra sus hermanos DENTRO de <main> — <main> entero
+   pierde contra <header> en la pila de apilamiento de <body>, sin
+   importar qué z-index tenga un descendiente suyo. Resultado real: el
+   Operador VEÍA el botón de restaurar a través del header traslúcido
+   (backdrop-filter:blur) pero un click de mouse real nunca lo tocaba —
+   caía sobre el header, que estaba "encima" pese a parecer detrás.
+   "maximizar ya no se puede deshacer, no me da acceso a la app".
+   Arreglo real: `top` se fija en vivo desde JS (ver toggleMaximize()/
+   _getMaximizeTop() en floatingWindow.js — mide el borde real del
+   header+banner, con el mismo piso fijo de siempre como respaldo), y
+   ACÁ el valor de respaldo (`var(--floating-window-safe-top)`) queda
+   SIN `!important` a propósito: un segundo bug real encontrado
+   mientras se probaba el fix de arriba — con `!important` en `top`,
+   esta regla de CSS le ganaba SIEMPRE al `top` inline que pone
+   toggleMaximize(), sin importar qué tan buena fuera la medición en
+   vivo (el inline nunca gana contra un !important de hoja de estilos,
+   pase lo que pase). Los otros 3 lados si necesitan `!important`
+   (nunca los toca JS, y sí hay que ganarle al layout responsivo
+   acoplado). */
 .floating-window--maximized {
   position: fixed !important;
-  inset: 14px !important;
+  top: var(--floating-window-safe-top, 100px);
+  right: 14px !important;
+  bottom: 14px !important;
+  left: 14px !important;
   width: auto !important;
   height: auto !important;
   /* Sin esto, el max-width/max-height responsivo del layout ACOPLADO
@@ -1471,10 +1500,10 @@ textarea,
      que ya limpiaba esto pero solo en el camino de arrastre/resize —
      toggleMaximize() no pasaba por ahí). Resultado sin esto: la
      ventana "maximizada" se quedaba clavada en una esquina con su
-     tamaño acoplado viejo en vez de llenar el inset:14px de arriba. */
+     tamaño acoplado viejo en vez de llenar el espacio disponible. */
   max-width: none !important;
   max-height: none !important;
-  transition: inset 0.25s ease, box-shadow 0.25s ease;
+  transition: top 0.25s ease, right 0.25s ease, bottom 0.25s ease, left 0.25s ease, box-shadow 0.25s ease;
 }
 
 /* Blindaje extra del mismo problema: el contenido de ADENTRO tampoco
