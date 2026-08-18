@@ -17,3 +17,10 @@ tools/ai-player/.env
 # Logs de las corridas programadas (tools/ai-player/run-scheduled.js,
 # Bloque 64) — texto plano local, no aporta nada versionado.
 tools/ai-player/logs/
+
+# Variables de entorno locales para `vercel dev` (miikaeru-web/, ver
+# miikaeru-web/.env.example) — credenciales reales de Supabase/Anthropic,
+# nunca van al repo, sin importar en qué carpeta aparezcan.
+.env
+.env.local
+.env.*.local

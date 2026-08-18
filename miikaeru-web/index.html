@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260817-1" />
+  <link rel="stylesheet" href="style.css?v=20260818-1" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -3072,24 +3072,106 @@
        `transactions`) e Inspector de Bugs (nuevo, lee/actualiza
        `feedback`). -->
   <div class="modal-overlay" id="admin-panel-modal" hidden>
-    <div class="modal modal--admin-panel glass">
+    <div class="modal modal--admin-panel glass admin-dash">
       <button type="button" class="btn-modal-close" id="admin-panel-modal-close" aria-label="Cerrar">✕</button>
-      <h2 class="modal-app__title" data-i18n="adminPanelTitle">🛡️ Panel de Administrador</h2>
+      <div class="admin-dash__header">
+        <h2 class="modal-app__title admin-dash__title" data-i18n="adminPanelTitle">🛡️ Panel de Administrador</h2>
+        <span class="admin-dash__subtitle" id="admin-dash-subtitle"></span>
+      </div>
 
-      <div class="admin-panel-tabs" id="admin-panel-tabs">
-        <button type="button" class="admin-panel-tab admin-panel-tab--active" data-admin-tab="transactions" data-i18n="adminPanelTabTransactions">💳 Transacciones</button>
-        <button type="button" class="admin-panel-tab" data-admin-tab="inspector" data-i18n="adminPanelTabInspector">📋 Bandeja de Sugerencias y Fallas</button>
-        <button type="button" class="admin-panel-tab" data-admin-tab="automation" data-i18n="adminPanelTabAutomation">🤖 Automatización (n8n)</button>
-        <button type="button" class="admin-panel-tab" data-admin-tab="users" data-i18n="adminPanelTabUsers">👥 Usuarios</button>
-        <button type="button" class="admin-panel-tab" data-admin-tab="metrics" data-i18n="adminPanelTabMetrics">📊 Métricas</button>
-        <button type="button" class="admin-panel-tab" data-admin-tab="photos" data-i18n="adminPanelTabPhotos">📸 Fotos</button>
-        <button type="button" class="admin-panel-tab" data-admin-tab="wallpapers" data-i18n="adminPanelTabWallpapers">🖼️ Fondos</button>
-        <button type="button" class="admin-panel-tab" data-admin-tab="database" data-i18n="adminPanelTabDatabase">🗄️ Base de Datos</button>
-        <button type="button" class="admin-panel-tab" data-admin-tab="admins" data-i18n="adminPanelTabAdmins">🔑 Administradores</button>
+      <div class="admin-dash__body">
+        <!-- Sidebar: mismo mecanismo data-admin-tab/.admin-panel-tab que
+             antes (ver showAdminPanelTab() en app.js) — solo se reorganizó
+             visualmente en 2 grupos y se agregaron 3 pestañas nuevas
+             (overview/health/activity) al principio. -->
+        <nav class="admin-dash__sidebar" id="admin-panel-tabs">
+          <span class="admin-dash__nav-group" data-i18n="adminDashGroupOverview">Resumen</span>
+          <button type="button" class="admin-panel-tab admin-panel-tab--active" data-admin-tab="overview" data-i18n="adminPanelTabOverview">📊 Resumen Ejecutivo</button>
+          <button type="button" class="admin-panel-tab" data-admin-tab="health" data-i18n="adminPanelTabHealth">🩺 Salud del Sistema</button>
+          <button type="button" class="admin-panel-tab" data-admin-tab="users" data-i18n="adminPanelTabUsers">👥 Usuarios y Progresión</button>
+          <button type="button" class="admin-panel-tab" data-admin-tab="activity" data-i18n="adminPanelTabActivity">📡 Actividad en Tiempo Real</button>
+
+          <span class="admin-dash__nav-group" data-i18n="adminDashGroupConfig">Configuración</span>
+          <button type="button" class="admin-panel-tab" data-admin-tab="transactions" data-i18n="adminPanelTabTransactions">💳 Transacciones</button>
+          <button type="button" class="admin-panel-tab" data-admin-tab="inspector" data-i18n="adminPanelTabInspector">📋 Bandeja de Sugerencias y Fallas</button>
+          <button type="button" class="admin-panel-tab" data-admin-tab="automation" data-i18n="adminPanelTabAutomation">🤖 Automatización (n8n)</button>
+          <button type="button" class="admin-panel-tab" data-admin-tab="metrics" data-i18n="adminPanelTabMetrics">📊 Métricas (detalle)</button>
+          <button type="button" class="admin-panel-tab" data-admin-tab="photos" data-i18n="adminPanelTabPhotos">📸 Fotos</button>
+          <button type="button" class="admin-panel-tab" data-admin-tab="wallpapers" data-i18n="adminPanelTabWallpapers">🖼️ Fondos</button>
+          <button type="button" class="admin-panel-tab" data-admin-tab="database" data-i18n="adminPanelTabDatabase">🗄️ Base de Datos (técnico)</button>
+          <button type="button" class="admin-panel-tab" data-admin-tab="admins" data-i18n="adminPanelTabAdmins">🔑 Administradores</button>
+        </nav>
+
+        <div class="admin-dash__content">
+      <!-- Pestaña: Resumen Ejecutivo (NUEVA) — métricas clave a simple
+           vista, reusa los mismos datos que ya cargan Métricas/
+           Transacciones/Inspector (ver syncOverviewStats() en app.js);
+           no dispara ninguna llamada de red propia. -->
+      <div id="admin-panel-tab-overview" class="admin-dash__pane">
+        <div class="admin-panel__toolbar">
+          <button type="button" class="btn-scan" id="admin-overview-refresh-btn" data-i18n="adminPanelRefreshBtn">🔄 Actualizar</button>
+        </div>
+        <div class="admin-stat-grid" id="admin-overview-stats">
+          <div class="admin-stat-card admin-stat-card--cyan">
+            <span class="admin-stat-card__label" data-i18n="overviewStatOperators">Operadores Totales</span>
+            <span class="admin-stat-card__value" id="overview-stat-operators">—</span>
+          </div>
+          <div class="admin-stat-card admin-stat-card--green">
+            <span class="admin-stat-card__label" data-i18n="overviewStatRelationships">Relaciones</span>
+            <span class="admin-stat-card__value" id="overview-stat-relationships">—</span>
+          </div>
+          <div class="admin-stat-card admin-stat-card--gold">
+            <span class="admin-stat-card__label" data-i18n="overviewStatTransactions">Transacciones</span>
+            <span class="admin-stat-card__value" id="overview-stat-transactions">—</span>
+          </div>
+          <div class="admin-stat-card admin-stat-card--magenta">
+            <span class="admin-stat-card__label" data-i18n="overviewStatFeedbackPending">Sugerencias Pendientes</span>
+            <span class="admin-stat-card__value" id="overview-stat-feedback-pending">—</span>
+          </div>
+        </div>
+        <div class="admin-dash__section-title" data-i18n="overviewHealthSectionTitle">🩺 Salud del Sistema</div>
+        <p class="admin-panel__status" id="admin-overview-health-summary"></p>
+      </div>
+
+      <!-- Pestaña: Salud del Sistema (NUEVA) — vista clara del diagnóstico
+           de /api/init-db (ver renderSystemHealth()/checkDatabaseStatus()
+           en app.js): una grilla de chips ✅/❌, uno por tabla de Postgres
+           esperada, calculada cruzando la lista fija de 13 tablas contra
+           failedStatements/realtimeErrors de la respuesta. El JSON crudo
+           sigue disponible en la pestaña "Base de Datos (técnico)" para
+           debug, ya no acá. -->
+      <div id="admin-panel-tab-health" class="admin-dash__pane" hidden>
+        <p class="admin-panel__status admin-panel__status--hint" data-i18n="adminHealthHint">
+          Estado de las 13 tablas de Postgres y de las funciones serverless que dependen de ellas.
+        </p>
+        <div class="admin-panel__toolbar">
+          <button type="button" class="btn-scan" id="admin-health-check-btn" data-i18n="adminDbCheckBtn">🔄 Verificar / Reintentar</button>
+        </div>
+        <p class="admin-panel__status" id="admin-health-status"></p>
+        <div class="admin-health-grid" id="admin-health-grid"></div>
+      </div>
+
+      <!-- Pestaña: Actividad en Tiempo Real (NUEVA) — se suscribe a
+           Supabase Realtime (postgres_changes) sobre `transactions` y
+           `feedback` mientras esta pestaña está abierta (ver
+           wireAdminActivityFeed()/unwireAdminActivityFeed() en app.js,
+           mismo patrón que wireFriendshipsRealtime()). Deliberadamente NO
+           incluye `public.users` (altas de Operador): esa tabla no tiene
+           ninguna política RLS de lectura (ver init-db.js) y su fila
+           completa incluye la columna `password` (hash) — igual que
+           admin-list-users.js nunca la selecciona, este feed tampoco la
+           toca ni por Realtime. -->
+      <div id="admin-panel-tab-activity" class="admin-dash__pane" hidden>
+        <p class="admin-panel__status admin-panel__status--hint" data-i18n="adminActivityHint">
+          Eventos en vivo de Transacciones y Sugerencias — activo mientras esta pestaña está abierta.
+        </p>
+        <div class="admin-activity-feed" id="admin-activity-feed">
+          <p class="admin-activity-feed__empty" id="admin-activity-empty" data-i18n="adminActivityEmpty">Esperando actividad...</p>
+        </div>
       </div>
 
       <!-- Pestaña: Transacciones (contenido original, sin cambios de lógica) -->
-      <div id="admin-panel-tab-transactions">
+      <div id="admin-panel-tab-transactions" class="admin-dash__pane" hidden>
         <div class="admin-panel__toolbar">
           <button type="button" class="btn-scan" id="admin-panel-refresh-btn" data-i18n="adminPanelRefreshBtn">🔄 Actualizar</button>
           <button type="button" class="btn-scan btn-scan--pdf" id="admin-panel-export-btn" data-i18n="adminPanelExportBtn">📥 Exportar CSV</button>
@@ -3115,7 +3197,7 @@
 
       <!-- Pestaña: Agente Inspector — audita `feedback` (Bugs & Sugerencias,
            ver #feedback-form/city-map-modal) y decide su destino. -->
-      <div id="admin-panel-tab-inspector" hidden>
+      <div id="admin-panel-tab-inspector" class="admin-dash__pane" hidden>
         <div class="admin-panel__toolbar">
           <button type="button" class="btn-scan" id="inspector-refresh-btn" data-i18n="adminPanelRefreshBtn">🔄 Actualizar</button>
         </div>
@@ -3155,7 +3237,7 @@
            marca la tarea como lista para pasar al flujo de desarrollo local
            (ver approved_tasks.json/AUTOMATION_WORKFLOW.md), NO la ejecuta
            sola: sigue sin existir ningún ejecutor automático de código. -->
-      <div id="admin-panel-tab-automation" hidden>
+      <div id="admin-panel-tab-automation" class="admin-dash__pane" hidden>
         <div class="admin-panel__toolbar">
           <button type="button" class="btn-scan" id="automation-refresh-btn" data-i18n="adminPanelRefreshBtn">🔄 Actualizar</button>
         </div>
@@ -3193,7 +3275,7 @@
            listado de TODAS las instalaciones de la app, ya que esta sigue
            siendo local-first (localStorage es la única fuente de verdad
            real; esta tabla es un espejo de "mejor esfuerzo"). -->
-      <div id="admin-panel-tab-users" hidden>
+      <div id="admin-panel-tab-users" class="admin-dash__pane" hidden>
         <div class="admin-panel__toolbar">
           <button type="button" class="btn-scan" id="users-refresh-btn" data-i18n="adminPanelRefreshBtn">🔄 Actualizar</button>
         </div>
@@ -3237,7 +3319,7 @@
            (app_friendships), vía api/admin-metrics.js (misma conexión
            directa a Postgres que admin-list-users.js, porque public.users
            no tiene política RLS para la anon key). -->
-      <div id="admin-panel-tab-metrics" hidden>
+      <div id="admin-panel-tab-metrics" class="admin-dash__pane" hidden>
         <div class="admin-panel__toolbar">
           <button type="button" class="btn-scan" id="metrics-refresh-btn" data-i18n="adminPanelRefreshBtn">🔄 Actualizar</button>
         </div>
@@ -3269,7 +3351,7 @@
            Onboarding/#hero-modal/Header, ver renderAdminPhotosTab() en
            app.js) + best-effort en Supabase (`hero_avatars`) para que el
            cambio también llegue a otros dispositivos. -->
-      <div id="admin-panel-tab-photos" hidden>
+      <div id="admin-panel-tab-photos" class="admin-dash__pane" hidden>
         <p class="admin-panel__status admin-panel__status--hint" data-i18n="adminPhotosHint">
           Pega la URL de una imagen para cada personaje y guarda — se refleja al instante en la pantalla de elección de Héroe.
         </p>
@@ -3283,7 +3365,7 @@
            desde su galería) o volver a "Aleatorio". Mismo mecanismo
            local+Supabase que la pestaña Fotos (`wallpapers`, ver
            renderAdminWallpapersTab() en app.js). -->
-      <div id="admin-panel-tab-wallpapers" hidden>
+      <div id="admin-panel-tab-wallpapers" class="admin-dash__pane" hidden>
         <p class="admin-panel__status admin-panel__status--hint" data-i18n="adminWallpapersHint">
           Por defecto cada ventana muestra un fondo aleatorio. Elige uno fijo del menú, pega una URL, o sube una imagen desde tu galería — "Aleatorio" vuelve a la rotación por defecto.
         </p>
@@ -3298,7 +3380,7 @@
            corre una vez por versión (ver DB_INIT_FLAG_KEY): reintentar
            acá no depende de subir una versión nueva ni de limpiar
            localStorage a mano. -->
-      <div id="admin-panel-tab-database" hidden>
+      <div id="admin-panel-tab-database" class="admin-dash__pane" hidden>
         <p class="admin-panel__status admin-panel__status--hint" data-i18n="adminDbHint">
           Verifica y crea (si hacen falta) las tablas de Supabase de Amigos/Escuadrones/Progreso. Si falta la variable SUPABASE_DB_URL en Vercel, el error exacto aparece acá.
         </p>
@@ -3316,7 +3398,7 @@
            de Supabase Auth (creada a mano desde el Dashboard de
            Supabase → Authentication → Users) — agregarlo acá solo le da
            PERMISO, nunca crea la cuenta. Ver api/admin-manage-admins.js. -->
-      <div id="admin-panel-tab-admins" hidden>
+      <div id="admin-panel-tab-admins" class="admin-dash__pane" hidden>
         <p class="admin-panel__status admin-panel__status--hint" data-i18n="adminAdminsHint">
           Otorga o quita acceso al Panel de Administrador. El email que agregues necesita tener su propia cuenta creada en Supabase Auth (Dashboard → Authentication → Users) — acá solo le das permiso.
         </p>
@@ -3339,6 +3421,8 @@
             </thead>
             <tbody id="admin-admins-table-body"></tbody>
           </table>
+        </div>
+      </div>
         </div>
       </div>
     </div>
@@ -3624,7 +3708,7 @@
        etiquetas <script> no importa en la práctica — se carga acá antes
        igual, por prolijidad. -->
   <script src="floatingWindow.js?v=20260811-6"></script>
-  <script src="app.js?v=20260817-1"></script>
+  <script src="app.js?v=20260818-1"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de

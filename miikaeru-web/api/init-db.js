@@ -346,6 +346,42 @@ const ADMIN_EMAIL = "javierusan18@gmail.com";
 // Amigos/Chat, esta no la crea este archivo — la creó el usuario a mano
 // en el Bloque 35) para no romper el resto del init si por lo que sea
 // todavía no existe en este proyecto de Supabase.
+// Función SECURITY DEFINER que resuelve "¿este email es Admin?" — mismo
+// criterio que isEmailAdmin() en api/_utils.js (Admin Raíz siempre, o
+// presente en public.admins), pero evaluable DESDE ADENTRO de una policy
+// RLS de otra tabla (ver ensureFeedbackAdminPolicies() abajo). Hace
+// falta SECURITY DEFINER porque public.admins tiene RLS habilitado SIN
+// ninguna policy (a propósito, ver SCHEMA_STATEMENTS más arriba): una
+// policy normal en `feedback` que intentara `exists(select 1 from
+// public.admins where ...)` como el rol `authenticated` chocaría con esa
+// misma RLS y siempre devolvería vacío, sin importar quién pregunte. Una
+// función SECURITY DEFINER corre con los privilegios de quien la CREÓ
+// (esta misma conexión, vía SUPABASE_DB_URL — privilegio suficiente para
+// pasar por encima de RLS), así que sí puede leer public.admins de
+// verdad. Antes, la política de `feedback` solo reconocía al Admin Raíz
+// hardcodeado — un Admin agregado por tabla (ver
+// api/admin-manage-admins.js) podía loguearse y pasar el nuevo gate del
+// frontend (ver /api/admin-verify.js) pero igual se topaba con la
+// Bandeja de Sugerencias vacía por RLS. `set search_path = public, pg_temp`
+// es defensa estándar contra search_path hijacking en funciones
+// SECURITY DEFINER.
+async function ensureIsAdminFunction(client) {
+  await client.query(
+    `create or replace function public.is_admin(check_email text)
+       returns boolean
+       language sql
+       security definer
+       set search_path = public, pg_temp
+       as $$
+         select
+           lower(check_email) = lower('${ADMIN_EMAIL}')
+           or exists (select 1 from public.admins where lower(email) = lower(check_email))
+       $$`
+  );
+  await client.query(`revoke all on function public.is_admin(text) from public`);
+  await client.query(`grant execute on function public.is_admin(text) to authenticated`);
+}
+
 async function ensureFeedbackAdminPolicies(client) {
   const { rows } = await client.query(
     `select 1 from information_schema.tables where table_schema = 'public' and table_name = 'feedback'`
@@ -358,15 +394,15 @@ async function ensureFeedbackAdminPolicies(client) {
   await client.query(
     `create policy "admin can read feedback" on public.feedback
        for select to authenticated
-       using (auth.jwt() ->> 'email' = '${ADMIN_EMAIL}')`
+       using (public.is_admin(auth.jwt() ->> 'email'))`
   );
 
   await client.query(`drop policy if exists "admin can update feedback" on public.feedback`);
   await client.query(
     `create policy "admin can update feedback" on public.feedback
        for update to authenticated
-       using (auth.jwt() ->> 'email' = '${ADMIN_EMAIL}')
-       with check (auth.jwt() ->> 'email' = '${ADMIN_EMAIL}')`
+       using (public.is_admin(auth.jwt() ->> 'email'))
+       with check (public.is_admin(auth.jwt() ->> 'email'))`
   );
 }
 
@@ -436,6 +472,12 @@ module.exports = async function handler(req, res) {
       } catch (err) {
         realtimeErrors.push({ table, error: err.message });
       }
+    }
+
+    try {
+      await ensureIsAdminFunction(client);
+    } catch (err) {
+      failedStatements.push({ statement: "ensureIsAdminFunction", error: err.message });
     }
 
     try {
