@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260818-1" />
+  <link rel="stylesheet" href="style.css?v=20260818-2" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -3085,8 +3085,10 @@
              visualmente en 2 grupos y se agregaron 3 pestañas nuevas
              (overview/health/activity) al principio. -->
         <nav class="admin-dash__sidebar" id="admin-panel-tabs">
-          <span class="admin-dash__nav-group" data-i18n="adminDashGroupOverview">Resumen</span>
-          <button type="button" class="admin-panel-tab admin-panel-tab--active" data-admin-tab="overview" data-i18n="adminPanelTabOverview">📊 Resumen Ejecutivo</button>
+          <span class="admin-dash__nav-group" data-i18n="adminDashGroupOverview">Ecosistema Miikaeru</span>
+          <button type="button" class="admin-panel-tab admin-panel-tab--active" data-admin-tab="overview" data-i18n="adminPanelTabOverview">📈 Crecimiento</button>
+          <button type="button" class="admin-panel-tab" data-admin-tab="ecosystem" data-i18n="adminPanelTabEcosystem">🧩 Ecosistema (3 Capas)</button>
+          <button type="button" class="admin-panel-tab" data-admin-tab="monetization" data-i18n="adminPanelTabMonetization">💰 Monetización</button>
           <button type="button" class="admin-panel-tab" data-admin-tab="health" data-i18n="adminPanelTabHealth">🩺 Salud del Sistema</button>
           <button type="button" class="admin-panel-tab" data-admin-tab="users" data-i18n="adminPanelTabUsers">👥 Usuarios y Progresión</button>
           <button type="button" class="admin-panel-tab" data-admin-tab="activity" data-i18n="adminPanelTabActivity">📡 Actividad en Tiempo Real</button>
@@ -3103,34 +3105,111 @@
         </nav>
 
         <div class="admin-dash__content">
-      <!-- Pestaña: Resumen Ejecutivo (NUEVA) — métricas clave a simple
-           vista, reusa los mismos datos que ya cargan Métricas/
-           Transacciones/Inspector (ver syncOverviewStats() en app.js);
-           no dispara ninguna llamada de red propia. -->
-      <div id="admin-panel-tab-overview" class="admin-dash__pane">
+      <!-- Pestaña: Crecimiento (NUEVA, reemplaza al viejo "Resumen
+           Ejecutivo" de tarjetas genéricas) — el panel de mando real de
+           la Capa 2 del Plan Estratégico: los 7 hitos de adopción
+           (Lanzamiento → 1M usuarios, ver GROWTH_MILESTONES en app.js)
+           contra el conteo real de Operadores (mismo dato que ya trae
+           /api/admin-metrics), más las 4 métricas clave como tarjetas de
+           vidrio. Lenguaje visual propio (.miika-*, ver style.css) —
+           deliberadamente NO reusa .admin-panel__table/.inspector-stat/
+           .btn-scan: esos siguen sirviendo bien a las pestañas
+           operativas de abajo (Transacciones, Usuarios...), pero acá se
+           pidió una identidad visual nueva, no otra piel de lo mismo. -->
+      <div id="admin-panel-tab-overview" class="admin-dash__pane miika-dash">
         <div class="admin-panel__toolbar">
           <button type="button" class="btn-scan" id="admin-overview-refresh-btn" data-i18n="adminPanelRefreshBtn">🔄 Actualizar</button>
         </div>
-        <div class="admin-stat-grid" id="admin-overview-stats">
-          <div class="admin-stat-card admin-stat-card--cyan">
-            <span class="admin-stat-card__label" data-i18n="overviewStatOperators">Operadores Totales</span>
-            <span class="admin-stat-card__value" id="overview-stat-operators">—</span>
+
+        <div class="miika-milestone-hero" id="miika-milestone-hero">
+          <!-- anillo + etapa actual, renderizado por renderGrowthMilestones() en app.js -->
+        </div>
+
+        <div class="miika-milestones" id="miika-milestones">
+          <!-- 7 filas de hitos, renderizadas por renderGrowthMilestones() en app.js -->
+        </div>
+
+        <div class="admin-dash__section-title" data-i18n="overviewMetricsSectionTitle">📊 Métricas Clave</div>
+        <div class="miika-tile-grid" id="admin-overview-stats">
+          <div class="miika-tile miika-tile--cyan">
+            <span class="miika-tile__label" data-i18n="overviewStatOperators">Operadores Totales</span>
+            <span class="miika-tile__value" id="overview-stat-operators">—</span>
           </div>
-          <div class="admin-stat-card admin-stat-card--green">
-            <span class="admin-stat-card__label" data-i18n="overviewStatRelationships">Relaciones</span>
-            <span class="admin-stat-card__value" id="overview-stat-relationships">—</span>
+          <div class="miika-tile miika-tile--green">
+            <span class="miika-tile__label" data-i18n="overviewStatRelationships">Relaciones</span>
+            <span class="miika-tile__value" id="overview-stat-relationships">—</span>
           </div>
-          <div class="admin-stat-card admin-stat-card--gold">
-            <span class="admin-stat-card__label" data-i18n="overviewStatTransactions">Transacciones</span>
-            <span class="admin-stat-card__value" id="overview-stat-transactions">—</span>
+          <div class="miika-tile miika-tile--gold">
+            <span class="miika-tile__label" data-i18n="overviewStatTransactions">Transacciones</span>
+            <span class="miika-tile__value" id="overview-stat-transactions">—</span>
           </div>
-          <div class="admin-stat-card admin-stat-card--magenta">
-            <span class="admin-stat-card__label" data-i18n="overviewStatFeedbackPending">Sugerencias Pendientes</span>
-            <span class="admin-stat-card__value" id="overview-stat-feedback-pending">—</span>
+          <div class="miika-tile miika-tile--magenta">
+            <span class="miika-tile__label" data-i18n="overviewStatFeedbackPending">Sugerencias Pendientes</span>
+            <span class="miika-tile__value" id="overview-stat-feedback-pending">—</span>
           </div>
         </div>
+
         <div class="admin-dash__section-title" data-i18n="overviewHealthSectionTitle">🩺 Salud del Sistema</div>
         <p class="admin-panel__status" id="admin-overview-health-summary"></p>
+      </div>
+
+      <!-- Pestaña: Ecosistema — Sección 2 del Plan Estratégico ("Las 3
+           Capas"). Contenido 100% estático (no dispara ningún fetch):
+           es un mapa de qué existe hoy, no un dato en vivo. El estado de
+           Capa 1 se verificó leyendo el código, no se inventó: no existe
+           ningún endpoint/feature de páginas de citas todavía en este
+           repo (ver api/, sin Stripe/PayPal/MercadoPago ni tabla de
+           bookings). -->
+      <div id="admin-panel-tab-ecosystem" class="admin-dash__pane miika-dash" hidden>
+        <p class="admin-panel__status admin-panel__status--hint" data-i18n="ecosystemHint">
+          Las 3 capas del ecosistema Miikaeru, según el Plan Estratégico.
+        </p>
+        <div class="miika-layer-grid">
+          <div class="miika-layer-card">
+            <span class="miika-layer-card__badge miika-layer-card__badge--planned" data-i18n="ecosystemLayer1Badge">No implementado aún</span>
+            <h3 class="miika-layer-card__title" data-i18n="ecosystemLayer1Title">Capa 1 — Páginas Personales de Citas</h3>
+            <p class="miika-layer-card__desc" data-i18n="ecosystemLayer1Desc">B2B / Servicio. Páginas web optimizadas para PC y móvil para que profesionales agenden citas con sus clientes, gestionen servicios y reciban pagos.</p>
+          </div>
+          <div class="miika-layer-card miika-layer-card--active">
+            <span class="miika-layer-card__badge miika-layer-card__badge--active" data-i18n="ecosystemLayer2Badge">Estás acá</span>
+            <h3 class="miika-layer-card__title" data-i18n="ecosystemLayer2Title">Capa 2 — Dashboard Central de Métricas</h3>
+            <p class="miika-layer-card__desc" data-i18n="ecosystemLayer2Desc">Panel de administración exclusivo, protegido con autenticación estricta basada en roles, que centraliza la salud del sistema (Supabase de 13 tablas), métricas globales y el control de crecimiento.</p>
+          </div>
+          <div class="miika-layer-card">
+            <span class="miika-layer-card__badge miika-layer-card__badge--live" data-i18n="ecosystemLayer3Badge">En producción</span>
+            <h3 class="miika-layer-card__title" data-i18n="ecosystemLayer3Title">Capa 3 — Miikaeru (App Principal)</h3>
+            <p class="miika-layer-card__desc" data-i18n="ecosystemLayer3Desc">El núcleo de desarrollo personal: finanzas, templo (cuerpo/espíritu), hábitos, aprendizaje de idiomas, donaciones y conexión opcional con los datos de los usuarios.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pestaña: Monetización — Sección 4 del Plan Estratégico (Modelo
+           de Monetización Progresivo). Estático a propósito: ni las
+           páginas de citas ni las donaciones existen todavía en el
+           código (verificado, ver nota de Ecosistema arriba), así que
+           mostrar números de ingresos acá sería inventarlos — esto es un
+           mapa de fases, no un reporte financiero. -->
+      <div id="admin-panel-tab-monetization" class="admin-dash__pane miika-dash" hidden>
+        <p class="admin-panel__status admin-panel__status--hint" data-i18n="monetizationHint">
+          Modelo de monetización progresivo, según el Plan Estratégico. Ninguna fase tiene todavía código de cobro implementado.
+        </p>
+        <div class="miika-phase-list">
+          <div class="miika-phase-card">
+            <span class="miika-phase-card__tag" data-i18n="monetizationPhase1Tag">Fase 1 — Corto Plazo</span>
+            <span class="miika-phase-card__status miika-phase-card__status--planned" data-i18n="monetizationPlannedBadge">Planeado</span>
+            <p class="miika-phase-card__desc" data-i18n="monetizationPhase1Desc">Cobro por la creación y configuración de páginas personales de citas para clientes, complementado con un sistema de donaciones integrado dentro de la app principal Miikaeru.</p>
+          </div>
+          <div class="miika-phase-card">
+            <span class="miika-phase-card__tag" data-i18n="monetizationPhase2Tag">Fase 2 — Mediano Plazo</span>
+            <span class="miika-phase-card__status miika-phase-card__status--planned" data-i18n="monetizationPlannedBadge">Planeado</span>
+            <p class="miika-phase-card__desc" data-i18n="monetizationPhase2Desc">Venta de plantillas premium, dominios personalizados y analíticas avanzadas para los dueños de las páginas.</p>
+          </div>
+          <div class="miika-phase-card">
+            <span class="miika-phase-card__tag" data-i18n="monetizationPhase3Tag">Fase 3 — Largo Plazo</span>
+            <span class="miika-phase-card__status miika-phase-card__status--planned" data-i18n="monetizationPlannedBadge">Planeado</span>
+            <p class="miika-phase-card__desc" data-i18n="monetizationPhase3Desc">Lanzamiento del Paso de Miika (pase mensual de suscripción) para desbloquear características avanzadas tanto en el ecosistema de páginas como en las herramientas profundas de la app principal.</p>
+          </div>
+        </div>
       </div>
 
       <!-- Pestaña: Salud del Sistema (NUEVA) — vista clara del diagnóstico
@@ -3140,7 +3219,7 @@
            failedStatements/realtimeErrors de la respuesta. El JSON crudo
            sigue disponible en la pestaña "Base de Datos (técnico)" para
            debug, ya no acá. -->
-      <div id="admin-panel-tab-health" class="admin-dash__pane" hidden>
+      <div id="admin-panel-tab-health" class="admin-dash__pane miika-dash" hidden>
         <p class="admin-panel__status admin-panel__status--hint" data-i18n="adminHealthHint">
           Estado de las 13 tablas de Postgres y de las funciones serverless que dependen de ellas.
         </p>
@@ -3161,7 +3240,7 @@
            completa incluye la columna `password` (hash) — igual que
            admin-list-users.js nunca la selecciona, este feed tampoco la
            toca ni por Realtime. -->
-      <div id="admin-panel-tab-activity" class="admin-dash__pane" hidden>
+      <div id="admin-panel-tab-activity" class="admin-dash__pane miika-dash" hidden>
         <p class="admin-panel__status admin-panel__status--hint" data-i18n="adminActivityHint">
           Eventos en vivo de Transacciones y Sugerencias — activo mientras esta pestaña está abierta.
         </p>
@@ -3708,7 +3787,7 @@
        etiquetas <script> no importa en la práctica — se carga acá antes
        igual, por prolijidad. -->
   <script src="floatingWindow.js?v=20260811-6"></script>
-  <script src="app.js?v=20260818-1"></script>
+  <script src="app.js?v=20260818-2"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de

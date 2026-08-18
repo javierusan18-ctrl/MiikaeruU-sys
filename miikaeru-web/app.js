@@ -1252,16 +1252,56 @@ const I18N = {
     financeOpenDashboardBtn: "📊 Ver Dashboard Completo",
     adminPanelOpenBtn: "🛡️ Panel de Administrador",
     adminPanelTitle: "🛡️ Panel de Administrador",
-    adminPanelTabOverview: "📊 Resumen Ejecutivo",
+    adminPanelTabOverview: "📈 Crecimiento",
+    adminPanelTabEcosystem: "🧩 Ecosistema (3 Capas)",
+    adminPanelTabMonetization: "💰 Monetización",
     adminPanelTabHealth: "🩺 Salud del Sistema",
     adminPanelTabActivity: "📡 Actividad en Tiempo Real",
-    adminDashGroupOverview: "Resumen",
+    adminDashGroupOverview: "Ecosistema Miikaeru",
     adminDashGroupConfig: "Configuración",
     overviewStatOperators: "Operadores Totales",
     overviewStatRelationships: "Relaciones",
     overviewStatTransactions: "Transacciones",
     overviewStatFeedbackPending: "Sugerencias Pendientes",
     overviewHealthSectionTitle: "🩺 Salud del Sistema",
+    overviewMetricsSectionTitle: "📊 Métricas Clave",
+    growthCurrentStage: "Etapa actual",
+    growthNextStage: "Próxima etapa",
+    growthOperatorsLabel: "operadores",
+    growthOperatorsRemaining: "faltan",
+    growthMaxStageReached: "🏆 Etapa máxima alcanzada",
+    growthMilestone0Label: "Lanzamiento Oficial",
+    growthMilestone0Note: "Despliegue de variables de entorno y validación inicial de la PWA.",
+    growthMilestone1Label: "100 usuarios",
+    growthMilestone1Note: "Estabilidad de la base de datos local-first y soporte cercano.",
+    growthMilestone2Label: "1.000 usuarios",
+    growthMilestone2Note: "Control de costos de llamadas a IA (Claude Haiku) y volumen de transacciones financieras.",
+    growthMilestone3Label: "5.000 usuarios",
+    growthMilestone3Note: "Optimización de consultas SQL en Supabase para el ranking social y comunidades.",
+    growthMilestone4Label: "20.000 usuarios",
+    growthMilestone4Note: "Preparación estructural para lanzar el Paso de Miika (suscripciones/niveles premium).",
+    growthMilestone5Label: "100.000 usuarios",
+    growthMilestone5Note: "Escalado masivo, automatización de flujos y soporte multi-idioma consolidado.",
+    growthMilestone6Label: "1.000.000 de usuarios",
+    growthMilestone6Note: "Consolidación como la plataforma de referencia de productividad gamificada.",
+    ecosystemHint: "Las 3 capas del ecosistema Miikaeru, según el Plan Estratégico.",
+    ecosystemLayer1Badge: "No implementado aún",
+    ecosystemLayer1Title: "Capa 1 — Páginas Personales de Citas",
+    ecosystemLayer1Desc: "B2B / Servicio. Páginas web optimizadas para PC y móvil para que profesionales agenden citas con sus clientes, gestionen servicios y reciban pagos.",
+    ecosystemLayer2Badge: "Estás acá",
+    ecosystemLayer2Title: "Capa 2 — Dashboard Central de Métricas",
+    ecosystemLayer2Desc: "Panel de administración exclusivo, protegido con autenticación estricta basada en roles, que centraliza la salud del sistema (Supabase de 13 tablas), métricas globales y el control de crecimiento.",
+    ecosystemLayer3Badge: "En producción",
+    ecosystemLayer3Title: "Capa 3 — Miikaeru (App Principal)",
+    ecosystemLayer3Desc: "El núcleo de desarrollo personal: finanzas, templo (cuerpo/espíritu), hábitos, aprendizaje de idiomas, donaciones y conexión opcional con los datos de los usuarios.",
+    monetizationHint: "Modelo de monetización progresivo, según el Plan Estratégico. Ninguna fase tiene todavía código de cobro implementado.",
+    monetizationPlannedBadge: "Planeado",
+    monetizationPhase1Tag: "Fase 1 — Corto Plazo",
+    monetizationPhase1Desc: "Cobro por la creación y configuración de páginas personales de citas para clientes, complementado con un sistema de donaciones integrado dentro de la app principal Miikaeru.",
+    monetizationPhase2Tag: "Fase 2 — Mediano Plazo",
+    monetizationPhase2Desc: "Venta de plantillas premium, dominios personalizados y analíticas avanzadas para los dueños de las páginas.",
+    monetizationPhase3Tag: "Fase 3 — Largo Plazo",
+    monetizationPhase3Desc: "Lanzamiento del Paso de Miika (pase mensual de suscripción) para desbloquear características avanzadas tanto en el ecosistema de páginas como en las herramientas profundas de la app principal.",
     adminHealthHint: "Estado de las 13 tablas de Postgres y de las funciones serverless que dependen de ellas.",
     adminActivityHint: "Eventos en vivo de Transacciones y Sugerencias — activo mientras esta pestaña está abierta.",
     adminActivityEmpty: "Esperando actividad...",
@@ -2421,16 +2461,28 @@ const I18N = {
     financeOpenDashboardBtn: "📊 View Full Dashboard",
     adminPanelOpenBtn: "🛡️ Admin Panel",
     adminPanelTitle: "🛡️ Admin Panel",
-    adminPanelTabOverview: "📊 Executive Overview",
+    adminPanelTabOverview: "📈 Growth",
+    adminPanelTabEcosystem: "🧩 Ecosystem (3 Layers)",
+    adminPanelTabMonetization: "💰 Monetization",
     adminPanelTabHealth: "🩺 System Health",
     adminPanelTabActivity: "📡 Real-Time Activity",
-    adminDashGroupOverview: "Overview",
+    adminDashGroupOverview: "Miikaeru Ecosystem",
     adminDashGroupConfig: "Configuration",
     overviewStatOperators: "Total Operators",
     overviewStatRelationships: "Relationships",
     overviewStatTransactions: "Transactions",
     overviewStatFeedbackPending: "Pending Suggestions",
     overviewHealthSectionTitle: "🩺 System Health",
+    overviewMetricsSectionTitle: "📊 Key Metrics",
+    growthCurrentStage: "Current stage",
+    growthNextStage: "Next stage",
+    growthOperatorsLabel: "operators",
+    growthOperatorsRemaining: "remaining",
+    growthMaxStageReached: "🏆 Max stage reached",
+    ecosystemLayer1Badge: "Not built yet",
+    ecosystemLayer2Badge: "You are here",
+    ecosystemLayer3Badge: "Live in production",
+    monetizationPlannedBadge: "Planned",
     adminHealthHint: "Status of the 13 Postgres tables and the serverless functions that depend on them.",
     adminActivityHint: "Live events for Transactions and Suggestions — active while this tab is open.",
     adminActivityEmpty: "Waiting for activity...",
@@ -3590,16 +3642,28 @@ const I18N = {
     financeOpenDashboardBtn: "📊 ダッシュボードを見る",
     adminPanelOpenBtn: "🛡️ 管理者パネル",
     adminPanelTitle: "🛡️ 管理者パネル",
-    adminPanelTabOverview: "📊 サマリー",
+    adminPanelTabOverview: "📈 成長",
+    adminPanelTabEcosystem: "🧩 エコシステム（3層）",
+    adminPanelTabMonetization: "💰 収益化",
     adminPanelTabHealth: "🩺 システムの状態",
     adminPanelTabActivity: "📡 リアルタイム活動",
-    adminDashGroupOverview: "サマリー",
+    adminDashGroupOverview: "Miikaeruエコシステム",
     adminDashGroupConfig: "設定",
     overviewStatOperators: "登録オペレーター数",
     overviewStatRelationships: "つながり",
     overviewStatTransactions: "取引数",
     overviewStatFeedbackPending: "保留中の提案",
     overviewHealthSectionTitle: "🩺 システムの状態",
+    overviewMetricsSectionTitle: "📊 主要指標",
+    growthCurrentStage: "現在の段階",
+    growthNextStage: "次の段階",
+    growthOperatorsLabel: "オペレーター",
+    growthOperatorsRemaining: "残り",
+    growthMaxStageReached: "🏆 最終段階に到達",
+    ecosystemLayer1Badge: "未実装",
+    ecosystemLayer2Badge: "現在地",
+    ecosystemLayer3Badge: "本番稼働中",
+    monetizationPlannedBadge: "計画中",
     adminHealthHint: "13個のPostgresテーブルと、それに依存するサーバーレス関数の状態。",
     adminActivityHint: "取引・提案のライブイベント — このタブが開いている間だけ有効。",
     adminActivityEmpty: "活動を待っています...",
@@ -12512,16 +12576,25 @@ document.addEventListener("DOMContentLoaded", () => {
   const adminPanelTabs = document.getElementById("admin-panel-tabs");
   const adminDashSubtitle = document.getElementById("admin-dash-subtitle");
 
-  // Pestaña "Resumen Ejecutivo" (NUEVA) — ver syncOverviewStats()/
-  // renderOverviewStats() más abajo. No dispara fetches propios: reusa
-  // los datos que ya cargan Métricas/Transacciones/Inspector.
+  // Pestaña "Crecimiento" (NUEVA — Capa 2 del Plan Estratégico) — ver
+  // syncOverviewStats()/renderGrowthMilestones() más abajo. No dispara
+  // fetches propios: reusa los datos que ya cargan Métricas/
+  // Transacciones/Inspector.
   const adminPanelTabOverview = document.getElementById("admin-panel-tab-overview");
   const adminOverviewRefreshBtn = document.getElementById("admin-overview-refresh-btn");
+  const miikaMilestoneHero = document.getElementById("miika-milestone-hero");
+  const miikaMilestonesList = document.getElementById("miika-milestones");
   const overviewStatOperators = document.getElementById("overview-stat-operators");
   const overviewStatRelationships = document.getElementById("overview-stat-relationships");
   const overviewStatTransactions = document.getElementById("overview-stat-transactions");
   const overviewStatFeedbackPending = document.getElementById("overview-stat-feedback-pending");
   const adminOverviewHealthSummary = document.getElementById("admin-overview-health-summary");
+
+  // Pestañas "Ecosistema"/"Monetización" (NUEVAS — Secciones 2 y 4 del
+  // Plan Estratégico) — contenido 100% estático en index.html, estas
+  // solo necesitan togglear `hidden` (ver showAdminPanelTab()).
+  const adminPanelTabEcosystem = document.getElementById("admin-panel-tab-ecosystem");
+  const adminPanelTabMonetization = document.getElementById("admin-panel-tab-monetization");
 
   // Pestaña "Salud del Sistema" (NUEVA) — vista en chips de la misma
   // respuesta de /api/init-db que ya diagnostica la pestaña técnica
@@ -14699,7 +14772,96 @@ document.addEventListener("DOMContentLoaded", () => {
   // revalida por las dudas, como red de seguridad de UI.
   let adminPanelRows = [];
 
-  // Resumen Ejecutivo (pestaña "overview") — no tiene su propio fetch,
+  // Los 7 hitos de adopción del Plan Estratégico (Sección 3 — "Metas de
+  // Crecimiento de Usuarios"), en el mismo orden/redacción que el plan.
+  // `threshold` = cantidad de Operadores (public.users) que marca ESE
+  // hito — se compara contra el total real de /api/admin-metrics (ver
+  // renderGrowthMilestones() más abajo), nunca un número inventado.
+  const GROWTH_MILESTONES = [
+    { threshold: 0, labelKey: "growthMilestone0Label", noteKey: "growthMilestone0Note" },
+    { threshold: 100, labelKey: "growthMilestone1Label", noteKey: "growthMilestone1Note" },
+    { threshold: 1000, labelKey: "growthMilestone2Label", noteKey: "growthMilestone2Note" },
+    { threshold: 5000, labelKey: "growthMilestone3Label", noteKey: "growthMilestone3Note" },
+    { threshold: 20000, labelKey: "growthMilestone4Label", noteKey: "growthMilestone4Note" },
+    { threshold: 100000, labelKey: "growthMilestone5Label", noteKey: "growthMilestone5Note" },
+    { threshold: 1000000, labelKey: "growthMilestone6Label", noteKey: "growthMilestone6Note" },
+  ];
+
+  // Dibuja el anillo de progreso (conic-gradient puro, ver .miika-ring en
+  // style.css — sin SVG ni librería de charts) + la etapa actual, más la
+  // lista completa de los 7 hitos con su estado (alcanzado/actual/
+  // próximo). `count` es el total REAL de Operadores (public.users) —
+  // nunca se inventa una tendencia histórica que esta app no guarda.
+  function renderGrowthMilestones(count) {
+    const n = Number.isFinite(count) ? count : 0;
+    let currentIndex = 0;
+    for (let i = 0; i < GROWTH_MILESTONES.length; i++) {
+      if (n >= GROWTH_MILESTONES[i].threshold) currentIndex = i;
+    }
+    const current = GROWTH_MILESTONES[currentIndex];
+    const next = GROWTH_MILESTONES[currentIndex + 1];
+    const pct = next
+      ? Math.max(0, Math.min(100, Math.round(((n - current.threshold) / (next.threshold - current.threshold)) * 100)))
+      : 100;
+
+    if (miikaMilestoneHero) {
+      miikaMilestoneHero.innerHTML = "";
+      const ring = document.createElement("div");
+      ring.className = "miika-ring";
+      ring.style.setProperty("--pct", String(pct));
+      const ringInner = document.createElement("div");
+      ringInner.className = "miika-ring__inner";
+      ringInner.innerHTML = `<span class="miika-ring__pct">${pct}%</span>`;
+      ring.appendChild(ringInner);
+
+      const info = document.createElement("div");
+      info.className = "miika-milestone-hero__info";
+      const stageLabel = document.createElement("div");
+      stageLabel.className = "miika-milestone-hero__stage";
+      stageLabel.textContent = `${t("growthCurrentStage")}: ${t(current.labelKey)}`;
+      const countLabel = document.createElement("div");
+      countLabel.className = "miika-milestone-hero__count";
+      countLabel.textContent = `${n.toLocaleString(currentLanguage === "ja" ? "ja-JP" : currentLanguage === "en" ? "en-US" : "es-PE")} ${t("growthOperatorsLabel")}`;
+      const nextLabel = document.createElement("div");
+      nextLabel.className = "miika-milestone-hero__next";
+      nextLabel.textContent = next
+        ? `${t("growthNextStage")}: ${t(next.labelKey)} (${Math.max(0, next.threshold - n).toLocaleString()} ${t("growthOperatorsRemaining")})`
+        : t("growthMaxStageReached");
+      info.appendChild(stageLabel);
+      info.appendChild(countLabel);
+      info.appendChild(nextLabel);
+
+      miikaMilestoneHero.appendChild(ring);
+      miikaMilestoneHero.appendChild(info);
+    }
+
+    if (miikaMilestonesList) {
+      miikaMilestonesList.innerHTML = "";
+      GROWTH_MILESTONES.forEach((milestone, i) => {
+        const row = document.createElement("div");
+        const state = i < currentIndex ? "reached" : i === currentIndex ? "current" : "upcoming";
+        row.className = `miika-milestone miika-milestone--${state}`;
+        const marker = document.createElement("span");
+        marker.className = "miika-milestone__marker";
+        marker.textContent = state === "reached" ? "✓" : state === "current" ? "●" : "";
+        const body = document.createElement("div");
+        body.className = "miika-milestone__body";
+        const label = document.createElement("div");
+        label.className = "miika-milestone__label";
+        label.textContent = t(milestone.labelKey);
+        const note = document.createElement("div");
+        note.className = "miika-milestone__note";
+        note.textContent = t(milestone.noteKey);
+        body.appendChild(label);
+        body.appendChild(note);
+        row.appendChild(marker);
+        row.appendChild(body);
+        miikaMilestonesList.appendChild(row);
+      });
+    }
+  }
+
+  // Resumen/Crecimiento (pestaña "overview") — no tiene su propio fetch,
   // solo refleja los números que YA renderizaron sus pestañas de origen
   // (Métricas → Operadores/Relaciones, Transacciones → adminPanelRows,
   // Inspector → Sugerencias Pendientes). Se llama al final de
@@ -14711,6 +14873,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (overviewStatRelationships) overviewStatRelationships.textContent = metricsStatRelationships.textContent;
     if (overviewStatTransactions) overviewStatTransactions.textContent = String(adminPanelRows.length);
     if (overviewStatFeedbackPending) overviewStatFeedbackPending.textContent = inspectorStatPending.textContent;
+    renderGrowthMilestones(Number(metricsStatOperators.textContent) || 0);
   }
 
   if (adminOverviewRefreshBtn) {
@@ -14722,6 +14885,8 @@ document.addEventListener("DOMContentLoaded", () => {
       btn.classList.toggle("admin-panel-tab--active", btn.dataset.adminTab === target);
     });
     if (adminPanelTabOverview) adminPanelTabOverview.hidden = target !== "overview";
+    if (adminPanelTabEcosystem) adminPanelTabEcosystem.hidden = target !== "ecosystem";
+    if (adminPanelTabMonetization) adminPanelTabMonetization.hidden = target !== "monetization";
     if (adminPanelTabHealth) adminPanelTabHealth.hidden = target !== "health";
     if (adminPanelTabActivity) adminPanelTabActivity.hidden = target !== "activity";
     adminPanelTabTransactions.hidden = target !== "transactions";
