@@ -1252,61 +1252,6 @@ const I18N = {
     financeOpenDashboardBtn: "📊 Ver Dashboard Completo",
     adminPanelOpenBtn: "🛡️ Panel de Administrador",
     adminPanelTitle: "🛡️ Panel de Administrador",
-    adminPanelTabOverview: "📈 Crecimiento",
-    adminPanelTabEcosystem: "🧩 Ecosistema (3 Capas)",
-    adminPanelTabMonetization: "💰 Monetización",
-    adminPanelTabHealth: "🩺 Salud del Sistema",
-    adminPanelTabActivity: "📡 Actividad en Tiempo Real",
-    adminDashGroupOverview: "Ecosistema Miikaeru",
-    adminDashGroupConfig: "Configuración",
-    overviewStatOperators: "Operadores Totales",
-    overviewStatRelationships: "Relaciones",
-    overviewStatTransactions: "Transacciones",
-    overviewStatFeedbackPending: "Sugerencias Pendientes",
-    overviewHealthSectionTitle: "🩺 Salud del Sistema",
-    overviewMetricsSectionTitle: "📊 Métricas Clave",
-    growthCurrentStage: "Etapa actual",
-    growthNextStage: "Próxima etapa",
-    growthOperatorsLabel: "operadores",
-    growthOperatorsRemaining: "faltan",
-    growthMaxStageReached: "🏆 Etapa máxima alcanzada",
-    growthMilestone0Label: "Lanzamiento Oficial",
-    growthMilestone0Note: "Despliegue de variables de entorno y validación inicial de la PWA.",
-    growthMilestone1Label: "100 usuarios",
-    growthMilestone1Note: "Estabilidad de la base de datos local-first y soporte cercano.",
-    growthMilestone2Label: "1.000 usuarios",
-    growthMilestone2Note: "Control de costos de llamadas a IA (Claude Haiku) y volumen de transacciones financieras.",
-    growthMilestone3Label: "5.000 usuarios",
-    growthMilestone3Note: "Optimización de consultas SQL en Supabase para el ranking social y comunidades.",
-    growthMilestone4Label: "20.000 usuarios",
-    growthMilestone4Note: "Preparación estructural para lanzar el Paso de Miika (suscripciones/niveles premium).",
-    growthMilestone5Label: "100.000 usuarios",
-    growthMilestone5Note: "Escalado masivo, automatización de flujos y soporte multi-idioma consolidado.",
-    growthMilestone6Label: "1.000.000 de usuarios",
-    growthMilestone6Note: "Consolidación como la plataforma de referencia de productividad gamificada.",
-    ecosystemHint: "Las 3 capas del ecosistema Miikaeru, según el Plan Estratégico.",
-    ecosystemLayer1Badge: "No implementado aún",
-    ecosystemLayer1Title: "Capa 1 — Páginas Personales de Citas",
-    ecosystemLayer1Desc: "B2B / Servicio. Páginas web optimizadas para PC y móvil para que profesionales agenden citas con sus clientes, gestionen servicios y reciban pagos.",
-    ecosystemLayer2Badge: "Estás acá",
-    ecosystemLayer2Title: "Capa 2 — Dashboard Central de Métricas",
-    ecosystemLayer2Desc: "Panel de administración exclusivo, protegido con autenticación estricta basada en roles, que centraliza la salud del sistema (Supabase de 13 tablas), métricas globales y el control de crecimiento.",
-    ecosystemLayer3Badge: "En producción",
-    ecosystemLayer3Title: "Capa 3 — Miikaeru (App Principal)",
-    ecosystemLayer3Desc: "El núcleo de desarrollo personal: finanzas, templo (cuerpo/espíritu), hábitos, aprendizaje de idiomas, donaciones y conexión opcional con los datos de los usuarios.",
-    monetizationHint: "Modelo de monetización progresivo, según el Plan Estratégico. Ninguna fase tiene todavía código de cobro implementado.",
-    monetizationPlannedBadge: "Planeado",
-    monetizationPhase1Tag: "Fase 1 — Corto Plazo",
-    monetizationPhase1Desc: "Cobro por la creación y configuración de páginas personales de citas para clientes, complementado con un sistema de donaciones integrado dentro de la app principal Miikaeru.",
-    monetizationPhase2Tag: "Fase 2 — Mediano Plazo",
-    monetizationPhase2Desc: "Venta de plantillas premium, dominios personalizados y analíticas avanzadas para los dueños de las páginas.",
-    monetizationPhase3Tag: "Fase 3 — Largo Plazo",
-    monetizationPhase3Desc: "Lanzamiento del Paso de Miika (pase mensual de suscripción) para desbloquear características avanzadas tanto en el ecosistema de páginas como en las herramientas profundas de la app principal.",
-    adminHealthHint: "Estado de las 13 tablas de Postgres y de las funciones serverless que dependen de ellas.",
-    adminActivityHint: "Eventos en vivo de Transacciones y Sugerencias — activo mientras esta pestaña está abierta.",
-    adminActivityEmpty: "Esperando actividad...",
-    adminHealthTableOk: "Al día",
-    adminHealthTableFailed: "Falló",
     adminPanelTabTransactions: "💳 Transacciones",
     adminPanelTabInspector: "📋 Bandeja de Sugerencias y Fallas",
     adminPanelTabAutomation: "🤖 Automatización (n8n)",
@@ -1358,8 +1303,8 @@ const I18N = {
     automationDiscardBtn: "❌ Descartar",
     automationRowCount: "Tareas encontradas:",
     automationEmptyState: "Sin tareas en cola. n8n las agrega automáticamente a la tabla automation_tasks de Supabase.",
-    adminPanelTabUsers: "👥 Usuarios y Progresión",
-    adminPanelTabMetrics: "📊 Métricas (detalle)",
+    adminPanelTabUsers: "👥 Usuarios",
+    adminPanelTabMetrics: "📊 Métricas",
     metricsStatOperators: "Operadores",
     metricsStatContacts: "Contactos",
     metricsStatRelationships: "Relaciones (Siguiendo)",
@@ -1398,7 +1343,7 @@ const I18N = {
     wallpaperUploadTooBig: "Esa imagen pesa demasiado (máximo 2 MB) — probá con una más liviana.",
     adminPhotosUrlPlaceholder: "https://...",
     adminPhotosSaveBtn: "Guardar",
-    adminPanelTabDatabase: "🗄️ Base de Datos (técnico)",
+    adminPanelTabDatabase: "🗄️ Base de Datos",
     adminDbHint: "Verifica y crea (si hacen falta) las tablas de Supabase de Amigos/Escuadrones/Progreso. Si falta la variable SUPABASE_DB_URL en Vercel, el error exacto aparece acá.",
     adminDbCheckBtn: "🔄 Verificar / Reintentar",
     adminDbChecking: "Verificando...",
@@ -2461,33 +2406,6 @@ const I18N = {
     financeOpenDashboardBtn: "📊 View Full Dashboard",
     adminPanelOpenBtn: "🛡️ Admin Panel",
     adminPanelTitle: "🛡️ Admin Panel",
-    adminPanelTabOverview: "📈 Growth",
-    adminPanelTabEcosystem: "🧩 Ecosystem (3 Layers)",
-    adminPanelTabMonetization: "💰 Monetization",
-    adminPanelTabHealth: "🩺 System Health",
-    adminPanelTabActivity: "📡 Real-Time Activity",
-    adminDashGroupOverview: "Miikaeru Ecosystem",
-    adminDashGroupConfig: "Configuration",
-    overviewStatOperators: "Total Operators",
-    overviewStatRelationships: "Relationships",
-    overviewStatTransactions: "Transactions",
-    overviewStatFeedbackPending: "Pending Suggestions",
-    overviewHealthSectionTitle: "🩺 System Health",
-    overviewMetricsSectionTitle: "📊 Key Metrics",
-    growthCurrentStage: "Current stage",
-    growthNextStage: "Next stage",
-    growthOperatorsLabel: "operators",
-    growthOperatorsRemaining: "remaining",
-    growthMaxStageReached: "🏆 Max stage reached",
-    ecosystemLayer1Badge: "Not built yet",
-    ecosystemLayer2Badge: "You are here",
-    ecosystemLayer3Badge: "Live in production",
-    monetizationPlannedBadge: "Planned",
-    adminHealthHint: "Status of the 13 Postgres tables and the serverless functions that depend on them.",
-    adminActivityHint: "Live events for Transactions and Suggestions — active while this tab is open.",
-    adminActivityEmpty: "Waiting for activity...",
-    adminHealthTableOk: "Up to date",
-    adminHealthTableFailed: "Failed",
     adminPanelTabTransactions: "💳 Transactions",
     adminPanelTabInspector: "📋 Suggestions & Issues Inbox",
     adminPanelTabAutomation: "🤖 Automation (n8n)",
@@ -2539,8 +2457,8 @@ const I18N = {
     automationDiscardBtn: "❌ Discard",
     automationRowCount: "Tasks found:",
     automationEmptyState: "No tasks queued. n8n adds them automatically to Supabase's automation_tasks table.",
-    adminPanelTabUsers: "👥 Users & Progression",
-    adminPanelTabMetrics: "📊 Metrics (detail)",
+    adminPanelTabUsers: "👥 Users",
+    adminPanelTabMetrics: "📊 Metrics",
     metricsStatOperators: "Operators",
     metricsStatContacts: "Contacts",
     metricsStatRelationships: "Relationships (Following)",
@@ -2579,7 +2497,7 @@ const I18N = {
     wallpaperUploadTooBig: "That image is too large (max 2 MB) — try a lighter one.",
     adminPhotosUrlPlaceholder: "https://...",
     adminPhotosSaveBtn: "Save",
-    adminPanelTabDatabase: "🗄️ Database (technical)",
+    adminPanelTabDatabase: "🗄️ Database",
     adminDbHint: "Checks and creates (if missing) the Supabase tables for Friends/Squads/Progress. If the SUPABASE_DB_URL variable is missing in Vercel, the exact error shows up here.",
     adminDbCheckBtn: "🔄 Check / Retry",
     adminDbChecking: "Checking...",
@@ -3642,33 +3560,6 @@ const I18N = {
     financeOpenDashboardBtn: "📊 ダッシュボードを見る",
     adminPanelOpenBtn: "🛡️ 管理者パネル",
     adminPanelTitle: "🛡️ 管理者パネル",
-    adminPanelTabOverview: "📈 成長",
-    adminPanelTabEcosystem: "🧩 エコシステム（3層）",
-    adminPanelTabMonetization: "💰 収益化",
-    adminPanelTabHealth: "🩺 システムの状態",
-    adminPanelTabActivity: "📡 リアルタイム活動",
-    adminDashGroupOverview: "Miikaeruエコシステム",
-    adminDashGroupConfig: "設定",
-    overviewStatOperators: "登録オペレーター数",
-    overviewStatRelationships: "つながり",
-    overviewStatTransactions: "取引数",
-    overviewStatFeedbackPending: "保留中の提案",
-    overviewHealthSectionTitle: "🩺 システムの状態",
-    overviewMetricsSectionTitle: "📊 主要指標",
-    growthCurrentStage: "現在の段階",
-    growthNextStage: "次の段階",
-    growthOperatorsLabel: "オペレーター",
-    growthOperatorsRemaining: "残り",
-    growthMaxStageReached: "🏆 最終段階に到達",
-    ecosystemLayer1Badge: "未実装",
-    ecosystemLayer2Badge: "現在地",
-    ecosystemLayer3Badge: "本番稼働中",
-    monetizationPlannedBadge: "計画中",
-    adminHealthHint: "13個のPostgresテーブルと、それに依存するサーバーレス関数の状態。",
-    adminActivityHint: "取引・提案のライブイベント — このタブが開いている間だけ有効。",
-    adminActivityEmpty: "活動を待っています...",
-    adminHealthTableOk: "正常",
-    adminHealthTableFailed: "失敗",
     adminPanelTabTransactions: "💳 取引",
     adminPanelTabInspector: "📋 提案・不具合の受信箱",
     adminPanelTabAutomation: "🤖 自動化（n8n）",
@@ -3720,8 +3611,8 @@ const I18N = {
     automationDiscardBtn: "❌ 却下",
     automationRowCount: "見つかったタスク：",
     automationEmptyState: "キューにタスクはありません。n8nがSupabaseのautomation_tasksテーブルに自動で追加します。",
-    adminPanelTabUsers: "👥 ユーザーと進捗",
-    adminPanelTabMetrics: "📊 メトリクス（詳細）",
+    adminPanelTabUsers: "👥 ユーザー",
+    adminPanelTabMetrics: "📊 メトリクス",
     metricsStatOperators: "オペレーター数",
     metricsStatContacts: "コンタクト数",
     metricsStatRelationships: "関係（フォロー中）",
@@ -3760,7 +3651,7 @@ const I18N = {
     wallpaperUploadTooBig: "この画像は大きすぎます（最大2MB）— もっと軽い画像を試してください。",
     adminPhotosUrlPlaceholder: "https://...",
     adminPhotosSaveBtn: "保存",
-    adminPanelTabDatabase: "🗄️ データベース（技術詳細）",
+    adminPanelTabDatabase: "🗄️ データベース",
     adminDbHint: "Amigos/Escuadrones/Progreso用のSupabaseテーブルを確認し、なければ作成します。VercelにSUPABASE_DB_URLが設定されていない場合、正確なエラーがここに表示されます。",
     adminDbCheckBtn: "🔄 確認・再試行",
     adminDbChecking: "確認中...",
@@ -12574,42 +12465,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const adminPanelModal = document.getElementById("admin-panel-modal");
   const adminPanelModalClose = document.getElementById("admin-panel-modal-close");
   const adminPanelTabs = document.getElementById("admin-panel-tabs");
-  const adminDashSubtitle = document.getElementById("admin-dash-subtitle");
-
-  // Pestaña "Crecimiento" (NUEVA — Capa 2 del Plan Estratégico) — ver
-  // syncOverviewStats()/renderGrowthMilestones() más abajo. No dispara
-  // fetches propios: reusa los datos que ya cargan Métricas/
-  // Transacciones/Inspector.
-  const adminPanelTabOverview = document.getElementById("admin-panel-tab-overview");
-  const adminOverviewRefreshBtn = document.getElementById("admin-overview-refresh-btn");
-  const miikaMilestoneHero = document.getElementById("miika-milestone-hero");
-  const miikaMilestonesList = document.getElementById("miika-milestones");
-  const overviewStatOperators = document.getElementById("overview-stat-operators");
-  const overviewStatRelationships = document.getElementById("overview-stat-relationships");
-  const overviewStatTransactions = document.getElementById("overview-stat-transactions");
-  const overviewStatFeedbackPending = document.getElementById("overview-stat-feedback-pending");
-  const adminOverviewHealthSummary = document.getElementById("admin-overview-health-summary");
-
-  // Pestañas "Ecosistema"/"Monetización" (NUEVAS — Secciones 2 y 4 del
-  // Plan Estratégico) — contenido 100% estático en index.html, estas
-  // solo necesitan togglear `hidden` (ver showAdminPanelTab()).
-  const adminPanelTabEcosystem = document.getElementById("admin-panel-tab-ecosystem");
-  const adminPanelTabMonetization = document.getElementById("admin-panel-tab-monetization");
-
-  // Pestaña "Salud del Sistema" (NUEVA) — vista en chips de la misma
-  // respuesta de /api/init-db que ya diagnostica la pestaña técnica
-  // "Base de Datos" (ver checkDatabaseStatus()/renderSystemHealth()).
-  const adminPanelTabHealth = document.getElementById("admin-panel-tab-health");
-  const adminHealthCheckBtn = document.getElementById("admin-health-check-btn");
-  const adminHealthStatus = document.getElementById("admin-health-status");
-  const adminHealthGrid = document.getElementById("admin-health-grid");
-
-  // Pestaña "Actividad en Tiempo Real" (NUEVA) — ver
-  // wireAdminActivityFeed()/unwireAdminActivityFeed() más abajo.
-  const adminPanelTabActivity = document.getElementById("admin-panel-tab-activity");
-  const adminActivityFeed = document.getElementById("admin-activity-feed");
-  const adminActivityEmpty = document.getElementById("admin-activity-empty");
-
   const adminPanelTabTransactions = document.getElementById("admin-panel-tab-transactions");
   const adminPanelTabInspector = document.getElementById("admin-panel-tab-inspector");
   const adminPanelTabAutomation = document.getElementById("admin-panel-tab-automation");
@@ -14629,6 +14484,10 @@ document.addEventListener("DOMContentLoaded", () => {
     applySuperAdminVisibility();
   }
 
+  // Se llama una vez al cargar la página: si ya había una sesión de
+  // Supabase Auth válida (persistida por la propia librería en
+  // localStorage) y su email coincide, restaura el rol sin pedir login
+  // de nuevo — mismo criterio que cualquier sesión web normal.
   // Única fuente de verdad sobre "¿esta sesión es de Admin?": llama a
   // /api/admin-verify (ver ese archivo) en vez de comparar el email a
   // mano contra ADMIN_EMAIL acá en el cliente — esa comparación local
@@ -14653,19 +14512,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Se llama una vez al cargar la página: si ya había una sesión de
-  // Supabase Auth válida (persistida por la propia librería en
-  // localStorage), revalida su rol contra /api/admin-verify y restaura
-  // el rol sin pedir login de nuevo — mismo criterio que cualquier
-  // sesión web normal.
   async function checkAdminSession() {
     if (!supabaseClient) return;
     try {
       const { data } = await supabaseClient.auth.getSession();
       const token = data && data.session && data.session.access_token;
-      const email = data && data.session && data.session.user && data.session.user.email;
       isSuperAdmin = await verifyAdminViaApi(token);
-      if (adminDashSubtitle) adminDashSubtitle.textContent = isSuperAdmin ? email || "" : "";
     } catch (err) {
       console.warn("Supabase: no se pudo verificar la sesión de administrador:", err);
       isSuperAdmin = false;
@@ -14755,7 +14607,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     isSuperAdmin = true;
-    if (adminDashSubtitle) adminDashSubtitle.textContent = sessionEmail || "";
     applySuperAdminVisibility();
     closeAdminLoginModal();
     addMessage({ author: "SISTEMA", text: t("adminLoginSuccessMessage"), variant: "system" });
@@ -14772,123 +14623,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // revalida por las dudas, como red de seguridad de UI.
   let adminPanelRows = [];
 
-  // Los 7 hitos de adopción del Plan Estratégico (Sección 3 — "Metas de
-  // Crecimiento de Usuarios"), en el mismo orden/redacción que el plan.
-  // `threshold` = cantidad de Operadores (public.users) que marca ESE
-  // hito — se compara contra el total real de /api/admin-metrics (ver
-  // renderGrowthMilestones() más abajo), nunca un número inventado.
-  const GROWTH_MILESTONES = [
-    { threshold: 0, labelKey: "growthMilestone0Label", noteKey: "growthMilestone0Note" },
-    { threshold: 100, labelKey: "growthMilestone1Label", noteKey: "growthMilestone1Note" },
-    { threshold: 1000, labelKey: "growthMilestone2Label", noteKey: "growthMilestone2Note" },
-    { threshold: 5000, labelKey: "growthMilestone3Label", noteKey: "growthMilestone3Note" },
-    { threshold: 20000, labelKey: "growthMilestone4Label", noteKey: "growthMilestone4Note" },
-    { threshold: 100000, labelKey: "growthMilestone5Label", noteKey: "growthMilestone5Note" },
-    { threshold: 1000000, labelKey: "growthMilestone6Label", noteKey: "growthMilestone6Note" },
-  ];
-
-  // Dibuja el anillo de progreso (conic-gradient puro, ver .miika-ring en
-  // style.css — sin SVG ni librería de charts) + la etapa actual, más la
-  // lista completa de los 7 hitos con su estado (alcanzado/actual/
-  // próximo). `count` es el total REAL de Operadores (public.users) —
-  // nunca se inventa una tendencia histórica que esta app no guarda.
-  function renderGrowthMilestones(count) {
-    const n = Number.isFinite(count) ? count : 0;
-    let currentIndex = 0;
-    for (let i = 0; i < GROWTH_MILESTONES.length; i++) {
-      if (n >= GROWTH_MILESTONES[i].threshold) currentIndex = i;
-    }
-    const current = GROWTH_MILESTONES[currentIndex];
-    const next = GROWTH_MILESTONES[currentIndex + 1];
-    const pct = next
-      ? Math.max(0, Math.min(100, Math.round(((n - current.threshold) / (next.threshold - current.threshold)) * 100)))
-      : 100;
-
-    if (miikaMilestoneHero) {
-      miikaMilestoneHero.innerHTML = "";
-      const ring = document.createElement("div");
-      ring.className = "miika-ring";
-      ring.style.setProperty("--pct", String(pct));
-      const ringInner = document.createElement("div");
-      ringInner.className = "miika-ring__inner";
-      ringInner.innerHTML = `<span class="miika-ring__pct">${pct}%</span>`;
-      ring.appendChild(ringInner);
-
-      const info = document.createElement("div");
-      info.className = "miika-milestone-hero__info";
-      const stageLabel = document.createElement("div");
-      stageLabel.className = "miika-milestone-hero__stage";
-      stageLabel.textContent = `${t("growthCurrentStage")}: ${t(current.labelKey)}`;
-      const countLabel = document.createElement("div");
-      countLabel.className = "miika-milestone-hero__count";
-      countLabel.textContent = `${n.toLocaleString(currentLanguage === "ja" ? "ja-JP" : currentLanguage === "en" ? "en-US" : "es-PE")} ${t("growthOperatorsLabel")}`;
-      const nextLabel = document.createElement("div");
-      nextLabel.className = "miika-milestone-hero__next";
-      nextLabel.textContent = next
-        ? `${t("growthNextStage")}: ${t(next.labelKey)} (${Math.max(0, next.threshold - n).toLocaleString()} ${t("growthOperatorsRemaining")})`
-        : t("growthMaxStageReached");
-      info.appendChild(stageLabel);
-      info.appendChild(countLabel);
-      info.appendChild(nextLabel);
-
-      miikaMilestoneHero.appendChild(ring);
-      miikaMilestoneHero.appendChild(info);
-    }
-
-    if (miikaMilestonesList) {
-      miikaMilestonesList.innerHTML = "";
-      GROWTH_MILESTONES.forEach((milestone, i) => {
-        const row = document.createElement("div");
-        const state = i < currentIndex ? "reached" : i === currentIndex ? "current" : "upcoming";
-        row.className = `miika-milestone miika-milestone--${state}`;
-        const marker = document.createElement("span");
-        marker.className = "miika-milestone__marker";
-        marker.textContent = state === "reached" ? "✓" : state === "current" ? "●" : "";
-        const body = document.createElement("div");
-        body.className = "miika-milestone__body";
-        const label = document.createElement("div");
-        label.className = "miika-milestone__label";
-        label.textContent = t(milestone.labelKey);
-        const note = document.createElement("div");
-        note.className = "miika-milestone__note";
-        note.textContent = t(milestone.noteKey);
-        body.appendChild(label);
-        body.appendChild(note);
-        row.appendChild(marker);
-        row.appendChild(body);
-        miikaMilestonesList.appendChild(row);
-      });
-    }
-  }
-
-  // Resumen/Crecimiento (pestaña "overview") — no tiene su propio fetch,
-  // solo refleja los números que YA renderizaron sus pestañas de origen
-  // (Métricas → Operadores/Relaciones, Transacciones → adminPanelRows,
-  // Inspector → Sugerencias Pendientes). Se llama al final de
-  // renderMetricsStats(), fetchAdminPanelTransactions() y
-  // renderInspectorStats() — cada una actualiza solo su propia porción
-  // del resumen, sin duplicar ninguna lógica de fetch/parseo.
-  function syncOverviewStats() {
-    if (overviewStatOperators) overviewStatOperators.textContent = metricsStatOperators.textContent;
-    if (overviewStatRelationships) overviewStatRelationships.textContent = metricsStatRelationships.textContent;
-    if (overviewStatTransactions) overviewStatTransactions.textContent = String(adminPanelRows.length);
-    if (overviewStatFeedbackPending) overviewStatFeedbackPending.textContent = inspectorStatPending.textContent;
-    renderGrowthMilestones(Number(metricsStatOperators.textContent) || 0);
-  }
-
-  if (adminOverviewRefreshBtn) {
-    adminOverviewRefreshBtn.addEventListener("click", () => showAdminPanelTab("overview"));
-  }
-
   function showAdminPanelTab(target) {
     document.querySelectorAll(".admin-panel-tab").forEach((btn) => {
       btn.classList.toggle("admin-panel-tab--active", btn.dataset.adminTab === target);
     });
-    if (adminPanelTabOverview) adminPanelTabOverview.hidden = target !== "overview";
-    if (adminPanelTabEcosystem) adminPanelTabEcosystem.hidden = target !== "ecosystem";
-    if (adminPanelTabMonetization) adminPanelTabMonetization.hidden = target !== "monetization";
-    if (adminPanelTabHealth) adminPanelTabHealth.hidden = target !== "health";
-    if (adminPanelTabActivity) adminPanelTabActivity.hidden = target !== "activity";
     adminPanelTabTransactions.hidden = target !== "transactions";
     adminPanelTabInspector.hidden = target !== "inspector";
     adminPanelTabAutomation.hidden = target !== "automation";
@@ -14898,30 +14636,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (adminPanelTabWallpapers) adminPanelTabWallpapers.hidden = target !== "wallpapers";
     if (adminPanelTabDatabase) adminPanelTabDatabase.hidden = target !== "database";
     if (adminPanelTabAdmins) adminPanelTabAdmins.hidden = target !== "admins";
-
-    // La Actividad en Tiempo Real solo se suscribe mientras esa pestaña
-    // está abierta — cualquier otra pestaña la desuscribe (ver
-    // wireAdminActivityFeed()/unwireAdminActivityFeed() más abajo), así
-    // no queda un canal de Realtime abierto de más una vez que el Admin
-    // se va a mirar otra cosa.
-    if (target === "activity") {
-      wireAdminActivityFeed();
-    } else {
-      unwireAdminActivityFeed();
-    }
-
-    // Resumen Ejecutivo: no tiene tabla/lista propia — solo junta los
-    // mismos datos que ya cargan Métricas/Transacciones/Inspector/Salud,
-    // reusando sus funciones existentes (ver syncOverviewStats(), que
-    // cada una de esas 4 llama al terminar).
-    if (target === "overview") {
-      fetchAdminMetrics();
-      fetchAdminPanelTransactions();
-      fetchInspectorFeedback();
-      checkDatabaseStatus();
-    }
-    if (target === "health") checkDatabaseStatus();
-    if (target === "transactions") fetchAdminPanelTransactions();
     if (target === "inspector") fetchInspectorFeedback();
     if (target === "automation") {
       fetchAutomationTasks();
@@ -14938,80 +14652,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (target === "admins") fetchAdminAccounts();
   }
 
-  // Las 13 tablas que /api/init-db crea/verifica (ver SCHEMA_STATEMENTS
-  // en ese archivo) — lista fija acá solo para poder dibujar un chip por
-  // tabla en la pestaña "Salud del Sistema" (ver renderSystemHealth()),
-  // cruzando esta lista contra failedStatements de la respuesta en vez
-  // de volcar el JSON crudo como única vista.
-  const ADMIN_DB_TABLES = [
-    "users",
-    "admins",
-    "app_contacts",
-    "app_friendships",
-    "app_friend_messages",
-    "player_progress",
-    "hero_avatars",
-    "wallpapers",
-    "transactions",
-    "feedback",
-    "app_squads",
-    "app_squad_members",
-    "app_squad_messages",
-  ];
-
-  // Dibuja un chip ✅/❌/❓ por tabla, más el resumen de una línea que
-  // también usa la pestaña Resumen Ejecutivo (ver
-  // adminOverviewHealthSummary). 3 estados posibles en `data`:
-  //   - null: todavía no se corrió ninguna verificación esta carga de
-  //     página, o se está corriendo una ahora mismo — chip neutro "—".
-  //   - "unreachable": SE INTENTÓ pero /api/init-db no respondió nada
-  //     usable (offline, 404 en local sin `vercel dev`, JSON roto) — NO
-  //     es lo mismo que "todas las tablas están bien": se desconoce su
-  //     estado real, así que el chip queda en "❓", nunca en falso ✅.
-  //   - objeto real de /api/init-db ({ok, failedStatements, ...}) — cada
-  //     chip refleja si ESA tabla aparece en failedStatements.
-  function renderSystemHealth(data) {
-    const isUnreachable = data === "unreachable";
-    const hasResult = data && typeof data === "object";
-    if (adminHealthGrid) {
-      const failedStatements = (hasResult && data.failedStatements) || [];
-      adminHealthGrid.innerHTML = "";
-      ADMIN_DB_TABLES.forEach((table) => {
-        const failed = hasResult && failedStatements.some((s) => s.statement.includes(`public.${table}`));
-        const chip = document.createElement("div");
-        chip.className = `admin-health-chip ${hasResult ? (failed ? "admin-health-chip--error" : "admin-health-chip--ok") : ""}`;
-        const icon = document.createElement("span");
-        icon.className = "admin-health-chip__icon";
-        icon.textContent = isUnreachable ? "❓" : !hasResult ? "—" : failed ? "❌" : "✅";
-        const label = document.createElement("span");
-        label.className = "admin-health-chip__label";
-        label.textContent = table;
-        chip.appendChild(icon);
-        chip.appendChild(label);
-        adminHealthGrid.appendChild(chip);
-      });
-    }
-
-    if (adminOverviewHealthSummary) {
-      if (isUnreachable) {
-        adminOverviewHealthSummary.textContent = t("adminDbError");
-      } else if (!hasResult) {
-        adminOverviewHealthSummary.textContent = t("adminDbChecking");
-      } else {
-        const failedCount = (data.failedStatements || []).length + (data.realtimeErrors || []).length;
-        adminOverviewHealthSummary.textContent = data.ok
-          ? `✅ ${ADMIN_DB_TABLES.length}/${ADMIN_DB_TABLES.length} ${t("adminHealthTableOk").toLowerCase()}`
-          : `⚠️ ${failedCount} — ${t("adminDbPartial")}`;
-      }
-    }
-  }
-
   // Diagnóstico visible de /api/init-db — antes un fallo de
   // aprovisionamiento (ej.: falta SUPABASE_DB_URL en Vercel, o una tabla
   // puntual que no se pudo crear) solo dejaba un console.warn, invisible
   // para el Admin salvo que abriera las devtools. Se llama sola al abrir
-  // la pestaña (tanto "Salud del Sistema" como "Base de Datos (técnico)"
-  // apuntan acá) y también a mano con los botones "Verificar / Reintentar"
+  // la pestaña y también a mano con el botón "Verificar / Reintentar"
   // (útil porque el auto-init de más abajo en este archivo solo corre
   // una vez por versión — ver DB_INIT_FLAG_KEY — así que reintentar acá
   // no depende de subir una versión nueva del sitio).
@@ -15020,8 +14665,6 @@ document.addEventListener("DOMContentLoaded", () => {
     adminDbStatus.textContent = t("adminDbChecking");
     adminDbStatus.className = "admin-panel__status";
     if (adminDbReport) adminDbReport.hidden = true;
-    if (adminHealthStatus) adminHealthStatus.textContent = t("adminDbChecking");
-    renderSystemHealth(null);
 
     try {
       const res = await fetch("/api/init-db");
@@ -15043,91 +14686,13 @@ document.addEventListener("DOMContentLoaded", () => {
         adminDbReport.textContent = JSON.stringify(data, null, 2);
         adminDbReport.hidden = false;
       }
-      if (adminHealthStatus) {
-        adminHealthStatus.textContent = adminDbStatus.textContent;
-        adminHealthStatus.className = adminDbStatus.className;
-      }
-      renderSystemHealth(data);
     } catch (err) {
       adminDbStatus.textContent = `${t("adminDbError")} ${err.message}`;
       adminDbStatus.className = "admin-panel__status admin-panel__status--error";
-      if (adminHealthStatus) {
-        adminHealthStatus.textContent = adminDbStatus.textContent;
-        adminHealthStatus.className = adminDbStatus.className;
-      }
-      renderSystemHealth("unreachable");
     }
   }
 
   if (adminDbCheckBtn) adminDbCheckBtn.addEventListener("click", checkDatabaseStatus);
-  if (adminHealthCheckBtn) adminHealthCheckBtn.addEventListener("click", checkDatabaseStatus);
-
-  // ---------------- Pestaña Actividad en Tiempo Real ----------------
-  // Se suscribe (mismo patrón que wireAutomationRealtime()/
-  // wireUsersRealtime() más abajo) a altas en `transactions` y
-  // `feedback` mientras la pestaña "activity" está abierta — ver
-  // showAdminPanelTab()/closeAdminPanel() más arriba, que llaman a
-  // wireAdminActivityFeed()/unwireAdminActivityFeed() al entrar/salir.
-  //
-  // A propósito NO incluye `public.users` (altas de Operador): esa tabla
-  // no tiene ninguna policy RLS de lectura (ver SCHEMA_STATEMENTS en
-  // init-db.js — es la única sin "anon full access", justamente porque
-  // guarda `password`), así que ni siquiera el JWT de Admin podría
-  // suscribirse — y aunque pudiera, el payload de postgres_changes trae
-  // la fila COMPLETA (incluida esa columna), algo que admin-list-users.js
-  // evita a propósito ni siquiera pidiéndola en su SELECT. `feedback` sí
-  // funciona para un Admin agregado por tabla (no solo el Raíz) gracias a
-  // is_admin() (ver ensureFeedbackAdminPolicies() en init-db.js).
-  let adminActivityChannel = null;
-
-  function renderAdminActivityEntry(icon, text) {
-    if (!adminActivityFeed) return;
-    if (adminActivityEmpty) adminActivityEmpty.hidden = true;
-    const entry = document.createElement("div");
-    entry.className = "admin-activity-feed__entry";
-    const iconSpan = document.createElement("span");
-    iconSpan.className = "admin-activity-feed__icon";
-    iconSpan.textContent = icon;
-    const textSpan = document.createElement("span");
-    textSpan.className = "admin-activity-feed__text";
-    textSpan.textContent = text;
-    const timeSpan = document.createElement("span");
-    timeSpan.className = "admin-activity-feed__time";
-    timeSpan.textContent = new Date().toLocaleTimeString(currentLanguage === "ja" ? "ja-JP" : currentLanguage === "en" ? "en-US" : "es-PE");
-    entry.appendChild(iconSpan);
-    entry.appendChild(textSpan);
-    entry.appendChild(timeSpan);
-    adminActivityFeed.insertBefore(entry, adminActivityFeed.firstChild);
-    // Cap a 50 entradas en pantalla — esto es un feed en vivo, no un
-    // historial: las filas viejas siguen existiendo en Supabase, acá
-    // solo se recorta el DOM para que no crezca sin límite en una sesión
-    // larga con el panel abierto.
-    while (adminActivityFeed.children.length > 50) {
-      adminActivityFeed.removeChild(adminActivityFeed.lastChild);
-    }
-  }
-
-  function wireAdminActivityFeed() {
-    if (adminActivityChannel || !supabaseClient) return;
-    adminActivityChannel = supabaseClient
-      .channel("admin_activity_feed")
-      .on("postgres_changes", { event: "INSERT", schema: "public", table: "transactions" }, (payload) => {
-        const row = payload.new || {};
-        renderAdminActivityEntry("💳", `${row.business_name || "?"} — ${row.collaborator || "?"}`);
-      })
-      .on("postgres_changes", { event: "INSERT", schema: "public", table: "feedback" }, (payload) => {
-        const row = payload.new || {};
-        const preview = (row.message || "").slice(0, 60);
-        renderAdminActivityEntry("📋", preview || t("adminPanelTabInspector"));
-      })
-      .subscribe();
-  }
-
-  function unwireAdminActivityFeed() {
-    if (!adminActivityChannel || !supabaseClient) return;
-    supabaseClient.removeChannel(adminActivityChannel);
-    adminActivityChannel = null;
-  }
 
   // ---------------- Pestaña Administradores (api/admin-manage-admins.js) ----------------
   // Mismo gate/token que Usuarios/Métricas (sesión real de Supabase Auth
@@ -15284,14 +14849,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     showAdminPanelTab(defaultTab);
     adminPanelModal.hidden = false;
+    if (defaultTab === "transactions") fetchAdminPanelTransactions();
   }
 
   function closeAdminPanel() {
     adminPanelModal.hidden = true;
-    unwireAdminActivityFeed();
   }
 
-  adminPanelOpenBtn.addEventListener("click", () => openAdminPanel("overview"));
+  adminPanelOpenBtn.addEventListener("click", () => openAdminPanel("transactions"));
   adminPanelModalClose.addEventListener("click", closeAdminPanel);
   adminPanelModal.addEventListener("click", (event) => {
     if (event.target === adminPanelModal) closeAdminPanel();
@@ -15353,18 +14918,15 @@ document.addEventListener("DOMContentLoaded", () => {
           // honesto en vez de una tabla vacía sin explicación.
           adminPanelRows = [];
           setAdminPanelStatus(`${t("adminPanelError")} ${error.message}`);
-          syncOverviewStats();
           return;
         }
         adminPanelRows = data || [];
         renderAdminPanelTable(adminPanelRows);
         setAdminPanelStatus(`${t("adminPanelRowCount")} ${adminPanelRows.length}`);
-        syncOverviewStats();
       })
       .catch(() => {
         adminPanelRows = [];
         setAdminPanelStatus(t("adminPanelNetworkError"));
-        syncOverviewStats();
       });
   }
 
@@ -15431,7 +14993,6 @@ document.addEventListener("DOMContentLoaded", () => {
     inspectorStatPending.textContent = counts.pendiente;
     inspectorStatApproved.textContent = counts.aprobado;
     inspectorStatResolved.textContent = counts.resuelto;
-    syncOverviewStats();
   }
 
   function updateFeedbackStatus(id, status) {
@@ -15952,7 +15513,6 @@ document.addEventListener("DOMContentLoaded", () => {
     metricsStatContacts.textContent = metrics ? metrics.total_contacts : 0;
     metricsStatRelationships.textContent = metrics ? metrics.total_relationships : 0;
     metricsStatMutual.textContent = metrics ? metrics.total_mutual_friendships : 0;
-    syncOverviewStats();
   }
 
   // Modo Local Autónomo para Métricas: los 4 números de arriba son

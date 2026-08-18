@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<!--
+  Dashboard Central de Métricas — Capa 2 del Ecosistema Miikaeru.
+
+  App independiente a propósito: NO comparte app.js (1.7MB, todo el
+  juego/RPG) ni style.css (12k+ líneas de UI cyberpunk del León/Chat)
+  con la app principal — pedido explícito del usuario ("esta es una app
+  diferente... lo único que tiene que sacar son las métricas de los
+  usuarios y donaciones"). Solo reusa lo que YA es compartido entre
+  cualquier frontend de este proyecto: las Serverless Functions de
+  /api (admin-verify, admin-metrics) y el mismo proyecto de Supabase
+  Auth (mismas SUPABASE_URL/ANON_KEY públicas que index.html, ver
+  app.js del dashboard).
+
+  Autenticación: exactamente el mismo criterio que el Panel de
+  Administrador de la app principal (ver checkAdminSession() en
+  app.js) — sesión REAL de Supabase Auth, verificada server-side contra
+  ADMIN_EMAIL o public.admins vía /api/admin-verify. Ningún dato de acá
+  se sirve sin ese chequeo.
+-->
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Miikaeru — Dashboard de Métricas</title>
+  <link rel="icon" href="../assets/icons/favicon-32.png" />
+  <link rel="stylesheet" href="style.css?v=1" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+  <!-- Pantalla de login — único punto de entrada, igual que el Panel de
+       Administrador de la app principal: sin sesión de Admin válida,
+       nunca se llega a #dashboard-view. -->
+  <div id="login-view" class="view">
+    <form id="login-form" class="login-card">
+      <h1 class="login-card__title">🛡️ Dashboard de Métricas</h1>
+      <p class="login-card__subtitle">Acceso exclusivo de Administrador — Miikaeru</p>
+      <input type="email" id="login-email" placeholder="Correo" autocomplete="username" required />
+      <input type="password" id="login-password" placeholder="Contraseña" autocomplete="current-password" required />
+      <button type="submit" id="login-submit">Iniciar sesión</button>
+      <p class="login-card__error" id="login-error" hidden></p>
+    </form>
+  </div>
+
+  <!-- Pantalla principal — oculta hasta que checkSession()/el submit del
+       login confirmen el rol de Admin (ver app.js). -->
+  <div id="dashboard-view" class="view" hidden>
+    <header class="topbar">
+      <div class="topbar__brand">Miikaeru <span>Dashboard</span></div>
+      <div class="topbar__right">
+        <span class="topbar__email" id="admin-email"></span>
+        <button type="button" id="refresh-btn" class="btn-ghost" title="Actualizar">↻</button>
+        <button type="button" id="logout-btn" class="btn-ghost" title="Cerrar sesión">⏻</button>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="col col--left">
+        <div class="card">
+          <p class="card__greeting" id="greeting-text">Hola, Admin</p>
+          <p class="card__hint">Este es el estado de tu comunidad hoy.</p>
+        </div>
+        <div class="card">
+          <p class="card__label">Donaciones</p>
+          <p class="card__value" id="stat-donations">S/ 0</p>
+          <p class="card__hint" id="donations-hint">Aún no implementado en la app principal.</p>
+        </div>
+      </section>
+
+      <section class="col col--center">
+        <div class="card card--hero">
+          <p class="card__label">Etapa actual</p>
+          <div class="ring" id="growth-ring">
+            <div class="ring__inner">
+              <span class="ring__value" id="ring-count">—</span>
+              <span class="ring__unit">operadores</span>
+            </div>
+          </div>
+          <p class="hero__stage" id="hero-stage">Cargando…</p>
+          <p class="hero__next" id="hero-next"></p>
+        </div>
+      </section>
+
+      <section class="col col--right">
+        <div class="card">
+          <p class="card__label">Operadores totales</p>
+          <p class="card__value" id="stat-operators">—</p>
+        </div>
+        <div class="card">
+          <p class="card__label">Relaciones</p>
+          <p class="card__value" id="stat-relationships">—</p>
+        </div>
+      </section>
+    </main>
+
+    <section class="milestones-section">
+      <p class="section-title">Hitos de crecimiento</p>
+      <div class="milestones" id="milestones-list"></div>
+    </section>
+
+    <p class="status-line" id="status-line"></p>
+  </div>
+
+  <script src="app.js?v=1"></script>
+</body>
+</html>

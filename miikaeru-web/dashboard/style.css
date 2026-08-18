@@ -1,0 +1,349 @@
+/* Dashboard Central de Métricas — CSS propio, sin relación con
+   style.css de la app principal (pedido explícito: "app diferente").
+   Paleta oscura plana con acentos de color puntuales, inspirada en la
+   referencia que compartió el usuario (tarjetas casi negras, color
+   reservado a anillo/números/íconos, nunca lavado sobre toda la
+   tarjeta). */
+
+:root {
+  --bg: #050608;
+  --card: #0d1016;
+  --card-border: rgba(255, 255, 255, 0.07);
+  --text-primary: #f2f4f7;
+  --text-secondary: #8a8f98;
+  --accent-purple: #a855f7;
+  --accent-magenta: #ff2e9a;
+  --accent-gold: #ffb700;
+  --accent-cyan: #00f0ff;
+  --accent-green: #00ff9c;
+  --radius: 20px;
+  --font: "Segoe UI", system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font);
+}
+
+.view[hidden] {
+  display: none;
+}
+
+/* ---- Login ---- */
+#login-view {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 340px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  text-align: center;
+}
+
+.login-card__title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.login-card__subtitle {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin: 0 0 8px;
+}
+
+.login-card input {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.login-card input:focus {
+  border-color: var(--accent-purple);
+}
+
+.login-card button {
+  background: linear-gradient(90deg, var(--accent-purple), var(--accent-magenta));
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.login-card__error {
+  color: var(--accent-magenta);
+  font-size: 0.78rem;
+  margin: 0;
+}
+
+/* ---- Dashboard shell ---- */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 28px;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.topbar__brand {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.topbar__brand span {
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+.topbar__right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.topbar__email {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  color: var(--text-primary);
+  width: 34px;
+  height: 34px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.btn-ghost:hover {
+  border-color: var(--accent-purple);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr 1fr;
+  gap: 16px;
+  padding: 24px 28px 0;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+
+.card__greeting {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+
+.card__hint {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.card__label {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin: 0 0 10px;
+}
+
+.card__value {
+  font-size: 1.9rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* ---- Hero: anillo de crecimiento ---- */
+.card--hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  height: 100%;
+  justify-content: center;
+}
+
+.ring {
+  --pct: 0;
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from -90deg,
+    var(--accent-purple),
+    var(--accent-magenta),
+    var(--accent-gold) calc(var(--pct) * 1%),
+    rgba(255, 255, 255, 0.08) 0
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ring__inner {
+  width: 102px;
+  height: 102px;
+  border-radius: 50%;
+  background: var(--card);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.ring__value {
+  font-size: 1.35rem;
+  font-weight: 600;
+}
+
+.ring__unit {
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+}
+
+.hero__stage {
+  font-size: 0.92rem;
+  font-weight: 600;
+  margin: 4px 0 0;
+}
+
+.hero__next {
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ---- Hitos ---- */
+.milestones-section {
+  max-width: 1100px;
+  margin: 24px auto 0;
+  padding: 0 28px;
+}
+
+.section-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin: 0 0 10px;
+}
+
+.milestones {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.milestone {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-left: 3px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 12px 16px;
+}
+
+.milestone--reached {
+  border-left-color: var(--accent-green);
+}
+
+.milestone--current {
+  border-left-color: var(--accent-gold);
+  background: rgba(255, 183, 0, 0.05);
+}
+
+.milestone__marker {
+  flex: none;
+  width: 20px;
+  text-align: center;
+  color: var(--accent-green);
+  font-size: 0.85rem;
+}
+
+.milestone--current .milestone__marker {
+  color: var(--accent-gold);
+}
+
+.milestone__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.milestone__label {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.milestone__note {
+  font-size: 0.74rem;
+  color: var(--text-secondary);
+}
+
+.milestone--upcoming .milestone__label,
+.milestone--upcoming .milestone__note {
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+.status-line {
+  max-width: 1100px;
+  margin: 20px auto 40px;
+  padding: 0 28px;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 860px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
