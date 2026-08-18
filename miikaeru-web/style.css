@@ -12593,7 +12593,7 @@ button:active,
    este archivo) — este bloque solo agrega el layout nuevo y los
    componentes nuevos (stat cards, chips de salud, feed de actividad); no
    modifica ninguna regla anterior. Reusa los tokens ya definidos en :root
-   (--neon-*/--bg-*/--glass-*) para mantener la misma identidad visual del
+   (--neon-*, --bg-*, --glass-*) para mantener la misma identidad visual del
    resto de la app, solo con más aire y jerarquía tipo dashboard
    profesional (menos "todo en neón", acentos de color reservados para
    estado/énfasis). */
@@ -12764,8 +12764,8 @@ button:active,
   gap: 8px;
   padding: 10px 14px;
   border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.04), rgba(10, 14, 22, 0.5));
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(8, 11, 18, 0.55);
   font-size: 0.74rem;
   color: var(--text-secondary);
 }
@@ -12820,8 +12820,8 @@ button:active,
   gap: 10px;
   padding: 10px 14px;
   border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: linear-gradient(160deg, rgba(0, 240, 255, 0.08), rgba(10, 14, 22, 0.5));
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(8, 11, 18, 0.55);
   font-size: 0.78rem;
   animation: adminActivityEntryIn 0.35s ease-out both;
 }
@@ -12890,7 +12890,7 @@ button:active,
 /* ===================== DASHBOARD DE CRECIMIENTO (Capa 2 del Plan
    Estratégico) — .miika-* =====================
    Lenguaje visual DISTINTO a propósito del resto del Panel de Admin
-   (.admin-panel__*/.inspector-stat/.admin-stat-card de arriba, que
+   (.admin-panel__ / .inspector-stat / .admin-stat-card de arriba, que
    siguen sirviendo a las pestañas operativas de Transacciones/Usuarios/
    etc.): tarjetas de vidrio con degradés suaves, esquinas grandes,
    tipografía sin mayúsculas forzadas — inspirado en las referencias que
@@ -12904,15 +12904,21 @@ button:active,
   --miika-radius: 20px;
 }
 
-/* ---- Tarjetas base reutilizadas por tiles/milestones/layer/phase ---- */
+/* ---- Tarjetas base reutilizadas por tiles/milestones/layer/phase ----
+   Planas y oscuras a propósito (casi negro + un borde fino), NO
+   degradé de color de fondo — en la referencia el color vive en el
+   anillo/íconos/números, nunca en la tarjeta entera. Reusa --glass-bg/
+   --glass-border ya definidos en :root (arriba de este archivo) en vez
+   de inventar valores nuevos. */
 .miika-tile,
 .miika-milestone-hero,
 .miika-layer-card,
-.miika-phase-card {
+.miika-phase-card,
+.miika-milestone {
   border-radius: var(--miika-radius);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.05), rgba(10, 14, 22, 0.6));
-  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(8, 11, 18, 0.55);
+  backdrop-filter: blur(10px);
 }
 
 /* ---- Hero: anillo de progreso + etapa actual ---- */
@@ -12930,7 +12936,13 @@ button:active,
   width: 96px;
   height: 96px;
   border-radius: 50%;
-  background: conic-gradient(var(--neon-cyan) calc(var(--pct) * 1%), rgba(255, 255, 255, 0.08) 0);
+  background: conic-gradient(
+    from -90deg,
+    var(--neon-purple),
+    var(--neon-magenta),
+    var(--neon-gold) calc(var(--pct) * 1%),
+    rgba(255, 255, 255, 0.08) 0
+  );
   display: flex;
   align-items: center;
   justify-content: center;
@@ -12968,7 +12980,7 @@ button:active,
 .miika-milestone-hero__count {
   font-size: 1.5rem;
   font-weight: 700;
-  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-green));
+  background: linear-gradient(90deg, var(--neon-purple), var(--neon-magenta), var(--neon-gold));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -12979,61 +12991,54 @@ button:active,
   color: var(--text-secondary);
 }
 
-/* ---- Lista de hitos: timeline vertical ---- */
+/* ---- Lista de hitos: filas con barra de acento a la izquierda (mismo
+   patrón que las filas de "Today's Schedule" en la referencia — no un
+   timeline con círculos conectados). Cada fila es su propia tarjeta
+   .miika-milestone (heredada del selector base de arriba), con un
+   `border-left` de color como único acento. */
 .miika-milestones {
   display: flex;
   flex-direction: column;
+  gap: 8px;
   margin-bottom: 8px;
 }
 
 .miika-milestone {
   display: flex;
-  gap: 14px;
-  padding: 8px 4px;
-  position: relative;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-left-width: 3px;
+  border-left-style: solid;
+  border-left-color: rgba(255, 255, 255, 0.12);
 }
 
-.miika-milestone:not(:last-child)::before {
-  content: "";
-  position: absolute;
-  left: 15px;
-  top: 30px;
-  bottom: -4px;
-  width: 2px;
-  background: rgba(255, 255, 255, 0.1);
+.miika-milestone--reached {
+  border-left-color: var(--neon-green);
+}
+
+.miika-milestone--current {
+  border-left-color: var(--neon-gold);
+  background: rgba(255, 183, 0, 0.05);
 }
 
 .miika-milestone__marker {
   flex: none;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 22px;
   font-size: 0.85rem;
-  border: 2px solid rgba(255, 255, 255, 0.15);
-  color: var(--text-secondary);
-  background: var(--bg-elevated);
-  z-index: 1;
-}
-
-.miika-milestone--reached .miika-milestone__marker {
-  border-color: var(--neon-green);
+  text-align: center;
   color: var(--neon-green);
 }
 
 .miika-milestone--current .miika-milestone__marker {
-  border-color: var(--neon-cyan);
-  color: var(--neon-cyan);
-  box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+  color: var(--neon-gold);
 }
 
 .miika-milestone__body {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  padding-top: 3px;
+  min-width: 0;
 }
 
 .miika-milestone__label {
@@ -13051,7 +13056,6 @@ button:active,
 .miika-milestone__note {
   font-size: 0.72rem;
   color: var(--text-secondary);
-  max-width: 60ch;
 }
 
 /* ---- Tiles: métricas clave ---- */
@@ -13067,22 +13071,40 @@ button:active,
   flex-direction: column;
   gap: 6px;
   padding: 16px;
+  position: relative;
 }
 
-.miika-tile--cyan {
-  background: linear-gradient(160deg, rgba(0, 240, 255, 0.16), rgba(10, 14, 22, 0.6));
+/* Punto de color arriba a la derecha — único acento de la tarjeta,
+   mismo criterio que la tarjeta "AI Insights" de la referencia (el
+   color marca la categoría, no cubre toda la superficie). */
+.miika-tile::before {
+  content: "";
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
 }
 
-.miika-tile--green {
-  background: linear-gradient(160deg, rgba(0, 255, 156, 0.16), rgba(10, 14, 22, 0.6));
+.miika-tile--cyan::before {
+  background: var(--neon-cyan);
+  box-shadow: 0 0 6px var(--neon-cyan);
 }
 
-.miika-tile--gold {
-  background: linear-gradient(160deg, rgba(255, 183, 0, 0.16), rgba(10, 14, 22, 0.6));
+.miika-tile--green::before {
+  background: var(--neon-green);
+  box-shadow: 0 0 6px var(--neon-green);
 }
 
-.miika-tile--magenta {
-  background: linear-gradient(160deg, rgba(255, 46, 154, 0.16), rgba(10, 14, 22, 0.6));
+.miika-tile--gold::before {
+  background: var(--neon-gold);
+  box-shadow: 0 0 6px var(--neon-gold);
+}
+
+.miika-tile--magenta::before {
+  background: var(--neon-magenta);
+  box-shadow: 0 0 6px var(--neon-magenta);
 }
 
 .miika-tile__label {
