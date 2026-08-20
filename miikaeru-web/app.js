@@ -20454,6 +20454,74 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // ---------------- Vista Hero (MetricasAI) ----------------
+  // Overlay opcional, 100% reversible (ver #hero-view en index.html):
+  // holograma del avatar + accesos rápidos en scroll + buscador fijo
+  // abajo. Mismo mecanismo data-forward que #cyber-grid unas líneas
+  // arriba — cada .hero-card reenvía el click al botón real
+  // correspondiente en vez de duplicar la lógica de apertura de cada
+  // panel, así que candados/estados dinámicos siguen intactos.
+  const heroViewToggleBtn = document.getElementById("hero-view-toggle-btn");
+  const heroView = document.getElementById("hero-view");
+  const heroViewExitBtn = document.getElementById("hero-view-exit-btn");
+  const heroViewScroll = document.getElementById("hero-view-scroll");
+  const heroViewCards = document.getElementById("hero-view-cards");
+  const heroViewCommandForm = document.getElementById("hero-view-command-form");
+  const heroViewCommandInput = document.getElementById("hero-view-command-input");
+
+  function openHeroView() {
+    if (!heroView) return;
+    heroView.hidden = false;
+    if (heroViewScroll) heroViewScroll.scrollTop = 0;
+  }
+
+  function closeHeroView() {
+    if (!heroView) return;
+    heroView.hidden = true;
+  }
+
+  if (heroViewToggleBtn) heroViewToggleBtn.addEventListener("click", openHeroView);
+  if (heroViewExitBtn) heroViewExitBtn.addEventListener("click", closeHeroView);
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && heroView && !heroView.hidden) closeHeroView();
+  });
+
+  if (heroViewCards) {
+    heroViewCards.addEventListener("click", (event) => {
+      const card = event.target.closest(".hero-card");
+      if (!card) return;
+      const selector = card.dataset.forward;
+      const target = selector && document.querySelector(selector);
+      if (!target) return;
+      closeHeroView();
+      target.click();
+    });
+  }
+
+  // Buscador fijo de abajo: SOLO hace scroll suave + resalta la tarjeta
+  // que coincide (pedido explícito: "que la interfaz haga scroll suave
+  // hacia ella"), no abre el panel solo — el usuario decide si clickea
+  // la tarjeta después de verla. Mismo patrón que el scrollIntoView +
+  // flash de MetricasAI, adaptado a las tarjetas reales de acá.
+  if (heroViewCommandForm) {
+    heroViewCommandForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const query = (heroViewCommandInput.value || "").trim().toLowerCase();
+      if (!query) return;
+      heroViewCommandInput.value = "";
+      const cards = heroViewCards ? Array.from(heroViewCards.querySelectorAll(".hero-card")) : [];
+      const match =
+        cards.find((card) => (card.dataset.keywords || "").includes(query)) ||
+        cards.find((card) => (card.dataset.keywords || "").split(" ").some((kw) => kw.startsWith(query)));
+      if (!match) return;
+      match.scrollIntoView({ behavior: "smooth", block: "center" });
+      match.classList.remove("hero-card--flash");
+      void match.offsetWidth;
+      match.classList.add("hero-card--flash");
+    });
+  }
+
   // ---------------- Accesos Directos (📌) + Orden por Uso ----------------
   // Pedido explícito: (1) sub-módulos importantes como Nihongo/English/
   // Português pueden fijarse como acceso directo real en el App Hub

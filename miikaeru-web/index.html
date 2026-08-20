@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260819-2" />
+  <link rel="stylesheet" href="style.css?v=20260821-1" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -229,6 +229,17 @@
           <span class="btn-profile-switch__operator" id="profile-name">Operador</span>
         </span>
       </button>
+      <!-- Vista Hero (opcional, 100% reversible): overlay de pantalla
+           completa inspirado en el prototipo MetricasAI (holograma del
+           avatar + accesos rápidos en scroll + buscador fijo abajo). NO
+           reemplaza el HUD ni duplica ninguna lógica de apertura de
+           paneles — ver #hero-view más abajo y su JS en app.js. Sin
+           data-i18n-title a propósito: agregar la clave a los diccionarios
+           I18N de cada idioma es un cambio aparte, no indispensable para
+           que el botón funcione (t() cae de vuelta a la clave cruda si
+           falta, nunca rompe, pero preferimos no tocar los diccionarios en
+           este primer paso). -->
+      <button class="btn-hero-view" id="hero-view-toggle-btn" type="button" title="Vista Inmersiva">🌌</button>
       <button class="btn-settings" id="settings-open-btn" type="button" data-i18n-title="settingsBtnTitle" title="Ajustes">⚙️</button>
       <button class="btn-logout" id="logout-btn" type="button" data-i18n-title="logout" title="Cerrar sesión">⏻</button>
     </div>
@@ -803,6 +814,84 @@
     </aside>
 
   </main>
+
+  <!-- VISTA HERO (opcional, MetricasAI): overlay de pantalla completa,
+       sibling de <header>/<main> a nivel de <body> — mismo patrón que los
+       .modal-overlay de abajo (evita el bug de stacking-context que tuvo
+       el sistema de ventanas flotantes, ver floatingWindow.js). Se abre
+       con #hero-view-toggle-btn (header) y NO reemplaza el HUD: es 100%
+       reversible, se cierra con ✕/Escape y vuelve exactamente al mismo
+       HUD de siempre, sin recargar ni perder estado.
+
+       Cada .hero-card NO duplica ninguna lógica de apertura de paneles:
+       reenvía el click al botón real correspondiente vía data-forward,
+       mismo mecanismo ya probado en producción que usa #cyber-grid (ver
+       el listener de "Tablero de Comando" en app.js) — así que candados,
+       colaborador activo, etc. siguen gobernados por el mismo código de
+       siempre. -->
+  <div class="hero-view" id="hero-view" hidden>
+    <button type="button" class="hero-view__exit" id="hero-view-exit-btn" aria-label="Volver al HUD" title="Volver al HUD">✕ Volver al HUD</button>
+
+    <div class="hero-view__scroll" id="hero-view-scroll">
+      <section class="hero-view__stage">
+        <img class="hero-view__avatar" src="assets/skins/Miikaeruu/mikaeru_idle_chakras.png" alt="" aria-hidden="true" />
+        <div class="hero-view__stage-text">
+          <p class="hero-view__eyebrow">MIIKAERU_SYS</p>
+          <h1 class="hero-view__title">Tu ecosistema, de un vistazo</h1>
+          <p class="hero-view__subtitle">Bajá para ver tus herramientas, o pedí una por el buscador de abajo.</p>
+        </div>
+      </section>
+
+      <div class="hero-view__cards" id="hero-view-cards">
+        <button type="button" class="hero-card" data-forward='.pillar-btn[data-pillar="finanzas"]' data-keywords="finanzas dinero plata negocio ingresos gastos">
+          <span class="hero-card__icon">💰</span>
+          <span class="hero-card__body"><span class="hero-card__label">Finanzas</span><span class="hero-card__desc">Balance, gastos, ingresos y declaraciones</span></span>
+        </button>
+        <button type="button" class="hero-card" data-forward='.pillar-btn[data-pillar="templo"]' data-keywords="templo ejercicio rutina nutricion biosync espiritu habitos">
+          <span class="hero-card__icon">⛩️</span>
+          <span class="hero-card__body"><span class="hero-card__label">Templo</span><span class="hero-card__desc">Rutinas, Bio-Sync, nutrición y estado espiritual</span></span>
+        </button>
+        <button type="button" class="hero-card" data-forward='.pillar-btn[data-pillar="aprendizaje"]' data-keywords="aprendizaje idiomas japones ingles portugues kanji nihongo">
+          <span class="hero-card__icon">🧠</span>
+          <span class="hero-card__body"><span class="hero-card__label">Aprendizaje</span><span class="hero-card__desc">Japonés, Inglés, Portugués y más</span></span>
+        </button>
+        <button type="button" class="hero-card" data-forward='.app-card[data-app="bossfight"]' data-keywords="boss fight minijuego batalla">
+          <span class="hero-card__icon">⚔️</span>
+          <span class="hero-card__body"><span class="hero-card__label">Boss Fight</span><span class="hero-card__desc">El minijuego de combate contra tus metas</span></span>
+        </button>
+        <button type="button" class="hero-card" data-forward='.app-card[data-app="calendar"]' data-keywords="calendario eventos agenda fechas">
+          <span class="hero-card__icon">📅</span>
+          <span class="hero-card__body"><span class="hero-card__label">Calendario &amp; Eventos</span><span class="hero-card__desc">Tu agenda y próximos eventos</span></span>
+        </button>
+        <button type="button" class="hero-card" data-forward='.app-card[data-app="karaoke"]' data-keywords="karaoke musica cantar">
+          <span class="hero-card__icon">🎤</span>
+          <span class="hero-card__body"><span class="hero-card__label">Karaoke</span><span class="hero-card__desc">Próximamente</span></span>
+        </button>
+        <button type="button" class="hero-card" data-forward="#chat-open-btn" data-keywords="chat feed mensajes ia asistente">
+          <span class="hero-card__icon">💬</span>
+          <span class="hero-card__body"><span class="hero-card__label">Feed // Chat</span><span class="hero-card__desc">Tu asistente y el feed de actividad</span></span>
+        </button>
+        <button type="button" class="hero-card" data-forward="#wishlist-open-btn" data-keywords="wishlist garage deseos lista">
+          <span class="hero-card__icon">🎁</span>
+          <span class="hero-card__body"><span class="hero-card__label">Wishlist // Garage</span><span class="hero-card__desc">Tu lista de deseos</span></span>
+        </button>
+        <button type="button" class="hero-card" data-forward="#city-map-open-btn" data-keywords="territorio ciudad mapa expansion bugs sugerencias">
+          <span class="hero-card__icon">🌐</span>
+          <span class="hero-card__body"><span class="hero-card__label">Expansión de Territorio</span><span class="hero-card__desc">Mapa de expansión y sugerencias</span></span>
+        </button>
+        <button type="button" class="hero-card" data-forward="#hero-open-btn" data-keywords="heroe avatar personaje skin">
+          <span class="hero-card__icon">🦸</span>
+          <span class="hero-card__body"><span class="hero-card__label">Héroe</span><span class="hero-card__desc">Tu personaje, skins y personalización</span></span>
+        </button>
+      </div>
+    </div>
+
+    <form class="hero-view__bar" id="hero-view-command-form">
+      <span class="hero-view__bar-icon">🔎</span>
+      <input type="text" id="hero-view-command-input" class="hero-view__bar-input" placeholder="Pedí una herramienta… (ej. finanzas, templo, calendario)" autocomplete="off" />
+      <button type="submit" class="hero-view__bar-submit">Ir</button>
+    </form>
+  </div>
 
   <!-- MODAL: WISHLIST // GARAGE — antes panel siempre visible en el
        sidebar izquierdo; ahora se abre desde el ícono 🎁 del dock
@@ -3624,7 +3713,7 @@
        etiquetas <script> no importa en la práctica — se carga acá antes
        igual, por prolijidad. -->
   <script src="floatingWindow.js?v=20260819-2"></script>
-  <script src="app.js?v=20260819-2"></script>
+  <script src="app.js?v=20260821-1"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de
