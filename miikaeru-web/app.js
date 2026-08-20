@@ -20469,15 +20469,44 @@ document.addEventListener("DOMContentLoaded", () => {
   const heroViewCommandForm = document.getElementById("hero-view-command-form");
   const heroViewCommandInput = document.getElementById("hero-view-command-input");
 
+  // Duración de la transición de apertura/cierre — DEBE calzar con los
+  // 0.32s de la regla `transition` de .hero-view/.hero-view--open en
+  // style.css (ver comentario ahí). Un solo número, no dos hardcodeados
+  // en archivos distintos por separado.
+  const HERO_VIEW_TRANSITION_MS = 320;
+  let heroViewCloseTimer = null;
+
   function openHeroView() {
     if (!heroView) return;
+    if (heroViewCloseTimer) {
+      clearTimeout(heroViewCloseTimer);
+      heroViewCloseTimer = null;
+    }
     heroView.hidden = false;
     if (heroViewScroll) heroViewScroll.scrollTop = 0;
+    // Doble requestAnimationFrame: garantiza que el navegador pinte el
+    // estado inicial (opacity:0/scale:0.97) ANTES de agregar la clase que
+    // dispara la transición — si se agregara en el mismo tick, el
+    // elemento arrancaría y terminaría en el mismo frame, sin animación
+    // visible (mismo problema clásico de "quitar hidden + animar ya").
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        heroView.classList.add("hero-view--open");
+      });
+    });
   }
 
   function closeHeroView() {
-    if (!heroView) return;
-    heroView.hidden = true;
+    if (!heroView || heroView.hidden) return;
+    heroView.classList.remove("hero-view--open");
+    // El atributo `hidden` real se pone recién cuando termina el fade de
+    // salida (no antes): mientras tanto opacity:0 + pointer-events:none
+    // (CSS) ya lo vuelven invisible y no-interactivo, así que no bloquea
+    // clicks del HUD debajo ni un instante.
+    heroViewCloseTimer = setTimeout(() => {
+      heroView.hidden = true;
+      heroViewCloseTimer = null;
+    }, HERO_VIEW_TRANSITION_MS);
   }
 
   if (heroViewToggleBtn) heroViewToggleBtn.addEventListener("click", openHeroView);

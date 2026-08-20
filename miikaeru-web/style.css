@@ -666,10 +666,37 @@ body::before {
   background:
     radial-gradient(ellipse 120% 60% at 50% -10%, rgba(0, 240, 255, 0.14), transparent 62%),
     var(--bg-base);
+  /* Transición de apertura/cierre tipo "sistema operativo": fade + zoom
+     suave en vez del salto instantáneo de [hidden]. opacity/pointer-events
+     hacen todo el trabajo de mostrar/ocultar (ver .hero-view--open más
+     abajo); el atributo `hidden` real lo sigue manejando app.js, pero
+     recién DESPUÉS de que termina la transición de salida (setTimeout que
+     coincide con la duración de acá) — así el elemento no bloquea clicks
+     del HUD mientras está invisible, y sigue siendo semánticamente
+     "oculto" para lectores de pantalla apenas se puede. */
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.97);
+  pointer-events: none;
+  transition: opacity 0.32s cubic-bezier(0.4, 0, 0.2, 1), transform 0.32s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0.32s;
 }
 
+/* .hero-view[hidden] se sobreescribe a display:flex a propósito: la regla
+   genérica `[hidden]{display:none!important}` (ver arriba en este mismo
+   archivo) no puede transicionar — necesitamos que el elemento siga
+   "pintado" mientras se desvanece. La invisibilidad real mientras está
+   cerrado la dan opacity:0 + visibility:hidden + pointer-events:none de
+   arriba, no display. */
 .hero-view[hidden] {
-  display: none !important;
+  display: flex !important;
+}
+
+.hero-view.hero-view--open {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+  pointer-events: auto;
+  transition: opacity 0.32s cubic-bezier(0.4, 0, 0.2, 1), transform 0.32s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0s;
 }
 
 .hero-view__exit {
@@ -703,27 +730,34 @@ body::before {
 
 .hero-view__stage {
   position: relative;
-  min-height: min(66vh, 560px);
+  min-height: min(88vh, 820px);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   text-align: center;
-  padding: 40px 20px 20px;
+  padding: 30px 20px 20px;
 }
 
+/* Avatar holograma: sin contenedor/caja/borde a propósito (pedido
+   explícito), imponente y central. El tamaño real lo da `width`; la
+   "presencia" viene de mix-blend-mode:screen + la máscara radial (funde
+   los bordes del PNG con el fondo en vez de recortarlo en seco) + el
+   drop-shadow ancho a modo de aura — ninguno de los tres se toca al
+   agrandar, así que la transparencia y la fusión con el fondo se
+   mantienen intactas sin importar el tamaño. */
 .hero-view__avatar {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: min(58vw, 420px);
+  width: min(78vw, 720px);
   transform: translate(-50%, -54%);
   opacity: 0.92;
   mix-blend-mode: screen;
   -webkit-mask-image: radial-gradient(ellipse 58% 72% at 50% 40%, #000 50%, transparent 88%);
   mask-image: radial-gradient(ellipse 58% 72% at 50% 40%, #000 50%, transparent 88%);
-  filter: drop-shadow(0 0 70px var(--avatar-aura-strong));
+  filter: drop-shadow(0 0 100px var(--avatar-aura-strong));
   animation: hero-view-avatar-pulse 3.4s ease-in-out infinite, hero-view-avatar-float 6s ease-in-out infinite;
   pointer-events: none;
 }
@@ -735,13 +769,13 @@ body::before {
 
 @keyframes hero-view-avatar-float {
   0%, 100% { transform: translate(-50%, -54%); }
-  50% { transform: translate(-50%, calc(-54% - 16px)); }
+  50% { transform: translate(-50%, calc(-54% - 22px)); }
 }
 
 .hero-view__stage-text {
   position: relative;
   z-index: 1;
-  margin-top: min(50vh, 420px);
+  margin-top: min(66vh, 600px);
   max-width: 520px;
 }
 
@@ -777,18 +811,27 @@ body::before {
   align-items: center;
   gap: 14px;
   background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
+  border: 1px solid rgba(0, 240, 255, 0.22);
   border-radius: var(--radius-md);
   padding: 16px 18px;
   cursor: pointer;
   text-align: left;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  /* Vidrio esmerilado avanzado (pedido explícito): backdrop-filter real
+     en vez de solo un fondo semitransparente, más un highlight interior
+     de 1px que simula el borde biselado de vidrio — mismo lenguaje
+     táctil que el resto de Miikaeru_Sys, con el borde cian fino de
+     MetricasAI. -webkit- necesario para Safari/iOS. */
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 8px 24px rgba(0, 0, 0, 0.22);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
 }
 
 .hero-card:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
   border-color: var(--neon-cyan);
-  box-shadow: var(--shadow-neon-cyan);
+  background-color: rgba(0, 240, 255, 0.06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), var(--shadow-neon-cyan);
 }
 
 .hero-card--flash {
@@ -873,9 +916,18 @@ body::before {
 }
 
 @media (max-width: 640px) {
-  .hero-view__avatar { width: min(72vw, 340px); }
-  .hero-view__stage-text { margin-top: min(48vh, 340px); }
+  .hero-view__avatar { width: min(90vw, 460px); }
+  .hero-view__stage-text { margin-top: min(60vh, 420px); }
   .hero-view__bar-submit { padding: 10px 14px; }
+}
+
+/* Reduced motion: el pulso/flotación del avatar y el fade/zoom de
+   apertura son puramente decorativos — se apagan sin dejar nada roto
+   (el avatar/las tarjetas siguen 100% funcionales sin animación). */
+@media (prefers-reduced-motion: reduce) {
+  .hero-view__avatar { animation: none; }
+  .hero-view { transition: opacity 0.01s linear, visibility 0.01s linear; }
+  .hero-view.hero-view--open { transition: opacity 0.01s linear, visibility 0.01s linear; }
 }
 
 /* Botón unificado de instalación PWA — mismo criterio visual de "acción
