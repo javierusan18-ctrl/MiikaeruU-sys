@@ -12,12 +12,18 @@ commitea acá directamente, mismo espíritu de independencia que `dashboard/`
 
 ## Cómo se sirve
 
-`index.html` (raíz de `miikaeru-web`) abre esto en un `<iframe>` dentro de
-un overlay a pantalla completa — ver el botón `#mindmap-open-btn` (dock
-derecho, icono 🗺️) y el bloque `#mindmap-overlay` al final de ese archivo.
-No está enganchado a `APP_MODULES`/`openAppModal()` de `app.js` a propósito:
-esos son paneles internos del juego, y esto es un mini-frontend aparte con
-su propio bundle.
+`index.html` (raíz de `miikaeru-web`) tiene un `<a href="/mapa-mental/"
+target="_blank">` en el dock derecho (icono 🗺️, `#mindmap-open-btn`) que
+navega de página completa a esta carpeta, en una pestaña nueva. A
+propósito **no** es un `<iframe>`: la primera versión de esta integración
+usaba un overlay con iframe, y cualquier bloqueador de contenido del
+navegador del usuario podía tumbarlo sin dar ningún error legible — un
+`<a>` normal es la ruta más simple y robusta (y más fácil de depurar: si
+algo falla, el navegador lo muestra directo en la pestaña, no escondido
+adentro de un iframe). Tampoco está enganchado a
+`APP_MODULES`/`openAppModal()` de `app.js` a propósito: esos son paneles
+internos del juego, y esto es un mini-frontend aparte con su propio
+bundle.
 
 ## Cómo actualizar este build
 
@@ -38,8 +44,7 @@ Recordar bumpear `?v=` en `index.html` (style.css/app.js) y `CACHE_NAME`
 en `sw.js` si se tocó algo de la app principal en el mismo commit.
 
 Este build en sí NO necesita ese bump para que se vea fresco: `sw.js`
-sirve el documento `/mapa-mental/` (la navegación del `<iframe>`) con
-estrategia Network First, y ese HTML apunta a los `assets/index-<hash>.*`
+sirve el documento `/mapa-mental/` con estrategia Network First, y ese HTML apunta a los `assets/index-<hash>.*`
 que Vite generó — un build nuevo trae un hash nuevo, así que aunque el
 Service Worker SÍ cachea esos archivos (misma regla `isStaticAsset()` que
 cualquier `.js`/`.css` del sitio), el navegador jamás pide la URL vieja de

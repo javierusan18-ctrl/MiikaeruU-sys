@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260902-1" />
+  <link rel="stylesheet" href="style.css?v=20260903-1" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -767,14 +767,28 @@
     <aside class="hud-dock hud-dock--right">
       <!-- Mapas Mentales (Celestial OS) — herramienta externa, app React
            independiente construida aparte (ver mapa-mental/README.md) y
-           servida como carpeta estática, mismo criterio que dashboard/.
-           Se abre en el overlay de #mindmap-overlay (ver script al pie
-           de este archivo) en vez de sumarse a APP_MODULES/openAppModal()
-           en app.js: esos "apps" son paneles internos del juego mismo
-           (Boss Fight, Karaoke, etc.), y esto es un mini-frontend aparte
-           con su propio bundle — mezclarlo ahí arrastraría lógica de
-           juego que no aplica acá. -->
-      <button type="button" class="hud-dock__icon hud-dock__icon--mindmap" id="mindmap-open-btn" title="Mapas Mentales">🗺️</button>
+           servida como carpeta estática en su propia sub-ruta limpia
+           (/mapa-mental/), mismo criterio que dashboard/. Navegación
+           real de página completa en pestaña nueva — a propósito NO es
+           un <iframe>: un iframe agrega una capa extra que cualquier
+           bloqueador de contenido del navegador puede tumbar sin dar
+           ningún error legible (así se rompió la primera versión de
+           esta integración). Un <a> normal es la ruta más simple y
+           robusta, y target="_blank" evita arriesgar el estado del RPG
+           en curso al salir de la pestaña principal. Tampoco se suma a
+           APP_MODULES/openAppModal() en app.js: esos "apps" son paneles
+           internos del juego mismo (Boss Fight, Karaoke, etc.), y esto
+           es un mini-frontend aparte con su propio bundle — mezclarlo
+           ahí arrastraría lógica de juego que no aplica acá. -->
+      <a
+        href="/mapa-mental/"
+        target="_blank"
+        rel="noopener"
+        id="mindmap-open-btn"
+        class="hud-dock__icon hud-dock__icon--mindmap"
+        title="Mapas Mentales (se abre en pestaña nueva)"
+        >🗺️</a
+      >
       <button type="button" class="hud-dock__icon hud-dock__icon--add-app" id="add-app-btn" data-i18n-title="appsAddBtn" title="+ Agregar App">➕</button>
 
       <div class="hud-dock__divider"></div>
@@ -3785,101 +3799,5 @@
     }
   </script>
 
-  <!-- ===================== MAPAS MENTALES (CELESTIAL OS) =====================
-       Overlay a pantalla completa que aloja /mapa-mental/ (app React/Vite
-       independiente, build committeado — ver mapa-mental/README.md) dentro
-       de un <iframe> same-origin. Deliberadamente NO se integra como
-       APP_MODULES/openAppModal() de app.js (esos paneles son del juego
-       mismo); esto es un mini-frontend aparte con su propio bundle, mismo
-       espíritu de independencia que dashboard/. CSS y JS 100% propios y
-       con prefijo único (mindmap-overlay__*) para no interferir ni un pixel
-       con las 12k+ líneas de style.css ni con ninguna variable/función de
-       app.js. -->
-  <style>
-    .mindmap-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 10000;
-      display: flex;
-      flex-direction: column;
-      background: #020617;
-    }
-    .mindmap-overlay[hidden] {
-      display: none !important;
-    }
-    .mindmap-overlay__bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 0.65rem 1rem;
-      background: rgba(2, 6, 23, 0.92);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(34, 211, 238, 0.25);
-      color: #a5f3fc;
-      font-family: var(--font-main, system-ui, sans-serif);
-      font-size: 0.85rem;
-      letter-spacing: 0.02em;
-    }
-    .mindmap-overlay__close {
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid rgba(148, 163, 184, 0.3);
-      color: #e2e8f0;
-      border-radius: 999px;
-      width: 2.2rem;
-      height: 2.2rem;
-      cursor: pointer;
-      font-size: 1rem;
-      line-height: 1;
-    }
-    .mindmap-overlay__close:hover {
-      border-color: rgba(103, 232, 249, 0.6);
-      box-shadow: 0 0 14px rgba(34, 211, 238, 0.4);
-    }
-    .mindmap-overlay__frame {
-      flex: 1;
-      width: 100%;
-      border: 0;
-    }
-  </style>
-  <div id="mindmap-overlay" class="mindmap-overlay" hidden>
-    <div class="mindmap-overlay__bar">
-      <span>🗺️ Mapas Mentales — Celestial OS</span>
-      <button type="button" id="mindmap-close-btn" class="mindmap-overlay__close" aria-label="Cerrar">✕</button>
-    </div>
-    <iframe
-      id="mindmap-frame"
-      class="mindmap-overlay__frame"
-      title="Mapas Mentales — Celestial OS"
-      src="about:blank"
-      allow="microphone"
-    ></iframe>
-  </div>
-  <script>
-    (function () {
-      var btn = document.getElementById("mindmap-open-btn");
-      var overlay = document.getElementById("mindmap-overlay");
-      var closeBtn = document.getElementById("mindmap-close-btn");
-      var frame = document.getElementById("mindmap-frame");
-      if (!btn || !overlay || !closeBtn || !frame) return;
-
-      function open() {
-        // Carga perezosa: el bundle de Mapa Mental recién se pide la
-        // primera vez que se abre, no en cada carga de Miikaeru.
-        if (!frame.src || frame.src === "about:blank") frame.src = "/mapa-mental/";
-        overlay.hidden = false;
-      }
-      function close() {
-        overlay.hidden = true;
-      }
-
-      btn.addEventListener("click", open);
-      closeBtn.addEventListener("click", close);
-      document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape" && !overlay.hidden) close();
-      });
-    })();
-  </script>
 </body>
 </html>

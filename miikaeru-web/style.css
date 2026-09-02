@@ -10871,6 +10871,14 @@ body.miikaeru-anim-off .modal-overlay .modal--japanese {
   transform: translateY(-2px);
 }
 
+/* El botón de Mapas Mentales (#mindmap-open-btn, ver index.html) es el
+   único .hud-dock__icon que es <a> en vez de <button> — necesita el
+   sin-subrayado a mano, el resto de la regla ya le queda idéntica por
+   compartir la clase. */
+a.hud-dock__icon {
+  text-decoration: none;
+}
+
 /* Menú desplegable del dock derecho (<details>, ver index.html) — el
    <summary> se ve idéntico a cualquier otro .hud-dock__icon (comparte la
    clase), y al abrirse despliega #app-grid como un panel flotante chico
