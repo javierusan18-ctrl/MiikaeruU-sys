@@ -3,10 +3,18 @@
    =================================================== */
 
 :root {
-  --bg-base: #0B0F19;
-  --bg-elevated: #10151f;
-  --neon-cyan: #00F0FF;
-  --neon-green: #00FF9C;
+  /* Paleta "Celestial OS" (Mapa Mental / MetricasAI) unificada acá:
+     --bg-base ahora es el mismo navy #020617 de esos proyectos, y
+     --neon-cyan/--neon-green se acercan a sus tonos cian/esmeralda —
+     202 y 67 usos respectivamente en este archivo heredan el cambio
+     solo por referenciar la variable, sin tocar esas reglas una por
+     una. --neon-magenta queda igual a propósito (no tiene equivalente
+     directo en la paleta de Mapa Mental y varias barras/indicadores le
+     dan un uso semántico, no solo decorativo). */
+  --bg-base: #020617;
+  --bg-elevated: #0b1220;
+  --neon-cyan: #22D3EE;
+  --neon-green: #10B981;
   --neon-magenta: #FF2E9A;
   --text-primary: #E6F7FF;
   --text-secondary: #7C93AD;
@@ -131,7 +139,7 @@ html, body {
 body {
   font-family: var(--font-main);
   color: var(--text-primary);
-  background-color: rgba(7, 9, 15, 0.94);
+  background-color: rgba(2, 6, 23, 0.94);
   /* Fondo por defecto — applyWindowWallpaper() (app.js, "Fondos de
      Pantalla / Wallpapers dinámicos") lo SOBRESCRIBE por completo vía
      estilo inline (background-image) apenas la app carga, con el mismo
@@ -141,11 +149,16 @@ body {
      pruebas reales terminaba en background-image vacío pese a sintaxis
      válida — el inline directo de abajo es el que sí funciona
      consistentemente, así que esta regla queda como el respaldo
-     estático de siempre (si JS todavía no corrió, o algo salió mal). */
+     estático de siempre (si JS todavía no corrió, o algo salió mal).
+     Gradientes cian/violeta/esmeralda: mismo tinte "Celestial OS" que
+     Mapa Mental (.celestial-bg) y WALLPAPER_TINT_LAYERS.dashboard en
+     app.js — deben mantenerse los tres en sync si se vuelve a tocar la
+     paleta. */
   background-image:
-    radial-gradient(circle at 15% 10%, rgba(0, 240, 255, 0.08), transparent 40%),
-    radial-gradient(circle at 85% 90%, rgba(0, 255, 156, 0.07), transparent 45%),
-    linear-gradient(180deg, rgba(9, 12, 20, 0.88) 0%, rgba(7, 9, 15, 0.94) 100%),
+    radial-gradient(circle at 20% 15%, rgba(34, 211, 238, 0.16), transparent 45%),
+    radial-gradient(circle at 85% 80%, rgba(168, 85, 247, 0.14), transparent 45%),
+    radial-gradient(circle at 50% 100%, rgba(16, 185, 129, 0.1), transparent 45%),
+    linear-gradient(180deg, rgba(2, 6, 23, 0.9) 0%, rgba(2, 6, 23, 0.96) 100%),
     url("assets/bg_main.png");
   background-repeat: no-repeat;
   background-size: cover;

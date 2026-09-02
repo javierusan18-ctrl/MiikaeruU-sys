@@ -14221,10 +14221,14 @@ document.addEventListener("DOMContentLoaded", () => {
   // válida) — fijar el string completo inline sí funciona de forma
   // consistente, así que ese es el mecanismo real.
   const WALLPAPER_TINT_LAYERS = {
+    // Paleta "Celestial OS" (mismo tinte que Mapa Mental/.celestial-bg y
+    // el fallback estático de `body` en style.css) — mantener los tres
+    // en sync si se retoca.
     dashboard:
-      'radial-gradient(circle at 15% 10%, rgba(0, 240, 255, 0.08), transparent 40%), ' +
-      "radial-gradient(circle at 85% 90%, rgba(0, 255, 156, 0.07), transparent 45%), " +
-      "linear-gradient(180deg, rgba(9, 12, 20, 0.88) 0%, rgba(7, 9, 15, 0.94) 100%)",
+      'radial-gradient(circle at 20% 15%, rgba(34, 211, 238, 0.16), transparent 45%), ' +
+      "radial-gradient(circle at 85% 80%, rgba(168, 85, 247, 0.14), transparent 45%), " +
+      "radial-gradient(circle at 50% 100%, rgba(16, 185, 129, 0.1), transparent 45%), " +
+      "linear-gradient(180deg, rgba(2, 6, 23, 0.9) 0%, rgba(2, 6, 23, 0.96) 100%)",
     // Mapa de Mundos/Contenido a pantalla completa (pedido explícito
     // "mayor notoriedad/visibilidad" — el tinte `default` de 0.75 de
     // opacidad, pensado para asomar apenas DETRÁS de un panel de
@@ -14284,7 +14288,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // bien declarado — mismo síntoma que el bug de background-image ya
   // documentado, mismo arreglo: fijarlo inline sí funciona siempre.
   const WALLPAPER_FLAT_FALLBACK_COLOR = {
-    dashboard: "rgba(7, 9, 15, 0.94)",
+    dashboard: "rgba(2, 6, 23, 0.94)",
     default: "rgba(5, 7, 12, 0.85)",
   };
 
