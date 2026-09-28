@@ -282,12 +282,16 @@ const SCHEMA_STATEMENTS = [
   // protección de la vista de edición del admin es 100% del lado de la
   // interfaz (isSuperAdmin), documentado igual que en el resto del
   // Panel de Administrador.
+  //
+  // Amigos/Chat/Escuadrones YA NO siguen ese criterio: sus políticas
+  // "anon full access" se BORRAN acá (los drop de abajo quedan a
+  // propósito, sin su create, para limpiar las bases que ya las tenían)
+  // y se reemplazan por políticas por Operador en ensureSocialPolicies()
+  // más abajo, atadas al JWT de Operador (claim `op_phone`, ver
+  // signOperatorToken() en api/_utils.js).
   `drop policy if exists "anon full access contacts" on public.app_contacts`,
-  `create policy "anon full access contacts" on public.app_contacts for all using (true) with check (true)`,
   `drop policy if exists "anon full access friendships" on public.app_friendships`,
-  `create policy "anon full access friendships" on public.app_friendships for all using (true) with check (true)`,
   `drop policy if exists "anon full access friend_messages" on public.app_friend_messages`,
-  `create policy "anon full access friend_messages" on public.app_friend_messages for all using (true) with check (true)`,
   `drop policy if exists "anon full access player_progress" on public.player_progress`,
   `create policy "anon full access player_progress" on public.player_progress for all using (true) with check (true)`,
   `drop policy if exists "anon full access hero_avatars" on public.hero_avatars`,
@@ -308,11 +312,8 @@ const SCHEMA_STATEMENTS = [
   `drop policy if exists "anon can insert feedback" on public.feedback`,
   `create policy "anon can insert feedback" on public.feedback for insert with check (true)`,
   `drop policy if exists "anon full access squads" on public.app_squads`,
-  `create policy "anon full access squads" on public.app_squads for all using (true) with check (true)`,
   `drop policy if exists "anon full access squad_members" on public.app_squad_members`,
-  `create policy "anon full access squad_members" on public.app_squad_members for all using (true) with check (true)`,
   `drop policy if exists "anon full access squad_messages" on public.app_squad_messages`,
-  `create policy "anon full access squad_messages" on public.app_squad_messages for all using (true) with check (true)`,
 ];
 
 async function ensureRealtimeEnabled(client, tableName) {
@@ -406,6 +407,224 @@ async function ensureFeedbackAdminPolicies(client) {
   );
 }
 
+// Políticas RLS por Operador para Amigos/Chat/Escuadrones — reemplazan
+// las viejas "anon full access" (borradas en SCHEMA_STATEMENTS). Todo se
+// ata a public.op_phone(), el claim `op_phone` del JWT de Operador que
+// emiten api/login-account.js/api/register-account.js (firmado con
+// SUPABASE_JWT_SECRET, ver signOperatorToken() en api/_utils.js). Sin
+// ese token (anon key sola, o una sesión de Supabase Auth del Admin),
+// op_phone() es null y ninguna política deja pasar nada.
+//
+// Realtime respeta estas mismas políticas: un evento postgres_changes
+// solo le llega a un suscriptor cuyo JWT podría hacer SELECT de esa
+// fila — por eso el canal de mensajes de amigos (sin filtro, ver
+// wireFriendRealtime() en app.js) ya no reparte los mensajes de todos.
+//
+// Las búsquedas que por diseño cruzan a otros usuarios (encontrar un
+// contacto por nombre/teléfono/ID, unirse a un escuadrón por código) van
+// por funciones SECURITY DEFINER que devuelven UNA fila puntual, en vez
+// de abrir SELECT sobre toda la tabla — así nadie puede listar el
+// directorio entero de teléfonos.
+const SOCIAL_POLICY_STATEMENTS = [
+  `create or replace function public.op_phone()
+     returns text
+     language sql
+     stable
+     as $$ select nullif(auth.jwt() ->> 'op_phone', '') $$`,
+
+  // SECURITY DEFINER (mismo motivo que is_admin() arriba): evaluadas
+  // DESDE ADENTRO de las políticas de app_contacts/app_squad_members,
+  // una subconsulta normal volvería a pasar por RLS de la propia tabla
+  // (recursión en app_squad_members).
+  `create or replace function public.is_social_contact(other_phone text)
+     returns boolean
+     language sql
+     stable
+     security definer
+     set search_path = public, pg_temp
+     as $$
+       select public.op_phone() is not null and (
+         other_phone = public.op_phone()
+         or exists (
+           select 1 from public.app_friendships f
+           where (f.phone_a = public.op_phone() and f.phone_b = other_phone)
+              or (f.phone_b = public.op_phone() and f.phone_a = other_phone)
+         )
+       )
+     $$`,
+  `create or replace function public.is_squad_member(check_squad_id uuid)
+     returns boolean
+     language sql
+     stable
+     security definer
+     set search_path = public, pg_temp
+     as $$
+       select public.op_phone() is not null and exists (
+         select 1 from public.app_squad_members m
+         where m.squad_id = check_squad_id and m.phone = public.op_phone()
+       )
+     $$`,
+
+  // Búsqueda de "Agregar amigo" — ver findContactByQuery() en app.js.
+  // Devuelve como mucho UNA fila. La búsqueda por nombre exige al menos
+  // 3 caracteres para no convertirse en un listado de a una letra.
+  `create or replace function public.social_find_contact(search_mode text, search_query text)
+     returns table (phone text, display_name text, preferred_language text, unique_id text)
+     language sql
+     stable
+     security definer
+     set search_path = public, pg_temp
+     as $$
+       select c.phone, c.display_name, c.preferred_language, c.unique_id
+       from public.app_contacts c
+       where public.op_phone() is not null
+         and (
+           (search_mode = 'unique_id' and lower(c.unique_id) = lower(trim(search_query)))
+           or (search_mode = 'phone' and c.phone = trim(search_query))
+           or (search_mode = 'name' and length(trim(search_query)) >= 3
+               and c.display_name ilike '%' || replace(replace(replace(trim(search_query), '\\', '\\\\'), '%', '\\%'), '_', '\\_') || '%')
+         )
+       order by c.display_name
+       limit 1
+     $$`,
+
+  // Unirse a un escuadrón por código — ver joinSquadByCode() en app.js.
+  // La política de INSERT de app_squad_members solo deja al DUEÑO
+  // agregarse a sí mismo; cualquier otro miembro entra por acá, que
+  // exige conocer el código exacto.
+  `create or replace function public.social_join_squad(squad_code text)
+     returns setof public.app_squads
+     language plpgsql
+     security definer
+     set search_path = public, pg_temp
+     as $$
+     declare
+       me text := public.op_phone();
+       found_squad public.app_squads;
+     begin
+       if me is null then
+         raise exception 'no-session';
+       end if;
+       select * into found_squad from public.app_squads where lower(code) = lower(trim(squad_code));
+       if not found then
+         return;
+       end if;
+       insert into public.app_squad_members (squad_id, phone) values (found_squad.id, me)
+         on conflict (squad_id, phone) do nothing;
+       return next found_squad;
+     end
+     $$`,
+
+  `revoke all on function public.is_social_contact(text) from public`,
+  `revoke all on function public.is_squad_member(uuid) from public`,
+  `revoke all on function public.social_find_contact(text, text) from public`,
+  `revoke all on function public.social_join_squad(text) from public`,
+  `grant execute on function public.op_phone() to authenticated`,
+  `grant execute on function public.is_social_contact(text) to authenticated`,
+  `grant execute on function public.is_squad_member(uuid) to authenticated`,
+  `grant execute on function public.social_find_contact(text, text) to authenticated`,
+  `grant execute on function public.social_join_squad(text) to authenticated`,
+
+  // Defensa en profundidad: además de no tener políticas, el rol anon
+  // pierde todo privilegio de tabla sobre estas seis.
+  `revoke all on table public.app_contacts, public.app_friendships, public.app_friend_messages,
+     public.app_squads, public.app_squad_members, public.app_squad_messages from anon`,
+
+  // ---- app_contacts ----
+  `drop policy if exists "operator reads linked contacts" on public.app_contacts`,
+  `create policy "operator reads linked contacts" on public.app_contacts
+     for select to authenticated using (public.is_social_contact(phone))`,
+  `drop policy if exists "operator inserts own contact" on public.app_contacts`,
+  `create policy "operator inserts own contact" on public.app_contacts
+     for insert to authenticated with check (phone = public.op_phone())`,
+  `drop policy if exists "operator updates own contact" on public.app_contacts`,
+  `create policy "operator updates own contact" on public.app_contacts
+     for update to authenticated using (phone = public.op_phone()) with check (phone = public.op_phone())`,
+
+  // ---- app_friendships ("sigue a" dirigida: phone_a sigue a phone_b) ----
+  `drop policy if exists "operator reads own friendships" on public.app_friendships`,
+  `create policy "operator reads own friendships" on public.app_friendships
+     for select to authenticated using (phone_a = public.op_phone() or phone_b = public.op_phone())`,
+  `drop policy if exists "operator follows" on public.app_friendships`,
+  `create policy "operator follows" on public.app_friendships
+     for insert to authenticated with check (phone_a = public.op_phone() and phone_b <> public.op_phone())`,
+  // UPDATE solo existe porque addFriendByQuery() usa upsert (on conflict
+  // do update) — misma condición que el insert.
+  `drop policy if exists "operator updates own follow" on public.app_friendships`,
+  `create policy "operator updates own follow" on public.app_friendships
+     for update to authenticated using (phone_a = public.op_phone())
+     with check (phone_a = public.op_phone() and phone_b <> public.op_phone())`,
+  `drop policy if exists "operator unfollows" on public.app_friendships`,
+  `create policy "operator unfollows" on public.app_friendships
+     for delete to authenticated using (phone_a = public.op_phone())`,
+
+  // ---- app_friend_messages ----
+  `drop policy if exists "operator reads own messages" on public.app_friend_messages`,
+  `create policy "operator reads own messages" on public.app_friend_messages
+     for select to authenticated using (phone_from = public.op_phone() or phone_to = public.op_phone())`,
+  // Solo se le puede escribir a alguien con quien hay relación en
+  // app_friendships (en cualquier dirección) — evita spam a teléfonos
+  // arbitrarios.
+  `drop policy if exists "operator sends messages" on public.app_friend_messages`,
+  `create policy "operator sends messages" on public.app_friend_messages
+     for insert to authenticated
+     with check (phone_from = public.op_phone() and phone_to <> public.op_phone() and public.is_social_contact(phone_to))`,
+  // El remitente completa la traducción después del insert (ver
+  // sendFriendMessage() en app.js) — solo esas dos columnas son
+  // actualizables (grant por columna más abajo), nunca el texto original
+  // ni los teléfonos.
+  `drop policy if exists "sender updates translation" on public.app_friend_messages`,
+  `create policy "sender updates translation" on public.app_friend_messages
+     for update to authenticated using (phone_from = public.op_phone()) with check (phone_from = public.op_phone())`,
+  `revoke update on table public.app_friend_messages from authenticated`,
+  `grant update (translated_text, translation_status) on table public.app_friend_messages to authenticated`,
+
+  // ---- app_squads ----
+  `drop policy if exists "member reads squad" on public.app_squads`,
+  `create policy "member reads squad" on public.app_squads
+     for select to authenticated using (owner_phone = public.op_phone() or public.is_squad_member(id))`,
+  `drop policy if exists "operator creates squad" on public.app_squads`,
+  `create policy "operator creates squad" on public.app_squads
+     for insert to authenticated with check (owner_phone = public.op_phone())`,
+  `drop policy if exists "owner deletes squad" on public.app_squads`,
+  `create policy "owner deletes squad" on public.app_squads
+     for delete to authenticated using (owner_phone = public.op_phone())`,
+
+  // ---- app_squad_members ----
+  // `phone = op_phone()` además de is_squad_member(): el upsert de
+  // createSquad() (insert ... on conflict do update) exige que la fila
+  // NUEVA también pase la política de SELECT, y en ese momento todavía
+  // no existe como membresía.
+  `drop policy if exists "member reads roster" on public.app_squad_members`,
+  `create policy "member reads roster" on public.app_squad_members
+     for select to authenticated using (phone = public.op_phone() or public.is_squad_member(squad_id))`,
+  // Solo el dueño se agrega a sí mismo directo (justo después de crear
+  // el escuadrón, ver createSquad() en app.js); el resto entra por
+  // social_join_squad(). UPDATE por el upsert de createSquad().
+  `drop policy if exists "owner joins own squad" on public.app_squad_members`,
+  `create policy "owner joins own squad" on public.app_squad_members
+     for insert to authenticated
+     with check (phone = public.op_phone()
+       and exists (select 1 from public.app_squads s where s.id = squad_id and s.owner_phone = public.op_phone()))`,
+  `drop policy if exists "owner rejoins own squad" on public.app_squad_members`,
+  `create policy "owner rejoins own squad" on public.app_squad_members
+     for update to authenticated using (phone = public.op_phone())
+     with check (phone = public.op_phone()
+       and exists (select 1 from public.app_squads s where s.id = squad_id and s.owner_phone = public.op_phone()))`,
+  `drop policy if exists "member leaves squad" on public.app_squad_members`,
+  `create policy "member leaves squad" on public.app_squad_members
+     for delete to authenticated using (phone = public.op_phone())`,
+
+  // ---- app_squad_messages ----
+  `drop policy if exists "member reads squad messages" on public.app_squad_messages`,
+  `create policy "member reads squad messages" on public.app_squad_messages
+     for select to authenticated using (public.is_squad_member(squad_id))`,
+  `drop policy if exists "member sends squad messages" on public.app_squad_messages`,
+  `create policy "member sends squad messages" on public.app_squad_messages
+     for insert to authenticated
+     with check (phone_from = public.op_phone() and public.is_squad_member(squad_id))`,
+];
+
 // Siembra al Admin Raíz (ADMIN_EMAIL) como primera fila de public.admins
 // — idempotente (on conflict do nothing) para poder correr este archivo
 // tantas veces como haga falta. No es estrictamente necesario para que
@@ -478,6 +697,13 @@ module.exports = async function handler(req, res) {
       await ensureIsAdminFunction(client);
     } catch (err) {
       failedStatements.push({ statement: "ensureIsAdminFunction", error: err.message });
+    }
+
+    for (const statement of SOCIAL_POLICY_STATEMENTS) {
+      const result = await runStatement(client, statement);
+      if (!result.ok) {
+        failedStatements.push({ statement: statement.trim().replace(/\s+/g, " ").slice(0, 100), error: result.error });
+      }
     }
 
     try {

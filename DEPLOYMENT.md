@@ -83,3 +83,28 @@ gh workflow run deploy.yml
   que la acompaña) — lo que agrega es que ese SQL quede escrito y
   revisable ANTES de correrlo, en vez de perderse en el historial del
   SQL Editor.
+
+## Seguridad de Amigos/Chat/Escuadrones — JWT de Operador (2026-09-28)
+
+Las tablas `app_contacts`, `app_friendships`, `app_friend_messages`,
+`app_squads`, `app_squad_members` y `app_squad_messages` ya no tienen
+políticas "anon full access": solo se accede con un JWT de Operador que
+emiten `/api/login-account` y `/api/register-account` (claim `op_phone`,
+ver `signOperatorToken()` en `api/_utils.js`), y las políticas RLS de
+`ensureSocialPolicies` en `api/init-db.js` filtran por ese claim.
+
+Orden obligatorio al desplegar (si no, Amigos/Escuadrones quedan
+bloqueados para todos hasta completar los pasos):
+
+1. Supabase → Project Settings → JWT Keys → copiar el **Legacy JWT secret**
+   (HS256). Si el proyecto ya migró a claves asimétricas, el secreto
+   legacy sigue sirviendo mientras no esté revocado.
+2. Vercel → Project Settings → Environment Variables → agregar
+   `SUPABASE_JWT_SECRET` con ese valor (Production + Preview). Nunca
+   commitearlo.
+3. Desplegar y abrir `/api/init-db` una vez (o dejar que la app lo llame
+   sola — el flag `DB_INIT_FLAG_KEY` se subió para eso). Debe responder
+   `ok: true`.
+4. Cada Operador que ya tenía la sesión recordada tiene que cerrar sesión
+   y volver a entrar UNA vez para obtener su token (la app se lo indica en
+   las pestañas Amigos/Escuadrón).

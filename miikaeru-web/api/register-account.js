@@ -9,7 +9,7 @@
 // texto plano.
 
 const { Client } = require("pg");
-const { hashPassword, getSupabaseEnvDiagnostics, classifyDbError, normalizePhone } = require("./_utils");
+const { hashPassword, getSupabaseEnvDiagnostics, classifyDbError, normalizePhone, signOperatorToken } = require("./_utils");
 
 module.exports = async function handler(req, res) {
   if (req.method !== "POST") {
@@ -59,7 +59,7 @@ module.exports = async function handler(req, res) {
       [phone, hashed, name]
     );
 
-    res.status(200).json({ ok: true, user: rows[0] });
+    res.status(200).json({ ok: true, user: rows[0], session: signOperatorToken(rows[0]) });
   } catch (err) {
     console.error("register-account falló:", err);
     const error = classifyDbError(err);

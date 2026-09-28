@@ -508,6 +508,70 @@ const MASTER_LOGGED_IN_KEY = "miikaeru_master_logged_in";
 // migrateLegacyMasterAccountIfNeeded() más abajo. Sin esto, cada carga
 // de página reintentaría la migración de nuevo innecesariamente.
 const MASTER_MIGRATED_KEY = "miikaeru_master_migrated";
+// JWT de Operador ({token, expiresAt, phone}) que devuelven
+// /api/login-account y /api/register-account — ver signOperatorToken()
+// en api/_utils.js. Es lo ÚNICO que habilita Amigos/Chat/Escuadrones
+// contra Supabase (ver socialClient más abajo y ensureSocialPolicies()
+// en api/init-db.js): sin él, la anon key pública ya no puede leer ni
+// escribir esas tablas. Una sesión recordada de antes de este cambio (o
+// un login en modo local-fallback) no lo tiene — esas pestañas piden
+// volver a iniciar sesión.
+const OPERATOR_SESSION_KEY = "miikaeru_operator_session";
+// Se renueva (ver /api/operator-session) cuando le queda menos de esto.
+const OPERATOR_SESSION_REFRESH_WINDOW_SECONDS = 2 * 24 * 60 * 60;
+
+function loadOperatorSession() {
+  try {
+    const session = JSON.parse(localStorage.getItem(OPERATOR_SESSION_KEY));
+    if (!session || !session.token || !session.phone) return null;
+    if (session.expiresAt <= Math.floor(Date.now() / 1000)) return null;
+    return session;
+  } catch (err) {
+    return null;
+  }
+}
+
+function saveOperatorSession(session, phone) {
+  if (session && session.token && phone) {
+    localStorage.setItem(OPERATOR_SESSION_KEY, JSON.stringify({ token: session.token, expiresAt: session.expiresAt, phone }));
+  } else {
+    localStorage.removeItem(OPERATOR_SESSION_KEY);
+  }
+}
+
+function clearOperatorSession() {
+  localStorage.removeItem(OPERATOR_SESSION_KEY);
+}
+
+let operatorSessionRefreshInFlight = null;
+
+// Token vigente para socialClient — lo renueva en segundo plano si está
+// por vencer. Nunca lanza: ante cualquier fallo devuelve el token actual
+// (todavía válido) o null.
+async function getOperatorAccessToken() {
+  const session = loadOperatorSession();
+  if (!session) return null;
+  const secondsLeft = session.expiresAt - Math.floor(Date.now() / 1000);
+  if (secondsLeft > OPERATOR_SESSION_REFRESH_WINDOW_SECONDS) return session.token;
+  if (!operatorSessionRefreshInFlight) {
+    operatorSessionRefreshInFlight = fetch("/api/operator-session", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${session.token}` },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.ok && data.session) saveOperatorSession(data.session, session.phone);
+        else if (data.error === "invalid_session") clearOperatorSession();
+      })
+      .catch(() => {})
+      .finally(() => {
+        operatorSessionRefreshInFlight = null;
+      });
+  }
+  await operatorSessionRefreshInFlight;
+  const refreshed = loadOperatorSession();
+  return refreshed ? refreshed.token : null;
+}
 
 // Modo híbrido: si /api/register-account o /api/login-account no
 // responden por un problema de infraestructura (SUPABASE_DB_URL sin
@@ -914,6 +978,18 @@ const supabaseClient = (typeof window !== "undefined" && window.supabase && wind
     })
   : null;
 
+// Segundo cliente, SOLO para Amigos/Chat/Escuadrones: manda el JWT de
+// Operador (getOperatorAccessToken(), arriba) en vez de la anon key sola,
+// tanto en REST como en Realtime — las políticas RLS de esas tablas
+// filtran por su claim `op_phone`. Separado de supabaseClient a
+// propósito: la opción `accessToken` desactiva supabase.auth, que el
+// Panel de Administrador sí necesita (sesión de Supabase Auth por email).
+const socialClient = (typeof window !== "undefined" && window.supabase && window.supabase.createClient)
+  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+      accessToken: getOperatorAccessToken,
+    })
+  : null;
+
 // ---------------------------------------------------
 // "Modo Local Autónomo": circuit breaker liviano para que ningún flujo
 // (Cuenta Principal, Amigos/Escuadrón, Métricas del Admin) siga
@@ -1108,7 +1184,7 @@ const I18N = {
     chatFriendAddSuccess: "¡Amigo agregado!",
     chatFriendAddNotFound: "No encontramos a nadie con ese nombre, teléfono o ID.",
     chatFriendAddSelf: "Ese eres tú.",
-    chatFriendAddNoSession: "Inicia sesión primero para agregar amigos.",
+    chatFriendAddNoSession: "Tu sesión de Amigos venció — cierra sesión y vuelve a entrar para agregar amigos.",
     chatFriendAddError: "No se pudo agregar — intenta de nuevo.",
     chatMyIdLabel: "Tu ID:",
     chatMyIdCopyBtn: "📋 Copiar",
@@ -1123,7 +1199,7 @@ const I18N = {
     chatSquadCreateSuccess: "¡Escuadrón creado!",
     chatSquadJoinSuccess: "¡Te uniste al Escuadrón!",
     chatSquadJoinNotFound: "Ese código no existe.",
-    chatSquadNoSession: "Inicia sesión primero.",
+    chatSquadNoSession: "Tu sesión de Amigos venció — cierra sesión y vuelve a entrar.",
     chatSquadSchemaMissing: "El sistema de Escuadrones todavía se está configurando en el servidor — probá de nuevo en unos minutos.",
     chatSquadError: "Algo falló — intenta de nuevo.",
     chatSquadNameRequired: "Ponle un nombre a tu Escuadrón.",
@@ -2262,7 +2338,7 @@ const I18N = {
     chatFriendAddSuccess: "Friend added!",
     chatFriendAddNotFound: "We couldn't find anyone with that name, phone or ID.",
     chatFriendAddSelf: "That's you.",
-    chatFriendAddNoSession: "Log in first to add friends.",
+    chatFriendAddNoSession: "Your Friends session expired — log out and back in to add friends.",
     chatFriendAddError: "Couldn't add friend — try again.",
     chatMyIdLabel: "Your ID:",
     chatMyIdCopyBtn: "📋 Copy",
@@ -2277,7 +2353,7 @@ const I18N = {
     chatSquadCreateSuccess: "Squad created!",
     chatSquadJoinSuccess: "Joined the Squad!",
     chatSquadJoinNotFound: "That code doesn't exist.",
-    chatSquadNoSession: "Log in first.",
+    chatSquadNoSession: "Your Friends session expired — log out and back in.",
     chatSquadSchemaMissing: "The Squads system is still being set up on the server — try again in a few minutes.",
     chatSquadError: "Something failed — try again.",
     chatSquadNameRequired: "Give your Squad a name.",
@@ -3416,7 +3492,7 @@ const I18N = {
     chatFriendAddSuccess: "フレンドを追加しました！",
     chatFriendAddNotFound: "その名前、電話番号、またはIDの相手が見つかりませんでした。",
     chatFriendAddSelf: "それはあなた自身です。",
-    chatFriendAddNoSession: "フレンドを追加するにはまずログインしてください。",
+    chatFriendAddNoSession: "フレンド用のセッションが切れました。ログアウトして再ログインしてください。",
     chatFriendAddError: "追加できませんでした — もう一度試してください。",
     chatMyIdLabel: "あなたのID:",
     chatMyIdCopyBtn: "📋 コピー",
@@ -3431,7 +3507,7 @@ const I18N = {
     chatSquadCreateSuccess: "スクワッドを作成しました！",
     chatSquadJoinSuccess: "スクワッドに参加しました！",
     chatSquadJoinNotFound: "そのコードは存在しません。",
-    chatSquadNoSession: "まずログインしてください。",
+    chatSquadNoSession: "フレンド用のセッションが切れました。ログアウトして再ログインしてください。",
     chatSquadSchemaMissing: "スクワッド機能はまだサーバー側で準備中です — 数分後にもう一度お試しください。",
     chatSquadError: "エラーが発生しました — もう一度お試しください。",
     chatSquadNameRequired: "スクワッドに名前を付けてください。",
@@ -12125,7 +12201,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // bump, un dispositivo que ya hubiera corrido /api/init-db con el
   // esquema anterior no lo volvería a llamar, y la tabla nunca se
   // crearía sola.
-  const DB_INIT_FLAG_KEY = "miikaeru_db_init_v20260810-5";
+  const DB_INIT_FLAG_KEY = "miikaeru_db_init_v20260928-1";
   if (!localStorage.getItem(DB_INIT_FLAG_KEY)) {
     fetch("/api/init-db")
       .then((res) => res.json())
@@ -16543,6 +16619,18 @@ document.addEventListener("DOMContentLoaded", () => {
     return account && account.phone ? account.phone : null;
   }
 
+  // Teléfono para todo lo que toca Supabase en Amigos/Chat/Escuadrones:
+  // solo existe si hay un JWT de Operador vigente (ver
+  // loadOperatorSession()) Y es de la misma Cuenta Principal que está
+  // logueada — si no, esos flujos caen en su camino "no-session" de
+  // siempre en vez de mandar consultas que RLS va a rechazar. Los
+  // contactos de prueba locales siguen usando myFriendPhone().
+  function socialPhone() {
+    const session = loadOperatorSession();
+    const phone = myFriendPhone();
+    return session && phone && session.phone === phone ? phone : null;
+  }
+
   // ---- ID único autogenerado ("MKR-892471") ----
   // Además del teléfono y el nombre, cada usuario tiene un ID corto y
   // compartible para buscarse/agregarse sin tener que dar el número —
@@ -16642,21 +16730,21 @@ document.addEventListener("DOMContentLoaded", () => {
   // vietnamita/chino/portugués puede registrarse en ese idioma aunque
   // la interfaz de la app siga en español.
   async function ensureContactRegistered() {
-    const phone = myFriendPhone();
-    if (!phone || !supabaseClient) return;
+    const phone = socialPhone();
+    if (!phone || !socialClient) return;
     try {
       // Reutiliza el unique_id ya asignado si el contacto ya existía —
       // solo genera uno nuevo la primera vez. Reintenta una vez ante un
       // choque de unique_id (dos dispositivos generando al mismo tiempo,
       // altamente improbable con 900000 combinaciones, pero posible).
-      const { data: existing } = await supabaseClient
+      const { data: existing } = await socialClient
         .from("app_contacts")
         .select("unique_id")
         .eq("phone", phone)
         .maybeSingle();
       let uniqueId = (existing && existing.unique_id) || generateUniqueId();
 
-      let { error } = await supabaseClient.from("app_contacts").upsert({
+      let { error } = await socialClient.from("app_contacts").upsert({
         phone,
         display_name: state.operatorName || "Operador",
         preferred_language: loadChatLanguage(),
@@ -16665,7 +16753,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       if (error && !(existing && existing.unique_id)) {
         uniqueId = generateUniqueId();
-        ({ error } = await supabaseClient.from("app_contacts").upsert({
+        ({ error } = await socialClient.from("app_contacts").upsert({
           phone,
           display_name: state.operatorName || "Operador",
           preferred_language: loadChatLanguage(),
@@ -16775,34 +16863,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const q = query.trim();
     if (!q) return null;
 
-    if (isUniqueIdFormat(q)) {
-      const { data, error } = await supabaseClient
-        .from("app_contacts")
-        .select("*")
-        .ilike("unique_id", q)
-        .maybeSingle();
-      if (error) throw new Error("schema-missing");
-      return data || null;
-    }
-
-    if (isPhoneFormat(q)) {
-      const { data, error } = await supabaseClient
-        .from("app_contacts")
-        .select("*")
-        .eq("phone", q)
-        .maybeSingle();
-      if (error) throw new Error("schema-missing");
-      return data || null;
-    }
-
-    // Búsqueda por nombre: parcial e insensible a mayúsculas, se queda
-    // con la primera coincidencia (misma app sin autenticación real de
-    // usuario final — mismo criterio ya documentado para Amigos).
-    const { data, error } = await supabaseClient
-      .from("app_contacts")
-      .select("*")
-      .ilike("display_name", `%${q}%`)
-      .limit(1);
+    // social_find_contact() (ver api/init-db.js) devuelve como mucho UNA
+    // fila — las políticas RLS ya no dejan leer app_contacts entero, así
+    // que el directorio de teléfonos no se puede listar desde el cliente.
+    // Búsqueda por nombre: parcial e insensible a mayúsculas (mínimo 3
+    // caracteres, validado del lado del servidor), primera coincidencia.
+    const mode = isUniqueIdFormat(q) ? "unique_id" : isPhoneFormat(q) ? "phone" : "name";
+    const { data, error } = await socialClient.rpc("social_find_contact", {
+      search_mode: mode,
+      search_query: mode === "phone" ? normalizePhone(q) : q,
+    });
     if (error) throw new Error("schema-missing");
     return (data && data[0]) || null;
   }
@@ -16816,14 +16886,14 @@ document.addEventListener("DOMContentLoaded", () => {
   // cuando la otra persona también te sigue de vuelta — ver loadFriends()
   // más abajo, que calcula el estado comparando ambas direcciones.
   async function addFriendByQuery(query) {
-    const myPhone = myFriendPhone();
-    if (!myPhone || !supabaseClient) throw new Error("no-session");
+    const myPhone = socialPhone();
+    if (!myPhone || !socialClient) throw new Error("no-session");
 
     const contact = await findContactByQuery(query);
     if (!contact) throw new Error("not-found");
     if (contact.phone === myPhone) throw new Error("self");
 
-    const { error } = await supabaseClient
+    const { error } = await socialClient
       .from("app_friendships")
       .upsert({ phone_a: myPhone, phone_b: contact.phone }, { onConflict: "phone_a,phone_b" });
     if (error) throw new Error("schema-missing");
@@ -16851,9 +16921,9 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem(LOCAL_TEST_MESSAGES_KEY, JSON.stringify(allMessages));
       return;
     }
-    const myPhone = myFriendPhone();
-    if (!myPhone || !supabaseClient) return;
-    await supabaseClient.from("app_friendships").delete().eq("phone_a", myPhone).eq("phone_b", friend.phone);
+    const myPhone = socialPhone();
+    if (!myPhone || !socialClient) return;
+    await socialClient.from("app_friendships").delete().eq("phone_a", myPhone).eq("phone_b", friend.phone);
   }
 
   // Amigos reales (Supabase) + contactos de prueba locales, combinados
@@ -16872,18 +16942,18 @@ document.addEventListener("DOMContentLoaded", () => {
   // "Siguiendo".
   async function loadFriends() {
     const localContacts = Object.values(loadLocalTestContacts()).map((c) => ({ ...c, relationship: "friend" }));
-    const myPhone = myFriendPhone();
-    if (!myPhone || !supabaseClient) return localContacts;
+    const myPhone = socialPhone();
+    if (!myPhone || !socialClient) return localContacts;
 
     const [{ data: following, error: followingError }, { data: followers }] = await Promise.all([
-      supabaseClient.from("app_friendships").select("phone_b").eq("phone_a", myPhone),
-      supabaseClient.from("app_friendships").select("phone_a").eq("phone_b", myPhone),
+      socialClient.from("app_friendships").select("phone_b").eq("phone_a", myPhone),
+      socialClient.from("app_friendships").select("phone_a").eq("phone_b", myPhone),
     ]);
     if (followingError || !following || !following.length) return localContacts;
 
     const followerSet = new Set((followers || []).map((f) => f.phone_a));
     const followingPhones = following.map((f) => f.phone_b);
-    const { data: contacts } = await supabaseClient.from("app_contacts").select("*").in("phone", followingPhones);
+    const { data: contacts } = await socialClient.from("app_contacts").select("*").in("phone", followingPhones);
     const withStatus = (contacts || []).map((c) => ({
       ...c,
       relationship: followerSet.has(c.phone) ? "friend" : "following",
@@ -16900,17 +16970,17 @@ document.addEventListener("DOMContentLoaded", () => {
   let friendshipsChannel = null;
 
   function stopFriendshipsRealtime() {
-    if (friendshipsChannel && supabaseClient) {
-      supabaseClient.removeChannel(friendshipsChannel);
+    if (friendshipsChannel && socialClient) {
+      socialClient.removeChannel(friendshipsChannel);
       friendshipsChannel = null;
     }
   }
 
   function wireFriendshipsRealtime() {
     stopFriendshipsRealtime();
-    const myPhone = myFriendPhone();
-    if (!supabaseClient || !myPhone) return;
-    friendshipsChannel = supabaseClient
+    const myPhone = socialPhone();
+    if (!socialClient || !myPhone) return;
+    friendshipsChannel = socialClient
       .channel(`friendships-${myPhone}`)
       .on(
         "postgres_changes",
@@ -17248,10 +17318,10 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    if (!supabaseClient) return;
-    const myPhone = myFriendPhone();
+    if (!socialClient) return;
+    const myPhone = socialPhone();
 
-    const { data, error } = await supabaseClient
+    const { data, error } = await socialClient
       .from("app_friend_messages")
       .select("*")
       .or(
@@ -17264,8 +17334,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function stopFriendRealtime() {
-    if (friendMessagesChannel && supabaseClient) {
-      supabaseClient.removeChannel(friendMessagesChannel);
+    if (friendMessagesChannel && socialClient) {
+      socialClient.removeChannel(friendMessagesChannel);
       friendMessagesChannel = null;
     }
   }
@@ -17275,11 +17345,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // Un contacto local es de un solo dispositivo por definición — no
     // hay ningún otro cliente con el que sincronizar, así que no tiene
     // sentido abrir un canal de Realtime para él.
-    if (!supabaseClient || !activeFriend || activeFriend.isLocal) return;
-    const myPhone = myFriendPhone();
+    if (!socialClient || !activeFriend || activeFriend.isLocal) return;
+    const myPhone = socialPhone();
     const friendPhone = activeFriend.phone;
 
-    friendMessagesChannel = supabaseClient
+    friendMessagesChannel = socialClient
       .channel(`friend-chat-${[myPhone, friendPhone].sort().join("-")}`)
       .on(
         "postgres_changes",
@@ -17360,9 +17430,9 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    if (!supabaseClient) return;
+    if (!socialClient || socialPhone() !== myPhone) return;
 
-    const { data: inserted, error } = await supabaseClient
+    const { data: inserted, error } = await socialClient
       .from("app_friend_messages")
       .insert({
         phone_from: myPhone,
@@ -17382,12 +17452,12 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const translated =
         senderLanguage === targetLanguage ? text : await translateViaMyMemory(text, targetLanguage, senderLanguage);
-      await supabaseClient
+      await socialClient
         .from("app_friend_messages")
         .update({ translated_text: translated, translation_status: "done" })
         .eq("id", inserted.id);
     } catch (err) {
-      await supabaseClient.from("app_friend_messages").update({ translation_status: "failed" }).eq("id", inserted.id);
+      await socialClient.from("app_friend_messages").update({ translation_status: "failed" }).eq("id", inserted.id);
     }
   }
 
@@ -17434,15 +17504,15 @@ document.addEventListener("DOMContentLoaded", () => {
   // para friendships -> contacts. Un usuario pertenece a un escuadrón a
   // la vez por simplicidad de producto.
   async function loadMySquad() {
-    const myPhone = myFriendPhone();
-    if (!myPhone || !supabaseClient) return null;
-    const { data: membership, error } = await supabaseClient
+    const myPhone = socialPhone();
+    if (!myPhone || !socialClient) return null;
+    const { data: membership, error } = await socialClient
       .from("app_squad_members")
       .select("squad_id")
       .eq("phone", myPhone)
       .maybeSingle();
     if (error || !membership) return null;
-    const { data: squad } = await supabaseClient
+    const { data: squad } = await socialClient
       .from("app_squads")
       .select("*")
       .eq("id", membership.squad_id)
@@ -17451,15 +17521,15 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function createSquad(name) {
-    const myPhone = myFriendPhone();
-    if (!myPhone || !supabaseClient) throw new Error("no-session");
+    const myPhone = socialPhone();
+    if (!myPhone || !socialClient) throw new Error("no-session");
 
     let squad = null;
     // Reintenta ante choque de código (33^6 combinaciones, un choque es
     // muy improbable, pero el código es la clave real que la gente
     // comparte a mano, vale la pena no fallar duro por eso).
     for (let attempt = 0; attempt < 5 && !squad; attempt++) {
-      const { data, error } = await supabaseClient
+      const { data, error } = await socialClient
         .from("app_squads")
         .insert({ code: generateSquadCode(), name: name.trim(), owner_phone: myPhone })
         .select()
@@ -17472,7 +17542,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     if (!squad) throw new Error("schema-missing");
 
-    const { error: memberError } = await supabaseClient
+    const { error: memberError } = await socialClient
       .from("app_squad_members")
       .upsert({ squad_id: squad.id, phone: myPhone }, { onConflict: "squad_id,phone" });
     if (memberError) throw new Error("schema-missing");
@@ -17480,28 +17550,23 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function joinSquadByCode(code) {
-    const myPhone = myFriendPhone();
-    if (!myPhone || !supabaseClient) throw new Error("no-session");
+    const myPhone = socialPhone();
+    if (!myPhone || !socialClient) throw new Error("no-session");
 
-    const { data: squad, error } = await supabaseClient
-      .from("app_squads")
-      .select("*")
-      .ilike("code", code.trim())
-      .maybeSingle();
-    if (error) throw new Error("schema-missing");
+    // social_join_squad() (ver api/init-db.js) busca por código Y agrega
+    // la membresía del lado del servidor — las políticas RLS ya no dejan
+    // leer escuadrones ajenos ni agregarse a uno sin pasar por ahí.
+    const { data, error } = await socialClient.rpc("social_join_squad", { squad_code: code.trim() });
+    if (error) throw new Error(/no-session/.test(error.message || "") ? "no-session" : "schema-missing");
+    const squad = (data && data[0]) || null;
     if (!squad) throw new Error("not-found");
-
-    const { error: memberError } = await supabaseClient
-      .from("app_squad_members")
-      .upsert({ squad_id: squad.id, phone: myPhone }, { onConflict: "squad_id,phone" });
-    if (memberError) throw new Error("schema-missing");
     return squad;
   }
 
   async function leaveSquad() {
-    const myPhone = myFriendPhone();
-    if (!mySquad || !myPhone || !supabaseClient) return;
-    await supabaseClient.from("app_squad_members").delete().eq("squad_id", mySquad.id).eq("phone", myPhone);
+    const myPhone = socialPhone();
+    if (!mySquad || !myPhone || !socialClient) return;
+    await socialClient.from("app_squad_members").delete().eq("squad_id", mySquad.id).eq("phone", myPhone);
     stopSquadRealtime();
     mySquad = null;
   }
@@ -17539,9 +17604,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function loadSquadMessages() {
-    if (!chatSquadFeed || !mySquad || !supabaseClient) return;
+    if (!chatSquadFeed || !mySquad || !socialClient) return;
     chatSquadFeed.innerHTML = "";
-    const { data, error } = await supabaseClient
+    const { data, error } = await socialClient
       .from("app_squad_messages")
       .select("*")
       .eq("squad_id", mySquad.id)
@@ -17552,8 +17617,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function stopSquadRealtime() {
-    if (squadMessagesChannel && supabaseClient) {
-      supabaseClient.removeChannel(squadMessagesChannel);
+    if (squadMessagesChannel && socialClient) {
+      socialClient.removeChannel(squadMessagesChannel);
       squadMessagesChannel = null;
     }
   }
@@ -17564,8 +17629,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // columna fija (squad_id) para filtrar server-side.
   function wireSquadRealtime() {
     stopSquadRealtime();
-    if (!supabaseClient || !mySquad) return;
-    squadMessagesChannel = supabaseClient
+    if (!socialClient || !mySquad) return;
+    squadMessagesChannel = socialClient
       .channel(`squad-chat-${mySquad.id}`)
       .on(
         "postgres_changes",
@@ -17670,9 +17735,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function sendSquadMessage(text) {
-    const myPhone = myFriendPhone();
-    if (!myPhone || !mySquad || !text.trim() || !supabaseClient) return;
-    await supabaseClient.from("app_squad_messages").insert({
+    const myPhone = socialPhone();
+    if (!myPhone || !mySquad || !text.trim() || !socialClient) return;
+    await socialClient.from("app_squad_messages").insert({
       squad_id: mySquad.id,
       phone_from: myPhone,
       display_name: state.operatorName || "Operador",
@@ -27104,6 +27169,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // de nuevo y pida la contraseña.
   logoutBtn.addEventListener("click", () => {
     localStorage.removeItem(MASTER_LOGGED_IN_KEY);
+    clearOperatorSession();
     location.reload();
   });
 
@@ -27141,6 +27207,7 @@ document.addEventListener("DOMContentLoaded", () => {
   masterAuthForgetDeviceBtn.addEventListener("click", () => {
     localStorage.removeItem(MASTER_ACCOUNT_KEY);
     localStorage.removeItem(MASTER_LOGGED_IN_KEY);
+    clearOperatorSession();
     masterLoginError.hidden = true;
     masterRegisterError.hidden = true;
     masterLoginForm.reset();
@@ -27299,6 +27366,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // recordar la sesión en este dispositivo (ver comentario de
       // MASTER_ACCOUNT_KEY arriba).
       localStorage.setItem(MASTER_ACCOUNT_KEY, JSON.stringify({ phone: data.user.phone, name: data.user.name }));
+      saveOperatorSession(data.session, data.user.phone);
       localStorage.setItem(MASTER_LOGGED_IN_KEY, "true");
       localStorage.setItem(MASTER_MIGRATED_KEY, "true");
       masterAuthModal.hidden = true;
@@ -27328,6 +27396,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       await saveLocalFallbackAccount(phone, password, null);
       localStorage.setItem(MASTER_ACCOUNT_KEY, JSON.stringify({ phone, name: null }));
+      clearOperatorSession();
       localStorage.setItem(MASTER_LOGGED_IN_KEY, "true");
       // No hay migración legacy pendiente que reintentar en este
       // dispositivo — el registro que sí falta subir es este nuevo
@@ -27425,6 +27494,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // la use activamente); esta cuenta que sí respondió el servidor
       // es la fuente de verdad de acá en más.
       localStorage.setItem(MASTER_ACCOUNT_KEY, JSON.stringify({ phone: data.user.phone, name: data.user.name }));
+      saveOperatorSession(data.session, data.user.phone);
       localStorage.setItem(MASTER_LOGGED_IN_KEY, "true");
       localStorage.setItem(MASTER_MIGRATED_KEY, "true");
       masterAuthModal.hidden = true;
@@ -27449,6 +27519,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const localMatch = await verifyLocalFallbackAccount(phone, password);
     if (!localMatch) return false;
     localStorage.setItem(MASTER_ACCOUNT_KEY, JSON.stringify({ phone, name: localMatch.name }));
+    clearOperatorSession();
     localStorage.setItem(MASTER_LOGGED_IN_KEY, "true");
     masterAuthModal.hidden = true;
     addMessage({ author: "SISTEMA", text: t("masterAuthLocalModeNotice"), variant: "system" });
@@ -27477,6 +27548,7 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.removeItem(MASTER_LOCAL_FALLBACK_KEY);
       const syncedName = (data.user && data.user.name) || name || null;
       localStorage.setItem(MASTER_ACCOUNT_KEY, JSON.stringify({ phone, name: syncedName }));
+      saveOperatorSession(data.session, phone);
       localStorage.setItem(MASTER_LOGGED_IN_KEY, "true");
       masterAuthModal.hidden = true;
       await clearStaleAdminSessionOnFreshMasterAuth();
