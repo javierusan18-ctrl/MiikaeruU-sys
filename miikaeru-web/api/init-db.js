@@ -250,6 +250,15 @@ const SCHEMA_STATEMENTS = [
     text text not null,
     created_at timestamptz not null default now()
   )`,
+  // Índices para las consultas reales de app.js — Postgres no indexa las
+  // foreign keys ni las columnas de filtro por sí solo. unique(phone_a,
+  // phone_b) ya cubre los filtros por phone_a; phone_b necesita el suyo.
+  `create index if not exists app_friendships_phone_b_idx on public.app_friendships (phone_b)`,
+  `create index if not exists app_friend_messages_pair_idx on public.app_friend_messages (phone_from, phone_to, created_at desc)`,
+  `create index if not exists app_squad_messages_squad_idx on public.app_squad_messages (squad_id, created_at desc)`,
+  `create index if not exists app_squad_members_phone_idx on public.app_squad_members (phone)`,
+  `create index if not exists transactions_txn_date_idx on public.transactions (txn_date desc)`,
+  `create index if not exists feedback_created_at_idx on public.feedback (created_at desc)`,
   // Sin política "anon full access" para esta — ver el comentario junto
   // al CREATE TABLE de public.users más arriba, es intencional.
   `alter table public.users enable row level security`,

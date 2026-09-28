@@ -17257,9 +17257,13 @@ document.addEventListener("DOMContentLoaded", () => {
       .or(
         `and(phone_from.eq.${myPhone},phone_to.eq.${activeFriend.phone}),and(phone_from.eq.${activeFriend.phone},phone_to.eq.${myPhone})`
       )
-      .order("created_at", { ascending: true });
+      // Los 200 más recientes (desc + limit) y luego se invierten para
+      // pintarlos en orden cronológico — sin límite, una conversación
+      // larga descargaba todo su historial en cada apertura.
+      .order("created_at", { ascending: false })
+      .limit(200);
 
-    if (!error && data) data.forEach((msg) => appendFriendMessage(msg));
+    if (!error && data) data.reverse().forEach((msg) => appendFriendMessage(msg));
     chatFriendFeed.scrollTop = chatFriendFeed.scrollHeight;
   }
 
@@ -17545,9 +17549,11 @@ document.addEventListener("DOMContentLoaded", () => {
       .from("app_squad_messages")
       .select("*")
       .eq("squad_id", mySquad.id)
-      .order("created_at", { ascending: true })
+      // desc + limit = los 100 MÁS RECIENTES (con ascending:true eran los
+      // 100 más viejos y los nuevos dejaban de aparecer al recargar).
+      .order("created_at", { ascending: false })
       .limit(100);
-    if (!error && data) data.forEach((msg) => appendSquadMessage(msg));
+    if (!error && data) data.reverse().forEach((msg) => appendSquadMessage(msg));
     chatSquadFeed.scrollTop = chatSquadFeed.scrollHeight;
   }
 
