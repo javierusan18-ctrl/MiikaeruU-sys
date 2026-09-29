@@ -1,0 +1,13 @@
+diff --git a/demo.py b/demo.py
+index d685d8a..c4ebf97 100644
+--- a/demo.py
++++ b/demo.py
+@@ -74,7 +74,7 @@ def make_animation(source_image, driving_video, inpainting_network, kp_detector,
+         kp_source = kp_detector(source)
+         kp_driving_initial = kp_detector(driving[:, :, 0])
+ 
+-        for frame_idx in tqdm(range(driving.shape[2])):
++        for frame_idx in tqdm(range(driving.shape[2]), desc="Transfiriendo el movimiento:"):
+             driving_frame = driving[:, :, frame_idx]
+             driving_frame = driving_frame.to(device)
+             kp_driving = kp_detector(driving_frame)

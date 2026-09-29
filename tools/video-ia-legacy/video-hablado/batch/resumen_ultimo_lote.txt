@@ -1,0 +1,5 @@
+Resumen del lote - 2026-09-15 01:18:55
+Total: 2 | Exitosos: 2 | Fallidos/omitidos: 0
+
+[OK] hablado/demo_hablado: C:\Users\PC\OneDrive\Desktop\Miikaeru_MVP\SadTalker\batch_output\hablado\demo_hablado.mp4
+[OK] cuerpo_completo/demo_cuerpo_completo: C:\Users\PC\OneDrive\Desktop\Miikaeru_MVP\SadTalker\batch_output\cuerpo_completo\demo_cuerpo_completo.mp4
