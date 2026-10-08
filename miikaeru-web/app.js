@@ -21835,7 +21835,15 @@ document.addEventListener("DOMContentLoaded", () => {
   // Nihongo" sin importar qué módulo la disparó. Opcional: si se omite,
   // cae al texto de siempre (jpVictoryTierXpUnit), cero cambio de
   // comportamiento para los llamadores de Nihongo existentes.
+  // Puente con Nyarukoo (la compañera de estudio de escritorio): avisa aciertos, errores y lecciones
+  // terminadas para que ella celebre o explique. window.nyaruko solo existe dentro de su ventana; en el
+  // navegador o el celular esto no hace absolutamente nada.
+  function emitStudyEvent(type, data) {
+    try { if (window.nyaruko && typeof window.nyaruko.emit === "function") window.nyaruko.emit({ type, ...data }); } catch (_) { /* nunca romper el estudio */ }
+  }
+
   function showJpVictoryModal({ title, subtitle, xp, gold, tierXp, tierXpUnitLabel }) {
+    emitStudyEvent("complete", { title, subtitle: subtitle || null, xp: xp || 0 });
     jpVictoryTitle.textContent = title;
     jpVictorySubtitle.hidden = !subtitle;
     jpVictorySubtitle.textContent = subtitle || "";
@@ -24580,6 +24588,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function handleMiniQuizAnswer(selected, item, btn) {
     const correct = selected === item.answer;
+    emitStudyEvent("answer", { kind: "quiz", correct, prompt: item.prompt || null, question: item.char || null, reading: item.charReading || null, expected: item.answer, chosen: selected });
     if (correct) miniQuizScore += 1;
     jpMiniQuizFeedback.hidden = false;
     jpMiniQuizFeedback.textContent = correct ? t("jpQuizCorrect") : `${t("jpQuizIncorrect")} ${item.answer}`;
@@ -24787,6 +24796,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function handleJpLevelExamAnswer(selected, item) {
     const correct = selected === item.answer;
+    emitStudyEvent("answer", { kind: "levelExam", correct, question: item.char || item.prompt || null, expected: item.answer, chosen: selected });
     Array.from(jpLevelExamOptions.children).forEach((btn) => {
       btn.disabled = true;
       if (btn.textContent === item.answer) btn.classList.add("jp-quiz-option-btn--correct");
@@ -25901,6 +25911,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function handleJpAnswer(selected, item) {
     const correct = selected === item.answer;
+    emitStudyEvent("answer", { kind: item.script === "kanji" ? "kanji" : "kana", script: item.script || null, correct, question: item.char, expected: item.answer, chosen: selected });
     const key = `${item.script}:${item.char}`;
 
     Array.from(jpQuizOptions.children).forEach((btn) => {
