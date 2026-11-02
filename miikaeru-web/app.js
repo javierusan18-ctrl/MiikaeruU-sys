@@ -768,6 +768,7 @@ const PROFILE_SCOPED_KEY_BASES = [
   "miikaeru_workout_plan",
   "miikaeru_workout_log",
   "miikaeru_seven_min_log",
+  "miikaeru_planner",
   "miikaeru_active_app",
   "miikaeru_chat_language",
   "miikaeru_local_test_contacts",
@@ -1976,7 +1977,7 @@ const I18N = {
     scaleControlsAvatar: "León",
     scaleControlsChat: "Chat",
     scaleControlsReset: "Restablecer",
-    calendarEventPlaceholder: "Pagos de sueldo, Mantenimiento Camión...",
+    calendarEventPlaceholder: "Cita, pago, reunión...",
     calendarAddBtn: "+ Agregar",
     calendarNoEvents: "Sin eventos para este día.",
     biosyncConnectBtn: "📡 Conectar Smartwatch / Banda Bluetooth",
@@ -3130,7 +3131,7 @@ const I18N = {
     scaleControlsAvatar: "Lion",
     scaleControlsChat: "Chat",
     scaleControlsReset: "Reset",
-    calendarEventPlaceholder: "Payroll, Truck maintenance...",
+    calendarEventPlaceholder: "Appointment, payment, meeting...",
     calendarAddBtn: "+ Add",
     calendarNoEvents: "No events for this day.",
     biosyncConnectBtn: "📡 Connect Smartwatch / Bluetooth Band",
@@ -4284,7 +4285,7 @@ const I18N = {
     scaleControlsChat: "チャット",
     scaleControlsReset: "リセット",
     appKaraokePlaceholder: "カラオケモジュールは開発中です。もうすぐここでお気に入りの曲を歌えるようになります。",
-    calendarEventPlaceholder: "給料の支払い、トラックの整備...",
+    calendarEventPlaceholder: "予約、支払い、会議...",
     calendarAddBtn: "+ 追加",
     calendarNoEvents: "この日の予定はありません。",
     biosyncConnectBtn: "📡 スマートウォッチ/バンドをBluetooth接続",
@@ -10618,6 +10619,66 @@ function persistCalendarEvents() {
 }
 
 let calendarEvents = loadCalendarEvents();
+
+// ---------------------------------------------------
+// Planificador del Calendario (Metas + Hábitos propios), inspirado en las
+// bases de datos enlazadas de Notion: cada Hábito puede apuntar a una Meta
+// (relación) y el avance de la Meta se calcula solo con los check-ins de
+// sus hábitos (rollup) — nunca se escribe a mano. Los check-ins de los
+// hábitos propios van al MISMO habitsLog que los 5 hábitos base (id
+// "h-..."), así hay un solo registro diario. Los campos ya llevan los
+// nombres de la futura tabla en Supabase (id, title, area, days, goalId,
+// createdAt) para respaldarlo después sin migrar formatos.
+// ---------------------------------------------------
+const PLANNER_KEY = scopedKey("miikaeru_planner", activeProfileId); // { version, goals: [], habits: [], rewarded: ["fecha|id"] }
+
+// open: módulo real al que lleva la recomendación (mismo botón que usa
+// #cyber-grid vía data-forward); tips: acciones concretas que el
+// Planificador recomienda cuando una meta de esa área va atrasada.
+const PLANNER_AREAS = [
+  { id: "estudio", label: "Estudio", open: { pillar: "aprendizaje" }, tips: ["Lección de japonés de 15 minutos", "Repasar 10 kanji o palabras nuevas", "Leer 10 páginas sobre tu meta"] },
+  { id: "ejercicio", label: "Ejercicio", open: { pillar: "templo", tab: "ejercicios" }, tips: ["Rutina de 7 minutos", "Caminata de 30 minutos", "Estiramientos de 10 minutos"] },
+  { id: "salud", label: "Salud", open: { pillar: "templo", tab: "nutricion" }, tips: ["Tomar 2 litros de agua", "Cocinar el almuerzo en casa", "Dormir antes de las 11 p. m."] },
+  { id: "finanzas", label: "Finanzas", open: { pillar: "finanzas" }, tips: ["Anotar los gastos del día", "Separar el 10 % de lo que ganes", "Revisar los pagos de la semana"] },
+  { id: "espiritu", label: "Mente", open: { pillar: "templo", tab: "espiritu" }, tips: ["Meditar 10 minutos", "Escribir 3 cosas que agradeces", "Planificar el día en 5 minutos"] },
+  { id: "personal", label: "Personal", open: null, tips: ["Avanzar 25 minutos en tu proyecto", "Llamar a alguien importante para ti", "Ordenar tu espacio de trabajo"] },
+];
+
+const PLANNER_ALL_DAYS = [0, 1, 2, 3, 4, 5, 6]; // getDay(): 0 = domingo
+
+// Plantillas tipo Notion: un toque crea la Meta con sus hábitos ya enlazados.
+const PLANNER_TEMPLATES = [
+  { id: "japones", title: "Aprender japonés (N5)", area: "estudio", days: 90, habits: [{ title: "Lección de japonés de 15 minutos", days: PLANNER_ALL_DAYS }, { title: "Repasar kanji", days: [1, 3, 5] }] },
+  { id: "forma", title: "Ponerme en forma", area: "ejercicio", days: 60, habits: [{ title: "Rutina de 7 minutos", days: [1, 3, 5] }, { title: "Caminata de 30 minutos", days: [2, 4, 6] }] },
+  { id: "ahorro", title: "Ahorrar cada mes", area: "finanzas", days: 90, habits: [{ title: "Anotar los gastos del día", days: PLANNER_ALL_DAYS }, { title: "Revisar el presupuesto", days: [0] }] },
+  { id: "salud", title: "Comer y dormir mejor", area: "salud", days: 30, habits: [{ title: "Tomar 2 litros de agua", days: PLANNER_ALL_DAYS }, { title: "Dormir antes de las 11 p. m.", days: PLANNER_ALL_DAYS }] },
+  { id: "calma", title: "Mente en calma", area: "espiritu", days: 30, habits: [{ title: "Meditar 10 minutos", days: PLANNER_ALL_DAYS }] },
+];
+
+function loadPlanner() {
+  const empty = { version: 1, goals: [], habits: [], rewarded: [] };
+  try {
+    const raw = localStorage.getItem(PLANNER_KEY);
+    const parsed = raw ? JSON.parse(raw) : null;
+    if (!parsed || typeof parsed !== "object") return empty;
+    return {
+      version: 1,
+      goals: Array.isArray(parsed.goals) ? parsed.goals : [],
+      habits: Array.isArray(parsed.habits) ? parsed.habits : [],
+      rewarded: Array.isArray(parsed.rewarded) ? parsed.rewarded : [],
+    };
+  } catch (err) {
+    return empty;
+  }
+}
+
+function persistPlanner() {
+  // rewarded solo evita cobrar dos veces el mismo check-in: basta con lo reciente.
+  if (planner.rewarded.length > 500) planner.rewarded = planner.rewarded.slice(-500);
+  localStorage.setItem(PLANNER_KEY, JSON.stringify(planner));
+}
+
+let planner = loadPlanner();
 
 // ---------------------------------------------------
 // Módulo Bio-Sync: registro de peso / sueño / energía, misma estrategia
@@ -20418,6 +20479,7 @@ document.addEventListener("DOMContentLoaded", () => {
         renderCalendarWeekdays();
         renderCalendar();
         renderCalendarEventsList();
+        renderPlanner();
       },
     },
   };
@@ -21673,6 +21735,15 @@ document.addEventListener("DOMContentLoaded", () => {
         cell.appendChild(dot);
       }
 
+      // Barrita de cumplimiento del día (Planificador): % de hábitos hechos.
+      const ratio = plannerDayRatio(dateKey);
+      if (ratio !== null) {
+        cell.classList.add("calendar-day--tracked");
+        if (ratio >= 1) cell.classList.add("calendar-day--complete");
+        cell.style.setProperty("--day-fill", String(ratio));
+        cell.title = `${Math.round(ratio * 100)} % de hábitos cumplidos`;
+      }
+
       calendarGridEl.appendChild(cell);
     }
   }
@@ -21729,6 +21800,7 @@ document.addEventListener("DOMContentLoaded", () => {
     calendarEventDateInput.value = calendarSelectedDate;
     renderCalendar();
     renderCalendarEventsList();
+    renderPlanner();
   });
 
   calendarAddEventBtn.addEventListener("click", () => {
@@ -21743,6 +21815,551 @@ document.addEventListener("DOMContentLoaded", () => {
     renderCalendar();
     renderCalendarEventsList();
     addGold(1);
+  });
+
+  // ---------------- Planificador: Metas + Hábitos + Recomendaciones ----------------
+  // Datos y constantes en PLANNER_KEY/PLANNER_AREAS/PLANNER_TEMPLATES (arriba,
+  // fuera del closure). Fechas en formato local "YYYY-MM-DD" (formatDateKey),
+  // salvo los 5 hábitos base de HOY, que siguen usando todayKey() porque así
+  // los guarda toggleHabit() — no se toca esa lógica ni su racha.
+
+  const plannerEl = document.getElementById("planner");
+  const plannerRecoEl = document.getElementById("planner-reco");
+  const plannerDayHabitsEl = document.getElementById("planner-day-habits");
+  const plannerTemplatesEl = document.getElementById("planner-templates");
+  const plannerGoalForm = document.getElementById("planner-goal-form");
+  const plannerGoalTitle = document.getElementById("planner-goal-title");
+  const plannerGoalArea = document.getElementById("planner-goal-area");
+  const plannerGoalDeadline = document.getElementById("planner-goal-deadline");
+  const plannerGoalsEl = document.getElementById("planner-goals");
+  const plannerHabitForm = document.getElementById("planner-habit-form");
+  const plannerHabitTitle = document.getElementById("planner-habit-title");
+  const plannerHabitArea = document.getElementById("planner-habit-area");
+  const plannerHabitGoal = document.getElementById("planner-habit-goal");
+  const plannerHabitDays = document.getElementById("planner-habit-days");
+  const plannerHabitsEl = document.getElementById("planner-habits");
+
+  const PLANNER_WEEK_ORDER = [1, 2, 3, 4, 5, 6, 0]; // chips de lunes a domingo
+  const PLANNER_DAY_LETTER = { 0: "D", 1: "L", 2: "M", 3: "X", 4: "J", 5: "V", 6: "S" };
+  let plannerHabitDaysPicked = new Set(PLANNER_ALL_DAYS);
+
+  function plannerToday() {
+    return formatDateKey(new Date());
+  }
+
+  function plannerParseDate(dateKey) {
+    const [y, m, d] = dateKey.split("-").map(Number);
+    return new Date(y, m - 1, d);
+  }
+
+  function plannerAddDays(dateKey, amount) {
+    const date = plannerParseDate(dateKey);
+    date.setDate(date.getDate() + amount);
+    return formatDateKey(date);
+  }
+
+  function plannerArea(areaId) {
+    return PLANNER_AREAS.find((area) => area.id === areaId) || PLANNER_AREAS[PLANNER_AREAS.length - 1];
+  }
+
+  function plannerIsScheduled(habit, dateKey) {
+    return !habit.archived
+      && habit.createdAt <= dateKey
+      && habit.days.includes(plannerParseDate(dateKey).getDay());
+  }
+
+  function plannerIsDone(habitId, dateKey) {
+    return !!(habitsLog[dateKey] && habitsLog[dateKey][habitId]);
+  }
+
+  // Entrada de los 5 hábitos base para una fecha local (hoy = clave de toggleHabit).
+  function plannerBaseEntry(dateKey) {
+    return (dateKey === plannerToday() ? habitsLog[todayKey()] : habitsLog[dateKey]) || {};
+  }
+
+  // % de hábitos cumplidos en un día (base + propios programados). null si
+  // es futuro o no hay ningún registro ese día (la celda queda sin barrita).
+  function plannerDayRatio(dateKey) {
+    if (dateKey > plannerToday()) return null;
+    const baseEntry = plannerBaseEntry(dateKey);
+    const baseDone = HABITS_LIST.filter((habit) => baseEntry[habit.id]).length;
+    const scheduled = planner.habits.filter((habit) => plannerIsScheduled(habit, dateKey));
+    const customDone = scheduled.filter((habit) => plannerIsDone(habit.id, dateKey)).length;
+    if (baseDone + customDone === 0) return null;
+    return (baseDone + customDone) / (HABITS_LIST.length + scheduled.length);
+  }
+
+  // Rollup tipo Notion: check-ins hechos / programados de los hábitos
+  // enlazados a la meta, entre `from` y `to` (incluidos).
+  function plannerGoalStats(goal, from, to) {
+    let scheduled = 0;
+    let done = 0;
+    planner.habits.filter((habit) => habit.goalId === goal.id && !habit.archived).forEach((habit) => {
+      let day = habit.createdAt > from ? habit.createdAt : from;
+      let guard = 0;
+      while (day <= to && guard < 400) {
+        if (plannerIsScheduled(habit, day)) {
+          scheduled += 1;
+          if (plannerIsDone(habit.id, day)) done += 1;
+        }
+        day = plannerAddDays(day, 1);
+        guard += 1;
+      }
+    });
+    return { scheduled, done, ratio: scheduled ? done / scheduled : 0 };
+  }
+
+  function plannerGoalProgress(goal) {
+    const today = plannerToday();
+    const end = goal.deadline && goal.deadline < today ? goal.deadline : today;
+    return plannerGoalStats(goal, goal.createdAt, end);
+  }
+
+  function plannerGoalWeek(goal) {
+    const today = plannerToday();
+    return plannerGoalStats(goal, plannerAddDays(today, -6), today);
+  }
+
+  // Racha del hábito: días programados seguidos cumplidos hasta hoy (si hoy
+  // todavía no lo marcó, la racha se cuenta desde ayer, no se rompe).
+  function plannerHabitStreak(habit) {
+    let day = plannerToday();
+    if (plannerIsScheduled(habit, day) && !plannerIsDone(habit.id, day)) day = plannerAddDays(day, -1);
+    let streak = 0;
+    let guard = 0;
+    while (day >= habit.createdAt && guard < 400) {
+      if (plannerIsScheduled(habit, day)) {
+        if (!plannerIsDone(habit.id, day)) break;
+        streak += 1;
+      }
+      day = plannerAddDays(day, -1);
+      guard += 1;
+    }
+    return streak;
+  }
+
+  function plannerDaysLabel(days) {
+    if (days.length === 7) return "Todos los días";
+    return PLANNER_WEEK_ORDER.filter((d) => days.includes(d)).map((d) => PLANNER_DAY_LETTER[d]).join(" · ");
+  }
+
+  function plannerNode(tag, className, text) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined) node.textContent = text;
+    return node;
+  }
+
+  function plannerAreaTag(areaId) {
+    const tag = plannerNode("span", `planner-area planner-area--${plannerArea(areaId).id}`, plannerArea(areaId).label);
+    return tag;
+  }
+
+  function plannerProgressBar(ratio) {
+    const bar = plannerNode("div", "planner-progress");
+    const fill = plannerNode("div", "planner-progress__fill");
+    fill.style.width = `${Math.round(Math.min(1, ratio) * 100)}%`;
+    bar.appendChild(fill);
+    return bar;
+  }
+
+  // Lleva al módulo real del área (mismo truco data-forward del #cyber-grid:
+  // click sintético sobre el botón original, así candados/estados no cambian).
+  function plannerOpenArea(areaId) {
+    const target = plannerArea(areaId).open;
+    if (!target) return;
+    closeAllAppModals();
+    const pillarBtn = document.querySelector(`.pillar-btn[data-pillar="${target.pillar}"]`);
+    if (pillarBtn) pillarBtn.click();
+    if (target.tab) {
+      const tabBtn = document.querySelector(`.templo-tab[data-templo-tab="${target.tab}"]`);
+      if (tabBtn) tabBtn.click();
+    }
+  }
+
+  function plannerNewId(prefix) {
+    return `${prefix}-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
+  }
+
+  function plannerAddHabit({ title, area, days, goalId }) {
+    planner.habits.push({
+      id: plannerNewId("h"),
+      title,
+      area,
+      days: [...days].sort(),
+      goalId: goalId || null,
+      createdAt: plannerToday(),
+      archived: false,
+    });
+  }
+
+  function plannerAddGoal({ title, area, deadline }) {
+    const goal = {
+      id: plannerNewId("g"),
+      title,
+      area,
+      deadline: deadline || null,
+      createdAt: plannerToday(),
+      done: false,
+      doneAt: null,
+    };
+    planner.goals.push(goal);
+    return goal;
+  }
+
+  function plannerRefresh() {
+    persistPlanner();
+    renderCalendar();
+    renderPlanner();
+  }
+
+  function plannerToggleCustomHabit(habit, dateKey) {
+    const entry = { ...(habitsLog[dateKey] || {}) };
+    entry[habit.id] = !entry[habit.id];
+    if (!entry[habit.id]) delete entry[habit.id];
+    habitsLog[dateKey] = entry;
+    persistHabitsLog();
+
+    // Recompensa una sola vez por hábito y día (desmarcar y volver a
+    // marcar no vuelve a pagar), igual que habitsMeta.lastStreakDate.
+    const rewardKey = `${dateKey}|${habit.id}`;
+    if (entry[habit.id] && !planner.rewarded.includes(rewardKey)) {
+      planner.rewarded.push(rewardKey);
+      grantXP(5);
+      addGold(1);
+      pulseAvatarStage();
+    }
+    plannerRefresh();
+  }
+
+  // ---- Pestaña «Mi día» ----
+
+  function renderPlannerReco() {
+    plannerRecoEl.innerHTML = "";
+    const activeGoals = planner.goals.filter((goal) => !goal.done);
+
+    if (!activeGoals.length) {
+      const card = plannerNode("div", "planner-reco-card");
+      card.append(
+        plannerNode("p", "planner-reco-card__title", "Define una meta y Miikaeru te arma los hábitos"),
+        plannerNode("p", "planner-reco-card__text", "Elige una plantilla: crea la meta con sus hábitos enlazados y aquí verás qué te toca cada día.")
+      );
+      const actions = plannerNode("div", "planner-reco-card__actions");
+      PLANNER_TEMPLATES.slice(0, 3).forEach((template) => {
+        const btn = plannerNode("button", "planner-chip", template.title);
+        btn.type = "button";
+        btn.addEventListener("click", () => plannerApplyTemplate(template));
+        actions.appendChild(btn);
+      });
+      card.appendChild(actions);
+      plannerRecoEl.appendChild(card);
+      return;
+    }
+
+    // Las 2 metas con peor semana: ahí es donde más rinde una recomendación.
+    const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+    activeGoals
+      .map((goal) => ({ goal, week: plannerGoalWeek(goal) }))
+      .sort((a, b) => a.week.ratio - b.week.ratio)
+      .slice(0, 2)
+      .forEach(({ goal, week }) => {
+        const area = plannerArea(goal.area);
+        const existing = new Set(planner.habits.filter((h) => !h.archived).map((h) => h.title.toLowerCase()));
+        const tips = area.tips.filter((tip) => !existing.has(tip.toLowerCase()));
+        const tip = tips.length ? tips[dayOfYear % tips.length] : null;
+        const percent = Math.round(week.ratio * 100);
+
+        const card = plannerNode("div", "planner-reco-card");
+        const head = plannerNode("div", "planner-reco-card__head");
+        head.append(plannerAreaTag(goal.area), plannerNode("span", "planner-reco-card__percent", week.scheduled ? `${percent} % esta semana` : "Sin hábitos aún"));
+        card.append(head, plannerNode("p", "planner-reco-card__title", goal.title));
+
+        const text = !week.scheduled
+          ? "Esta meta todavía no tiene hábitos. Empieza por uno pequeño:"
+          : percent >= 80 ? "Vas muy bien. Para subir de nivel, suma:" : "Para recuperar el ritmo, hoy te recomiendo:";
+        card.appendChild(plannerNode("p", "planner-reco-card__text", tip ? `${text} ${tip}.` : text.replace(/:$/, ".")));
+
+        const actions = plannerNode("div", "planner-reco-card__actions");
+        if (tip) {
+          const addBtn = plannerNode("button", "planner-chip planner-chip--gold", "+ Agregar como hábito");
+          addBtn.type = "button";
+          addBtn.addEventListener("click", () => {
+            plannerAddHabit({ title: tip, area: goal.area, days: PLANNER_ALL_DAYS, goalId: goal.id });
+            plannerRefresh();
+          });
+          actions.appendChild(addBtn);
+        }
+        if (area.open) {
+          const openBtn = plannerNode("button", "planner-chip", `Ir a ${area.label}`);
+          openBtn.type = "button";
+          openBtn.addEventListener("click", () => plannerOpenArea(goal.area));
+          actions.appendChild(openBtn);
+        }
+        card.appendChild(actions);
+        plannerRecoEl.appendChild(card);
+      });
+  }
+
+  function plannerHabitRow({ title, areaId, meta, done, disabled, onToggle, onOpen }) {
+    const row = plannerNode("div", "planner-row");
+    row.classList.toggle("planner-row--done", !!done);
+    const check = plannerNode("button", "planner-check");
+    check.type = "button";
+    check.disabled = !!disabled;
+    check.setAttribute("aria-pressed", done ? "true" : "false");
+    check.setAttribute("aria-label", done ? `Desmarcar ${title}` : `Marcar ${title}`);
+    if (onToggle) check.addEventListener("click", onToggle);
+
+    const body = plannerNode("div", "planner-row__body");
+    body.appendChild(plannerNode("span", "planner-row__title", title));
+    const sub = plannerNode("div", "planner-row__meta");
+    if (areaId) sub.appendChild(plannerAreaTag(areaId));
+    if (meta) sub.appendChild(plannerNode("span", "", meta));
+    body.appendChild(sub);
+
+    row.append(check, body);
+    if (onOpen) {
+      const go = plannerNode("button", "planner-row__go", "Abrir");
+      go.type = "button";
+      go.addEventListener("click", onOpen);
+      row.appendChild(go);
+    }
+    return row;
+  }
+
+  function renderPlannerDay() {
+    plannerDayHabitsEl.innerHTML = "";
+    const dateKey = calendarSelectedDate;
+    const today = plannerToday();
+    const isFuture = dateKey > today;
+    const dateLabel = plannerParseDate(dateKey).toLocaleDateString(calendarLocale(), { weekday: "long", day: "numeric", month: "long" });
+
+    const scheduled = planner.habits.filter((habit) => plannerIsScheduled(habit, dateKey));
+    const ratio = plannerDayRatio(dateKey);
+    const header = plannerNode("div", "planner-day-head");
+    header.append(
+      plannerNode("span", "planner-day-head__date", dateKey === today ? `Hoy · ${dateLabel}` : dateLabel),
+      plannerNode("span", "planner-day-head__percent", isFuture ? "Programado" : `${Math.round((ratio || 0) * 100)} %`)
+    );
+    plannerDayHabitsEl.appendChild(header);
+
+    if (scheduled.length) {
+      plannerDayHabitsEl.appendChild(plannerNode("p", "planner-label", "Tus hábitos"));
+      scheduled.forEach((habit) => {
+        const goal = planner.goals.find((g) => g.id === habit.goalId);
+        plannerDayHabitsEl.appendChild(plannerHabitRow({
+          title: habit.title,
+          areaId: habit.area,
+          meta: goal ? `Meta: ${goal.title}` : "",
+          done: plannerIsDone(habit.id, dateKey),
+          disabled: isFuture,
+          onToggle: () => plannerToggleCustomHabit(habit, dateKey),
+          onOpen: plannerArea(habit.area).open ? () => plannerOpenArea(habit.area) : null,
+        }));
+      });
+    }
+
+    // Los 5 hábitos base del Templo: se marcan solo HOY (su racha y su
+    // recompensa viven en toggleHabit); los días pasados se ven en lectura.
+    if (!isFuture) {
+      plannerDayHabitsEl.appendChild(plannerNode("p", "planner-label", "Rutina base"));
+      const baseEntry = plannerBaseEntry(dateKey);
+      HABITS_LIST.forEach((habit) => {
+        plannerDayHabitsEl.appendChild(plannerHabitRow({
+          title: t(habit.i18nKey),
+          done: !!baseEntry[habit.id],
+          disabled: dateKey !== today,
+          onToggle: () => {
+            toggleHabit(habit.id);
+            renderCalendar();
+            renderPlanner();
+          },
+        }));
+      });
+    }
+  }
+
+  // ---- Pestaña «Metas» ----
+
+  function plannerApplyTemplate(template) {
+    const goal = plannerAddGoal({ title: template.title, area: template.area, deadline: plannerAddDays(plannerToday(), template.days) });
+    template.habits.forEach((habit) => plannerAddHabit({ title: habit.title, area: template.area, days: habit.days, goalId: goal.id }));
+    plannerRefresh();
+  }
+
+  function renderPlannerGoals() {
+    plannerTemplatesEl.innerHTML = "";
+    const taken = new Set(planner.goals.filter((g) => !g.done).map((g) => g.title));
+    PLANNER_TEMPLATES.filter((template) => !taken.has(template.title)).forEach((template) => {
+      const btn = plannerNode("button", "planner-chip");
+      btn.type = "button";
+      btn.append(plannerAreaTag(template.area), document.createTextNode(` ${template.title}`));
+      btn.addEventListener("click", () => plannerApplyTemplate(template));
+      plannerTemplatesEl.appendChild(btn);
+    });
+
+    plannerGoalsEl.innerHTML = "";
+    if (!planner.goals.length) {
+      plannerGoalsEl.appendChild(plannerNode("p", "calendar-events-empty", "Todavía no tienes metas."));
+      return;
+    }
+
+    const today = plannerToday();
+    [...planner.goals].sort((a, b) => Number(a.done) - Number(b.done)).forEach((goal) => {
+      const progress = plannerGoalProgress(goal);
+      const linked = planner.habits.filter((h) => h.goalId === goal.id && !h.archived).length;
+      const card = plannerNode("div", "planner-goal");
+      card.classList.toggle("planner-goal--done", goal.done);
+
+      const head = plannerNode("div", "planner-goal__head");
+      head.append(plannerAreaTag(goal.area), plannerNode("span", "planner-goal__title", goal.title));
+      const removeBtn = plannerNode("button", "finanzas-category__remove", "✕");
+      removeBtn.type = "button";
+      removeBtn.setAttribute("aria-label", `Eliminar la meta ${goal.title}`);
+      removeBtn.addEventListener("click", () => {
+        if (!window.confirm(`¿Eliminar la meta «${goal.title}»? Sus hábitos se quedan, solo se desenlazan.`)) return;
+        planner.goals = planner.goals.filter((g) => g.id !== goal.id);
+        planner.habits.forEach((h) => { if (h.goalId === goal.id) h.goalId = null; });
+        plannerRefresh();
+      });
+      head.appendChild(removeBtn);
+
+      let timeLabel = "Sin fecha límite";
+      if (goal.done) timeLabel = "Lograda";
+      else if (goal.deadline) {
+        const left = Math.round((plannerParseDate(goal.deadline) - plannerParseDate(today)) / 86400000);
+        timeLabel = left > 0 ? `Faltan ${left} días` : left === 0 ? "Vence hoy" : `Venció hace ${-left} días`;
+      }
+      const meta = plannerNode("div", "planner-goal__meta");
+      meta.append(
+        plannerNode("span", "", `${Math.round(progress.ratio * 100)} % cumplido`),
+        plannerNode("span", "", `${linked} ${linked === 1 ? "hábito" : "hábitos"}`),
+        plannerNode("span", "", timeLabel)
+      );
+
+      card.append(head, plannerProgressBar(progress.ratio), meta);
+
+      if (!goal.done) {
+        const doneBtn = plannerNode("button", "planner-chip planner-chip--gold", "Marcar como lograda");
+        doneBtn.type = "button";
+        doneBtn.addEventListener("click", () => {
+          goal.done = true;
+          goal.doneAt = today;
+          grantXP(50);
+          addGold(20);
+          pulseAvatarStage();
+          setAvatarSpeech(`¡Meta lograda: ${goal.title}! Así se construye una vida.`);
+          plannerRefresh();
+        });
+        card.appendChild(doneBtn);
+      }
+      plannerGoalsEl.appendChild(card);
+    });
+  }
+
+  // ---- Pestaña «Hábitos» ----
+
+  function renderPlannerHabitDays() {
+    plannerHabitDays.innerHTML = "";
+    PLANNER_WEEK_ORDER.forEach((day) => {
+      const chip = plannerNode("button", "planner-day-chip", PLANNER_DAY_LETTER[day]);
+      chip.type = "button";
+      chip.setAttribute("aria-pressed", plannerHabitDaysPicked.has(day) ? "true" : "false");
+      chip.addEventListener("click", () => {
+        if (plannerHabitDaysPicked.has(day)) {
+          if (plannerHabitDaysPicked.size > 1) plannerHabitDaysPicked.delete(day);
+        } else {
+          plannerHabitDaysPicked.add(day);
+        }
+        renderPlannerHabitDays();
+      });
+      plannerHabitDays.appendChild(chip);
+    });
+  }
+
+  function renderPlannerHabits() {
+    const selectedGoal = plannerHabitGoal.value;
+    plannerHabitGoal.innerHTML = "";
+    plannerHabitGoal.appendChild(new Option("Sin meta", ""));
+    planner.goals.filter((g) => !g.done).forEach((goal) => plannerHabitGoal.appendChild(new Option(`Meta: ${goal.title}`, goal.id)));
+    plannerHabitGoal.value = planner.goals.some((g) => g.id === selectedGoal && !g.done) ? selectedGoal : "";
+
+    plannerHabitsEl.innerHTML = "";
+    const active = planner.habits.filter((habit) => !habit.archived);
+    if (!active.length) {
+      plannerHabitsEl.appendChild(plannerNode("p", "calendar-events-empty", "Crea tu primer hábito o usa una plantilla en Metas."));
+      return;
+    }
+    active.forEach((habit) => {
+      const goal = planner.goals.find((g) => g.id === habit.goalId);
+      const streak = plannerHabitStreak(habit);
+      const row = plannerNode("div", "planner-row");
+      const body = plannerNode("div", "planner-row__body");
+      body.appendChild(plannerNode("span", "planner-row__title", habit.title));
+      const meta = plannerNode("div", "planner-row__meta");
+      meta.append(plannerAreaTag(habit.area), plannerNode("span", "", plannerDaysLabel(habit.days)));
+      if (streak) meta.appendChild(plannerNode("span", "planner-streak", `Racha ${streak}`));
+      if (goal) meta.appendChild(plannerNode("span", "", `Meta: ${goal.title}`));
+      body.appendChild(meta);
+
+      // Archivar (no borrar): sus check-ins siguen contando en el historial.
+      const removeBtn = plannerNode("button", "finanzas-category__remove", "✕");
+      removeBtn.type = "button";
+      removeBtn.setAttribute("aria-label", `Quitar el hábito ${habit.title}`);
+      removeBtn.addEventListener("click", () => {
+        habit.archived = true;
+        plannerRefresh();
+      });
+      row.append(body, removeBtn);
+      plannerHabitsEl.appendChild(row);
+    });
+  }
+
+  function renderPlanner() {
+    if (!plannerEl) return;
+    renderPlannerReco();
+    renderPlannerDay();
+    renderPlannerGoals();
+    renderPlannerHabits();
+  }
+
+  [plannerGoalArea, plannerHabitArea].forEach((select) => {
+    PLANNER_AREAS.forEach((area) => select.appendChild(new Option(area.label, area.id)));
+  });
+  renderPlannerHabitDays();
+
+  plannerEl.querySelectorAll(".planner-tab").forEach((tabBtn) => {
+    tabBtn.addEventListener("click", () => {
+      plannerEl.querySelectorAll(".planner-tab").forEach((b) => b.classList.toggle("planner-tab--active", b === tabBtn));
+      plannerEl.querySelectorAll(".planner-panel").forEach((panel) => {
+        panel.hidden = panel.id !== `planner-panel-${tabBtn.dataset.plannerTab}`;
+      });
+    });
+  });
+
+  plannerGoalForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const title = plannerGoalTitle.value.trim();
+    if (!title) return;
+    plannerAddGoal({ title, area: plannerGoalArea.value, deadline: plannerGoalDeadline.value || null });
+    plannerGoalTitle.value = "";
+    plannerGoalDeadline.value = "";
+    plannerRefresh();
+  });
+
+  // Al elegir una meta, el hábito toma su área (relación coherente).
+  plannerHabitGoal.addEventListener("change", () => {
+    const goal = planner.goals.find((g) => g.id === plannerHabitGoal.value);
+    if (goal) plannerHabitArea.value = goal.area;
+  });
+
+  plannerHabitForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const title = plannerHabitTitle.value.trim();
+    if (!title) return;
+    plannerAddHabit({ title, area: plannerHabitArea.value, days: [...plannerHabitDaysPicked], goalId: plannerHabitGoal.value || null });
+    plannerHabitTitle.value = "";
+    plannerRefresh();
   });
 
   // ---------------- Módulo Bio-Sync & Estado Físico ----------------

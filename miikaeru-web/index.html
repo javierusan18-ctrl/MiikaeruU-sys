@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20260903-1" />
+  <link rel="stylesheet" href="style.css?v=20261102-3" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -1719,11 +1719,50 @@
 
         <div class="calendar-add-event">
           <input type="date" id="calendar-event-date" class="calendar-input" />
-          <input type="text" id="calendar-event-title" class="calendar-input" data-i18n-placeholder="calendarEventPlaceholder" placeholder="Pagos de sueldo, Mantenimiento Camión..." />
+          <input type="text" id="calendar-event-title" class="calendar-input" data-i18n-placeholder="calendarEventPlaceholder" placeholder="Cita, pago, reunión..." />
           <button type="button" class="btn-register" id="calendar-add-event-btn" data-i18n="calendarAddBtn">+ Agregar</button>
         </div>
 
         <div class="calendar-events-list" id="calendar-events-list"></div>
+
+        <!-- Planificador (Metas + Hábitos + Recomendaciones), estilo Notion:
+             lo dibuja renderPlanner() en app.js. La barrita bajo cada día de
+             la grilla es el % de hábitos cumplidos ese día. -->
+        <div class="planner" id="planner">
+          <div class="planner-tabs" role="tablist">
+            <button type="button" class="planner-tab planner-tab--active" data-planner-tab="dia" role="tab">Mi día</button>
+            <button type="button" class="planner-tab" data-planner-tab="metas" role="tab">Metas</button>
+            <button type="button" class="planner-tab" data-planner-tab="habitos" role="tab">Hábitos</button>
+          </div>
+
+          <div class="planner-panel" id="planner-panel-dia">
+            <div class="planner-reco" id="planner-reco"></div>
+            <div class="planner-list" id="planner-day-habits"></div>
+          </div>
+
+          <div class="planner-panel" id="planner-panel-metas" hidden>
+            <p class="planner-label">Empieza con una plantilla</p>
+            <div class="planner-templates" id="planner-templates"></div>
+            <form class="planner-form" id="planner-goal-form">
+              <input type="text" id="planner-goal-title" class="calendar-input" maxlength="60" placeholder="Tu meta, p. ej.: Aprobar el JLPT N5" required />
+              <select id="planner-goal-area" class="calendar-input" aria-label="Área"></select>
+              <input type="date" id="planner-goal-deadline" class="calendar-input" aria-label="Fecha límite" />
+              <button type="submit" class="btn-register">+ Meta</button>
+            </form>
+            <div class="planner-list" id="planner-goals"></div>
+          </div>
+
+          <div class="planner-panel" id="planner-panel-habitos" hidden>
+            <form class="planner-form" id="planner-habit-form">
+              <input type="text" id="planner-habit-title" class="calendar-input" maxlength="60" placeholder="Nuevo hábito, p. ej.: Leer 20 minutos" required />
+              <select id="planner-habit-area" class="calendar-input" aria-label="Área"></select>
+              <select id="planner-habit-goal" class="calendar-input" aria-label="Meta"></select>
+              <div class="planner-days" id="planner-habit-days" role="group" aria-label="Días"></div>
+              <button type="submit" class="btn-register">+ Hábito</button>
+            </form>
+            <div class="planner-list" id="planner-habits"></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -3737,7 +3776,7 @@
        etiquetas <script> no importa en la práctica — se carga acá antes
        igual, por prolijidad. -->
   <script src="floatingWindow.js?v=20260819-2"></script>
-  <script src="app.js?v=20261102-1"></script>
+  <script src="app.js?v=20261102-3"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de

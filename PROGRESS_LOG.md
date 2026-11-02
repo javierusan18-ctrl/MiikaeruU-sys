@@ -1998,3 +1998,19 @@ Miikaeru tenía 3 líneas sueltas que no se contenían entre sí: `origin/main` 
 - La parte de seguridad no requiere SQL a mano (`/api/init-db` crea las políticas), pero **antes de publicar** hace falta `SUPABASE_JWT_SECRET` en Vercel (ver DEPLOYMENT.md); si no, Amigos/Escuadrones quedan bloqueados.
 - Pruebas: `node --check` de app.js, sw.js y api/*.js sin errores; la app abre en local con la versión nueva y sin errores de JS (solo los 404 esperados de `/api/init-db` y `leon_nivel1.glb`).
 - Plan completo: `C:\Users\PC\OneDrive\Desktop\Miikaeru_MVP\plan-maros-miikaeru.md`. Sin push.
+
+## Bloque 76 — Calendario con Metas, Hábitos y Recomendaciones (estilo Notion) (2026-11-02)
+
+Pedido de Javier: llevar en el Calendario el registro de hábitos y el cumplimiento de metas, enlazado con lo que se le puede recomendar (estudiar, ejercitarse, etc.), estudiando lo que ofrece Notion. De Notion se tomó: bases enlazadas (Hábito → Meta), avance calculado solo (rollup), vista calendario con el cumplimiento de cada día y plantillas que crean todo en un toque.
+
+- **Datos** (`app.js`, junto a `calendarEvents`): una sola clave nueva por perfil, `miikaeru_planner` = `{ version, goals, habits, rewarded }`, agregada a `PROFILE_SCOPED_KEY_BASES`. Los check-ins de los hábitos propios (id `h-…`) van al MISMO `habitsLog` que los 5 hábitos base. Campos con nombres de la futura tabla de Supabase. `PLANNER_AREAS` (Estudio, Ejercicio, Salud, Finanzas, Mente, Personal) con el módulo real al que lleva cada área y sus acciones recomendadas; `PLANNER_TEMPLATES` (5 plantillas).
+- **Calendario**: cada día muestra una barrita con el % de hábitos cumplidos (dorada al 100 %). Debajo, 3 pestañas: **Mi día** (recomendaciones para las 2 metas con peor semana + checklist del día: hábitos propios y la rutina base, que se marca con el mismo `toggleHabit()` del Templo, sin tocar su racha), **Metas** (plantillas, crear meta con área y fecha límite, barra de avance, días restantes, «Marcar como lograda» +50 XP +20 oro) y **Hábitos** (crear hábito con área, meta y días; racha por hábito; quitar = archivar, el historial se conserva).
+- **Recomendaciones**: reglas fijas, sin IA ni costo. «+ Agregar como hábito» lo crea enlazado a la meta; «Ir a …» abre el módulo real (Aprendizaje, Templo › Ejercicios/Nutrición/Espíritu, Finanzas) con el mismo click sintético de `#cyber-grid`.
+- Recompensa por check-in: +5 XP +1 oro, una sola vez por hábito y día (`rewarded`).
+- Texto de ejemplo de eventos «Pagos de sueldo, Mantenimiento Camión…» → «Cita, pago, reunión…» (es/en/ja).
+- Estilos al final del bloque del Calendario en `style.css`, solo con variables de `:root` (tomarán la paleta de Maros en la Fase 1); sin emojis, un punto de color por área.
+- Versión: `?v=20261102-3` y `CACHE_NAME miikaeru-cache-v20261102-3`.
+
+**Pruebas (navegador real, local):** plantilla «Ponerme en forma» + «Aprender japonés» crean 2 metas con 4 hábitos enlazados; marcar un hábito → meta 50 %, día 13–29 % con su barrita, «Racha 1», XP/oro una sola vez; el hábito base marcado desde el calendario aparece hecho en Templo › Hábitos; «Ir a Ejercicio» cierra el calendario y abre el Templo en Ejercicios; «Ir a Estudio» abre Aprendizaje; en 375 px no hay scroll horizontal; los datos siguen después de recargar. Sin errores de JS (solo los 404 esperados de `/api/init-db` y `leon_nivel1.glb`).
+
+**Pendiente / conocido:** los datos viven en el dispositivo (igual que el calendario de hoy); el respaldo en Supabase se hará cuando esté publicada la seguridad por JWT de Operador. Textos nuevos solo en español (en inglés/japonés también se ven en español). Bug previo, no tocado: `todayKey()` usa la fecha UTC, así que en Japón antes de las 9:00 los 5 hábitos base se guardan en el día anterior.

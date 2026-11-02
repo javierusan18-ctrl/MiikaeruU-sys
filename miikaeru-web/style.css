@@ -4105,6 +4105,398 @@ body.miikaeru-anim-off .modal-overlay .modal--japanese {
   font-size: 0.72rem;
 }
 
+/* ---- Planificador del Calendario (Metas + Hábitos), ver renderPlanner() ----
+   Solo usa las variables de :root, así toma sola la paleta que se defina
+   arriba (la de Maros en la Fase 1). */
+
+.calendar-day--tracked::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  bottom: 2px;
+  height: 2px;
+  width: calc((100% - 8px) * var(--day-fill, 0));
+  border-radius: 2px;
+  background: var(--neon-green);
+}
+
+.calendar-day--complete {
+  border-color: var(--neon-gold);
+  box-shadow: inset 0 0 8px rgba(255, 183, 0, 0.18);
+}
+
+.calendar-day--complete::after {
+  background: var(--neon-gold);
+}
+
+.planner {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+  padding-top: 10px;
+  border-top: 1px solid var(--glass-border);
+  text-align: left;
+}
+
+.planner-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  padding: 3px;
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.planner-tab {
+  border: 0;
+  border-radius: 999px;
+  padding: 6px 8px;
+  background: transparent;
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 0.72rem;
+  letter-spacing: 0.4px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.planner-tab--active {
+  background: rgba(0, 240, 255, 0.12);
+  color: var(--text-primary);
+}
+
+.planner-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.planner-label {
+  margin: 4px 0 0;
+  font-size: 0.62rem;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.planner-list,
+.planner-reco,
+.planner-templates {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.planner-templates {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.planner-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.planner-form .btn-register {
+  flex: 0 0 auto;
+}
+
+.planner-days {
+  display: flex;
+  gap: 4px;
+  flex: 1 1 100%;
+}
+
+.planner-day-chip {
+  flex: 1;
+  min-width: 0;
+  padding: 5px 0;
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 0.68rem;
+  cursor: pointer;
+}
+
+.planner-day-chip[aria-pressed="true"] {
+  border-color: var(--neon-cyan);
+  background: rgba(0, 240, 255, 0.12);
+  color: var(--text-primary);
+}
+
+.planner-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 0.68rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.planner-chip:hover {
+  border-color: var(--neon-cyan);
+}
+
+.planner-chip--gold {
+  border-color: rgba(255, 183, 0, 0.5);
+  color: var(--neon-gold);
+}
+
+.planner-chip--gold:hover {
+  border-color: var(--neon-gold);
+  background: rgba(255, 183, 0, 0.08);
+}
+
+/* Etiqueta de área: un punto de color + nombre (sin emojis). */
+.planner-area {
+  --area: var(--neon-cyan);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.6rem;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--area);
+  white-space: nowrap;
+}
+
+.planner-area::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--area);
+  box-shadow: 0 0 6px var(--area);
+}
+
+.planner-area--estudio { --area: var(--neon-purple); }
+.planner-area--ejercicio { --area: #FF7A45; }
+.planner-area--salud { --area: var(--neon-green); }
+.planner-area--finanzas { --area: var(--neon-gold); }
+.planner-area--espiritu { --area: var(--neon-cyan); }
+.planner-area--personal { --area: var(--neon-magenta); }
+
+.planner-reco-card,
+.planner-goal {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  background: var(--glass-bg);
+}
+
+.planner-reco-card {
+  border-color: rgba(255, 183, 0, 0.35);
+  background: linear-gradient(135deg, rgba(255, 183, 0, 0.07), rgba(168, 85, 247, 0.05));
+}
+
+.planner-reco-card__head,
+.planner-goal__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.planner-reco-card__percent {
+  margin-left: auto;
+  font-size: 0.62rem;
+  color: var(--text-secondary);
+}
+
+.planner-reco-card__title,
+.planner-goal__title {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.planner-goal__title {
+  flex: 1;
+  min-width: 0;
+}
+
+.planner-reco-card__text {
+  margin: 0;
+  font-size: 0.7rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.planner-reco-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.planner-progress {
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+}
+
+.planner-progress__fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--neon-cyan), var(--neon-gold));
+  transition: width 0.4s ease;
+}
+
+.planner-goal__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  font-size: 0.62rem;
+  color: var(--text-secondary);
+}
+
+.planner-goal .planner-chip--gold {
+  align-self: flex-start;
+}
+
+.planner-goal--done {
+  opacity: 0.6;
+}
+
+.planner-day-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.planner-day-head__date {
+  font-size: 0.78rem;
+  color: var(--text-primary);
+}
+
+.planner-day-head__date::first-letter {
+  text-transform: uppercase;
+}
+
+.planner-day-head__percent {
+  font-size: 0.7rem;
+  color: var(--neon-gold);
+}
+
+.planner-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.planner-row__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.planner-row__title {
+  font-size: 0.74rem;
+  color: var(--text-primary);
+}
+
+.planner-row--done .planner-row__title {
+  color: var(--text-secondary);
+  text-decoration: line-through;
+}
+
+.planner-row__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  font-size: 0.6rem;
+  color: var(--text-secondary);
+}
+
+.planner-streak {
+  color: var(--neon-gold);
+}
+
+.planner-check {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid var(--text-secondary);
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.planner-check:hover:not(:disabled) {
+  border-color: var(--neon-cyan);
+}
+
+.planner-check[aria-pressed="true"] {
+  border-color: var(--neon-green);
+  background: var(--neon-green);
+}
+
+.planner-check[aria-pressed="true"]::after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid #04121a;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.planner-check:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.planner-row__go {
+  flex: 0 0 auto;
+  border: 1px solid var(--glass-border);
+  border-radius: 999px;
+  padding: 3px 9px;
+  background: transparent;
+  color: var(--neon-cyan);
+  font: inherit;
+  font-size: 0.62rem;
+  cursor: pointer;
+}
+
+.planner-row__go:hover {
+  border-color: var(--neon-cyan);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .planner-progress__fill,
+  .planner-tab,
+  .planner-chip,
+  .planner-check {
+    transition: none;
+  }
+}
+
 /* ===================== MÓDULO BIO-SYNC & ESTADO FÍSICO ===================== */
 
 .biosync-content {
