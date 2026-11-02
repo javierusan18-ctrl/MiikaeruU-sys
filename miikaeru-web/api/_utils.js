@@ -196,6 +196,88 @@ function normalizePhone(raw) {
   return digits;
 }
 
+// ---------------------------------------------------------------------
+// Sesión de Operador (JWT propio firmado con el JWT secret de Supabase)
+// ---------------------------------------------------------------------
+// Las Cuentas de Operador NO son usuarios de Supabase Auth (ver
+// api/login-account.js), así que antes el navegador hablaba con las
+// tablas de Amigos/Chat/Escuadrones solo con la anon key pública — y
+// para que eso funcionara, esas tablas tenían políticas "anon full
+// access" (cualquiera con la key, que es pública, podía leer/modificar
+// los mensajes y contactos de TODOS). Ahora login/register devuelven un
+// JWT firmado acá con el mismo secreto HS256 que usa Supabase
+// (SUPABASE_JWT_SECRET, Supabase → Project Settings → JWT Keys →
+// "Legacy JWT secret"), así PostgREST y Realtime lo aceptan como una
+// sesión `authenticated` normal y las políticas RLS (ver
+// ensureSocialPolicies() en init-db.js) filtran por el claim `op_phone`.
+//
+// Por qué un claim propio (`op_phone`) y no el `phone` estándar: los
+// tokens de Supabase Auth (la sesión del Panel de Administrador) también
+// son `authenticated` y traen su propio `phone` top-level — un claim con
+// nombre propio garantiza que solo un token emitido por ESTE servidor
+// (tras verificar la contraseña) puede hacerse pasar por un Operador.
+const OPERATOR_TOKEN_TTL_SECONDS = 7 * 24 * 60 * 60;
+const OPERATOR_TOKEN_ISSUER = "miikaeru-operator";
+
+function base64url(input) {
+  return Buffer.from(input).toString("base64").replace(/=+$/, "").replace(/\+/g, "-").replace(/\//g, "_");
+}
+
+function getJwtSecret() {
+  return (process.env.SUPABASE_JWT_SECRET || "").trim();
+}
+
+// Devuelve {token, expiresAt} o null si SUPABASE_JWT_SECRET no está
+// configurado — el login sigue funcionando igual (el Operador entra a la
+// app), solo que sin sesión para Amigos/Escuadrones hasta que se
+// configure la variable en Vercel.
+function signOperatorToken(user) {
+  const secret = getJwtSecret();
+  if (!secret || !user || !user.phone) return null;
+  const now = Math.floor(Date.now() / 1000);
+  const exp = now + OPERATOR_TOKEN_TTL_SECONDS;
+  const header = base64url(JSON.stringify({ alg: "HS256", typ: "JWT" }));
+  const payload = base64url(
+    JSON.stringify({
+      iss: OPERATOR_TOKEN_ISSUER,
+      aud: "authenticated",
+      role: "authenticated",
+      sub: String(user.id),
+      op_phone: user.phone,
+      iat: now,
+      exp,
+    })
+  );
+  const signature = base64url(crypto.createHmac("sha256", secret).update(`${header}.${payload}`).digest());
+  return { token: `${header}.${payload}.${signature}`, expiresAt: exp };
+}
+
+// Verifica firma + vencimiento + emisor de un token de Operador y
+// devuelve su payload, o null. Solo acepta tokens emitidos por
+// signOperatorToken() (iss + op_phone), nunca una sesión de Supabase
+// Auth aunque esté firmada con el mismo secreto.
+function verifyOperatorToken(authHeader) {
+  const secret = getJwtSecret();
+  const token = typeof authHeader === "string" ? authHeader.replace(/^Bearer\s+/i, "").trim() : "";
+  if (!secret || !token) return null;
+  const parts = token.split(".");
+  if (parts.length !== 3) return null;
+  const expected = base64url(crypto.createHmac("sha256", secret).update(`${parts[0]}.${parts[1]}`).digest());
+  const a = Buffer.from(parts[2]);
+  const b = Buffer.from(expected);
+  if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) return null;
+  try {
+    const header = JSON.parse(Buffer.from(parts[0], "base64").toString("utf8"));
+    if (header.alg !== "HS256") return null;
+    const payload = JSON.parse(Buffer.from(parts[1], "base64").toString("utf8"));
+    if (payload.iss !== OPERATOR_TOKEN_ISSUER || !payload.op_phone) return null;
+    if (typeof payload.exp !== "number" || payload.exp <= Math.floor(Date.now() / 1000)) return null;
+    return payload;
+  } catch (err) {
+    return null;
+  }
+}
+
 module.exports = {
   hashPassword,
   verifyPassword,
@@ -205,4 +287,6 @@ module.exports = {
   getSupabaseEnvDiagnostics,
   classifyDbError,
   normalizePhone,
+  signOperatorToken,
+  verifyOperatorToken,
 };
