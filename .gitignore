@@ -24,3 +24,7 @@ tools/ai-player/logs/
 .env
 .env.local
 .env.*.local
+
+# Modelos de IA pesados (SadTalker, Thin-Plate) — viven fuera del repo en C:\dev\_modelos-ia
+SadTalker/
+Thin-Plate-Spline-Motion-Model/

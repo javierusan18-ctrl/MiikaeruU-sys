@@ -1,0 +1,117 @@
+diff --git a/src/audio2exp_models/audio2exp.py b/src/audio2exp_models/audio2exp.py
+index 9e79a92..8a81b61 100644
+--- a/src/audio2exp_models/audio2exp.py
++++ b/src/audio2exp_models/audio2exp.py
+@@ -18,7 +18,7 @@ class Audio2Exp(nn.Module):
+ 
+         exp_coeff_pred = []
+ 
+-        for i in tqdm(range(0, T, 10),'audio2exp:'): # every 10 frames
++        for i in tqdm(range(0, T, 10),'Generando expresiones faciales:'): # every 10 frames
+             
+             current_mel_input = mel_input[:,i:i+10]
+ 
+diff --git a/src/face3d/extract_kp_videos.py b/src/face3d/extract_kp_videos.py
+index 21616a3..1817729 100644
+--- a/src/face3d/extract_kp_videos.py
++++ b/src/face3d/extract_kp_videos.py
+@@ -20,7 +20,7 @@ class KeypointExtractor():
+         if isinstance(images, list):
+             keypoints = []
+             if info:
+-                i_range = tqdm(images,desc='landmark Det:')
++                i_range = tqdm(images,desc='Detectando puntos faciales:')
+             else:
+                 i_range = images
+ 
+diff --git a/src/face3d/extract_kp_videos_safe.py b/src/face3d/extract_kp_videos_safe.py
+index 5141ba3..7771676 100644
+--- a/src/face3d/extract_kp_videos_safe.py
++++ b/src/face3d/extract_kp_videos_safe.py
+@@ -49,7 +49,7 @@ class KeypointExtractor():
+         if isinstance(images, list):
+             keypoints = []
+             if info:
+-                i_range = tqdm(images,desc='landmark Det:')
++                i_range = tqdm(images,desc='Detectando puntos faciales:')
+             else:
+                 i_range = images
+ 
+diff --git a/src/face3d/visualize.py b/src/face3d/visualize.py
+index 23a1110..aecfbd2 100644
+--- a/src/face3d/visualize.py
++++ b/src/face3d/visualize.py
+@@ -27,7 +27,7 @@ def gen_composed_video(args, device, first_frame_coeff, coeff_path, audio_path,
+     
+     video = cv2.VideoWriter(tmp_video_path, cv2.VideoWriter_fourcc(*'mp4v'), 25, (224, 224))
+ 
+-    for k in tqdm(range(coeff_pred.shape[0]), 'face3d rendering:'):
++    for k in tqdm(range(coeff_pred.shape[0]), 'Renderizando rostro 3D:'):
+         cur_coeff_full = torch.tensor(coeff_full[k:k+1], device=device)
+ 
+         facemodel.forward(cur_coeff_full, device)
+diff --git a/src/facerender/modules/make_animation.py b/src/facerender/modules/make_animation.py
+index 3360c53..487ef19 100644
+--- a/src/facerender/modules/make_animation.py
++++ b/src/facerender/modules/make_animation.py
+@@ -110,7 +110,7 @@ def make_animation(source_image, source_semantics, target_semantics,
+         he_source = mapping(source_semantics)
+         kp_source = keypoint_transformation(kp_canonical, he_source)
+     
+-        for frame_idx in tqdm(range(target_semantics.shape[1]), 'Face Renderer:'):
++        for frame_idx in tqdm(range(target_semantics.shape[1]), 'Renderizando video (paso mas lento):'):
+             # still check the dimension
+             # print(target_semantics.shape, source_semantics.shape)
+             target_semantics_frame = target_semantics[:, frame_idx]
+diff --git a/src/generate_batch.py b/src/generate_batch.py
+index 95f2152..83b558c 100644
+--- a/src/generate_batch.py
++++ b/src/generate_batch.py
+@@ -68,7 +68,7 @@ def get_data(first_coeff_path, audio_path, device, ref_eyeblink_coeff_path, stil
+         spec = orig_mel.copy()         # nframes 80
+         indiv_mels = []
+ 
+-        for i in tqdm(range(num_frames), 'mel:'):
++        for i in tqdm(range(num_frames), 'Analizando audio:'):
+             start_frame_num = i-2
+             start_idx = int(80. * (start_frame_num / float(fps)))
+             end_idx = start_idx + syncnet_mel_step_size
+diff --git a/src/utils/face_enhancer.py b/src/utils/face_enhancer.py
+index 15851a1..f3711e0 100644
+--- a/src/utils/face_enhancer.py
++++ b/src/utils/face_enhancer.py
+@@ -108,7 +108,7 @@ def enhancer_generator_no_len(images, method='gfpgan', bg_upsampler='realesrgan'
+         bg_upsampler=bg_upsampler)
+ 
+     # ------------------------ restore ------------------------
+-    for idx in tqdm(range(len(images)), 'Face Enhancer:'):
++    for idx in tqdm(range(len(images)), 'Mejorando calidad del rostro:'):
+         
+         img = cv2.cvtColor(images[idx], cv2.COLOR_RGB2BGR)
+         
+diff --git a/src/utils/paste_pic.py b/src/utils/paste_pic.py
+index f9989e2..0bfff04 100644
+--- a/src/utils/paste_pic.py
++++ b/src/utils/paste_pic.py
+@@ -55,7 +55,7 @@ def paste_pic(video_path, pic_path, crop_info, new_audio_path, full_video_path,
+ 
+     tmp_path = str(uuid.uuid4())+'.mp4'
+     out_tmp = cv2.VideoWriter(tmp_path, cv2.VideoWriter_fourcc(*'MP4V'), fps, (frame_w, frame_h))
+-    for crop_frame in tqdm(crop_frames, 'seamlessClone:'):
++    for crop_frame in tqdm(crop_frames, 'Aplicando retoques finales:'):
+         p = cv2.resize(crop_frame.astype(np.uint8), (ox2-ox1, oy2 - oy1)) 
+ 
+         mask = 255*np.ones(p.shape, p.dtype)
+diff --git a/src/utils/preprocess.py b/src/utils/preprocess.py
+index 0f784e6..1ada011 100644
+--- a/src/utils/preprocess.py
++++ b/src/utils/preprocess.py
+@@ -130,7 +130,7 @@ class CropAndExtract():
+         if not os.path.isfile(coeff_path):
+             # load 3dmm paramter generator from Deep3DFaceRecon_pytorch 
+             video_coeffs, full_coeffs = [],  []
+-            for idx in tqdm(range(len(frames_pil)), desc='3DMM Extraction In Video:'):
++            for idx in tqdm(range(len(frames_pil)), desc='Extrayendo datos faciales del video:'):
+                 frame = frames_pil[idx]
+                 W,H = frame.size
+                 lm1 = lm[idx].reshape([-1, 2])
