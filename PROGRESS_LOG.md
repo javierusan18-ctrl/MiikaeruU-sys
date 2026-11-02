@@ -1990,3 +1990,11 @@ Segundo incremento sobre el Bloque 73, pedido explícito tras probar la Vista He
 - `getComputedStyle(card).backdropFilter`: `"blur(14px) saturate(1.6)"`, `borderColor: "rgba(0, 240, 255, 0.22)"` — vidrio esmerilado + borde cian confirmados.
 - Click en la tarjeta "Templo" real (después del pulido visual, para confirmar que `data-forward` sigue intacto): `#hero-view` se cierra (`hidden:true` tras el fade) Y `#templo-modal` se abre (`hidden:false`) — cero regresión funcional.
 - 0 errores nuevos en consola (mismos 404 esperados de `/api/init-db`, sin backend local).
+## Bloque 75 — Paso 0 de «Miikaeru dentro de Maros»: una sola rama de trabajo (2026-11-02)
+
+Miikaeru tenía 3 líneas sueltas que no se contenían entre sí: `origin/main` (lo publicado, puente con Nyarukoo del 8-oct), `diagnostico/entorno` (índices en init-db, CLAUDE.md, código de video IA respaldado) y `security/operator-jwt-rls` (JWT de Operador + RLS en Amigos/Chat/Escuadrones). Se creó `claude/maros-miikaeru` desde `origin/main` (carpeta aparte `C:\dev\wt\miikaeru-maros`) y se unieron las otras dos. Desde aquí todo el trabajo de Maros + Muro va en esta rama; las viejas quedan de respaldo.
+
+- Único choque (en las dos uniones): la versión de caché, porque cada rama la había subido por su lado. Se dejó una nueva para las tres: `app.js?v=20261102-1` y `CACHE_NAME = miikaeru-cache-v20261102-1`.
+- La parte de seguridad no requiere SQL a mano (`/api/init-db` crea las políticas), pero **antes de publicar** hace falta `SUPABASE_JWT_SECRET` en Vercel (ver DEPLOYMENT.md); si no, Amigos/Escuadrones quedan bloqueados.
+- Pruebas: `node --check` de app.js, sw.js y api/*.js sin errores; la app abre en local con la versión nueva y sin errores de JS (solo los 404 esperados de `/api/init-db` y `leon_nivel1.glb`).
+- Plan completo: `C:\Users\PC\OneDrive\Desktop\Miikaeru_MVP\plan-maros-miikaeru.md`. Sin push.
