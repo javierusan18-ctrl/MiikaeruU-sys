@@ -10861,8 +10861,12 @@ let routineLog = loadRoutineLog();
 // biometricsLog — no vive dentro de `state` porque puede crecer con el
 // tiempo (un registro por día), a diferencia de un contador simple.
 // ---------------------------------------------------
+// Fecha LOCAL del dispositivo, mismo formato que formatDateKey() del
+// Calendario. Antes usaba toISOString() (UTC): en Japón, antes de las 9:00,
+// guardaba el día anterior, y en Perú, después de las 19:00, el siguiente.
 function todayKey() {
-  return new Date().toISOString().slice(0, 10);
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
 }
 
 const HABITS_LIST = [
@@ -20889,10 +20893,15 @@ document.addEventListener("DOMContentLoaded", () => {
     if (allDone && habitsMeta.lastStreakDate !== today) {
       if (habitsMeta.lastStreakDate) {
         const diffDays = Math.round((new Date(today) - new Date(habitsMeta.lastStreakDate)) / 86400000);
-        habitsMeta.streak = diffDays === 1 ? habitsMeta.streak + 1 : 1;
+        // Una sola vez tras pasar todayKey() de UTC a fecha local: la última
+        // racha pudo quedar guardada un día atrás (Japón de madrugada), así
+        // que un salto de 2 días cuenta como «ayer» para no cortarla.
+        const legacyUtcGap = !habitsMeta.localDates && diffDays === 2;
+        habitsMeta.streak = diffDays === 1 || legacyUtcGap ? habitsMeta.streak + 1 : 1;
       } else {
         habitsMeta.streak = 1;
       }
+      habitsMeta.localDates = true;
       habitsMeta.lastStreakDate = today;
       persistHabitsMeta();
       renderHabitsStreak();
@@ -21820,8 +21829,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ---------------- Planificador: Metas + Hábitos + Recomendaciones ----------------
   // Datos y constantes en PLANNER_KEY/PLANNER_AREAS/PLANNER_TEMPLATES (arriba,
   // fuera del closure). Fechas en formato local "YYYY-MM-DD" (formatDateKey),
-  // salvo los 5 hábitos base de HOY, que siguen usando todayKey() porque así
-  // los guarda toggleHabit() — no se toca esa lógica ni su racha.
+  // el mismo que todayKey(), con el que toggleHabit() guarda los 5 hábitos base.
 
   const plannerEl = document.getElementById("planner");
   const plannerRecoEl = document.getElementById("planner-reco");
@@ -21872,9 +21880,9 @@ document.addEventListener("DOMContentLoaded", () => {
     return !!(habitsLog[dateKey] && habitsLog[dateKey][habitId]);
   }
 
-  // Entrada de los 5 hábitos base para una fecha local (hoy = clave de toggleHabit).
+  // Entrada de los 5 hábitos base para una fecha local.
   function plannerBaseEntry(dateKey) {
-    return (dateKey === plannerToday() ? habitsLog[todayKey()] : habitsLog[dateKey]) || {};
+    return habitsLog[dateKey] || {};
   }
 
   // % de hábitos cumplidos en un día (base + propios programados). null si

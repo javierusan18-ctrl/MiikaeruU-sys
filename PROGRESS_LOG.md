@@ -2013,4 +2013,15 @@ Pedido de Javier: llevar en el Calendario el registro de hábitos y el cumplimie
 
 **Pruebas (navegador real, local):** plantilla «Ponerme en forma» + «Aprender japonés» crean 2 metas con 4 hábitos enlazados; marcar un hábito → meta 50 %, día 13–29 % con su barrita, «Racha 1», XP/oro una sola vez; el hábito base marcado desde el calendario aparece hecho en Templo › Hábitos; «Ir a Ejercicio» cierra el calendario y abre el Templo en Ejercicios; «Ir a Estudio» abre Aprendizaje; en 375 px no hay scroll horizontal; los datos siguen después de recargar. Sin errores de JS (solo los 404 esperados de `/api/init-db` y `leon_nivel1.glb`).
 
-**Pendiente / conocido:** los datos viven en el dispositivo (igual que el calendario de hoy); el respaldo en Supabase se hará cuando esté publicada la seguridad por JWT de Operador. Textos nuevos solo en español (en inglés/japonés también se ven en español). Bug previo, no tocado: `todayKey()` usa la fecha UTC, así que en Japón antes de las 9:00 los 5 hábitos base se guardan en el día anterior.
+**Pendiente / conocido:** los datos viven en el dispositivo (igual que el calendario de hoy); el respaldo en Supabase se hará cuando esté publicada la seguridad por JWT de Operador. Textos nuevos solo en español (en inglés/japonés también se ven en español). El bug previo de `todayKey()` en UTC se corrigió en el Bloque 77.
+
+## Bloque 77 — La fecha de «hoy» de hábitos, nutrición y entrenamientos pasa a ser la local (2026-11-02)
+
+`todayKey()` usaba `toISOString()` (UTC): en Japón, antes de las 9:00, los hábitos, comidas, entrenamientos, la rutina de 7 minutos y las rutinas del Templo se guardaban en el día ANTERIOR; en Perú, después de las 19:00, en el SIGUIENTE. Ahora devuelve la fecha local del dispositivo (mismo formato que `formatDateKey()` del Calendario), y el Planificador ya no necesita un caso especial para los hábitos base.
+
+- **Rachas sin cortes:** una sola vez después del cambio, si la última racha se guardó con el formato viejo (`habitsMeta.localDates` sin marcar) y el salto es de 2 días, cuenta como «ayer». Luego queda `localDates: true` y la regla vuelve a ser la de siempre.
+- **Efecto de transición conocido:** quien en Perú marcó sus hábitos después de las 19:00 el día anterior a publicar los verá ya marcados al día siguiente (quedaron guardados con esa fecha). Pasa una sola vez.
+- **No tocado a propósito:** la racha general de actividad (`updateActivityStreak`), la de idiomas y las estadísticas del Panel de Admin siguen en UTC porque se comparan con `last_active_date` del servidor; cambiarlas va junto con ese lado.
+- Versión: `?v=20261102-4` / `CACHE_NAME miikaeru-cache-v20261102-4`.
+
+**Pruebas:** con la hora simulada a las 8:00 de Japón, `todayKey()` da 2026-11-03 (antes daba 2026-11-02). Racha 5 con el formato viejo y salto de 2 días → 6 (se ve igual en Templo › Hábitos); con el formato nuevo y salto de 2 → 1. Sin errores de JS.
