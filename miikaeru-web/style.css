@@ -4141,7 +4141,7 @@ body.miikaeru-anim-off .modal-overlay .modal--japanese {
 
 .planner-tabs {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 4px;
   padding: 3px;
   border: 1px solid var(--glass-border);
@@ -4486,6 +4486,230 @@ body.miikaeru-anim-off .modal-overlay .modal--japanese {
 
 .planner-row__go:hover {
   border-color: var(--neon-cyan);
+}
+
+/* ---- Pestaña «Horario» (renderPlannerSchedule en app.js) ---- */
+.sched-section {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 10px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.sched-section > summary {
+  margin: 0;
+  cursor: pointer;
+  list-style: none;
+}
+
+.sched-section > summary::-webkit-details-marker {
+  display: none;
+}
+
+.sched-section > summary::before {
+  content: "+ ";
+  color: var(--neon-cyan);
+}
+
+.sched-section[open] > summary::before {
+  content: "– ";
+}
+
+.sched-section[open] > summary {
+  margin-bottom: 8px;
+}
+
+.sched-section > .planner-form,
+.sched-section > .sched-sleep,
+.sched-section > .sched-photo {
+  margin-bottom: 8px;
+}
+
+.sched-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.sched-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 7px 4px;
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  background: rgba(0, 240, 255, 0.04);
+  text-align: center;
+}
+
+.sched-stat__value {
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.sched-stat__label {
+  font-size: 0.56rem;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.sched-stat--warn {
+  border-color: rgba(255, 122, 69, 0.6);
+  background: rgba(255, 122, 69, 0.08);
+}
+
+.sched-note {
+  margin: 4px 0 0;
+  font-size: 0.66rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.sched-note--warn,
+.sched-warn {
+  color: #FF7A45;
+}
+
+.sched-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sched-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  border: 1px solid var(--glass-border);
+  border-left-width: 3px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.sched-row__time {
+  flex: 0 0 36px;
+  white-space: pre-line;
+  font-size: 0.62rem;
+  line-height: 1.35;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+}
+
+.sched-row--sleep {
+  border-left-color: var(--neon-purple);
+  background: rgba(168, 85, 247, 0.06);
+}
+
+.sched-row--fixed {
+  border-left-color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.sched-row--plan {
+  border-left-color: var(--neon-gold);
+  background: linear-gradient(90deg, rgba(255, 183, 0, 0.07), rgba(0, 240, 255, 0.03));
+}
+
+.sched-row--free {
+  border-style: dashed;
+  border-left-style: solid;
+  border-left-color: var(--neon-green);
+  background: transparent;
+}
+
+.sched-row--done .planner-row__title {
+  color: var(--text-secondary);
+  text-decoration: line-through;
+}
+
+.sched-row--off {
+  opacity: 0.55;
+}
+
+.sched-later {
+  color: var(--text-secondary);
+}
+
+.calendar-input.sched-minutes {
+  flex: 0 0 auto;
+  min-width: 0;
+  width: 92px;
+}
+
+.sched-sleep,
+.sched-photo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.sched-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+}
+
+.sched-field .calendar-input {
+  flex: 0 0 auto;
+  min-width: 0;
+  width: 96px;
+}
+
+.sched-photo__status {
+  flex: 1 1 160px;
+  font-size: 0.66rem;
+  color: var(--text-secondary);
+}
+
+.sched-focus {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px;
+  border: 1px solid rgba(255, 183, 0, 0.55);
+  border-radius: var(--radius-md);
+  background: radial-gradient(circle at 50% 0%, rgba(255, 183, 0, 0.14), rgba(168, 85, 247, 0.06) 70%);
+  text-align: center;
+}
+
+.sched-focus[hidden] {
+  display: none;
+}
+
+.sched-focus .planner-reco-card__actions {
+  justify-content: center;
+}
+
+.sched-focus__title {
+  margin: 0;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.sched-focus__time {
+  margin: 0;
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  font-variant-numeric: tabular-nums;
+  color: var(--neon-gold);
+  text-shadow: 0 0 18px rgba(255, 183, 0, 0.35);
+}
+
+.sched-next {
+  border-color: rgba(0, 240, 255, 0.4);
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.08), rgba(255, 183, 0, 0.05));
 }
 
 @media (prefers-reduced-motion: reduce) {

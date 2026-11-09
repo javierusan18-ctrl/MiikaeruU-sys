@@ -10655,8 +10655,44 @@ const PLANNER_TEMPLATES = [
   { id: "calma", title: "Mente en calma", area: "espiritu", days: 30, habits: [{ title: "Meditar 10 minutos", days: PLANNER_ALL_DAYS }] },
 ];
 
+// ---------------------------------------------------
+// Horario (pestaña del Planificador): sueño + bloques fijos (trabajo/estudio,
+// a mano o leídos de una foto con /api/leer-horario) → el tiempo libre que
+// queda se reparte solo entre los pendientes y estas prioridades. Ideas
+// tomadas de apps probadas, sin copiar su código: bloques de tiempo
+// (time-blocking), Pomodoro de 25 min, regla de los 2 minutos (cada bloque
+// trae un «primer paso» mínimo) y la «fuerza del hábito» de Loop Habit
+// Tracker (ver plannerHabitStrength). El orden del arreglo es el orden en
+// que se ubican: lo que pide la mente fresca primero, lo liviano al final.
+// prefer: early = lo antes posible; late = lo más tarde posible; any = el
+// primer hueco, pero nunca en los 90 minutos antes de dormir (ejercicio).
+const PLANNER_FREE_PRIORITIES = [
+  { id: "estudio", title: "Estudiar lo pendiente", area: "estudio", minutes: 45, prefer: "early", firstStep: "Abre el material y lee solo la primera página." },
+  { id: "proyectos", title: "Avanzar mis proyectos", area: "personal", minutes: 50, prefer: "early", firstStep: "Abre tu proyecto y escribe en una línea cuál es el siguiente paso." },
+  { id: "ejercicio", title: "Ejercicio", area: "ejercicio", minutes: 30, prefer: "any", firstStep: "Ponte la ropa deportiva y haz 10 sentadillas." },
+  { id: "descanso", title: "Descanso sin pantallas", area: "espiritu", minutes: 20, prefer: "late", firstStep: "Deja el celular en otra habitación y respira hondo 5 veces." },
+  { id: "ordenar", title: "Ordenar mis cosas", area: "personal", minutes: 15, prefer: "late", firstStep: "Guarda solo 5 cosas que estén fuera de lugar." },
+];
+
+function normalizePlannerSchedule(raw) {
+  const src = raw && typeof raw === "object" ? raw : {};
+  const saved = Array.isArray(src.priorities) ? src.priorities : [];
+  return {
+    bed: typeof src.bed === "string" ? src.bed : "23:00",
+    wake: typeof src.wake === "string" ? src.wake : "07:00",
+    blocks: Array.isArray(src.blocks) ? src.blocks : [],
+    tasks: Array.isArray(src.tasks) ? src.tasks : [],
+    priorities: PLANNER_FREE_PRIORITIES.map((p) => {
+      const s = saved.find((x) => x && x.id === p.id) || {};
+      return { id: p.id, on: s.on !== false, minutes: Number(s.minutes) || p.minutes };
+    }),
+    done: Array.isArray(src.done) ? src.done : [],
+    from: src.from && typeof src.from.date === "string" && Number.isFinite(src.from.min) ? src.from : null,
+  };
+}
+
 function loadPlanner() {
-  const empty = { version: 1, goals: [], habits: [], rewarded: [] };
+  const empty = { version: 1, goals: [], habits: [], rewarded: [], schedule: normalizePlannerSchedule(null) };
   try {
     const raw = localStorage.getItem(PLANNER_KEY);
     const parsed = raw ? JSON.parse(raw) : null;
@@ -10666,6 +10702,7 @@ function loadPlanner() {
       goals: Array.isArray(parsed.goals) ? parsed.goals : [],
       habits: Array.isArray(parsed.habits) ? parsed.habits : [],
       rewarded: Array.isArray(parsed.rewarded) ? parsed.rewarded : [],
+      schedule: normalizePlannerSchedule(parsed.schedule),
     };
   } catch (err) {
     return empty;
@@ -10675,6 +10712,7 @@ function loadPlanner() {
 function persistPlanner() {
   // rewarded solo evita cobrar dos veces el mismo check-in: basta con lo reciente.
   if (planner.rewarded.length > 500) planner.rewarded = planner.rewarded.slice(-500);
+  if (planner.schedule.done.length > 500) planner.schedule.done = planner.schedule.done.slice(-500);
   localStorage.setItem(PLANNER_KEY, JSON.stringify(planner));
 }
 
@@ -21946,6 +21984,28 @@ document.addEventListener("DOMContentLoaded", () => {
     return streak;
   }
 
+  // Fuerza del hábito, misma idea que Loop Habit Tracker (app libre, muy
+  // probada): un promedio que sube con cada día cumplido y baja despacio con
+  // cada fallo, así una falla no borra todo como pasa con la racha. Cada día
+  // programado pesa lo mismo (multiplicador 0,5^(1/13) ≈ 0,948). 0 a 100.
+  function plannerHabitStrength(habit) {
+    const multiplier = Math.pow(0.5, 1 / 13);
+    const today = plannerToday();
+    let day = habit.createdAt;
+    let score = 0;
+    let guard = 0;
+    while (day <= today && guard < 400) {
+      if (plannerIsScheduled(habit, day)) {
+        const done = plannerIsDone(habit.id, day);
+        // Hoy sin marcar todavía no cuenta como fallo.
+        if (done || day < today) score = score * multiplier + (done ? 1 - multiplier : 0);
+      }
+      day = plannerAddDays(day, 1);
+      guard += 1;
+    }
+    return Math.round(score * 100);
+  }
+
   function plannerDaysLabel(days) {
     if (days.length === 7) return "Todos los días";
     return PLANNER_WEEK_ORDER.filter((d) => days.includes(d)).map((d) => PLANNER_DAY_LETTER[d]).join(" · ");
@@ -22151,6 +22211,30 @@ document.addEventListener("DOMContentLoaded", () => {
     );
     plannerDayHabitsEl.appendChild(header);
 
+    // Lo que toca ahora según la pestaña «Horario» (solo hoy).
+    const next = dateKey === today ? schedNextItem() : null;
+    if (next) {
+      const { item, isNow } = next;
+      const card = plannerNode("div", "planner-reco-card sched-next");
+      const head = plannerNode("div", "planner-reco-card__head");
+      head.append(plannerAreaTag(item.area), plannerNode("span", "planner-reco-card__percent", `${schedFmt(item.s)}–${schedFmt(item.e)}`));
+      card.append(
+        head,
+        plannerNode("p", "planner-reco-card__title", `${isNow ? "Ahora toca" : "Lo siguiente"}: ${item.title}`),
+        plannerNode("p", "planner-reco-card__text", `Primer paso: ${item.firstStep}`)
+      );
+      const actions = plannerNode("div", "planner-reco-card__actions");
+      const startBtn = plannerNode("button", "planner-chip planner-chip--gold", "Empezar ahora");
+      startBtn.type = "button";
+      startBtn.addEventListener("click", () => schedStartFocus(today, item));
+      const seeBtn = plannerNode("button", "planner-chip", "Ver mi horario");
+      seeBtn.type = "button";
+      seeBtn.addEventListener("click", () => schedOpenTab("horario"));
+      actions.append(startBtn, seeBtn);
+      card.appendChild(actions);
+      plannerDayHabitsEl.appendChild(card);
+    }
+
     if (scheduled.length) {
       plannerDayHabitsEl.appendChild(plannerNode("p", "planner-label", "Tus hábitos"));
       scheduled.forEach((habit) => {
@@ -22307,6 +22391,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const meta = plannerNode("div", "planner-row__meta");
       meta.append(plannerAreaTag(habit.area), plannerNode("span", "", plannerDaysLabel(habit.days)));
       if (streak) meta.appendChild(plannerNode("span", "planner-streak", `Racha ${streak}`));
+      const strength = plannerHabitStrength(habit);
+      if (strength) meta.appendChild(plannerNode("span", "", `Fuerza ${strength} %`));
       if (goal) meta.appendChild(plannerNode("span", "", `Meta: ${goal.title}`));
       body.appendChild(meta);
 
@@ -22323,12 +22409,702 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // ---- Pestaña «Horario» (sueño + bloques fijos → tiempo libre organizado) ----
+  // Todo se calcula al vuelo para la fecha elegida en la grilla (no se guarda
+  // un plan por día): si cambia el horario, el plan se reacomoda solo. Solo se
+  // guarda qué bloques se marcaron hechos (schedule.done = "fecha|clave").
+
+  const schedFocusEl = document.getElementById("sched-focus");
+  const schedSummaryEl = document.getElementById("sched-summary");
+  const schedPlanEl = document.getElementById("sched-plan");
+  const schedTaskForm = document.getElementById("sched-task-form");
+  const schedTaskTitle = document.getElementById("sched-task-title");
+  const schedTaskArea = document.getElementById("sched-task-area");
+  const schedTaskMinutes = document.getElementById("sched-task-minutes");
+  const schedTasksEl = document.getElementById("sched-tasks");
+  const schedPrioritiesEl = document.getElementById("sched-priorities");
+  const schedFixedSection = document.getElementById("sched-sec-fijo");
+  const schedBed = document.getElementById("sched-bed");
+  const schedWake = document.getElementById("sched-wake");
+  const schedPhotoBtn = document.getElementById("sched-photo-btn");
+  const schedPhotoInput = document.getElementById("sched-photo-input");
+  const schedPhotoStatus = document.getElementById("sched-photo-status");
+  const schedPhotoReview = document.getElementById("sched-photo-review");
+  const schedBlockForm = document.getElementById("sched-block-form");
+  const schedBlockTitle = document.getElementById("sched-block-title");
+  const schedBlockKind = document.getElementById("sched-block-kind");
+  const schedBlockStart = document.getElementById("sched-block-start");
+  const schedBlockEnd = document.getElementById("sched-block-end");
+  const schedBlockDays = document.getElementById("sched-block-days");
+  const schedBlocksEl = document.getElementById("sched-blocks");
+
+  const SCHED_KINDS = [
+    { id: "trabajo", label: "Trabajo" },
+    { id: "estudio", label: "Clases / estudio" },
+    { id: "otro", label: "Otro compromiso" },
+  ];
+  const SCHED_TASK_MINUTES = [15, 25, 45, 60, 90];
+  const SCHED_PRIORITY_MINUTES = [10, 15, 20, 30, 45, 60, 90, 120];
+  const SCHED_MIN_SLOT = 15; // huecos más cortos no se usan
+  const SCHED_BREAK = 10; // respiro después de cada bloque sugerido
+  const SCHED_COMMUTE = 15; // margen después de trabajo/clases (traslado, cambiarse)
+  const SCHED_TASK_FIRST_STEP = "Haz solo los primeros 2 minutos: abre lo que necesitas y empieza por la parte más fácil.";
+  let schedBlockDaysPicked = new Set([1, 2, 3, 4, 5]);
+  let schedPhotoCandidates = [];
+  let schedFocus = null; // { dateKey, key, title, firstStep, total, remaining, running }
+  let schedFocusTimer = null;
+
+  function schedToMin(hhmm) {
+    const match = /^(\d{1,2}):(\d{2})$/.exec(hhmm || "");
+    if (!match) return null;
+    return Number(match[1]) * 60 + Number(match[2]);
+  }
+
+  function schedFmt(min) {
+    const value = ((Math.round(min) % 1440) + 1440) % 1440;
+    return `${String(Math.floor(value / 60)).padStart(2, "0")}:${String(value % 60).padStart(2, "0")}`;
+  }
+
+  function schedDur(min) {
+    const hours = Math.floor(min / 60);
+    const rest = Math.round(min % 60);
+    if (!hours) return `${rest} min`;
+    return rest ? `${hours} h ${rest} min` : `${hours} h`;
+  }
+
+  // Día "despierto" en minutos: de levantarse a acostarse (si se acuesta
+  // después de medianoche, el final pasa de 1440, p. ej. 01:00 = 1500).
+  function schedDayWindow() {
+    const s = planner.schedule;
+    const wake = schedToMin(s.wake) ?? 420;
+    let bed = schedToMin(s.bed) ?? 1380;
+    if (bed <= wake) bed += 1440;
+    return { wake, bed, sleep: 1440 - (bed - wake) };
+  }
+
+  function schedBlocksFor(dateKey) {
+    const weekday = plannerParseDate(dateKey).getDay();
+    const { wake } = schedDayWindow();
+    return planner.schedule.blocks
+      .filter((block) => Array.isArray(block.days) && block.days.includes(weekday))
+      .map((block) => {
+        let start = schedToMin(block.start);
+        let end = schedToMin(block.end);
+        if (start === null || end === null) return null;
+        if (end <= start) end += 1440; // turno de noche
+        if (start < wake && end <= wake) { start += 1440; end += 1440; } // de madrugada = parte de "este" día despierto
+        return { ...block, s: start, e: end };
+      })
+      .filter(Boolean)
+      .sort((a, b) => a.s - b.s);
+  }
+
+  function schedSubtract(slots, from, to) {
+    const out = [];
+    slots.forEach(([s, e]) => {
+      if (to <= s || from >= e) { out.push([s, e]); return; }
+      if (from - s >= SCHED_MIN_SLOT) out.push([s, from]);
+      if (e - to >= SCHED_MIN_SLOT) out.push([to, e]);
+    });
+    return out;
+  }
+
+  // Busca un hueco para `minutes` (si no entra entero, una versión corta de
+  // la mitad) y lo descuenta de `slots`. Devuelve { s, e, short } o null.
+  function schedPlace(slots, minutes, prefer, notAfter) {
+    const order = slots.map((_, i) => i);
+    if (prefer === "late") order.reverse();
+    const wants = [minutes, Math.max(SCHED_MIN_SLOT, Math.round(minutes / 2))];
+    for (const want of wants) {
+      for (const i of order) {
+        const [s, e0] = slots[i];
+        const e = notAfter != null ? Math.min(e0, notAfter) : e0;
+        if (e - s < want) continue;
+        const start = prefer === "late" ? e - want : s;
+        const placed = { s: start, e: start + want, short: want < minutes };
+        // El respiro va del lado que queda libre: después si es temprano, antes si es tarde.
+        const rest = prefer === "late"
+          ? schedSubtract(slots, start - SCHED_BREAK, start + want)
+          : schedSubtract(slots, start, start + want + SCHED_BREAK);
+        slots.splice(0, slots.length, ...rest);
+        return placed;
+      }
+    }
+    return null;
+  }
+
+  function schedIsDone(dateKey, key) {
+    return planner.schedule.done.includes(`${dateKey}|${key}`);
+  }
+
+  // Plan completo de una fecha: bloques fijos, huecos libres y lo sugerido.
+  function schedBuildPlan(dateKey) {
+    const s = planner.schedule;
+    const { wake, bed, sleep } = schedDayWindow();
+    const fixed = schedBlocksFor(dateKey);
+    // 30 min para arrancar la mañana y 30 min para bajar el ritmo antes de dormir.
+    let slots = [[wake + 30, bed - 30]];
+    fixed.forEach((block) => { slots = schedSubtract(slots, block.s, block.e + SCHED_COMMUTE); });
+    const freeTotal = slots.reduce((sum, [a, b]) => sum + (b - a), 0);
+    // «Reorganizar desde ahora»: lo pendiente se vuelve a repartir desde esa
+    // hora; lo ya hecho sale de la línea de tiempo y se lista aparte.
+    const from = s.from && s.from.date === dateKey ? s.from.min : null;
+    if (from !== null) slots = schedSubtract(slots, 0, from);
+
+    const items = [];
+    const today = plannerToday();
+    if (dateKey === today) {
+      s.tasks
+        .filter((task) => (!task.done || task.doneAt === dateKey) && task.skipDate !== dateKey)
+        .sort((a, b) => (b.postponed || 0) - (a.postponed || 0) || String(a.createdAt).localeCompare(String(b.createdAt)))
+        .forEach((task) => items.push({ key: task.id, title: task.title, area: task.area, minutes: task.minutes, prefer: "early", firstStep: SCHED_TASK_FIRST_STEP, task }));
+    }
+    PLANNER_FREE_PRIORITIES.forEach((base) => {
+      const pref = s.priorities.find((p) => p.id === base.id);
+      if (!pref || !pref.on) return;
+      items.push({ key: `p-${base.id}`, title: base.title, area: base.area, minutes: pref.minutes, prefer: base.prefer, firstStep: base.firstStep });
+    });
+
+    const placed = [];
+    const missing = [];
+    const doneBefore = [];
+    items.forEach((item) => {
+      if (from !== null && schedIsDone(dateKey, item.key)) { doneBefore.push(item); return; }
+      const notAfter = item.prefer === "any" ? bed - 90 : null;
+      const spot = schedPlace(slots, item.minutes, item.prefer === "any" ? "early" : item.prefer, notAfter);
+      if (spot) placed.push({ ...item, ...spot, done: schedIsDone(dateKey, item.key) });
+      else missing.push(item);
+    });
+
+    const busyTotal = fixed.reduce((sum, block) => sum + (block.e - block.s), 0);
+    const plannedTotal = placed.reduce((sum, item) => sum + (item.e - item.s), 0);
+    return { wake, bed, sleep, fixed, placed, missing, doneBefore, slotsLeft: slots, freeTotal, busyTotal, plannedTotal };
+  }
+
+  // Minutos de "ahora" en la misma escala que la ventana del día (pasada la
+  // medianoche, si todavía no se acostó, suma 1440).
+  function schedNowMin(plan) {
+    const now = new Date();
+    let nowMin = now.getHours() * 60 + now.getMinutes();
+    if (nowMin < plan.wake && plan.bed > 1440) nowMin += 1440;
+    return nowMin;
+  }
+
+  function schedToggleDone(dateKey, item) {
+    const s = planner.schedule;
+    const doneKey = `${dateKey}|${item.key}`;
+    const wasDone = s.done.includes(doneKey);
+    s.done = wasDone ? s.done.filter((k) => k !== doneKey) : [...s.done, doneKey];
+    if (item.task) {
+      item.task.done = !wasDone;
+      item.task.doneAt = wasDone ? null : dateKey;
+    }
+    const rewardKey = `${dateKey}|s-${item.key}`;
+    if (!wasDone && !planner.rewarded.includes(rewardKey)) {
+      planner.rewarded.push(rewardKey);
+      grantXP(5);
+      addGold(1);
+      pulseAvatarStage();
+    }
+    plannerRefresh();
+  }
+
+  // Lo que toca ahora o lo próximo de HOY que no está hecho (para «Mi día»).
+  function schedNextItem() {
+    const today = plannerToday();
+    const plan = schedBuildPlan(today);
+    const nowMin = schedNowMin(plan);
+    const pending = plan.placed.filter((item) => !item.done && item.e > nowMin).sort((a, b) => a.s - b.s);
+    return pending.length ? { item: pending[0], isNow: pending[0].s <= nowMin } : null;
+  }
+
+  // ---- Modo enfoque: Pomodoro de hasta 25 min con el «primer paso» ----
+
+  function schedOpenTab(tabId) {
+    const tabBtn = plannerEl.querySelector(`.planner-tab[data-planner-tab="${tabId}"]`);
+    if (tabBtn) tabBtn.click();
+  }
+
+  function schedStopTimer() {
+    if (schedFocusTimer) clearInterval(schedFocusTimer);
+    schedFocusTimer = null;
+  }
+
+  function schedStartFocus(dateKey, item) {
+    schedStopTimer();
+    const total = Math.min(25, Math.max(5, item.e - item.s)) * 60;
+    schedFocus = { dateKey, key: item.key, title: item.title, firstStep: item.firstStep, total, remaining: total, running: true, long: item.e - item.s > 25 };
+    schedOpenTab("horario");
+    schedRunTimer();
+    renderSchedFocus();
+    if (plannerEl.scrollIntoView) schedFocusEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  function schedRunTimer() {
+    schedStopTimer();
+    if (!schedFocus || !schedFocus.running) return;
+    let last = Date.now();
+    schedFocusTimer = setInterval(() => {
+      if (!schedFocus) { schedStopTimer(); return; }
+      const nowTs = Date.now();
+      schedFocus.remaining = Math.max(0, schedFocus.remaining - Math.round((nowTs - last) / 1000));
+      last = nowTs;
+      if (schedFocus.remaining === 0) {
+        schedStopTimer();
+        schedFinishFocus(true);
+        return;
+      }
+      renderSchedFocus();
+    }, 1000);
+  }
+
+  function schedFinishFocus(byTimer) {
+    if (!schedFocus) return;
+    const { dateKey, key, title, long } = schedFocus;
+    schedStopTimer();
+    schedFocus = null;
+    const plan = schedBuildPlan(dateKey);
+    const item = plan.placed.find((p) => p.key === key);
+    if (item && !item.done) schedToggleDone(dateKey, item);
+    setAvatarSpeech(byTimer && long
+      ? `¡25 minutos de enfoque en «${title}»! Descansa 5 minutos y, si quieres, sigue.`
+      : `¡Hecho: ${title}! Empezar era lo más difícil.`);
+    renderPlanner();
+  }
+
+  function renderSchedFocus() {
+    schedFocusEl.innerHTML = "";
+    schedFocusEl.hidden = !schedFocus;
+    if (!schedFocus) return;
+    const mm = String(Math.floor(schedFocus.remaining / 60)).padStart(2, "0");
+    const ss = String(schedFocus.remaining % 60).padStart(2, "0");
+    const ratio = 1 - schedFocus.remaining / schedFocus.total;
+
+    schedFocusEl.append(
+      plannerNode("p", "planner-label", "Modo enfoque"),
+      plannerNode("p", "sched-focus__title", schedFocus.title),
+      plannerNode("p", "sched-focus__time", `${mm}:${ss}`),
+      plannerProgressBar(ratio),
+      plannerNode("p", "planner-reco-card__text", `Primer paso (2 minutos): ${schedFocus.firstStep}`)
+    );
+    const actions = plannerNode("div", "planner-reco-card__actions");
+    const pauseBtn = plannerNode("button", "planner-chip", schedFocus.running ? "Pausar" : "Seguir");
+    pauseBtn.type = "button";
+    pauseBtn.addEventListener("click", () => {
+      schedFocus.running = !schedFocus.running;
+      schedRunTimer();
+      renderSchedFocus();
+    });
+    const doneBtn = plannerNode("button", "planner-chip planner-chip--gold", "Terminé");
+    doneBtn.type = "button";
+    doneBtn.addEventListener("click", () => schedFinishFocus(false));
+    const exitBtn = plannerNode("button", "planner-chip", "Salir");
+    exitBtn.type = "button";
+    exitBtn.addEventListener("click", () => {
+      schedStopTimer();
+      schedFocus = null;
+      renderSchedFocus();
+    });
+    actions.append(pauseBtn, doneBtn, exitBtn);
+    schedFocusEl.appendChild(actions);
+  }
+
+  // ---- Dibujo de la pestaña ----
+
+  function schedStat(label, value, warn) {
+    const box = plannerNode("div", "sched-stat");
+    box.classList.toggle("sched-stat--warn", !!warn);
+    box.append(plannerNode("span", "sched-stat__value", value), plannerNode("span", "sched-stat__label", label));
+    return box;
+  }
+
+  function schedTimelineRow({ start, end, title, kind, sub, item, dateKey, canAct }) {
+    const row = plannerNode("div", `sched-row sched-row--${kind}`);
+    row.classList.toggle("sched-row--done", !!(item && item.done));
+    row.appendChild(plannerNode("span", "sched-row__time", end != null ? `${schedFmt(start)}\n${schedFmt(end)}` : schedFmt(start)));
+    if (item) {
+      const check = plannerNode("button", "planner-check");
+      check.type = "button";
+      check.disabled = !canAct;
+      check.setAttribute("aria-pressed", item.done ? "true" : "false");
+      check.setAttribute("aria-label", item.done ? `Desmarcar ${title}` : `Marcar ${title}`);
+      check.addEventListener("click", () => schedToggleDone(dateKey, item));
+      row.appendChild(check);
+    }
+    const body = plannerNode("div", "planner-row__body");
+    body.appendChild(plannerNode("span", "planner-row__title", title));
+    if (sub) {
+      const meta = plannerNode("div", "planner-row__meta");
+      sub.forEach((part) => meta.appendChild(typeof part === "string" ? plannerNode("span", "", part) : part));
+      body.appendChild(meta);
+    }
+    row.appendChild(body);
+    if (item && canAct && !item.done) {
+      const go = plannerNode("button", "planner-row__go", "Empezar");
+      go.type = "button";
+      go.addEventListener("click", () => schedStartFocus(dateKey, item));
+      row.appendChild(go);
+      if (item.task) {
+        const later = plannerNode("button", "planner-row__go sched-later", "Mañana");
+        later.type = "button";
+        later.setAttribute("aria-label", `Pasar ${title} a mañana`);
+        later.addEventListener("click", () => {
+          item.task.postponed = (item.task.postponed || 0) + 1;
+          item.task.skipDate = dateKey;
+          plannerRefresh();
+        });
+        row.appendChild(later);
+      }
+    }
+    return row;
+  }
+
+  function renderSchedPlan() {
+    const dateKey = calendarSelectedDate;
+    const today = plannerToday();
+    const plan = schedBuildPlan(dateKey);
+    const canAct = dateKey === today;
+
+    schedSummaryEl.innerHTML = "";
+    const head = plannerNode("div", "planner-day-head");
+    const dateLabel = plannerParseDate(dateKey).toLocaleDateString(calendarLocale(), { weekday: "long", day: "numeric", month: "long" });
+    head.append(
+      plannerNode("span", "planner-day-head__date", dateKey === today ? `Hoy · ${dateLabel}` : dateLabel),
+      plannerNode("span", "planner-day-head__percent", plan.placed.length ? `${plan.placed.filter((p) => p.done).length}/${plan.placed.length} hechos` : "")
+    );
+    const stats = plannerNode("div", "sched-stats");
+    stats.append(
+      schedStat("Sueño", schedDur(plan.sleep), plan.sleep < 420),
+      schedStat("Ocupado", schedDur(plan.busyTotal)),
+      schedStat("Libre", schedDur(plan.freeTotal)),
+      schedStat("Organizado", schedDur(plan.plannedTotal))
+    );
+    schedSummaryEl.append(head, stats);
+    if (plan.sleep < 420) {
+      schedSummaryEl.appendChild(plannerNode("p", "sched-note sched-note--warn", "Duermes menos de 7 horas. Dormir bien es el primer hábito: prueba acostarte 30 minutos antes."));
+    }
+    if (!planner.schedule.blocks.length) {
+      schedSummaryEl.appendChild(plannerNode("p", "sched-note", "Agrega tu horario de trabajo o estudio (a mano o con una foto) en «Mi sueño, trabajo y estudio» para que el plan sea real."));
+    }
+
+    schedPlanEl.innerHTML = "";
+    const rows = [];
+    rows.push({ s: plan.wake, node: schedTimelineRow({ start: plan.wake, title: "Me levanto", kind: "sleep" }) });
+    plan.fixed.forEach((block) => {
+      const kind = SCHED_KINDS.find((k) => k.id === block.kind) || SCHED_KINDS[2];
+      rows.push({ s: block.s, node: schedTimelineRow({ start: block.s, end: block.e, title: block.title, kind: "fixed", sub: [kind.label] }) });
+    });
+    plan.placed.forEach((item) => {
+      const sub = [plannerAreaTag(item.area)];
+      if (item.task) sub.push("Pendiente");
+      if (item.short) sub.push("versión corta");
+      if (item.task && item.task.postponed >= 3) sub.push(plannerNode("span", "sched-warn", `Lo postergaste ${item.task.postponed} veces: divídelo en algo de 15 min`));
+      rows.push({ s: item.s, node: schedTimelineRow({ start: item.s, end: item.e, title: item.title, kind: "plan", sub, item, dateKey, canAct }) });
+    });
+    plan.slotsLeft.filter(([a, b]) => b - a >= 20).forEach(([a, b]) => {
+      rows.push({ s: a, node: schedTimelineRow({ start: a, end: b, title: "Tiempo libre de verdad", kind: "free", sub: [schedDur(b - a)] }) });
+    });
+    rows.push({ s: plan.bed, node: schedTimelineRow({ start: plan.bed, title: "A dormir", kind: "sleep" }) });
+    rows.sort((a, b) => a.s - b.s).forEach((row) => schedPlanEl.appendChild(row.node));
+
+    if (plan.doneBefore.length) {
+      schedPlanEl.appendChild(plannerNode("p", "sched-note", `Ya hiciste hoy: ${plan.doneBefore.map((m) => m.title).join(", ")}.`));
+    }
+    // Si se le pasó la hora de algo sin hacerlo, ofrece reacomodar el resto del día.
+    if (canAct) {
+      const nowMin = schedNowMin(plan);
+      if (plan.placed.some((item) => !item.done && item.e <= nowMin)) {
+        const redoBtn = plannerNode("button", "planner-chip planner-chip--gold", "Se me pasó la hora: reorganizar desde ahora");
+        redoBtn.type = "button";
+        redoBtn.addEventListener("click", () => {
+          planner.schedule.from = { date: dateKey, min: Math.ceil(nowMin / 5) * 5 };
+          plannerRefresh();
+        });
+        schedPlanEl.appendChild(redoBtn);
+      }
+    }
+    if (plan.missing.length) {
+      schedPlanEl.appendChild(plannerNode("p", "sched-note", `Hoy no entró: ${plan.missing.map((m) => m.title).join(", ")}. Baja minutos en «En qué quiero usar mi tiempo libre» o pásalo a otro día.`));
+    }
+  }
+
+  function renderSchedTasks() {
+    schedTasksEl.innerHTML = "";
+    const today = plannerToday();
+    const visible = planner.schedule.tasks.filter((task) => !task.done || task.doneAt === today);
+    if (!visible.length) {
+      schedTasksEl.appendChild(plannerNode("p", "calendar-events-empty", "Anota aquí lo que vienes postergando: Miikaeru le busca un hueco hoy."));
+      return;
+    }
+    visible.forEach((task) => {
+      const row = plannerNode("div", "planner-row");
+      row.classList.toggle("planner-row--done", !!task.done);
+      const body = plannerNode("div", "planner-row__body");
+      body.appendChild(plannerNode("span", "planner-row__title", task.title));
+      const meta = plannerNode("div", "planner-row__meta");
+      meta.append(plannerAreaTag(task.area), plannerNode("span", "", schedDur(task.minutes)));
+      if (task.postponed) meta.appendChild(plannerNode("span", task.postponed >= 3 ? "sched-warn" : "", `Postergado ${task.postponed} ${task.postponed === 1 ? "vez" : "veces"}`));
+      if (task.skipDate === today && !task.done) meta.appendChild(plannerNode("span", "", "Pasado a mañana"));
+      body.appendChild(meta);
+      const removeBtn = plannerNode("button", "finanzas-category__remove", "✕");
+      removeBtn.type = "button";
+      removeBtn.setAttribute("aria-label", `Quitar el pendiente ${task.title}`);
+      removeBtn.addEventListener("click", () => {
+        planner.schedule.tasks = planner.schedule.tasks.filter((t) => t.id !== task.id);
+        plannerRefresh();
+      });
+      row.append(body, removeBtn);
+      schedTasksEl.appendChild(row);
+    });
+  }
+
+  function renderSchedPriorities() {
+    schedPrioritiesEl.innerHTML = "";
+    PLANNER_FREE_PRIORITIES.forEach((base) => {
+      const pref = planner.schedule.priorities.find((p) => p.id === base.id);
+      const row = plannerNode("div", "planner-row");
+      row.classList.toggle("sched-row--off", !pref.on);
+      const check = plannerNode("button", "planner-check");
+      check.type = "button";
+      check.setAttribute("aria-pressed", pref.on ? "true" : "false");
+      check.setAttribute("aria-label", pref.on ? `No usar tiempo en ${base.title}` : `Usar tiempo en ${base.title}`);
+      check.addEventListener("click", () => {
+        pref.on = !pref.on;
+        plannerRefresh();
+      });
+      const body = plannerNode("div", "planner-row__body");
+      body.appendChild(plannerNode("span", "planner-row__title", base.title));
+      const meta = plannerNode("div", "planner-row__meta");
+      meta.appendChild(plannerAreaTag(base.area));
+      body.appendChild(meta);
+      const select = plannerNode("select", "calendar-input sched-minutes");
+      select.setAttribute("aria-label", `Minutos para ${base.title}`);
+      SCHED_PRIORITY_MINUTES.forEach((m) => select.appendChild(new Option(schedDur(m), String(m))));
+      select.value = String(pref.minutes);
+      select.addEventListener("change", () => {
+        pref.minutes = Number(select.value);
+        plannerRefresh();
+      });
+      row.append(check, body, select);
+      schedPrioritiesEl.appendChild(row);
+    });
+  }
+
+  function schedDaysChips(container, picked, onChange) {
+    container.innerHTML = "";
+    PLANNER_WEEK_ORDER.forEach((day) => {
+      const chip = plannerNode("button", "planner-day-chip", PLANNER_DAY_LETTER[day]);
+      chip.type = "button";
+      chip.setAttribute("aria-pressed", picked.has(day) ? "true" : "false");
+      chip.addEventListener("click", () => {
+        if (picked.has(day)) {
+          if (picked.size > 1) picked.delete(day);
+        } else {
+          picked.add(day);
+        }
+        onChange();
+      });
+      container.appendChild(chip);
+    });
+  }
+
+  function renderSchedBlockDays() {
+    schedDaysChips(schedBlockDays, schedBlockDaysPicked, renderSchedBlockDays);
+  }
+
+  function renderSchedBlocks() {
+    schedBed.value = planner.schedule.bed;
+    schedWake.value = planner.schedule.wake;
+    schedBlocksEl.innerHTML = "";
+    if (!planner.schedule.blocks.length) return;
+    planner.schedule.blocks.forEach((block) => {
+      const kind = SCHED_KINDS.find((k) => k.id === block.kind) || SCHED_KINDS[2];
+      const row = plannerNode("div", "planner-row");
+      const body = plannerNode("div", "planner-row__body");
+      body.appendChild(plannerNode("span", "planner-row__title", block.title));
+      const meta = plannerNode("div", "planner-row__meta");
+      meta.append(
+        plannerNode("span", "", kind.label),
+        plannerNode("span", "", `${block.start}–${block.end}`),
+        plannerNode("span", "", plannerDaysLabel(block.days))
+      );
+      body.appendChild(meta);
+      const removeBtn = plannerNode("button", "finanzas-category__remove", "✕");
+      removeBtn.type = "button";
+      removeBtn.setAttribute("aria-label", `Quitar el bloque ${block.title}`);
+      removeBtn.addEventListener("click", () => {
+        planner.schedule.blocks = planner.schedule.blocks.filter((b) => b.id !== block.id);
+        plannerRefresh();
+      });
+      row.append(body, removeBtn);
+      schedBlocksEl.appendChild(row);
+    });
+  }
+
+  // ---- Foto del horario → bloques (revisión antes de guardar) ----
+
+  function renderSchedPhotoReview() {
+    schedPhotoReview.innerHTML = "";
+    if (!schedPhotoCandidates.length) return;
+    schedPhotoReview.appendChild(plannerNode("p", "sched-note", "Revisa lo que leí. Quita lo que no sea correcto y guarda."));
+    schedPhotoCandidates.forEach((cand) => {
+      const kind = SCHED_KINDS.find((k) => k.id === cand.kind) || SCHED_KINDS[2];
+      schedPhotoReview.appendChild(plannerHabitRow({
+        title: cand.title,
+        meta: `${kind.label} · ${cand.start}–${cand.end} · ${plannerDaysLabel(cand.days)}`,
+        done: cand.pick,
+        onToggle: () => {
+          cand.pick = !cand.pick;
+          renderSchedPhotoReview();
+        },
+      }));
+    });
+    const actions = plannerNode("div", "planner-reco-card__actions");
+    const saveBtn = plannerNode("button", "planner-chip planner-chip--gold", "Guardar los marcados");
+    saveBtn.type = "button";
+    saveBtn.addEventListener("click", () => {
+      schedPhotoCandidates.filter((c) => c.pick).forEach((c) => {
+        planner.schedule.blocks.push({ id: plannerNewId("b"), title: c.title, kind: c.kind, start: c.start, end: c.end, days: c.days });
+      });
+      schedPhotoCandidates = [];
+      schedPhotoStatus.textContent = "Horario guardado.";
+      plannerRefresh();
+    });
+    const cancelBtn = plannerNode("button", "planner-chip", "Descartar");
+    cancelBtn.type = "button";
+    cancelBtn.addEventListener("click", () => {
+      schedPhotoCandidates = [];
+      schedPhotoStatus.textContent = "";
+      renderSchedPhotoReview();
+    });
+    actions.append(saveBtn, cancelBtn);
+    schedPhotoReview.appendChild(actions);
+  }
+
+  // Achica la foto en el teléfono (máx. 1600 px, JPEG) antes de mandarla:
+  // menos datos móviles y menos costo de IA.
+  function schedResizeImage(file, maxSide) {
+    return new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.round(img.width * scale);
+        canvas.height = Math.round(img.height * scale);
+        canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+        URL.revokeObjectURL(url);
+        resolve(canvas.toDataURL("image/jpeg", 0.85));
+      };
+      img.onerror = () => {
+        URL.revokeObjectURL(url);
+        reject(new Error("bad_image"));
+      };
+      img.src = url;
+    });
+  }
+
+  async function schedReadPhoto(file) {
+    schedPhotoBtn.disabled = true;
+    schedPhotoStatus.textContent = "Leyendo tu horario...";
+    try {
+      const dataUrl = await schedResizeImage(file, 1600);
+      const res = await fetch("/api/leer-horario", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image: dataUrl.split(",")[1], mediaType: "image/jpeg" }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) throw new Error(data.error || `status_${res.status}`);
+      if (!data.blocks.length) {
+        schedPhotoStatus.textContent = "No encontré horarios en la foto. Prueba con una foto más clara o agrégalos a mano.";
+        return;
+      }
+      schedPhotoCandidates = data.blocks.map((block) => ({ ...block, pick: true }));
+      schedPhotoStatus.textContent = data.note ? `Listo. Nota: ${data.note}` : `Encontré ${data.blocks.length} ${data.blocks.length === 1 ? "bloque" : "bloques"}.`;
+      renderSchedPhotoReview();
+    } catch (err) {
+      schedPhotoStatus.textContent = "No pude leer la foto ahora. Agrega tus bloques a mano abajo.";
+    } finally {
+      schedPhotoBtn.disabled = false;
+      schedPhotoInput.value = "";
+    }
+  }
+
+  function renderPlannerSchedule() {
+    renderSchedFocus();
+    renderSchedPlan();
+    renderSchedTasks();
+    renderSchedPriorities();
+    renderSchedBlocks();
+  }
+
+  PLANNER_AREAS.forEach((area) => schedTaskArea.appendChild(new Option(area.label, area.id)));
+  schedTaskArea.value = "personal";
+  SCHED_TASK_MINUTES.forEach((m) => schedTaskMinutes.appendChild(new Option(schedDur(m), String(m))));
+  schedTaskMinutes.value = "25";
+  SCHED_KINDS.forEach((kind) => schedBlockKind.appendChild(new Option(kind.label, kind.id)));
+  renderSchedBlockDays();
+
+  schedTaskForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const title = schedTaskTitle.value.trim();
+    if (!title) return;
+    planner.schedule.tasks.push({
+      id: plannerNewId("t"),
+      title,
+      area: schedTaskArea.value,
+      minutes: Number(schedTaskMinutes.value) || 25,
+      createdAt: plannerToday(),
+      done: false,
+      doneAt: null,
+      postponed: 0,
+      skipDate: null,
+    });
+    schedTaskTitle.value = "";
+    plannerRefresh();
+  });
+
+  [schedBed, schedWake].forEach((input) => {
+    input.addEventListener("change", () => {
+      if (schedToMin(input.value) === null) return;
+      planner.schedule[input === schedBed ? "bed" : "wake"] = input.value;
+      plannerRefresh();
+    });
+  });
+
+  schedBlockForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const title = schedBlockTitle.value.trim();
+    if (!title || !schedBlockStart.value || !schedBlockEnd.value) return;
+    planner.schedule.blocks.push({
+      id: plannerNewId("b"),
+      title,
+      kind: schedBlockKind.value,
+      start: schedBlockStart.value,
+      end: schedBlockEnd.value,
+      days: [...schedBlockDaysPicked].sort(),
+    });
+    schedBlockTitle.value = "";
+    plannerRefresh();
+  });
+
+  schedPhotoBtn.addEventListener("click", () => schedPhotoInput.click());
+  schedPhotoInput.addEventListener("change", () => {
+    const file = schedPhotoInput.files && schedPhotoInput.files[0];
+    if (file) schedReadPhoto(file);
+  });
+
+  // Primera vez sin horario: abre la sección para que lo configure.
+  if (schedFixedSection && !planner.schedule.blocks.length) schedFixedSection.open = true;
+
   function renderPlanner() {
     if (!plannerEl) return;
     renderPlannerReco();
     renderPlannerDay();
     renderPlannerGoals();
     renderPlannerHabits();
+    renderPlannerSchedule();
   }
 
   [plannerGoalArea, plannerHabitArea].forEach((select) => {

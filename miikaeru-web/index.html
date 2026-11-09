@@ -19,7 +19,7 @@
   <!-- ?v=: fuerza a los navegadores móviles a recargar CSS/JS tras cada
        deploy en vez de servir una versión vieja desde su caché — subir
        este número a mano cada vez que se publique un cambio real. -->
-  <link rel="stylesheet" href="style.css?v=20261102-4" />
+  <link rel="stylesheet" href="style.css?v=20261109-1" />
   <!-- Hanzi Writer: dependencia externa del Módulo de Práctica de Trazos
        Reales (ver #hanzi-writer-modal), porque dibuja trazos verificados
        a partir de datos KanjiVG reales — algo que el módulo de Práctica
@@ -1733,6 +1733,7 @@
             <button type="button" class="planner-tab planner-tab--active" data-planner-tab="dia" role="tab">Mi día</button>
             <button type="button" class="planner-tab" data-planner-tab="metas" role="tab">Metas</button>
             <button type="button" class="planner-tab" data-planner-tab="habitos" role="tab">Hábitos</button>
+            <button type="button" class="planner-tab" data-planner-tab="horario" role="tab">Horario</button>
           </div>
 
           <div class="planner-panel" id="planner-panel-dia">
@@ -1761,6 +1762,53 @@
               <button type="submit" class="btn-register">+ Hábito</button>
             </form>
             <div class="planner-list" id="planner-habits"></div>
+          </div>
+
+          <!-- Horario: sueño + bloques fijos (a mano o desde una foto) →
+               el tiempo libre se reparte solo. Lo dibuja renderPlannerSchedule(). -->
+          <div class="planner-panel" id="planner-panel-horario" hidden>
+            <div class="sched-focus" id="sched-focus" hidden></div>
+            <div class="sched-summary" id="sched-summary"></div>
+            <div class="sched-timeline" id="sched-plan"></div>
+
+            <details class="sched-section" open>
+              <summary class="planner-label">Pendientes que no quiero postergar</summary>
+              <form class="planner-form" id="sched-task-form">
+                <input type="text" id="sched-task-title" class="calendar-input" maxlength="60" placeholder="P. ej.: Terminar el informe, estudiar el tema 3" required />
+                <select id="sched-task-area" class="calendar-input" aria-label="Área"></select>
+                <select id="sched-task-minutes" class="calendar-input" aria-label="Duración"></select>
+                <button type="submit" class="btn-register">+ Pendiente</button>
+              </form>
+              <div class="planner-list" id="sched-tasks"></div>
+            </details>
+
+            <details class="sched-section">
+              <summary class="planner-label">En qué quiero usar mi tiempo libre</summary>
+              <div class="planner-list" id="sched-priorities"></div>
+            </details>
+
+            <details class="sched-section" id="sched-sec-fijo">
+              <summary class="planner-label">Mi sueño, trabajo y estudio</summary>
+              <div class="sched-sleep">
+                <label class="sched-field">Me acuesto <input type="time" id="sched-bed" class="calendar-input" /></label>
+                <label class="sched-field">Me levanto <input type="time" id="sched-wake" class="calendar-input" /></label>
+              </div>
+              <div class="sched-photo">
+                <button type="button" class="planner-chip planner-chip--gold" id="sched-photo-btn">Leer una foto de mi horario</button>
+                <input type="file" id="sched-photo-input" accept="image/*" hidden />
+                <span class="sched-photo__status" id="sched-photo-status" role="status"></span>
+              </div>
+              <div class="planner-list" id="sched-photo-review"></div>
+              <form class="planner-form" id="sched-block-form">
+                <input type="text" id="sched-block-title" class="calendar-input" maxlength="40" placeholder="Trabajo, clases, turno..." required />
+                <select id="sched-block-kind" class="calendar-input" aria-label="Tipo"></select>
+                <label class="sched-field">Desde <input type="time" id="sched-block-start" class="calendar-input" required /></label>
+                <label class="sched-field">Hasta <input type="time" id="sched-block-end" class="calendar-input" required /></label>
+                <div class="planner-days" id="sched-block-days" role="group" aria-label="Días"></div>
+                <button type="submit" class="btn-register">+ Bloque</button>
+              </form>
+              <div class="planner-list" id="sched-blocks"></div>
+            </details>
           </div>
         </div>
       </div>
@@ -3776,7 +3824,7 @@
        etiquetas <script> no importa en la práctica — se carga acá antes
        igual, por prolijidad. -->
   <script src="floatingWindow.js?v=20260819-2"></script>
-  <script src="app.js?v=20261102-4"></script>
+  <script src="app.js?v=20261109-1"></script>
   <!-- Lector de Lectura Inmersiva de Japonés (furigana + audio + modo
        automático) — módulo aparte compartido por el Japonés AI Coach
        (dentro de app.js) y el Modal de Lore (storyEngine.js), ninguno de
